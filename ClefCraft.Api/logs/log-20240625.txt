@@ -1,0 +1,12 @@
+2024-06-25 08:40:36.208 +03:00 [INF] Now listening on: https://localhost:7287
+2024-06-25 08:40:36.342 +03:00 [INF] Now listening on: http://localhost:5166
+2024-06-25 08:40:36.357 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-06-25 08:40:36.361 +03:00 [INF] Hosting environment: Development
+2024-06-25 08:40:36.364 +03:00 [INF] Content root path: C:\TemsaUG\Projects\UnknownProject\ClefCraft.Api
+2024-06-25 14:22:48.367 +03:00 [INF] Now listening on: https://localhost:7287
+2024-06-25 14:22:48.472 +03:00 [INF] Now listening on: http://localhost:5166
+2024-06-25 14:22:48.477 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-06-25 14:22:48.481 +03:00 [INF] Hosting environment: Development
+2024-06-25 14:22:48.484 +03:00 [INF] Content root path: C:\TemsaUG\Projects\UnknownProject\ClefCraft.Api
+2024-06-25 14:24:19.629 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 7.8642 ms
+2024-06-25 14:24:24.198 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 4553.2554 ms

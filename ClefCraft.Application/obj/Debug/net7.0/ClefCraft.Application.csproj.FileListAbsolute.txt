@@ -1,0 +1,15 @@
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Application\bin\Debug\net7.0\ClefCraft.Application.deps.json
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Application\bin\Debug\net7.0\ClefCraft.Application.dll
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Application\bin\Debug\net7.0\ClefCraft.Application.pdb
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Application\bin\Debug\net7.0\ClefCraft.Domain.dll
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Application\bin\Debug\net7.0\ClefCraft.Domain.pdb
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Application\obj\Debug\net7.0\ClefCraft.Application.csproj.AssemblyReference.cache
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Application\obj\Debug\net7.0\ClefCraft.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Application\obj\Debug\net7.0\ClefCraft.Application.AssemblyInfoInputs.cache
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Application\obj\Debug\net7.0\ClefCraft.Application.AssemblyInfo.cs
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Application\obj\Debug\net7.0\ClefCraft.Application.csproj.CoreCompileInputs.cache
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Application\obj\Debug\net7.0\ClefCraft.Application.csproj.CopyComplete
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Application\obj\Debug\net7.0\ClefCraft.Application.dll
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Application\obj\Debug\net7.0\refint\ClefCraft.Application.dll
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Application\obj\Debug\net7.0\ClefCraft.Application.pdb
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Application\obj\Debug\net7.0\ref\ClefCraft.Application.dll

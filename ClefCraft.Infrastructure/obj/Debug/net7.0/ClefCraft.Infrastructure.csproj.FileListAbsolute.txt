@@ -1,0 +1,17 @@
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Infrastructure\bin\Debug\net7.0\ClefCraft.Infrastructure.deps.json
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Infrastructure\bin\Debug\net7.0\ClefCraft.Infrastructure.dll
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Infrastructure\bin\Debug\net7.0\ClefCraft.Infrastructure.pdb
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Infrastructure\bin\Debug\net7.0\ClefCraft.Application.dll
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Infrastructure\bin\Debug\net7.0\ClefCraft.Domain.dll
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Infrastructure\bin\Debug\net7.0\ClefCraft.Application.pdb
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Infrastructure\bin\Debug\net7.0\ClefCraft.Domain.pdb
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Infrastructure\obj\Debug\net7.0\ClefCraft.Infrastructure.csproj.AssemblyReference.cache
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Infrastructure\obj\Debug\net7.0\ClefCraft.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Infrastructure\obj\Debug\net7.0\ClefCraft.Infrastructure.AssemblyInfoInputs.cache
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Infrastructure\obj\Debug\net7.0\ClefCraft.Infrastructure.AssemblyInfo.cs
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Infrastructure\obj\Debug\net7.0\ClefCraft.Infrastructure.csproj.CoreCompileInputs.cache
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Infrastructure\obj\Debug\net7.0\ClefCraft.Infrastructure.csproj.CopyComplete
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Infrastructure\obj\Debug\net7.0\ClefCraft.Infrastructure.dll
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Infrastructure\obj\Debug\net7.0\refint\ClefCraft.Infrastructure.dll
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Infrastructure\obj\Debug\net7.0\ClefCraft.Infrastructure.pdb
+C:\TemsaUG\Projects\UnknownProject\ClefCraft.Infrastructure\obj\Debug\net7.0\ref\ClefCraft.Infrastructure.dll

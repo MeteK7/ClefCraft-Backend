@@ -1,0 +1,319 @@
+2024-05-08 10:18:24.860 +03:00 [INF] Now listening on: https://localhost:7287
+2024-05-08 10:18:24.995 +03:00 [INF] Now listening on: http://localhost:5166
+2024-05-08 10:18:25.004 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-05-08 10:18:25.008 +03:00 [INF] Hosting environment: Development
+2024-05-08 10:18:25.012 +03:00 [INF] Content root path: C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api
+2024-05-08 10:19:08.921 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 7248.5958 ms
+2024-05-08 10:21:25.532 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 7.3053 ms
+2024-05-08 10:21:26.011 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 457.6026 ms
+2024-05-08 10:21:31.705 +03:00 [INF] HTTP GET /api/LeaveTypes responded 401 in 58.8057 ms
+2024-05-08 10:21:39.775 +03:00 [INF] HTTP GET /api/LeaveTypes responded 401 in 10.1857 ms
+2024-05-08 10:22:21.419 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 0.5203 ms
+2024-05-08 10:22:21.432 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 3.0619 ms
+2024-05-08 10:22:30.459 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 1.0198 ms
+2024-05-08 10:22:30.502 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 0.7485 ms
+2024-05-08 10:23:21.804 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 1.3146 ms
+2024-05-08 10:24:38.863 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 0.3193 ms
+2024-05-08 10:25:59.636 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 1.0091 ms
+2024-05-08 10:27:51.964 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 0.4820 ms
+2024-05-08 10:27:53.113 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 0.8307 ms
+2024-05-08 10:33:45.100 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 0.9670 ms
+2024-05-08 10:36:34.447 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.1444 ms
+2024-05-08 10:36:35.036 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 497.1329 ms
+2024-05-08 10:36:40.558 +03:00 [INF] HTTP GET /api/LeaveTypes responded 401 in 1.5095 ms
+2024-05-08 10:36:49.345 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 0.0878 ms
+2024-05-08 10:36:49.431 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 0.3543 ms
+2024-05-08 10:38:35.754 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 0.1372 ms
+2024-05-08 10:38:35.768 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 0.3647 ms
+2024-05-08 11:18:16.344 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 1.4567 ms
+2024-05-08 11:18:16.671 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 304.0635 ms
+2024-05-08 11:18:19.431 +03:00 [INF] HTTP GET /api/LeaveTypes responded 401 in 0.5657 ms
+2024-05-08 11:19:39.795 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 0.3014 ms
+2024-05-08 11:19:39.818 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 0.9322 ms
+2024-05-08 11:39:28.645 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 0.5687 ms
+2024-05-08 14:19:59.320 +03:00 [INF] Now listening on: https://localhost:7287
+2024-05-08 14:19:59.383 +03:00 [INF] Now listening on: http://localhost:5166
+2024-05-08 14:19:59.393 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-05-08 14:19:59.396 +03:00 [INF] Hosting environment: Development
+2024-05-08 14:19:59.399 +03:00 [INF] Content root path: C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api
+2024-05-08 14:20:06.397 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 5.9974 ms
+2024-05-08 14:20:08.945 +03:00 [ERR] HTTP POST /api/Auth/login responded 500 in 2533.3092 ms
+ClefCraft.Application.Exceptions.BadRequestException: Credentials for 'admin@localhost.com aren't valid'.
+   at ClefCraft.Identity.Services.AuthService.Login(AuthRequest request) in C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Identity\Services\AuthService.cs:line 43
+   at ClefCraft.Api.Controllers.AuthController.Login(AuthRequest request) in C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api\Controllers\AuthController.cs:line 22
+   at lambda_method6(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2024-05-08 14:20:09.133 +03:00 [ERR] {"Errors":null,"Type":"BadRequestException","Title":"Credentials for 'admin@localhost.com aren't valid'.","Status":400,"Detail":null,"Instance":null,"Extensions":{}}
+ClefCraft.Application.Exceptions.BadRequestException: Credentials for 'admin@localhost.com aren't valid'.
+   at ClefCraft.Identity.Services.AuthService.Login(AuthRequest request) in C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Identity\Services\AuthService.cs:line 43
+   at ClefCraft.Api.Controllers.AuthController.Login(AuthRequest request) in C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api\Controllers\AuthController.cs:line 22
+   at lambda_method6(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at ClefCraft.Api.Middleware.ExceptionMiddleware.InvokeAsync(HttpContext httpContext) in C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api\Middleware\ExceptionMiddleware.cs:line 23
+2024-05-08 14:20:49.491 +03:00 [INF] Now listening on: https://localhost:7287
+2024-05-08 14:20:49.572 +03:00 [INF] Now listening on: http://localhost:5166
+2024-05-08 14:20:49.578 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-05-08 14:20:49.581 +03:00 [INF] Hosting environment: Development
+2024-05-08 14:20:49.583 +03:00 [INF] Content root path: C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api
+2024-05-08 14:21:26.723 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 3079.8377 ms
+2024-05-08 14:21:56.954 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 21.3017 ms
+2024-05-08 14:22:30.843 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 26.3871 ms
+2024-05-08 14:22:31.843 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 3.2924 ms
+2024-05-08 14:33:46.695 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 5.5567 ms
+2024-05-08 14:36:36.688 +03:00 [INF] Now listening on: https://localhost:7287
+2024-05-08 14:36:36.828 +03:00 [INF] Now listening on: http://localhost:5166
+2024-05-08 14:36:36.845 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-05-08 14:36:36.855 +03:00 [INF] Hosting environment: Development
+2024-05-08 14:36:36.870 +03:00 [INF] Content root path: C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api
+2024-05-08 14:37:43.552 +03:00 [ERR] HTTP POST /api/LeaveTypes responded 500 in 24014.7258 ms
+ClefCraft.Application.Exceptions.BadRequestException: Invalid Leave type
+   at ClefCraft.Application.Features.LeaveType.Commands.CreateLeaveType.CreateLeaveTypeCommandHandler.Handle(CreateLeaveTypeCommand request, CancellationToken cancellationToken) in C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Application\Features\LeaveType\Commands\CreateLeaveType\CreateLeaveTypeCommandHandler.cs:line 31
+   at MediatR.Pipeline.RequestExceptionProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at MediatR.Pipeline.RequestExceptionProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at MediatR.Pipeline.RequestExceptionActionProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at MediatR.Pipeline.RequestExceptionActionProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at MediatR.Pipeline.RequestPostProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at MediatR.Pipeline.RequestPreProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at ClefCraft.Api.Controllers.LeaveTypesController.Post(CreateLeaveTypeCommand leaveType) in C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api\Controllers\LeaveTypesController.cs:line 49
+   at lambda_method6(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2024-05-08 14:37:44.880 +03:00 [ERR] {"Errors":{"":["Leave type already exists"]},"Type":"BadRequestException","Title":"Invalid Leave type","Status":400,"Detail":null,"Instance":null,"Extensions":{}}
+ClefCraft.Application.Exceptions.BadRequestException: Invalid Leave type
+   at ClefCraft.Application.Features.LeaveType.Commands.CreateLeaveType.CreateLeaveTypeCommandHandler.Handle(CreateLeaveTypeCommand request, CancellationToken cancellationToken) in C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Application\Features\LeaveType\Commands\CreateLeaveType\CreateLeaveTypeCommandHandler.cs:line 31
+   at MediatR.Pipeline.RequestExceptionProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at MediatR.Pipeline.RequestExceptionProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at MediatR.Pipeline.RequestExceptionActionProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at MediatR.Pipeline.RequestExceptionActionProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at MediatR.Pipeline.RequestPostProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at MediatR.Pipeline.RequestPreProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at ClefCraft.Api.Controllers.LeaveTypesController.Post(CreateLeaveTypeCommand leaveType) in C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api\Controllers\LeaveTypesController.cs:line 49
+   at lambda_method6(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at ClefCraft.Api.Middleware.ExceptionMiddleware.InvokeAsync(HttpContext httpContext) in C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api\Middleware\ExceptionMiddleware.cs:line 23
+2024-05-08 15:03:09.199 +03:00 [INF] Now listening on: https://localhost:7287
+2024-05-08 15:03:09.400 +03:00 [INF] Now listening on: http://localhost:5166
+2024-05-08 15:03:09.451 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-05-08 15:03:09.467 +03:00 [INF] Hosting environment: Development
+2024-05-08 15:03:09.522 +03:00 [INF] Content root path: C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api
+2024-05-08 15:03:44.240 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 10754.6983 ms
+2024-05-08 15:04:45.041 +03:00 [INF] Now listening on: https://localhost:7287
+2024-05-08 15:04:45.757 +03:00 [INF] Now listening on: http://localhost:5166
+2024-05-08 15:04:45.776 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-05-08 15:04:45.784 +03:00 [INF] Hosting environment: Development
+2024-05-08 15:04:45.788 +03:00 [INF] Content root path: C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api
+2024-05-08 15:05:32.534 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 16987.3918 ms
+2024-05-08 15:09:06.988 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 1116.6851 ms
+2024-05-08 15:15:35.430 +03:00 [INF] Now listening on: https://localhost:7287
+2024-05-08 15:15:35.621 +03:00 [INF] Now listening on: http://localhost:5166
+2024-05-08 15:15:35.637 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-05-08 15:15:35.645 +03:00 [INF] Hosting environment: Development
+2024-05-08 15:15:35.653 +03:00 [INF] Content root path: C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api
+2024-05-08 15:17:15.912 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 14.1196 ms
+2024-05-08 15:17:23.832 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 7824.8646 ms
+2024-05-08 15:17:37.255 +03:00 [INF] HTTP GET /api/LeaveTypes responded 401 in 44.5868 ms
+2024-05-08 15:17:56.321 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 1.2796 ms
+2024-05-08 15:17:56.374 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 21.5895 ms
+2024-05-08 15:18:23.405 +03:00 [INF] HTTP GET /api/LeaveTypes responded 401 in 17.0977 ms
+2024-05-08 15:18:38.405 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 0.2189 ms
+2024-05-08 15:18:38.422 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 0.2597 ms
+2024-05-08 15:18:59.624 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 1.0691 ms
+2024-05-08 15:22:55.390 +03:00 [INF] Now listening on: https://localhost:7287
+2024-05-08 15:22:55.479 +03:00 [INF] Now listening on: http://localhost:5166
+2024-05-08 15:22:55.487 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-05-08 15:22:55.491 +03:00 [INF] Hosting environment: Development
+2024-05-08 15:22:55.494 +03:00 [INF] Content root path: C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api
+2024-05-08 15:26:48.636 +03:00 [INF] Now listening on: https://localhost:7287
+2024-05-08 15:26:48.726 +03:00 [INF] Now listening on: http://localhost:5166
+2024-05-08 15:26:48.735 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-05-08 15:26:48.739 +03:00 [INF] Hosting environment: Development
+2024-05-08 15:26:48.742 +03:00 [INF] Content root path: C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api
+2024-05-08 15:27:19.233 +03:00 [INF] Now listening on: https://localhost:7287
+2024-05-08 15:27:19.345 +03:00 [INF] Now listening on: http://localhost:5166
+2024-05-08 15:27:19.363 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-05-08 15:27:19.373 +03:00 [INF] Hosting environment: Development
+2024-05-08 15:27:19.382 +03:00 [INF] Content root path: C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api
+2024-05-08 15:27:55.466 +03:00 [INF] Now listening on: https://localhost:7287
+2024-05-08 15:27:55.550 +03:00 [INF] Now listening on: http://localhost:5166
+2024-05-08 15:27:55.557 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-05-08 15:27:55.561 +03:00 [INF] Hosting environment: Development
+2024-05-08 15:27:55.563 +03:00 [INF] Content root path: C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api
+2024-05-08 15:28:20.909 +03:00 [INF] Now listening on: https://localhost:7287
+2024-05-08 15:28:21.027 +03:00 [INF] Now listening on: http://localhost:5166
+2024-05-08 15:28:21.034 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-05-08 15:28:21.037 +03:00 [INF] Hosting environment: Development
+2024-05-08 15:28:21.040 +03:00 [INF] Content root path: C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api
+2024-05-08 15:32:44.362 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 8.6051 ms
+2024-05-08 15:32:50.298 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 5877.4967 ms
+2024-05-08 15:32:53.719 +03:00 [INF] HTTP GET /api/LeaveTypes responded 401 in 87.1042 ms
+2024-05-08 15:33:00.604 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 1.2400 ms
+2024-05-08 15:33:00.641 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 15.3386 ms
+2024-05-08 15:33:12.889 +03:00 [INF] HTTP GET /api/LeaveRequests responded 401 in 2.4722 ms
+2024-05-08 15:33:15.151 +03:00 [INF] HTTP GET /api/LeaveTypes responded 401 in 2.2862 ms
+2024-05-08 15:33:16.476 +03:00 [INF] HTTP GET /api/LeaveTypes responded 401 in 1.0383 ms
+2024-05-08 16:50:28.521 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 0.8870 ms
+2024-05-08 16:50:28.568 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 1.6471 ms
+2024-05-08 16:51:50.793 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 4.1356 ms
+2024-05-08 16:51:50.874 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 0.3499 ms
+2024-05-08 17:33:43.794 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.7578 ms
+2024-05-08 17:33:44.413 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 602.7910 ms
+2024-05-08 17:33:47.978 +03:00 [INF] HTTP GET /api/LeaveTypes responded 401 in 0.6530 ms
+2024-05-08 17:33:55.204 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 0.4612 ms
+2024-05-08 17:33:55.230 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 0.4327 ms
+2024-05-08 17:34:21.426 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 0.1540 ms
+2024-05-08 17:34:21.471 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 0.4822 ms
+2024-05-08 17:36:32.201 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.6430 ms
+2024-05-08 17:36:32.547 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 321.9559 ms
+2024-05-08 17:36:35.709 +03:00 [INF] HTTP GET /api/LeaveTypes responded 401 in 0.4371 ms
+2024-05-08 17:36:44.362 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 0.0734 ms
+2024-05-08 17:36:44.379 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 0.3475 ms
+2024-05-08 17:43:56.429 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.1326 ms
+2024-05-08 17:43:56.738 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 294.7888 ms
+2024-05-08 17:43:59.890 +03:00 [INF] HTTP GET /api/LeaveTypes responded 401 in 0.7768 ms
+2024-05-08 17:44:37.459 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 0.1091 ms
+2024-05-08 17:44:37.473 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 0.4736 ms
+2024-05-08 17:45:46.411 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.2055 ms
+2024-05-08 17:45:46.894 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 444.2592 ms
+2024-05-08 17:45:50.435 +03:00 [INF] HTTP GET /api/LeaveRequests responded 401 in 0.5350 ms
+2024-05-08 17:47:07.282 +03:00 [INF] Now listening on: https://localhost:7287
+2024-05-08 17:47:07.694 +03:00 [INF] Now listening on: http://localhost:5166
+2024-05-08 17:47:07.705 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-05-08 17:47:07.710 +03:00 [INF] Hosting environment: Development
+2024-05-08 17:47:07.714 +03:00 [INF] Content root path: C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api
+2024-05-08 17:48:30.547 +03:00 [ERR] HTTP POST /api/LeaveTypes responded 500 in 18856.4599 ms
+ClefCraft.Application.Exceptions.BadRequestException: Invalid Leave type
+   at ClefCraft.Application.Features.LeaveType.Commands.CreateLeaveType.CreateLeaveTypeCommandHandler.Handle(CreateLeaveTypeCommand request, CancellationToken cancellationToken) in C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Application\Features\LeaveType\Commands\CreateLeaveType\CreateLeaveTypeCommandHandler.cs:line 31
+   at MediatR.Pipeline.RequestExceptionProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at MediatR.Pipeline.RequestExceptionProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at MediatR.Pipeline.RequestExceptionActionProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at MediatR.Pipeline.RequestExceptionActionProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at MediatR.Pipeline.RequestPostProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at MediatR.Pipeline.RequestPreProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at ClefCraft.Api.Controllers.LeaveTypesController.Post(CreateLeaveTypeCommand leaveType) in C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api\Controllers\LeaveTypesController.cs:line 49
+   at lambda_method6(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2024-05-08 17:48:32.880 +03:00 [ERR] {"Errors":{"":["Leave type already exists"]},"Type":"BadRequestException","Title":"Invalid Leave type","Status":400,"Detail":null,"Instance":null,"Extensions":{}}
+ClefCraft.Application.Exceptions.BadRequestException: Invalid Leave type
+   at ClefCraft.Application.Features.LeaveType.Commands.CreateLeaveType.CreateLeaveTypeCommandHandler.Handle(CreateLeaveTypeCommand request, CancellationToken cancellationToken) in C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Application\Features\LeaveType\Commands\CreateLeaveType\CreateLeaveTypeCommandHandler.cs:line 31
+   at MediatR.Pipeline.RequestExceptionProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at MediatR.Pipeline.RequestExceptionProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at MediatR.Pipeline.RequestExceptionActionProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at MediatR.Pipeline.RequestExceptionActionProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at MediatR.Pipeline.RequestPostProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at MediatR.Pipeline.RequestPreProcessorBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at ClefCraft.Api.Controllers.LeaveTypesController.Post(CreateLeaveTypeCommand leaveType) in C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api\Controllers\LeaveTypesController.cs:line 49
+   at lambda_method6(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at ClefCraft.Api.Middleware.ExceptionMiddleware.InvokeAsync(HttpContext httpContext) in C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api\Middleware\ExceptionMiddleware.cs:line 23
+2024-05-08 17:48:51.688 +03:00 [INF] HTTP POST /api/LeaveTypes responded 201 in 1024.0763 ms
+2024-05-08 17:49:51.233 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 5.3510 ms
+2024-05-08 17:49:53.506 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 2256.1536 ms
+2024-05-08 17:49:56.260 +03:00 [INF] HTTP GET /api/LeaveRequests responded 401 in 41.6816 ms
+2024-05-08 17:49:58.517 +03:00 [INF] Leave types were retrieved successfully.
+2024-05-08 17:49:58.534 +03:00 [INF] HTTP GET /api/LeaveTypes responded 200 in 138.7549 ms
+2024-05-08 17:50:01.828 +03:00 [INF] Leave types were retrieved successfully.
+2024-05-08 17:50:01.838 +03:00 [INF] HTTP GET /api/LeaveTypes responded 200 in 37.3913 ms
+2024-05-08 17:50:30.678 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 1.1676 ms
+2024-05-08 17:50:30.772 +03:00 [INF] HTTP POST /api/LeaveTypes responded 201 in 69.6914 ms
+2024-05-08 17:50:30.902 +03:00 [INF] Leave types were retrieved successfully.
+2024-05-08 17:50:30.907 +03:00 [INF] HTTP GET /api/LeaveTypes responded 200 in 22.2097 ms
+2024-05-08 17:50:37.075 +03:00 [INF] HTTP GET /api/LeaveRequests responded 401 in 27.1526 ms
+2024-05-08 17:50:37.732 +03:00 [INF] Leave types were retrieved successfully.
+2024-05-08 17:50:37.743 +03:00 [INF] HTTP GET /api/LeaveTypes responded 200 in 36.6095 ms
+2024-05-08 17:51:08.066 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 0.1102 ms
+2024-05-08 17:51:08.254 +03:00 [INF] HTTP POST /api/LeaveTypes responded 201 in 147.1404 ms
+2024-05-08 17:51:08.339 +03:00 [INF] Leave types were retrieved successfully.
+2024-05-08 17:51:08.343 +03:00 [INF] HTTP GET /api/LeaveTypes responded 200 in 17.9101 ms
+2024-05-08 17:51:44.637 +03:00 [INF] Now listening on: https://localhost:7287
+2024-05-08 17:51:44.729 +03:00 [INF] Now listening on: http://localhost:5166
+2024-05-08 17:51:44.736 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-05-08 17:51:44.739 +03:00 [INF] Hosting environment: Development
+2024-05-08 17:51:44.742 +03:00 [INF] Content root path: C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api
+2024-05-08 17:52:21.791 +03:00 [INF] Now listening on: https://localhost:7287
+2024-05-08 17:52:21.879 +03:00 [INF] Now listening on: http://localhost:5166
+2024-05-08 17:52:21.888 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-05-08 17:52:21.892 +03:00 [INF] Hosting environment: Development
+2024-05-08 17:52:21.895 +03:00 [INF] Content root path: C:\TemsaUG\Projects\TutorialProjects\ClefCraft.Clean\ClefCraft.Api
+2024-05-08 17:53:56.230 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 16.3827 ms
+2024-05-08 17:54:05.014 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 8754.1178 ms
+2024-05-08 17:54:08.775 +03:00 [INF] HTTP GET /api/LeaveTypes responded 401 in 42.7379 ms
+2024-05-08 17:54:23.548 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 4.7656 ms
+2024-05-08 17:54:23.590 +03:00 [INF] HTTP POST /api/LeaveTypes responded 401 in 12.5615 ms
+2024-05-08 17:54:32.744 +03:00 [INF] HTTP GET /api/LeaveRequests responded 401 in 11.9182 ms
