@@ -10,6 +10,6 @@ namespace ClefCraft.Domain
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public List<BoardTask> BoardTasks { get; set; }
+        public List<BoardItem> BoardItems { get; set; }
     }
 }

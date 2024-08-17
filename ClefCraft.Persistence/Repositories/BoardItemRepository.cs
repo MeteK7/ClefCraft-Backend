@@ -11,21 +11,21 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Persistence.Repositories
 {
-    public class BoardTaskRepository : IBoardTaskRepository
+    public class BoardItemRepository : IBoardItemRepository
     {
         private readonly ClefCraftDatabaseContext _context;
 
-        public BoardTaskRepository(ClefCraftDatabaseContext context)
+        public BoardItemRepository(ClefCraftDatabaseContext context)
         {
             _context = context;
         }
-        public async Task<List<BoardColumn>> GetBoardColumnsWithBoardTasks()
+        public async Task<List<BoardColumn>> GetBoardColumnsWithBoardItems()
         {
-            return await _context.BoardColumns.Include(c => c.BoardTasks).ToListAsync();
+            return await _context.BoardColumns.Include(c => c.BoardItems).ToListAsync();
         }
-        public async Task AddBoardTask(BoardTask boardTask)
+        public async Task AddBoardItem(BoardItem boardItem)
         {
-            await _context.BoardTasks.AddAsync(boardTask);
+            await _context.BoardItems.AddAsync(boardItem);
             await _context.SaveChangesAsync();
         }
     }

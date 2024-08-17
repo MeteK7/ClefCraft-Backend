@@ -47,7 +47,7 @@ namespace ClefCraft.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BoardTasks",
+                name: "BoardItems",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -63,9 +63,9 @@ namespace ClefCraft.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BoardTasks", x => x.Id);
+                    table.PrimaryKey("PK_BoardItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BoardTasks_BoardColumns_BoardColumnId",
+                        name: "FK_BoardItems_BoardColumns_BoardColumnId",
                         column: x => x.BoardColumnId,
                         principalTable: "BoardColumns",
                         principalColumn: "Id",
@@ -131,11 +131,11 @@ namespace ClefCraft.Persistence.Migrations
             migrationBuilder.InsertData(
                 table: "LeaveTypes",
                 columns: new[] { "Id", "CreatedBy", "DateCreated", "DateModified", "DefaultDays", "ModifiedBy", "Name" },
-                values: new object[] { 1, null, new DateTime(2024, 6, 25, 14, 20, 39, 847, DateTimeKind.Local).AddTicks(7075), new DateTime(2024, 6, 25, 14, 20, 39, 847, DateTimeKind.Local).AddTicks(7088), 10, null, "Vacation" });
+                values: new object[] { 1, null, new DateTime(2024, 6, 25, 17, 37, 0, 631, DateTimeKind.Local).AddTicks(7987), new DateTime(2024, 6, 25, 17, 37, 0, 631, DateTimeKind.Local).AddTicks(8020), 10, null, "Vacation" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_BoardTasks_BoardColumnId",
-                table: "BoardTasks",
+                name: "IX_BoardItems_BoardColumnId",
+                table: "BoardItems",
                 column: "BoardColumnId");
 
             migrationBuilder.CreateIndex(
@@ -153,7 +153,7 @@ namespace ClefCraft.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BoardTasks");
+                name: "BoardItems");
 
             migrationBuilder.DropTable(
                 name: "LeaveAllocations");

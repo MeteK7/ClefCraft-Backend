@@ -8667,23 +8667,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\mete.kaba\\.nuget\\packages\\": {},
+    "C:\\Users\\MeteK\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\TemsaUG\\Projects\\UnknownProject\\ClefCraft.Persistence.IntegrationTests\\ClefCraft.Persistence.IntegrationTests.csproj",
+      "projectUniqueName": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence.IntegrationTests\\ClefCraft.Persistence.IntegrationTests.csproj",
       "projectName": "ClefCraft.Persistence.IntegrationTests",
-      "projectPath": "C:\\TemsaUG\\Projects\\UnknownProject\\ClefCraft.Persistence.IntegrationTests\\ClefCraft.Persistence.IntegrationTests.csproj",
-      "packagesPath": "C:\\Users\\mete.kaba\\.nuget\\packages\\",
-      "outputPath": "C:\\TemsaUG\\Projects\\UnknownProject\\ClefCraft.Persistence.IntegrationTests\\obj\\",
+      "projectPath": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence.IntegrationTests\\ClefCraft.Persistence.IntegrationTests.csproj",
+      "packagesPath": "C:\\Users\\MeteK\\.nuget\\packages\\",
+      "outputPath": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence.IntegrationTests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\mete.kaba\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\MeteK\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -8692,18 +8692,17 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "http://nuget.caretta.net/nuget": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\TemsaUG\\Projects\\UnknownProject\\ClefCraft.Application\\ClefCraft.Application.csproj": {
-              "projectPath": "C:\\TemsaUG\\Projects\\UnknownProject\\ClefCraft.Application\\ClefCraft.Application.csproj"
+            "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\ClefCraft.Application.csproj": {
+              "projectPath": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\ClefCraft.Application.csproj"
             },
-            "C:\\TemsaUG\\Projects\\UnknownProject\\ClefCraft.Persistence\\ClefCraft.Persistence.csproj": {
-              "projectPath": "C:\\TemsaUG\\Projects\\UnknownProject\\ClefCraft.Persistence\\ClefCraft.Persistence.csproj"
+            "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\ClefCraft.Persistence.csproj": {
+              "projectPath": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\ClefCraft.Persistence.csproj"
             }
           }
         }
@@ -8712,6 +8711,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -8767,16 +8771,8 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1803",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "You are running the 'restore' operation with an 'HTTP' source, 'http://nuget.caretta.net/nuget'. Non-HTTPS access will be removed in a future version. Consider migrating to an 'HTTPS' source."
-    }
-  ]
+  }
 }

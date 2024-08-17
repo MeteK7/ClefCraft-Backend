@@ -1,15 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "kPif5kr6ro9CE/rwQ/wuKSL3DKeHMN2hBDvcXlDaK7yzq2CE8508tFRhkdV9Nf35ubgy1wBzCTpxchbFmmKRgg==",
+  "dgSpecHash": "UOVbx9EqEOLorppGVeRFgUZ7uFmvrMr9z5Y5gSexIh6fNBIyoQQgUMVq8RGkcYQ7FOICd+BrFfI+xKPlIilYpA==",
   "success": true,
-  "projectFilePath": "C:\\TemsaUG\\Projects\\UnknownProject\\ClefCraft.Domain\\ClefCraft.Domain.csproj",
+  "projectFilePath": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Domain\\ClefCraft.Domain.csproj",
   "expectedPackageFiles": [],
-  "logs": [
-    {
-      "code": "NU1803",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "You are running the 'restore' operation with an 'HTTP' source, 'http://nuget.caretta.net/nuget'. Non-HTTPS access will be removed in a future version. Consider migrating to an 'HTTPS' source."
-    }
-  ]
+  "logs": []
 }

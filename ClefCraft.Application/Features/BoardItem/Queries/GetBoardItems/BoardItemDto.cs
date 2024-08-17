@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ClefCraft.Application.Features.BoardTask.Queries.GetBoardTasks
+namespace ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems
 {
-    public class BoardTaskDto
+    public class BoardItemDto
     {
         public int Id { get; set; }
         public string Title { get; set; }

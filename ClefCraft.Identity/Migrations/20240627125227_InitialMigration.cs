@@ -174,8 +174,8 @@ namespace ClefCraft.Identity.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "944d0156-cb3d-466f-a1ea-5f53e3a10f8e", 0, "f4167ae1-f8d5-4944-b83f-5c5d47fa97e7", "admin@localhost.com", true, "System", "Admin", false, null, "ADMIN@LOCALHOST.COM", "ADMIN@LOCALHOST.COM", "AQAAAAIAAYagAAAAEINxcZgXzL2aIgRwWVzc8xGk3T2UIlULYI6vXxlrR88x52L2guRyeE0zXacfL/XKlw==", null, false, "900437af-2f3e-449d-97ad-db6b5d4f8a96", false, "admin@localhost.com" },
-                    { "9e224968-33e4-4652-b7b7-8574d048cdb9", 0, "b6bdf05a-f9a0-4650-b18b-7f6a7d5951ce", "user@localhost.com", true, "System", "User", false, null, "USER@LOCALHOST.COM", "USER@LOCALHOST.COM", "AQAAAAIAAYagAAAAEK4EunNQcNWpZV9QgpsuSC+mGQLyYftLLLzUFbB1ymb2bHn8ggwJhxZsxagxjRnvqA==", null, false, "05c28d58-7587-402c-a034-494ab49aeecd", false, "user@localhost.com" }
+                    { "944d0156-cb3d-466f-a1ea-5f53e3a10f8e", 0, "7650df90-636f-431d-b71c-5b0c64902340", "admin@localhost.com", true, "System", "Admin", false, null, "ADMIN@LOCALHOST.COM", "ADMIN@LOCALHOST.COM", "AQAAAAIAAYagAAAAECi43/Hm4Yuvfqm/vbcjvCGj46p3rnV2O3tzX0WRwrS7UEStPgxlsgEWti+ttJ9voQ==", null, false, "b39b7fc6-82df-4354-bbf5-7b87c32d79a0", false, "admin@localhost.com" },
+                    { "9e224968-33e4-4652-b7b7-8574d048cdb9", 0, "13743291-af17-4ea9-894d-db1b37e3f71f", "user@localhost.com", true, "System", "User", false, null, "USER@LOCALHOST.COM", "USER@LOCALHOST.COM", "AQAAAAIAAYagAAAAEG6onvgJ5ZHUfTTuxZSNDXYoA1pSN9G66YwzhSC8zT4qOK/Smhu6lLYYWddVGwBkdQ==", null, false, "b2bee395-c49d-4cf1-afb6-99cffe861994", false, "user@localhost.com" }
                 });
 
             migrationBuilder.InsertData(

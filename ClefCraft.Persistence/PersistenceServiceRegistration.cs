@@ -21,7 +21,7 @@ namespace ClefCraft.Persistence
             services.AddScoped<ILeaveAllocationRepository, LeaveAllocationRepository>();
             services.AddScoped<ILeaveRequestRepository, LeaveRequestRepository>();
             //services.AddScoped<IBoardColumnRepository, BoardColumnRepository>();
-            services.AddScoped<IBoardTaskRepository, BoardTaskRepository>();
+            services.AddScoped<IBoardItemRepository, BoardItemRepository>();
 
             return services;
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ClefCraft.Application.Features.BoardTask.Queries.GetBoardTasks;
+using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems;
 
 namespace ClefCraft.Application.Features.BoardColumn.Queries.GetBoardColumns
 {
@@ -11,6 +11,6 @@ namespace ClefCraft.Application.Features.BoardColumn.Queries.GetBoardColumns
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public List<BoardTaskDto> BoardTasks { get; set; }
+        public List<BoardItemDto> BoardItems { get; set; }
     }
 }

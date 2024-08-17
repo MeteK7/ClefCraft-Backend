@@ -10,3 +10,35 @@
 2024-06-25 14:22:48.484 +03:00 [INF] Content root path: C:\TemsaUG\Projects\UnknownProject\ClefCraft.Api
 2024-06-25 14:24:19.629 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 7.8642 ms
 2024-06-25 14:24:24.198 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 4553.2554 ms
+2024-06-25 14:34:02.417 +03:00 [INF] HTTP OPTIONS /api/Auth/register responded 204 in 7.1145 ms
+2024-06-25 14:34:02.500 +03:00 [INF] HTTP POST /api/Auth/register responded 400 in 40.8450 ms
+2024-06-25 14:34:40.457 +03:00 [INF] HTTP OPTIONS /api/Auth/register responded 204 in 0.0918 ms
+2024-06-25 14:34:40.486 +03:00 [INF] HTTP POST /api/Auth/register responded 400 in 15.4912 ms
+2024-06-25 14:35:14.114 +03:00 [INF] HTTP OPTIONS /api/Auth/register responded 204 in 0.0874 ms
+2024-06-25 14:35:14.123 +03:00 [INF] HTTP POST /api/Auth/register responded 400 in 0.7149 ms
+2024-06-25 14:35:43.147 +03:00 [INF] HTTP OPTIONS /api/Auth/register responded 204 in 0.6591 ms
+2024-06-25 14:35:43.164 +03:00 [INF] HTTP POST /api/Auth/register responded 400 in 1.0856 ms
+2024-06-25 14:44:39.759 +03:00 [INF] HTTP OPTIONS /api/Auth/register responded 204 in 0.2234 ms
+2024-06-25 14:44:39.778 +03:00 [INF] HTTP POST /api/Auth/register responded 400 in 1.0443 ms
+2024-06-25 14:45:11.597 +03:00 [INF] HTTP OPTIONS /api/Auth/register responded 204 in 0.1333 ms
+2024-06-25 14:45:11.614 +03:00 [INF] HTTP POST /api/Auth/register responded 400 in 0.9349 ms
+2024-06-25 14:45:50.102 +03:00 [INF] HTTP OPTIONS /api/Auth/register responded 204 in 0.0949 ms
+2024-06-25 14:45:50.118 +03:00 [INF] HTTP POST /api/Auth/register responded 400 in 1.0716 ms
+2024-06-25 14:45:52.322 +03:00 [INF] HTTP POST /api/Auth/register responded 400 in 0.8176 ms
+2024-06-25 14:46:14.484 +03:00 [INF] HTTP OPTIONS /api/Auth/register responded 204 in 0.0532 ms
+2024-06-25 14:46:14.500 +03:00 [INF] HTTP POST /api/Auth/register responded 400 in 1.0855 ms
+2024-06-25 14:47:25.513 +03:00 [INF] HTTP OPTIONS /api/Auth/register responded 204 in 0.1553 ms
+2024-06-25 14:47:25.537 +03:00 [INF] HTTP POST /api/Auth/register responded 400 in 7.5113 ms
+2024-06-25 14:47:32.973 +03:00 [INF] HTTP OPTIONS /api/Auth/register responded 204 in 0.6204 ms
+2024-06-25 14:47:32.980 +03:00 [INF] HTTP POST /api/Auth/register responded 400 in 0.8756 ms
+2024-06-25 14:47:39.130 +03:00 [INF] HTTP OPTIONS /api/Auth/register responded 204 in 0.0709 ms
+2024-06-25 14:47:39.135 +03:00 [INF] HTTP POST /api/Auth/register responded 400 in 0.6901 ms
+2024-06-25 14:50:35.707 +03:00 [INF] HTTP OPTIONS /api/Auth/register responded 204 in 0.0960 ms
+2024-06-25 14:50:35.723 +03:00 [INF] HTTP POST /api/Auth/register responded 400 in 0.9732 ms
+2024-06-25 14:56:12.680 +03:00 [INF] HTTP OPTIONS /api/Auth/register responded 204 in 0.1223 ms
+2024-06-25 14:56:12.706 +03:00 [INF] HTTP POST /api/Auth/register responded 400 in 2.8256 ms
+2024-06-25 17:34:41.793 +03:00 [INF] Now listening on: https://localhost:7287
+2024-06-25 17:34:41.988 +03:00 [INF] Now listening on: http://localhost:5166
+2024-06-25 17:34:42.079 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-06-25 17:34:42.202 +03:00 [INF] Hosting environment: Development
+2024-06-25 17:34:42.242 +03:00 [INF] Content root path: C:\TemsaUG\Projects\UnknownProject\ClefCraft.Api

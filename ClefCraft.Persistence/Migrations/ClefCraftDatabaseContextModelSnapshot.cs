@@ -51,7 +51,7 @@ namespace ClefCraft.Persistence.Migrations
                     b.ToTable("BoardColumns");
                 });
 
-            modelBuilder.Entity("ClefCraft.Domain.BoardTask", b =>
+            modelBuilder.Entity("ClefCraft.Domain.BoardItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -90,7 +90,7 @@ namespace ClefCraft.Persistence.Migrations
 
                     b.HasIndex("BoardColumnId");
 
-                    b.ToTable("BoardTasks");
+                    b.ToTable("BoardItems");
                 });
 
             modelBuilder.Entity("ClefCraft.Domain.LeaveAllocation", b =>
@@ -221,17 +221,17 @@ namespace ClefCraft.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2024, 6, 25, 14, 20, 39, 847, DateTimeKind.Local).AddTicks(7075),
-                            DateModified = new DateTime(2024, 6, 25, 14, 20, 39, 847, DateTimeKind.Local).AddTicks(7088),
+                            DateCreated = new DateTime(2024, 6, 27, 15, 57, 30, 676, DateTimeKind.Local).AddTicks(3208),
+                            DateModified = new DateTime(2024, 6, 27, 15, 57, 30, 676, DateTimeKind.Local).AddTicks(3221),
                             DefaultDays = 10,
                             Name = "Vacation"
                         });
                 });
 
-            modelBuilder.Entity("ClefCraft.Domain.BoardTask", b =>
+            modelBuilder.Entity("ClefCraft.Domain.BoardItem", b =>
                 {
                     b.HasOne("ClefCraft.Domain.BoardColumn", "BoardColumn")
-                        .WithMany("BoardTasks")
+                        .WithMany("BoardItems")
                         .HasForeignKey("BoardColumnId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -263,7 +263,7 @@ namespace ClefCraft.Persistence.Migrations
 
             modelBuilder.Entity("ClefCraft.Domain.BoardColumn", b =>
                 {
-                    b.Navigation("BoardTasks");
+                    b.Navigation("BoardItems");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,18 +1,17 @@
-﻿using ClefCraft.Domain.Common;
+﻿using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ClefCraft.Domain
+namespace ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem
 {
-    public class BoardTask : BaseEntity
+    public class CreateBoardItemCommand : IRequest<BoardItemDto>
     {
         public string Title { get; set; }
         public string Description { get; set; }
-        public string Status { get; set; }
         public int BoardColumnId { get; set; }
-        public BoardColumn BoardColumn { get; set; }
     }
 }

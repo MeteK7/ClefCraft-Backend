@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Application.Contracts.Persistence
 {
-    public interface IBoardTaskRepository
+    public interface IBoardItemRepository
     {
-        Task<List<BoardColumn>> GetBoardColumnsWithBoardTasks();
-        Task AddBoardTask(BoardTask boardTask);
+        Task<List<BoardColumn>> GetBoardColumnsWithBoardItems();
+        Task AddBoardItem(BoardItem BoardItem);
     }
 }

@@ -24,7 +24,7 @@ namespace ClefCraft.Persistence.DatabaseContext
         public DbSet<LeaveAllocation> LeaveAllocations { get; set; }
         public DbSet<LeaveRequest> LeaveRequests { get; set; }
         public DbSet<BoardColumn> BoardColumns { get; set; }
-        public DbSet<BoardTask> BoardTasks { get; set; }
+        public DbSet<BoardItem> BoardItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

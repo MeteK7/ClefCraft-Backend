@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ClefCraft.Application.Features.BoardTask.Queries.GetBoardTasks
+namespace ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems
 {
-    public class GetBoardTasksQuery : IRequest<List<BoardColumnDto>> { }
+    public class GetBoardItemsQuery : IRequest<List<BoardColumnDto>> { }
 }
