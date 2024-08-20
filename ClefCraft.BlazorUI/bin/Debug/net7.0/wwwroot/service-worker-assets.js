@@ -73,6 +73,10 @@
       "url": "sample-data\/weather.json"
     },
     {
+      "hash": "sha256-lOCs45frNf+D7me6lKLgUhRCdt4VwHCp9H6Ct+YWzfs=",
+      "url": "_framework\/blazor.webassembly.js"
+    },
+    {
       "hash": "sha256-iMJHFY1US5OMMbM5iv0qVC7ORZiYFYVhEYVyhPZgMZ0=",
       "url": "ClefCraft.BlazorUI.styles.css"
     },
@@ -889,20 +893,12 @@
       "url": "_framework\/System.Private.CoreLib.dll"
     },
     {
-      "hash": "sha256-qJB30QURoyH3y3WyayHu6nMFIx2XNOkXCez7tagGpvE=",
-      "url": "_framework\/dotnet.7.0.10.semk2rypt7.js"
-    },
-    {
       "hash": "sha256-pf9chcB37Cf13KuuvScsozomnAUanMeCfvDr9Wqofh8=",
       "url": "_framework\/dotnet.timezones.blat"
     },
     {
       "hash": "sha256-gdnUvePnfbvTJDGtaK1+TnCtuTiC5NZjlYZ9kgEpMO0=",
       "url": "_framework\/dotnet.wasm"
-    },
-    {
-      "hash": "sha256-tO5O5YzMTVSaKBboxAqezOQL9ewmupzV2JrB5Rkc8a4=",
-      "url": "_framework\/icudt.dat"
     },
     {
       "hash": "sha256-SZLtQnRc0JkwqHab0VUVP7T3uBPSeYzxzDnpxPpUnHk=",
@@ -917,20 +913,20 @@
       "url": "_framework\/icudt_no_CJK.dat"
     },
     {
-      "hash": "sha256-4V\/4lcXln3yiiwr4vwKdoJGDMQ+P6QW0gZLyfIR5Dig=",
+      "hash": "sha256-Mw0bpjT0Tp2309156GdEuxLOIeisqUtrffIJ61hflEc=",
       "url": "_framework\/ClefCraft.BlazorUI.dll"
     },
     {
-      "hash": "sha256-ukRvAXCmNZcoIUcA7JMTKhU7Kvu0C8pK1YbBLE4b9iY=",
+      "hash": "sha256-Kq2lN7CJhkOx329eYMgR51z4IV2uGNXJSIS2HXnlg7M=",
       "url": "_framework\/ClefCraft.BlazorUI.pdb"
     },
     {
-      "hash": "sha256-lOCs45frNf+D7me6lKLgUhRCdt4VwHCp9H6Ct+YWzfs=",
-      "url": "_framework\/blazor.webassembly.js"
+      "hash": "sha256-yEpFq+UWrRKGRWtS3O2aJz3iHyp2\/3m7GvDizh4vT8Q=",
+      "url": "_framework\/blazor.boot.json"
     },
     {
-      "hash": "sha256-sLxt+O6cEsgiLUVX9svxyv2jBn9ux4lITC8M+nmJ20g=",
-      "url": "_framework\/blazor.boot.json"
+      "hash": "sha256-4BiArKugJJtpQrznGF5zWfmJ2TB98+p6rKsyoqhtMk4=",
+      "url": "_framework\/dotnet.7.0.16.apob2ouu30.js"
     },
     {
       "hash": "sha256-77r6EoPx0vDQng2q8f7vrx5MGk1pwoGzkEyD4cLOcqE=",
@@ -941,5 +937,5 @@
       "url": "_content\/Blazored.Toast\/Blazored.Toast.bundle.scp.css"
     }
   ],
-  "version": "9NEhdcBM"
+  "version": "5WUNH+FI"
 };

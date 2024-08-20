@@ -221,8 +221,8 @@ namespace ClefCraft.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2024, 6, 27, 15, 57, 30, 676, DateTimeKind.Local).AddTicks(3208),
-                            DateModified = new DateTime(2024, 6, 27, 15, 57, 30, 676, DateTimeKind.Local).AddTicks(3221),
+                            DateCreated = new DateTime(2024, 8, 17, 22, 19, 17, 6, DateTimeKind.Local).AddTicks(8454),
+                            DateModified = new DateTime(2024, 8, 17, 22, 19, 17, 6, DateTimeKind.Local).AddTicks(8468),
                             DefaultDays = 10,
                             Name = "Vacation"
                         });
