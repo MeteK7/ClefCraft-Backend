@@ -1,7 +1,6 @@
 ﻿using ClefCraft.Application.Features.BoardColumn.Queries.GetBoardColumns;
 using ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems;
-using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
