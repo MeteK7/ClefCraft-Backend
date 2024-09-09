@@ -99,7 +99,7 @@ namespace ClefCraft.Identity.Migrations
                         {
                             Id = "944d0156-cb3d-466f-a1ea-5f53e3a10f8e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7650df90-636f-431d-b71c-5b0c64902340",
+                            ConcurrencyStamp = "ec5e5036-8566-4b7f-b959-d8c8f4dbba42",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -107,9 +107,9 @@ namespace ClefCraft.Identity.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAECi43/Hm4Yuvfqm/vbcjvCGj46p3rnV2O3tzX0WRwrS7UEStPgxlsgEWti+ttJ9voQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPKBfVJEfvV6wVCC7q7RcCMvzPdKb8qjkXJ/aTg9KFcMVX1h/txPp8Y1Tye2/5AggA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b39b7fc6-82df-4354-bbf5-7b87c32d79a0",
+                            SecurityStamp = "0026650b-5a77-4520-bb60-6a3c0b030e4a",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         },
@@ -117,7 +117,7 @@ namespace ClefCraft.Identity.Migrations
                         {
                             Id = "9e224968-33e4-4652-b7b7-8574d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "13743291-af17-4ea9-894d-db1b37e3f71f",
+                            ConcurrencyStamp = "0babed99-c4cb-4afd-9232-ee5d9656c66e",
                             Email = "user@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -125,9 +125,9 @@ namespace ClefCraft.Identity.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@LOCALHOST.COM",
                             NormalizedUserName = "USER@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEG6onvgJ5ZHUfTTuxZSNDXYoA1pSN9G66YwzhSC8zT4qOK/Smhu6lLYYWddVGwBkdQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPc1cFvFVmaA1jVAtr8tvK/t1KQz0VlYX6cl/EQtHNMIQxligc/V2R4Ml6Ofpaq4fA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b2bee395-c49d-4cf1-afb6-99cffe861994",
+                            SecurityStamp = "9384d9e4-db78-4630-aef1-6ec3d7a1d2b5",
                             TwoFactorEnabled = false,
                             UserName = "user@localhost.com"
                         });

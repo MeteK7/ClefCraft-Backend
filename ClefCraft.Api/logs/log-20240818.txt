@@ -1,0 +1,2 @@
+2024-08-18 09:40:09.597 +03:00 [INF] HTTP GET /api/BoardItems responded 200 in 68.1793 ms
+2024-08-18 09:40:09.606 +03:00 [INF] HTTP GET /api/BoardItems responded 200 in 6.0664 ms

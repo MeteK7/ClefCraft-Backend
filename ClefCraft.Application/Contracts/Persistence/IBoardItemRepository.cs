@@ -10,6 +10,8 @@ namespace ClefCraft.Application.Contracts.Persistence
     public interface IBoardItemRepository
     {
         Task<List<BoardColumn>> GetBoardColumnsWithBoardItems();
+        Task<BoardItem> GetBoardItemById(int id);
         Task AddBoardItem(BoardItem BoardItem);
+        Task UpdateBoardItem(BoardItem BoardItem);
     }
 }

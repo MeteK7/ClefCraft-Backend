@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ClefCraft.Persistence.IntegrationTests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d4da3c6f3375d3c89dc20fd26fbd0ff7f51d4121")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+419e388ab8eb363372f72c23b10a67956dd763ed")]
 [assembly: System.Reflection.AssemblyProductAttribute("ClefCraft.Persistence.IntegrationTests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ClefCraft.Persistence.IntegrationTests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
