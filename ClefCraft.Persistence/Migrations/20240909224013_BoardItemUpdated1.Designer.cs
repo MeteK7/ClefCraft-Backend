@@ -4,6 +4,7 @@ using ClefCraft.Persistence.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClefCraft.Persistence.Migrations
 {
     [DbContext(typeof(ClefCraftDatabaseContext))]
-    partial class ClefCraftDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240909224013_BoardItemUpdated1")]
+    partial class BoardItemUpdated1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,8 +222,8 @@ namespace ClefCraft.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2024, 9, 10, 1, 45, 6, 477, DateTimeKind.Local).AddTicks(2233),
-                            DateModified = new DateTime(2024, 9, 10, 1, 45, 6, 477, DateTimeKind.Local).AddTicks(2247),
+                            DateCreated = new DateTime(2024, 9, 10, 1, 40, 13, 278, DateTimeKind.Local).AddTicks(5083),
+                            DateModified = new DateTime(2024, 9, 10, 1, 40, 13, 278, DateTimeKind.Local).AddTicks(5098),
                             DefaultDays = 10,
                             Name = "Vacation"
                         });

@@ -23,6 +23,11 @@ namespace ClefCraft.Persistence.Repositories
         {
             return await _context.BoardColumns.Include(c => c.BoardItems).ToListAsync();
         }
+        public async Task<BoardItem> GetBoardItemById(int id)
+        {
+            return await _context.BoardItems.FirstOrDefaultAsync(bi => bi.Id == id);
+        }
+
         public async Task AddBoardItem(BoardItem boardItem)
         {
             await _context.BoardItems.AddAsync(boardItem);
@@ -34,6 +39,20 @@ namespace ClefCraft.Persistence.Repositories
             {
                 // Log the exception or inspect ex.InnerException for more details
                 throw new ApplicationException("An error occurred while saving the BoardItem", ex);
+            }
+        }
+
+        public async Task UpdateBoardItem(BoardItem boardItem)
+        {
+            _context.BoardItems.Update(boardItem); // Mark the entity as modified
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new ApplicationException("An error occurred while updating the BoardItem", ex);
             }
         }
     }
