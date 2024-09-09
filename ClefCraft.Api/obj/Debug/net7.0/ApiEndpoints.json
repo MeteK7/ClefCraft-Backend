@@ -73,8 +73,34 @@
   },
   {
     "ContainingType": "ClefCraft.Api.Controllers.BoardItemsController",
+    "Method": "GetBoardItemById",
+    "RelativePath": "api/BoardItems/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems.BoardItemDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "ClefCraft.Api.Controllers.BoardItemsController",
     "Method": "Create",
-    "RelativePath": "api/BoardItems",
+    "RelativePath": "api/BoardItems/Create",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -82,6 +108,32 @@
       {
         "Name": "command",
         "Type": "ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem.CreateBoardItemCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems.BoardItemDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "ClefCraft.Api.Controllers.BoardItemsController",
+    "Method": "SwitchColumn",
+    "RelativePath": "api/BoardItems/SwitchColumn",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "command",
+        "Type": "ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem.UpdateBoardItemCommand",
         "IsRequired": true
       }
     ],
