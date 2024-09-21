@@ -3,14 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ClefCraft.Domain
 {
-    public class BoardColumn : BaseEntity
+    public class Board:BaseEntity
     {
         public int Id { get; set; }
-        public int IdBoard { get; set; }
         public string Title { get; set; }
-        public List<BoardItem> BoardItems { get; set; }
+        public List<BoardColumn> BoardColumns { get; set; }
     }
 }
