@@ -125,6 +125,32 @@
   },
   {
     "ContainingType": "ClefCraft.Api.Controllers.BoardItemsController",
+    "Method": "GetBoardItemsByBoardId",
+    "RelativePath": "api/BoardItems/GetBoardItemsByBoardId/{boardId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "boardId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[ClefCraft.Application.Features.BoardColumn.Queries.GetBoardColumns.BoardColumnDto, ClefCraft.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "ClefCraft.Api.Controllers.BoardItemsController",
     "Method": "SwitchColumn",
     "RelativePath": "api/BoardItems/SwitchColumn",
     "HttpMethod": "POST",
@@ -140,6 +166,26 @@
     "ReturnTypes": [
       {
         "Type": "ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems.BoardItemDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "ClefCraft.Api.Controllers.BoardsController",
+    "Method": "Get",
+    "RelativePath": "api/Boards",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[ClefCraft.Application.Features.Board.Queries.GetBoards.BoardDto, ClefCraft.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",

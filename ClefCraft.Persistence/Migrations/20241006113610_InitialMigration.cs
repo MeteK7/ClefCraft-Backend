@@ -12,7 +12,7 @@ namespace ClefCraft.Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "BoardColumns",
+                name: "Boards",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -25,7 +25,7 @@ namespace ClefCraft.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BoardColumns", x => x.Id);
+                    table.PrimaryKey("PK_Boards", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -47,15 +47,13 @@ namespace ClefCraft.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BoardItems",
+                name: "BoardColumns",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    BoardId = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BoardColumnId = table.Column<int>(type: "int", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateModified = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -63,11 +61,11 @@ namespace ClefCraft.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BoardItems", x => x.Id);
+                    table.PrimaryKey("PK_BoardColumns", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BoardItems_BoardColumns_BoardColumnId",
-                        column: x => x.BoardColumnId,
-                        principalTable: "BoardColumns",
+                        name: "FK_BoardColumns_Boards_BoardId",
+                        column: x => x.BoardId,
+                        principalTable: "Boards",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -128,10 +126,41 @@ namespace ClefCraft.Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "BoardItems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BoardColumnId = table.Column<int>(type: "int", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BoardItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BoardItems_BoardColumns_BoardColumnId",
+                        column: x => x.BoardColumnId,
+                        principalTable: "BoardColumns",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "LeaveTypes",
                 columns: new[] { "Id", "CreatedBy", "DateCreated", "DateModified", "DefaultDays", "ModifiedBy", "Name" },
-                values: new object[] { 1, null, new DateTime(2024, 6, 25, 17, 37, 0, 631, DateTimeKind.Local).AddTicks(7987), new DateTime(2024, 6, 25, 17, 37, 0, 631, DateTimeKind.Local).AddTicks(8020), 10, null, "Vacation" });
+                values: new object[] { 1, null, new DateTime(2024, 10, 6, 14, 36, 10, 399, DateTimeKind.Local).AddTicks(4577), new DateTime(2024, 10, 6, 14, 36, 10, 399, DateTimeKind.Local).AddTicks(4592), 10, null, "Vacation" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BoardColumns_BoardId",
+                table: "BoardColumns",
+                column: "BoardId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BoardItems_BoardColumnId",
@@ -166,6 +195,9 @@ namespace ClefCraft.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "LeaveTypes");
+
+            migrationBuilder.DropTable(
+                name: "Boards");
         }
     }
 }

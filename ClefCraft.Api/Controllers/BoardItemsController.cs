@@ -18,12 +18,12 @@ namespace ClefCraft.Api.Controllers
         {
             _mediator = mediator;
         }
-        //GET: api/<ItemsController>
+        //GET: api/<ItemsController> 
         [HttpGet]
         public async Task<ActionResult<List<BoardColumnDto>>> Get()
         {
-            var BoardColumns = await _mediator.Send(new GetBoardItemsQuery());
-            return Ok(BoardColumns);
+            var boardColumns = await _mediator.Send(new GetBoardItemsQuery());
+            return Ok(boardColumns);
         }
 
         [HttpGet("{id}")]
@@ -35,6 +35,13 @@ namespace ClefCraft.Api.Controllers
                 return NotFound();
             }
             return Ok(boardItem);
+        }
+
+        [HttpGet("GetBoardItemsByBoardId/{boardId}")]
+        public async Task<ActionResult<List<BoardColumnDto>>> GetBoardItemsByBoardId(int boardId)
+        {
+            var boardColumns = await _mediator.Send(new GetBoardItemsQuery(boardId));
+            return Ok(boardColumns);
         }
 
         [HttpPost("Create")]

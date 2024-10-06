@@ -20,6 +20,7 @@ namespace ClefCraft.Persistence
             services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
             services.AddScoped<ILeaveAllocationRepository, LeaveAllocationRepository>();
             services.AddScoped<ILeaveRequestRepository, LeaveRequestRepository>();
+            services.AddScoped<IBoardRepository, BoardRepository>();
             //services.AddScoped<IBoardColumnRepository, BoardColumnRepository>();
             services.AddScoped<IBoardItemRepository, BoardItemRepository>();
 

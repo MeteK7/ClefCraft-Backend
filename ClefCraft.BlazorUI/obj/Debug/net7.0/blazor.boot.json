@@ -1,7 +1,7 @@
 {
   "entryAssembly": "ClefCraft.BlazorUI",
   "resources": {
-    "hash": "sha256-+tTyJB4tr+JRUaaHKzVsETHdaJCTRhtlu+Zh9DS4pZU=",
+    "hash": "sha256-3hdf9rk4BhnnPC62hjjVjvnVT+1iOZTMpBhLz8c7hBY=",
     "runtime": {
       "dotnet.7.0.16.apob2ouu30.js": "sha256-4BiArKugJJtpQrznGF5zWfmJ2TB98+p6rKsyoqhtMk4=",
       "dotnet.timezones.blat": "sha256-rwyJqJu36keQwNmm/O1XV7tnkkVldIOK8GIjn4gTUt4=",
@@ -214,10 +214,10 @@
       "mscorlib.dll": "sha256-7yxnoj0sx/xIMKjSCkfYzaeQKDj1UsUSr/JXW7fRggs=",
       "netstandard.dll": "sha256-c9xgB5oQro5/rBTTHeD+4cqLi9QOB+6fhaP3jmkeGo4=",
       "System.Private.CoreLib.dll": "sha256-FGXoQzMt7mcWfUZbWXoXgg8tPIt7PF+QZoXXBQWegAQ=",
-      "ClefCraft.BlazorUI.dll": "sha256-aNpk256SQYe9nWB04QH1HbTEeqI0t5fxx/DijdNvSL0="
+      "ClefCraft.BlazorUI.dll": "sha256-EFfz9S7v+VGfGiy+voUFzJf1frISZdMHRAGdqxIrE2I="
     },
     "pdb": {
-      "ClefCraft.BlazorUI.pdb": "sha256-hDMTdU8dMGpybm4wWe40HpQ5xj9nGJ7iLm0kvTm/3pU="
+      "ClefCraft.BlazorUI.pdb": "sha256-Z4MnfPftmAIg5e4fQsswsIHDPw9h2ErHTx6LAJgFYPI="
     },
     "runtimeAssets": {
       "dotnet.wasm": {

@@ -22,7 +22,7 @@ namespace ClefCraft.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ClefCraft.Domain.BoardColumn", b =>
+            modelBuilder.Entity("ClefCraft.Domain.Board", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -47,6 +47,40 @@ namespace ClefCraft.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.ToTable("Boards");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.BoardColumn", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BoardId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BoardId");
 
                     b.ToTable("BoardColumns");
                 });
@@ -219,11 +253,20 @@ namespace ClefCraft.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2024, 9, 10, 1, 45, 6, 477, DateTimeKind.Local).AddTicks(2233),
-                            DateModified = new DateTime(2024, 9, 10, 1, 45, 6, 477, DateTimeKind.Local).AddTicks(2247),
+                            DateCreated = new DateTime(2024, 10, 6, 14, 36, 10, 399, DateTimeKind.Local).AddTicks(4577),
+                            DateModified = new DateTime(2024, 10, 6, 14, 36, 10, 399, DateTimeKind.Local).AddTicks(4592),
                             DefaultDays = 10,
                             Name = "Vacation"
                         });
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.BoardColumn", b =>
+                {
+                    b.HasOne("ClefCraft.Domain.Board", null)
+                        .WithMany("BoardColumns")
+                        .HasForeignKey("BoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ClefCraft.Domain.BoardItem", b =>
@@ -257,6 +300,11 @@ namespace ClefCraft.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("LeaveType");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.Board", b =>
+                {
+                    b.Navigation("BoardColumns");
                 });
 
             modelBuilder.Entity("ClefCraft.Domain.BoardColumn", b =>

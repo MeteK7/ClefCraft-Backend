@@ -10,6 +10,7 @@ namespace ClefCraft.Application.Features.BoardColumn.Queries.GetBoardColumns
     public class BoardColumnDto
     {
         public int Id { get; set; }
+        public int BoardId { get; set; }
         public string Title { get; set; }
         public List<BoardItemDto> BoardItems { get; set; }
     }
