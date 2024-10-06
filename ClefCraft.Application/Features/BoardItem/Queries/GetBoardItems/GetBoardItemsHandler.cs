@@ -22,8 +22,17 @@ namespace ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems
         }
         public async Task<List<BoardColumnDto>> Handle(GetBoardItemsQuery request, CancellationToken cancellationToken)
         {
-            var columns = await _boardItemRepository.GetBoardColumnsWithBoardItems();
-            return _mapper.Map<List<BoardColumnDto>>(columns);
+            if (request.BoardId.HasValue)
+            {
+                var columns = await _boardItemRepository.GetBoardColumnsWithBoardItems(request.BoardId.Value);
+                return _mapper.Map<List<BoardColumnDto>>(columns);
+            }
+            else
+            {
+                // Fetch all board columns and items if no specific board is selected
+                var allColumns = await _boardItemRepository.GetAllBoardColumnsWithItems();
+                return _mapper.Map<List<BoardColumnDto>>(allColumns);
+            }
         }
     }
 }

@@ -26,7 +26,7 @@ namespace ClefCraft.Identity.Configurations
                     LastName = "Admin",
                     UserName = "admin@localhost.com",
                     NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                    PasswordHash = hasher.HashPassword(null, "sSO42ub0w5TWg4d@"),
+                    PasswordHash = hasher.HashPassword(null, "sSO42ub0w5TWg4d."),
                     EmailConfirmed = true
                 },
                 new ApplicationUser

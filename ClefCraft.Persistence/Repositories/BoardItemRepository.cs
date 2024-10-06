@@ -19,9 +19,19 @@ namespace ClefCraft.Persistence.Repositories
         {
             _context = context;
         }
-        public async Task<List<BoardColumn>> GetBoardColumnsWithBoardItems()
+        public async Task<List<BoardColumn>> GetAllBoardColumnsWithItems()
         {
-            return await _context.BoardColumns.Include(c => c.BoardItems).ToListAsync();
+            return await _context.BoardColumns
+                                 .Include(c => c.BoardItems)
+                                 .ToListAsync();
+        }
+
+        public async Task<List<BoardColumn>> GetBoardColumnsWithBoardItems(int boardId)
+        {
+            return await _context.BoardColumns
+                                 .Where(c => c.BoardId == boardId)  // Filter by boardId
+                                 .Include(c => c.BoardItems)
+                                 .ToListAsync();
         }
         public async Task<BoardItem> GetBoardItemById(int id)
         {
