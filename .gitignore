@@ -13,3 +13,8 @@
 .vs/ClefCraft/v17/.suo
 .vs/ClefCraft/v17/DocumentLayout.json
 ClefCraft.Persistence/Migrations/20240909224506_BoardItemUpdated2.Designer.cs
+/.vs
+/ClefCraft.Api/obj
+/ClefCraft.Application/bin
+/ClefCraft.Persistence/obj
+/ClefCraft.Persistence/bin
