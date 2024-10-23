@@ -1,7 +1,24 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{B651D082-97C3-42C4-8B85-129121A576E5}|ClefCraft.Api\\ClefCraft.Api.csproj|c:\\temsaug\\projects\\clefcraft-backend\\clefcraft.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{B651D082-97C3-42C4-8B85-129121A576E5}|ClefCraft.Api\\ClefCraft.Api.csproj|solutionrelative:clefcraft.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FF6B17A1-90B6-43DA-86AD-D75FF4DB9D4A}|ClefCraft.Identity\\ClefCraft.Identity.csproj|c:\\temsaug\\projects\\clefcraft-backend\\clefcraft.identity\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FF6B17A1-90B6-43DA-86AD-D75FF4DB9D4A}|ClefCraft.Identity\\ClefCraft.Identity.csproj|solutionrelative:clefcraft.identity\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B651D082-97C3-42C4-8B85-129121A576E5}|ClefCraft.Api\\ClefCraft.Api.csproj|c:\\temsaug\\projects\\clefcraft-backend\\clefcraft.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B651D082-97C3-42C4-8B85-129121A576E5}|ClefCraft.Api\\ClefCraft.Api.csproj|solutionrelative:clefcraft.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FF6B17A1-90B6-43DA-86AD-D75FF4DB9D4A}|ClefCraft.Identity\\ClefCraft.Identity.csproj|c:\\temsaug\\projects\\clefcraft-backend\\clefcraft.identity\\configurations\\userconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FF6B17A1-90B6-43DA-86AD-D75FF4DB9D4A}|ClefCraft.Identity\\ClefCraft.Identity.csproj|solutionrelative:clefcraft.identity\\configurations\\userconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,7 +26,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 171,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -18,6 +35,58 @@
             {
               "$type": "Bookmark",
               "Name": "ST:12:0:{2456bd12-ecf7-4988-a4a6-67d49173f565}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.Api\\appsettings.json",
+              "RelativeDocumentMoniker": "ClefCraft.Api\\appsettings.json",
+              "ToolTip": "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.Api\\appsettings.json",
+              "RelativeToolTip": "ClefCraft.Api\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAA+AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-10-23T11:02:40.016Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.Identity\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Identity\\Services\\AuthService.cs",
+              "ToolTip": "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.Identity\\Services\\AuthService.cs",
+              "RelativeToolTip": "ClefCraft.Identity\\Services\\AuthService.cs",
+              "ViewState": "AQIAAA8AAAAAAAAAAAAUwB4AAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-23T11:01:30.55Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "UserConfiguration.cs",
+              "DocumentMoniker": "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.Identity\\Configurations\\UserConfiguration.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Identity\\Configurations\\UserConfiguration.cs",
+              "ToolTip": "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.Identity\\Configurations\\UserConfiguration.cs",
+              "RelativeToolTip": "ClefCraft.Identity\\Configurations\\UserConfiguration.cs",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAvwBwAAAA+AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-23T11:00:26.75Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.Api\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Api\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.Api\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "ClefCraft.Api\\Controllers\\AuthController.cs",
+              "ViewState": "AQIAAAIAAAAAAAAAAAAvwBUAAAA0AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-23T10:57:45.84Z",
+              "EditorCaption": ""
             }
           ]
         }
