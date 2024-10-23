@@ -1,36 +1,37 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Domain\\ClefCraft.Domain.csproj": {}
+    "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.Domain\\ClefCraft.Domain.csproj": {}
   },
   "projects": {
-    "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Domain\\ClefCraft.Domain.csproj": {
+    "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.Domain\\ClefCraft.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Domain\\ClefCraft.Domain.csproj",
+        "projectUniqueName": "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.Domain\\ClefCraft.Domain.csproj",
         "projectName": "ClefCraft.Domain",
-        "projectPath": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Domain\\ClefCraft.Domain.csproj",
-        "packagesPath": "C:\\Users\\MeteK\\.nuget\\packages\\",
-        "outputPath": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Domain\\obj\\",
+        "projectPath": "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.Domain\\ClefCraft.Domain.csproj",
+        "packagesPath": "C:\\Users\\mete.kaba\\.nuget\\packages\\",
+        "outputPath": "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\MeteK\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\mete.kaba\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net7.0"
+          "net8.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net7.0": {
-            "targetAlias": "net7.0",
+          "net8.0": {
+            "targetAlias": "net8.0",
             "projectReferences": {}
           }
         },
@@ -46,8 +47,8 @@
         }
       },
       "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
+        "net8.0": {
+          "targetAlias": "net8.0",
           "imports": [
             "net461",
             "net462",
@@ -64,7 +65,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

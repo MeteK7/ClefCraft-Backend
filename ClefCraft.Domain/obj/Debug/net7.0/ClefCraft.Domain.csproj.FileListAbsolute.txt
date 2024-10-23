@@ -21,3 +21,15 @@ C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Domain\obj\Debug\net7.0\ClefCraf
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Domain\obj\Debug\net7.0\refint\ClefCraft.Domain.dll
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Domain\obj\Debug\net7.0\ClefCraft.Domain.pdb
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Domain\obj\Debug\net7.0\ref\ClefCraft.Domain.dll
+C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.Domain\bin\Debug\net7.0\ClefCraft.Domain.deps.json
+C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.Domain\bin\Debug\net7.0\ClefCraft.Domain.dll
+C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.Domain\bin\Debug\net7.0\ClefCraft.Domain.pdb
+C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.Domain\obj\Debug\net7.0\ClefCraft.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.Domain\obj\Debug\net7.0\ClefCraft.Domain.AssemblyInfoInputs.cache
+C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.Domain\obj\Debug\net7.0\ClefCraft.Domain.AssemblyInfo.cs
+C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.Domain\obj\Debug\net7.0\ClefCraft.Domain.csproj.CoreCompileInputs.cache
+C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.Domain\obj\Debug\net7.0\ClefCraft.Domain.sourcelink.json
+C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.Domain\obj\Debug\net7.0\ClefCraft.Domain.dll
+C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.Domain\obj\Debug\net7.0\refint\ClefCraft.Domain.dll
+C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.Domain\obj\Debug\net7.0\ClefCraft.Domain.pdb
+C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.Domain\obj\Debug\net7.0\ref\ClefCraft.Domain.dll
