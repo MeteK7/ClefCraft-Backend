@@ -32,10 +32,10 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
                 throw new ApplicationException($"Board item with ID {request.Id} not found.");
             }
 
-            // Update the relevant properties
+            boardItem.Title = request.Title ?? boardItem.Title;
+            boardItem.Description = request.Description ?? boardItem.Description;
+            boardItem.Status = request.Status ?? boardItem.Status;
             boardItem.BoardColumnId = request.BoardColumnId;
-            //boardItem.Title = request.Title; // Optional
-            //boardItem.Description = request.Description; // Optional
 
             await _boardItemRepository.UpdateBoardItem(boardItem);
 

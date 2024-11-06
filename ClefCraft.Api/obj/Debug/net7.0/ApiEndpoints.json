@@ -99,6 +99,37 @@
   },
   {
     "ContainingType": "ClefCraft.Api.Controllers.BoardItemsController",
+    "Method": "Update",
+    "RelativePath": "api/BoardItems/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "command",
+        "Type": "ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem.UpdateBoardItemCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "ClefCraft.Application.Features.BoardItem.Queries.GetBoardItemById.BoardItemByIdDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "ClefCraft.Api.Controllers.BoardItemsController",
     "Method": "Create",
     "RelativePath": "api/BoardItems/Create",
     "HttpMethod": "POST",

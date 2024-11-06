@@ -1,0 +1,21 @@
+2024-10-23 21:09:48.184 +03:00 [INF] Now listening on: https://localhost:7287
+2024-10-23 21:09:48.236 +03:00 [INF] Now listening on: http://localhost:5166
+2024-10-23 21:09:48.369 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-10-23 21:09:48.372 +03:00 [INF] Hosting environment: Development
+2024-10-23 21:09:48.373 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-10-23 21:12:26.532 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 4.2724 ms
+2024-10-23 21:12:30.120 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 3575.9917 ms
+2024-10-23 21:12:32.826 +03:00 [INF] HTTP GET /api/Boards responded 200 in 419.6292 ms
+2024-10-23 21:12:33.057 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 217.4142 ms
+2024-10-23 21:12:36.049 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/2 responded 200 in 29.0213 ms
+2024-10-23 21:12:40.741 +03:00 [INF] HTTP OPTIONS /api/BoardItems/SwitchColumn responded 204 in 0.3511 ms
+2024-10-23 21:12:40.945 +03:00 [INF] HTTP POST /api/BoardItems/SwitchColumn responded 200 in 198.4235 ms
+2024-10-23 21:12:42.521 +03:00 [INF] HTTP POST /api/BoardItems/SwitchColumn responded 200 in 18.0578 ms
+2024-10-23 21:12:44.032 +03:00 [INF] HTTP POST /api/BoardItems/SwitchColumn responded 200 in 27.9203 ms
+2024-10-23 21:17:34.523 +03:00 [INF] HTTP GET /api/Boards responded 200 in 21.3186 ms
+2024-10-23 21:17:34.552 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 12.5650 ms
+2024-10-23 21:17:39.750 +03:00 [INF] HTTP GET /api/Boards responded 200 in 11.4466 ms
+2024-10-23 21:17:39.790 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 13.5375 ms
+2024-10-23 21:17:45.647 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 12.0225 ms
+2024-10-23 21:17:57.868 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/2 responded 200 in 9.1350 ms
+2024-10-23 21:17:59.511 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/2 responded 200 in 9.3014 ms

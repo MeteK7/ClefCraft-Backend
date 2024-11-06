@@ -51,6 +51,25 @@ namespace ClefCraft.Api.Controllers
             return Ok(item);
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult<BoardItemByIdDto>> Update(int id, UpdateBoardItemCommand command)
+        {
+            if (id != command.Id)
+            {
+                return BadRequest("Item ID mismatch.");
+            }
+
+            var updatedItem = await _mediator.Send(command);
+
+            if (updatedItem == null)
+            {
+                return NotFound($"Board item with ID {id} not found.");
+            }
+
+            return Ok(updatedItem);
+        }
+
+
         [HttpPost("SwitchColumn")]
         public async Task<ActionResult<BoardItemDto>> SwitchColumn(UpdateBoardItemCommand command)
         {

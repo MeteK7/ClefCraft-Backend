@@ -1,5 +1,5 @@
 -- Insert Boards
-INSERT INTO dbo.Boards (Title, DateCreated, CreatedBy, DateModified, ModifiedBy) VALUES
+INSERT INTO db_clefcraft.dbo.Boards (Title, DateCreated, CreatedBy, DateModified, ModifiedBy) VALUES
 ('Software Development Process', GETDATE(), 'admin', GETDATE(), 'admin'),
 ('Music', GETDATE(), 'admin', GETDATE(), 'admin'),
 ('Content Creation', GETDATE(), 'admin', GETDATE(), 'admin'),
@@ -7,7 +7,7 @@ INSERT INTO dbo.Boards (Title, DateCreated, CreatedBy, DateModified, ModifiedBy)
 ('Fitness Training Board', GETDATE(), 'admin', GETDATE(), 'admin');
 
 -- Insert BoardColumns for Software Development Process
-INSERT INTO dbo.BoardColumns (BoardId, Title, DateCreated, CreatedBy, DateModified, ModifiedBy) VALUES
+INSERT INTO db_clefcraft.dbo.BoardColumns (BoardId, Title, DateCreated, CreatedBy, DateModified, ModifiedBy) VALUES
 (1, 'To-Do', GETDATE(), 'admin', GETDATE(), 'admin'),
 (1, 'Analysis', GETDATE(), 'admin', GETDATE(), 'admin'),
 (1, 'In-Progress', GETDATE(), 'admin', GETDATE(), 'admin'),
@@ -17,7 +17,7 @@ INSERT INTO dbo.BoardColumns (BoardId, Title, DateCreated, CreatedBy, DateModifi
 (1, 'Done', GETDATE(), 'admin', GETDATE(), 'admin');
 
 -- Insert BoardItems for Software Development Process
-INSERT INTO dbo.BoardItems (Title, Description, Status, BoardColumnId, DateCreated, CreatedBy, DateModified, ModifiedBy) VALUES
+INSERT INTO db_clefcraft.dbo.BoardItems (Title, Description, Status, BoardColumnId, DateCreated, CreatedBy, DateModified, ModifiedBy) VALUES
 -- To-Do
 ('Set up project repository', 'Initialize Git repository for the project.', 'Pending', 1, GETDATE(), 'admin', GETDATE(), 'admin'),
 ('Define project scope', 'Determine the scope and requirements of the software.', 'Pending', 1, GETDATE(), 'admin', GETDATE(), 'admin'),
@@ -69,7 +69,7 @@ INSERT INTO dbo.BoardItems (Title, Description, Status, BoardColumnId, DateCreat
 ('Close project', 'Officially close the project.', 'Completed', 7, GETDATE(), 'admin', GETDATE(), 'admin');
 
 -- Insert BoardColumns for Music Practice Board
-INSERT INTO dbo.BoardColumns (BoardId, Title, DateCreated, CreatedBy, DateModified, ModifiedBy) VALUES
+INSERT INTO db_clefcraft.dbo.BoardColumns (BoardId, Title, DateCreated, CreatedBy, DateModified, ModifiedBy) VALUES
 (2, 'Routine', GETDATE(), 'admin', GETDATE(), 'admin'),
 (2, 'To-Do', GETDATE(), 'admin', GETDATE(), 'admin'),
 (2, 'Sight-Reading', GETDATE(), 'admin', GETDATE(), 'admin'),
@@ -78,7 +78,7 @@ INSERT INTO dbo.BoardColumns (BoardId, Title, DateCreated, CreatedBy, DateModifi
 (2, 'Done', GETDATE(), 'admin', GETDATE(), 'admin');
 
 -- Insert BoardItems for Music Practice Board
-INSERT INTO dbo.BoardItems (Title, Description, Status, BoardColumnId, DateCreated, CreatedBy, DateModified, ModifiedBy) VALUES
+INSERT INTO db_clefcraft.dbo.BoardItems (Title, Description, Status, BoardColumnId, DateCreated, CreatedBy, DateModified, ModifiedBy) VALUES
 -- Routine
 ('Warm-up exercises', 'Daily warm-up for 10 minutes.', 'Pending', 8, GETDATE(), 'admin', GETDATE(), 'admin'),
 ('Breath control', 'Practice breath control techniques.', 'Pending', 8, GETDATE(), 'admin', GETDATE(), 'admin'),
@@ -123,7 +123,7 @@ INSERT INTO dbo.BoardItems (Title, Description, Status, BoardColumnId, DateCreat
 ('Received positive feedback', 'Received feedback from instructor.', 'Completed', 13, GETDATE(), 'admin', GETDATE(), 'admin');
 
 -- Insert BoardColumns for Content Creation Board
-INSERT INTO dbo.BoardColumns (BoardId, Title, DateCreated, CreatedBy, DateModified, ModifiedBy) VALUES
+INSERT INTO db_clefcraft.dbo.BoardColumns (BoardId, Title, DateCreated, CreatedBy, DateModified, ModifiedBy) VALUES
 (3, 'Ideation', GETDATE(), 'admin', GETDATE(), 'admin'),
 (3, 'Drafting', GETDATE(), 'admin', GETDATE(), 'admin'),
 (3, 'Editing', GETDATE(), 'admin', GETDATE(), 'admin'),
@@ -132,7 +132,7 @@ INSERT INTO dbo.BoardColumns (BoardId, Title, DateCreated, CreatedBy, DateModifi
 (3, 'Archived', GETDATE(), 'admin', GETDATE(), 'admin');
 
 -- Insert BoardItems for Content Creation Board
-INSERT INTO dbo.BoardItems (Title, Description, Status, BoardColumnId, DateCreated, CreatedBy, DateModified, ModifiedBy) VALUES
+INSERT INTO db_clefcraft.dbo.BoardItems (Title, Description, Status, BoardColumnId, DateCreated, CreatedBy, DateModified, ModifiedBy) VALUES
 -- Ideation
 ('Brainstorm blog topics', 'Generate a list of potential blog topics for next month.', 'Pending', 14, GETDATE(), 'admin', GETDATE(), 'admin'),
 ('Research trending keywords', 'Identify keywords to target for SEO optimization.', 'Pending', 14, GETDATE(), 'admin', GETDATE(), 'admin'),
@@ -177,7 +177,7 @@ INSERT INTO dbo.BoardItems (Title, Description, Status, BoardColumnId, DateCreat
 ('Maintain email campaign statistics', 'Save metrics from the email campaign.', 'Completed', 19, GETDATE(), 'admin', GETDATE(), 'admin');
 
 -- Insert BoardColumns for Marketing Campaign Board
-INSERT INTO dbo.BoardColumns (BoardId, Title, DateCreated, CreatedBy, DateModified, ModifiedBy) VALUES
+INSERT INTO db_clefcraft.dbo.BoardColumns (BoardId, Title, DateCreated, CreatedBy, DateModified, ModifiedBy) VALUES
 (4, 'Planning', GETDATE(), 'admin', GETDATE(), 'admin'),
 (4, 'Execution', GETDATE(), 'admin', GETDATE(), 'admin'),
 (4, 'Analysis', GETDATE(), 'admin', GETDATE(), 'admin'),
@@ -186,7 +186,7 @@ INSERT INTO dbo.BoardColumns (BoardId, Title, DateCreated, CreatedBy, DateModifi
 (4, 'Archived', GETDATE(), 'admin', GETDATE(), 'admin');
 
 -- Insert BoardItems for Marketing Campaign Board
-INSERT INTO dbo.BoardItems (Title, Description, Status, BoardColumnId, DateCreated, CreatedBy, DateModified, ModifiedBy) VALUES
+INSERT INTO db_clefcraft.dbo.BoardItems (Title, Description, Status, BoardColumnId, DateCreated, CreatedBy, DateModified, ModifiedBy) VALUES
 -- Planning
 ('Define campaign objectives', 'Set clear goals for the marketing campaign.', 'Pending', 20, GETDATE(), 'admin', GETDATE(), 'admin'),
 ('Identify target audience', 'Determine the demographics and interests of the target audience.', 'Pending', 20, GETDATE(), 'admin', GETDATE(), 'admin'),
@@ -231,7 +231,7 @@ INSERT INTO dbo.BoardItems (Title, Description, Status, BoardColumnId, DateCreat
 ('Review archived campaigns', 'Set a schedule for reviewing archived campaigns for insights.', 'Completed', 25, GETDATE(), 'admin', GETDATE(), 'admin');
 
 -- Insert BoardColumns for Fitness Training Board
-INSERT INTO dbo.BoardColumns (BoardId, Title, DateCreated, CreatedBy, DateModified, ModifiedBy) VALUES
+INSERT INTO db_clefcraft.dbo.BoardColumns (BoardId, Title, DateCreated, CreatedBy, DateModified, ModifiedBy) VALUES
 (5, 'Goal Setting', GETDATE(), 'admin', GETDATE(), 'admin'),
 (5, 'Workout Plans', GETDATE(), 'admin', GETDATE(), 'admin'),
 (5, 'Nutrition', GETDATE(), 'admin', GETDATE(), 'admin'),
@@ -240,7 +240,7 @@ INSERT INTO dbo.BoardColumns (BoardId, Title, DateCreated, CreatedBy, DateModifi
 (5, 'Completed', GETDATE(), 'admin', GETDATE(), 'admin');
 
 -- Insert BoardItems for Fitness Training Board
-INSERT INTO dbo.BoardItems (Title, Description, Status, BoardColumnId, DateCreated, CreatedBy, DateModified, ModifiedBy) VALUES
+INSERT INTO db_clefcraft.dbo.BoardItems (Title, Description, Status, BoardColumnId, DateCreated, CreatedBy, DateModified, ModifiedBy) VALUES
 -- Goal Setting
 ('Set weight loss goal', 'Aim to lose 10 pounds in 3 months.', 'Pending', 26, GETDATE(), 'admin', GETDATE(), 'admin'),
 ('Define workout frequency', 'Plan to work out 4 times a week.', 'Pending', 26, GETDATE(), 'admin', GETDATE(), 'admin'),
