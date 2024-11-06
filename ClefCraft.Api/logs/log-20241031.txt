@@ -1,0 +1,2 @@
+2024-10-31 09:36:37.480 +03:00 [INF] HTTP GET /api/Boards responded 200 in 129.5957 ms
+2024-10-31 09:36:37.523 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 16.7514 ms

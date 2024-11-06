@@ -1,11 +1,11 @@
 -- First, delete data from the child table (BoardItems) if it exists
-DELETE FROM dbo.BoardItems;
+DELETE FROM db_clefcraft.dbo.Boards;
 
 -- Then, delete from the next child table (BoardColumns)
-DELETE FROM dbo.BoardColumns;
+DELETE FROM db_clefcraft.dbo.BoardColumns;
 
 -- Finally, delete from the parent table (Boards)
-DELETE FROM dbo.Boards;
+DELETE FROM db_clefcraft.dbo.Boards;
 
 -- If you want to reset identity columns, use TRUNCATE instead (if no foreign key constraints)
 -- TRUNCATE TABLE dbo.BoardItems;
@@ -13,6 +13,6 @@ DELETE FROM dbo.Boards;
 -- TRUNCATE TABLE dbo.Boards;
 
 -- To reset the identity values (if using DELETE)
-DBCC CHECKIDENT ('dbo.Boards', RESEED, 0);
-DBCC CHECKIDENT ('dbo.BoardColumns', RESEED, 0);
-DBCC CHECKIDENT ('dbo.BoardItems', RESEED, 0);
+DBCC CHECKIDENT ('db_clefcraft.dbo.Boards', RESEED, 0);
+DBCC CHECKIDENT ('db_clefcraft.dbo.BoardColumns', RESEED, 0);
+DBCC CHECKIDENT ('db_clefcraft.dbo.BoardItems', RESEED, 0);

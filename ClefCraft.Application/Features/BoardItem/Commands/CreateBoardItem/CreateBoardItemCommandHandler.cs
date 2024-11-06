@@ -31,8 +31,6 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem
                 BoardColumnId = request.BoardColumnId
             };
 
-
-
             await _boardItemRepository.AddBoardItem(boardItem);
 
             return _mapper.Map<BoardItemDto>(boardItem);
