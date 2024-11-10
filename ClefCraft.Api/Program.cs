@@ -1,8 +1,11 @@
 using ClefCraft.Api.Middleware;
 using ClefCraft.Application;
+using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Identity;
+using ClefCraft.Identity.Services;
 using ClefCraft.Infrastructure;
 using ClefCraft.Persistence;
+using Microsoft.OpenApi.Models;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,19 +23,57 @@ builder.Services.AddControllers();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngularClient",
-        builder => builder
-            .WithOrigins("http://localhost:4200") // Update this URL to your Angular app's URL
-            .AllowAnyMethod()
-            .AllowAnyHeader());
+    options.AddPolicy("AllowAngularClient", builder =>
+        builder
+            .WithOrigins("http://localhost:4200") // Allow the Angular app's origin
+            .AllowAnyMethod()                      // Allow any HTTP method (GET, POST, etc.)
+            .AllowAnyHeader()                      // Allow any headers
+            .AllowCredentials()                    // Allow credentials (cookies, authorization headers, etc.)
+    );
 });
-
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("all", builder => builder.AllowAnyOrigin()
+//    .AllowAnyHeader()
+//    .AllowAnyMethod());
+//});
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IUserService, UserService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
+//builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "API",
+        Version = "v2",
+        Description = "Your Api Description"
+    });
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme (Example: 'Bearer 12345abcdef')",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+});
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();
@@ -47,6 +88,7 @@ app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 
 app.UseCors("AllowAngularClient");
+//app.UseCors("all");
 
 app.UseAuthentication();
 

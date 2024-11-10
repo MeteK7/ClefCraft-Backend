@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Name": "ClefCraft.Api\\ClefCraft.Api.csproj",
+        "Action": "Start"
+      },
+      {
+        "Name": "ClefCraft.BlazorUI\\ClefCraft.BlazorUI.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

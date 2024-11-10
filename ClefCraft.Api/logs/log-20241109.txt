@@ -1,0 +1,440 @@
+2024-11-09 00:25:06.944 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 00:25:07.005 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 00:25:07.103 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 00:25:07.108 +03:00 [INF] Hosting environment: Development
+2024-11-09 00:25:07.109 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 00:32:54.594 +03:00 [INF] HTTP GET /api/Boards responded 200 in 3026.6700 ms
+2024-11-09 00:32:55.019 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 409.1532 ms
+2024-11-09 00:33:40.989 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 8.7148 ms
+2024-11-09 00:33:41.935 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 937.8948 ms
+2024-11-09 00:33:42.852 +03:00 [INF] HTTP GET /api/Boards responded 200 in 17.4851 ms
+2024-11-09 00:33:42.924 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 28.1287 ms
+2024-11-09 00:35:28.138 +03:00 [INF] HTTP GET /api/Boards responded 200 in 30.6663 ms
+2024-11-09 00:35:28.190 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 22.3009 ms
+2024-11-09 00:35:43.099 +03:00 [INF] HTTP GET /api/Boards responded 200 in 5.6929 ms
+2024-11-09 00:35:43.164 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 9.6033 ms
+2024-11-09 00:35:45.184 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/3 responded 200 in 8.6292 ms
+2024-11-09 00:35:46.575 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/2 responded 200 in 8.8727 ms
+2024-11-09 00:36:01.337 +03:00 [INF] HTTP OPTIONS /api/BoardItems/188 responded 204 in 0.1905 ms
+2024-11-09 00:41:50.693 +03:00 [INF] HTTP OPTIONS /api/BoardItems/188 responded 204 in 0.1363 ms
+2024-11-09 00:41:50.786 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.0481 ms
+2024-11-09 00:41:51.072 +03:00 [INF] HTTP GET /api/Boards responded 200 in 366.3238 ms
+2024-11-09 00:41:51.093 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 9.1183 ms
+2024-11-09 00:41:51.712 +03:00 [INF] HTTP PUT /api/BoardItems/188 responded 200 in 350368.3126 ms
+2024-11-09 00:41:51.713 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 701.5935 ms
+2024-11-09 00:41:52.848 +03:00 [INF] HTTP GET /api/Boards responded 200 in 5.9515 ms
+2024-11-09 00:41:52.900 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 14.5750 ms
+2024-11-09 00:41:58.511 +03:00 [INF] HTTP OPTIONS /api/BoardItems/14 responded 204 in 0.0766 ms
+2024-11-09 00:42:14.810 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 200 in 16294.6820 ms
+2024-11-09 00:44:53.782 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 00:44:54.035 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 00:44:54.403 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 00:44:54.407 +03:00 [INF] Hosting environment: Development
+2024-11-09 00:44:54.408 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 00:45:18.419 +03:00 [INF] HTTP OPTIONS /api/BoardItems/14 responded 204 in 5.9989 ms
+2024-11-09 00:48:44.109 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 200 in 205677.7836 ms
+2024-11-09 00:49:44.900 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 00:49:45.041 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 00:49:45.817 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 00:49:45.864 +03:00 [INF] Hosting environment: Development
+2024-11-09 00:49:45.892 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 00:50:26.891 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 4.5766 ms
+2024-11-09 00:50:35.873 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.8562 ms
+2024-11-09 00:51:11.743 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.7935 ms
+2024-11-09 00:52:31.143 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 00:52:31.264 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 00:52:32.392 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 00:52:32.497 +03:00 [INF] Hosting environment: Development
+2024-11-09 00:52:32.500 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 00:52:52.741 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 2926.9056 ms
+2024-11-09 00:53:09.988 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.7285 ms
+2024-11-09 00:53:24.450 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 1.0457 ms
+2024-11-09 00:53:37.042 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.0556 ms
+2024-11-09 00:54:30.380 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 00:54:30.518 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 00:54:31.813 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 00:54:31.823 +03:00 [INF] Hosting environment: Development
+2024-11-09 00:54:31.827 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 00:54:53.987 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 00:54:54.377 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 00:54:55.194 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 00:54:55.196 +03:00 [INF] Hosting environment: Development
+2024-11-09 00:54:55.197 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 00:55:07.795 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 3.6347 ms
+2024-11-09 00:57:52.160 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 00:57:52.288 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 00:57:53.267 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 00:57:53.276 +03:00 [INF] Hosting environment: Development
+2024-11-09 00:57:53.277 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 01:01:37.705 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 5.9504 ms
+2024-11-09 01:01:40.607 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 2889.6546 ms
+2024-11-09 01:02:02.677 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 7.3986 ms
+2024-11-09 01:02:03.205 +03:00 [INF] Leave types were retrieved successfully.
+2024-11-09 01:02:03.217 +03:00 [INF] HTTP GET /api/LeaveTypes responded 200 in 533.3336 ms
+2024-11-09 01:02:09.068 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes/1 responded 204 in 0.3565 ms
+2024-11-09 01:02:09.160 +03:00 [INF] HTTP GET /api/LeaveTypes/1 responded 200 in 85.8365 ms
+2024-11-09 01:02:10.461 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes/1 responded 204 in 0.5604 ms
+2024-11-09 01:02:40.965 +03:00 [INF] HTTP PUT /api/LeaveTypes/1 responded 204 in 30498.3316 ms
+2024-11-09 01:02:41.006 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 0.0737 ms
+2024-11-09 01:02:41.021 +03:00 [INF] Leave types were retrieved successfully.
+2024-11-09 01:02:41.022 +03:00 [INF] HTTP GET /api/LeaveTypes responded 200 in 11.3211 ms
+2024-11-09 01:03:55.232 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 01:03:55.344 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 01:03:56.625 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 01:03:56.675 +03:00 [INF] Hosting environment: Development
+2024-11-09 01:03:56.678 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 01:04:49.301 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 405 in 109.2769 ms
+2024-11-09 01:04:59.114 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 405 in 3.6417 ms
+2024-11-09 01:06:07.365 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 01:06:07.647 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 01:06:07.878 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 01:06:08.335 +03:00 [INF] Hosting environment: Development
+2024-11-09 01:06:08.339 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 01:06:24.986 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 5.2525 ms
+2024-11-09 01:06:27.855 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 2857.0778 ms
+2024-11-09 01:06:34.879 +03:00 [INF] HTTP GET /api/Boards responded 200 in 533.2239 ms
+2024-11-09 01:06:35.194 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 302.9961 ms
+2024-11-09 01:06:40.214 +03:00 [INF] HTTP OPTIONS /api/BoardItems/14 responded 204 in 0.2360 ms
+2024-11-09 01:07:38.597 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 200 in 58378.7452 ms
+2024-11-09 01:08:41.286 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 01:08:41.795 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 01:08:42.510 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 01:08:42.518 +03:00 [INF] Hosting environment: Development
+2024-11-09 01:08:42.519 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 01:09:00.246 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 5.7441 ms
+2024-11-09 01:09:03.230 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 2971.1759 ms
+2024-11-09 01:09:04.925 +03:00 [INF] HTTP GET /api/Boards responded 200 in 557.9048 ms
+2024-11-09 01:09:05.165 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 230.1096 ms
+2024-11-09 01:09:07.832 +03:00 [INF] HTTP OPTIONS /api/BoardItems/14 responded 204 in 0.2478 ms
+2024-11-09 01:10:06.178 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 0.0501 ms
+2024-11-09 01:10:06.178 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 0.0499 ms
+2024-11-09 01:10:06.178 +03:00 [INF] HTTP OPTIONS /api/LeaveRequests responded 204 in 0.0501 ms
+2024-11-09 01:10:06.178 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.0303 ms
+2024-11-09 01:10:06.335 +03:00 [INF] Leave types were retrieved successfully.
+2024-11-09 01:10:06.347 +03:00 [INF] HTTP GET /api/LeaveTypes responded 200 in 162.2854 ms
+2024-11-09 01:10:06.351 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 200 in 58513.5851 ms
+2024-11-09 01:10:06.362 +03:00 [INF] Leave types were retrieved successfully.
+2024-11-09 01:10:06.364 +03:00 [INF] HTTP GET /api/LeaveTypes responded 200 in 14.7623 ms
+2024-11-09 01:10:06.376 +03:00 [INF] HTTP GET /api/LeaveRequests responded 200 in 185.5352 ms
+2024-11-09 01:10:06.383 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 191.3892 ms
+2024-11-09 01:10:15.299 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 0.0587 ms
+2024-11-09 01:10:15.326 +03:00 [INF] Leave types were retrieved successfully.
+2024-11-09 01:10:15.329 +03:00 [INF] HTTP GET /api/LeaveTypes responded 200 in 23.4886 ms
+2024-11-09 01:10:18.008 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes/1 responded 204 in 0.0620 ms
+2024-11-09 01:10:18.058 +03:00 [INF] HTTP GET /api/LeaveTypes/1 responded 200 in 45.3698 ms
+2024-11-09 01:11:59.309 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 01:12:01.283 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 01:12:01.610 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 01:12:01.613 +03:00 [INF] Hosting environment: Development
+2024-11-09 01:12:01.614 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 01:12:46.818 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 01:12:47.351 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 01:12:48.342 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 01:12:48.496 +03:00 [INF] Hosting environment: Development
+2024-11-09 01:12:48.571 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 01:13:25.216 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 01:13:25.324 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 01:13:25.583 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 01:13:25.814 +03:00 [INF] Hosting environment: Development
+2024-11-09 01:13:25.815 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 01:15:25.101 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 01:15:25.304 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 01:15:25.834 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 01:15:25.859 +03:00 [INF] Hosting environment: Development
+2024-11-09 01:15:25.862 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 01:15:46.132 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 3.9155 ms
+2024-11-09 01:15:49.311 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 2432.7637 ms
+2024-11-09 01:15:49.311 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 3167.8862 ms
+2024-11-09 01:15:58.171 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.7100 ms
+2024-11-09 01:15:58.416 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 238.2528 ms
+2024-11-09 01:15:59.660 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 0.5043 ms
+2024-11-09 01:16:00.126 +03:00 [INF] Leave types were retrieved successfully.
+2024-11-09 01:16:00.136 +03:00 [INF] HTTP GET /api/LeaveTypes responded 200 in 470.4257 ms
+2024-11-09 01:16:01.749 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes/1 responded 204 in 0.0596 ms
+2024-11-09 01:16:01.816 +03:00 [INF] HTTP GET /api/LeaveTypes/1 responded 200 in 57.3659 ms
+2024-11-09 01:16:02.713 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes/1 responded 204 in 0.3391 ms
+2024-11-09 01:17:44.668 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 01:17:44.791 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 01:17:44.966 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 01:17:44.968 +03:00 [INF] Hosting environment: Development
+2024-11-09 01:17:44.970 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 01:17:59.401 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 5.4409 ms
+2024-11-09 01:18:02.331 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 2917.0507 ms
+2024-11-09 01:18:03.883 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 0.5769 ms
+2024-11-09 01:18:04.430 +03:00 [INF] Leave types were retrieved successfully.
+2024-11-09 01:18:04.442 +03:00 [INF] HTTP GET /api/LeaveTypes responded 200 in 552.9814 ms
+2024-11-09 01:18:05.630 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes/1 responded 204 in 0.0580 ms
+2024-11-09 01:18:05.717 +03:00 [INF] HTTP GET /api/LeaveTypes/1 responded 200 in 80.3973 ms
+2024-11-09 01:18:06.775 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes/1 responded 204 in 0.4648 ms
+2024-11-09 01:18:27.109 +03:00 [INF] HTTP PUT /api/LeaveTypes/1 responded 204 in 20327.9243 ms
+2024-11-09 01:18:27.144 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 0.0729 ms
+2024-11-09 01:18:27.158 +03:00 [INF] Leave types were retrieved successfully.
+2024-11-09 01:18:27.161 +03:00 [INF] HTTP GET /api/LeaveTypes responded 200 in 10.5457 ms
+2024-11-09 01:18:38.526 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 0.0450 ms
+2024-11-09 01:18:52.761 +03:00 [INF] HTTP POST /api/LeaveTypes responded 201 in 14230.4868 ms
+2024-11-09 01:18:52.830 +03:00 [INF] HTTP OPTIONS /api/LeaveTypes responded 204 in 0.0869 ms
+2024-11-09 01:18:52.857 +03:00 [INF] Leave types were retrieved successfully.
+2024-11-09 01:18:52.859 +03:00 [INF] HTTP GET /api/LeaveTypes responded 200 in 23.1625 ms
+2024-11-09 01:49:08.377 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 01:49:08.617 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 01:49:10.225 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 01:49:10.374 +03:00 [INF] Hosting environment: Development
+2024-11-09 01:49:10.376 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 01:49:32.778 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 5.5360 ms
+2024-11-09 01:49:50.089 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 17299.0257 ms
+2024-11-09 01:49:54.336 +03:00 [INF] HTTP GET /api/Boards responded 200 in 490.8400 ms
+2024-11-09 01:49:54.363 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 401 in 15.8972 ms
+2024-11-09 01:50:19.727 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.7879 ms
+2024-11-09 01:51:01.729 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 01:51:01.877 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 01:51:03.437 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 01:51:03.530 +03:00 [INF] Hosting environment: Development
+2024-11-09 01:51:03.545 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 01:51:10.744 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 5.5248 ms
+2024-11-09 01:51:32.199 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 21443.6825 ms
+2024-11-09 01:51:35.892 +03:00 [INF] HTTP GET /api/Boards responded 200 in 557.7861 ms
+2024-11-09 01:51:36.150 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 246.5193 ms
+2024-11-09 01:51:39.752 +03:00 [INF] HTTP OPTIONS /api/BoardItems/14 responded 204 in 0.3480 ms
+2024-11-09 01:51:56.643 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 200 in 16880.0555 ms
+2024-11-09 01:53:31.673 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 01:53:31.793 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 01:53:33.492 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 01:53:33.493 +03:00 [INF] Hosting environment: Development
+2024-11-09 01:53:33.499 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 01:54:39.311 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 7.0895 ms
+2024-11-09 01:54:44.775 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 5452.3944 ms
+2024-11-09 01:54:47.532 +03:00 [INF] HTTP GET /api/Boards responded 200 in 539.7745 ms
+2024-11-09 01:54:47.793 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 249.3809 ms
+2024-11-09 01:54:51.999 +03:00 [INF] HTTP OPTIONS /api/BoardItems/14 responded 204 in 0.3512 ms
+2024-11-09 01:54:52.024 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 401 in 19.5352 ms
+2024-11-09 01:58:01.304 +03:00 [INF] HTTP GET /api/Boards responded 200 in 205.0018 ms
+2024-11-09 01:58:01.440 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 17.9252 ms
+2024-11-09 01:58:21.631 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.5369 ms
+2024-11-09 01:58:23.988 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 2350.1977 ms
+2024-11-09 02:09:44.560 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.2564 ms
+2024-11-09 02:10:05.547 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 20975.5270 ms
+2024-11-09 02:10:09.209 +03:00 [INF] HTTP GET /api/Boards responded 200 in 13.8638 ms
+2024-11-09 02:10:09.294 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 14.8744 ms
+2024-11-09 02:10:14.000 +03:00 [INF] HTTP OPTIONS /api/BoardItems/187 responded 204 in 0.1061 ms
+2024-11-09 02:10:14.009 +03:00 [INF] HTTP PUT /api/BoardItems/187 responded 401 in 3.0337 ms
+2024-11-09 02:11:20.667 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 2099.7903 ms
+2024-11-09 02:12:05.474 +03:00 [INF] HTTP PUT /api/BoardItems/187 responded 401 in 7.7806 ms
+2024-11-09 02:19:23.016 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.2535 ms
+2024-11-09 02:19:26.168 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 3133.2922 ms
+2024-11-09 02:19:28.771 +03:00 [INF] HTTP GET /api/Boards responded 200 in 6.0751 ms
+2024-11-09 02:19:28.865 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 18.4471 ms
+2024-11-09 02:19:32.409 +03:00 [INF] HTTP OPTIONS /api/BoardItems/14 responded 204 in 0.0579 ms
+2024-11-09 02:19:32.414 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 401 in 0.1519 ms
+2024-11-09 02:19:50.299 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.0386 ms
+2024-11-09 02:19:52.284 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 1979.2853 ms
+2024-11-09 02:32:04.559 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.9026 ms
+2024-11-09 02:32:07.219 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 2648.4218 ms
+2024-11-09 02:32:11.907 +03:00 [INF] HTTP GET /api/Boards responded 200 in 6.4606 ms
+2024-11-09 02:32:12.027 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 13.1639 ms
+2024-11-09 02:32:14.808 +03:00 [INF] HTTP OPTIONS /api/BoardItems/14 responded 204 in 0.0690 ms
+2024-11-09 02:32:14.814 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 401 in 0.2666 ms
+2024-11-09 02:33:50.951 +03:00 [INF] HTTP OPTIONS /api/BoardItems/14 responded 204 in 0.1047 ms
+2024-11-09 02:33:50.962 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 401 in 0.2436 ms
+2024-11-09 02:33:51.797 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 401 in 5.7377 ms
+2024-11-09 02:33:51.942 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 401 in 0.1972 ms
+2024-11-09 02:33:56.057 +03:00 [INF] HTTP GET /api/Boards responded 200 in 16.6198 ms
+2024-11-09 02:33:56.153 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 67.0086 ms
+2024-11-09 02:34:04.344 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.0459 ms
+2024-11-09 02:34:06.167 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 1816.9969 ms
+2024-11-09 02:34:41.412 +03:00 [INF] HTTP GET /api/Boards responded 200 in 12.9300 ms
+2024-11-09 02:34:41.486 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 12.5834 ms
+2024-11-09 02:34:43.902 +03:00 [INF] HTTP OPTIONS /api/BoardItems/14 responded 204 in 0.0341 ms
+2024-11-09 02:34:43.907 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 401 in 0.1956 ms
+2024-11-09 02:49:40.631 +03:00 [INF] HTTP GET /api/Boards responded 200 in 135.0213 ms
+2024-11-09 02:49:40.674 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 14.6796 ms
+2024-11-09 02:49:48.151 +03:00 [INF] HTTP OPTIONS /api/BoardItems/14 responded 204 in 0.1950 ms
+2024-11-09 02:49:48.156 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 401 in 0.2726 ms
+2024-11-09 02:50:09.146 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.0349 ms
+2024-11-09 02:50:11.477 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 2326.2065 ms
+2024-11-09 02:50:13.968 +03:00 [INF] HTTP GET /api/Boards responded 200 in 6.7390 ms
+2024-11-09 02:50:14.107 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 23.8558 ms
+2024-11-09 02:50:16.456 +03:00 [INF] HTTP OPTIONS /api/BoardItems/2 responded 204 in 0.1355 ms
+2024-11-09 02:50:16.465 +03:00 [INF] HTTP PUT /api/BoardItems/2 responded 401 in 0.1768 ms
+2024-11-09 02:57:19.813 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 02:57:19.884 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 02:57:20.048 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 02:57:20.092 +03:00 [INF] Hosting environment: Development
+2024-11-09 02:57:20.125 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 03:00:02.668 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 03:00:02.726 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 03:00:02.840 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 03:00:02.842 +03:00 [INF] Hosting environment: Development
+2024-11-09 03:00:02.844 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 03:00:37.688 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 4.9321 ms
+2024-11-09 03:00:51.048 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 12916.4030 ms
+2024-11-09 03:00:51.048 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 13348.7937 ms
+2024-11-09 03:00:51.315 +03:00 [INF] HTTP GET /api/Boards responded 200 in 589.9895 ms
+2024-11-09 03:00:51.547 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 214.9176 ms
+2024-11-09 03:00:53.048 +03:00 [INF] HTTP GET /api/Boards responded 200 in 30.7630 ms
+2024-11-09 03:00:53.122 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 31.1036 ms
+2024-11-09 03:00:56.798 +03:00 [INF] HTTP OPTIONS /api/BoardItems/9 responded 204 in 1.4009 ms
+2024-11-09 03:00:56.824 +03:00 [INF] HTTP PUT /api/BoardItems/9 responded 401 in 20.2663 ms
+2024-11-09 03:01:25.881 +03:00 [INF] HTTP OPTIONS /api/BoardItems/9 responded 204 in 0.0960 ms
+2024-11-09 03:01:25.893 +03:00 [INF] HTTP PUT /api/BoardItems/9 responded 401 in 6.3395 ms
+2024-11-09 03:01:30.404 +03:00 [INF] HTTP PUT /api/BoardItems/9 responded 401 in 2.7633 ms
+2024-11-09 03:01:35.765 +03:00 [INF] HTTP GET /api/Boards responded 200 in 40.3977 ms
+2024-11-09 03:01:35.828 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 12.8721 ms
+2024-11-09 03:08:41.087 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 34788.8565 ms
+2024-11-09 03:09:11.414 +03:00 [INF] HTTP OPTIONS /api/BoardItems/14 responded 204 in 0.1371 ms
+2024-11-09 03:09:11.427 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 401 in 0.1986 ms
+2024-11-09 03:09:29.674 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 401 in 0.3594 ms
+2024-11-09 03:18:16.475 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 03:18:16.537 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 03:18:16.693 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 03:18:16.696 +03:00 [INF] Hosting environment: Development
+2024-11-09 03:18:16.697 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 03:19:20.223 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 5211.5953 ms
+2024-11-09 03:20:23.904 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 200 in 12931.2997 ms
+2024-11-09 03:20:52.454 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 4.8373 ms
+2024-11-09 03:20:54.592 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 2126.9826 ms
+2024-11-09 03:20:57.305 +03:00 [INF] HTTP GET /api/Boards responded 200 in 82.3510 ms
+2024-11-09 03:20:57.539 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 209.4628 ms
+2024-11-09 03:21:04.171 +03:00 [INF] HTTP OPTIONS /api/BoardItems/14 responded 204 in 0.3467 ms
+2024-11-09 03:21:04.186 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 401 in 10.1633 ms
+2024-11-09 12:32:56.649 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 12:32:56.714 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 12:32:56.816 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 12:32:56.818 +03:00 [INF] Hosting environment: Development
+2024-11-09 12:32:56.819 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 12:33:29.403 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 5.5261 ms
+2024-11-09 12:33:58.082 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 28666.6743 ms
+2024-11-09 12:34:02.204 +03:00 [INF] HTTP GET /api/Boards responded 200 in 490.1077 ms
+2024-11-09 12:34:02.436 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 222.0055 ms
+2024-11-09 12:34:09.401 +03:00 [INF] HTTP OPTIONS /api/BoardItems/14 responded 204 in 0.3574 ms
+2024-11-09 12:34:09.419 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 401 in 13.2264 ms
+2024-11-09 13:38:56.177 +03:00 [INF] HTTP GET /api/Boards responded 200 in 47.0175 ms
+2024-11-09 13:38:56.276 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 41.1165 ms
+2024-11-09 13:40:14.625 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 5.4782 ms
+2024-11-09 13:40:17.428 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 2797.4902 ms
+2024-11-09 13:40:37.650 +03:00 [INF] HTTP GET /api/Boards responded 200 in 75.3329 ms
+2024-11-09 13:40:37.695 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 17.3515 ms
+2024-11-09 13:40:44.836 +03:00 [INF] HTTP OPTIONS /api/BoardItems/14 responded 204 in 0.0620 ms
+2024-11-09 13:40:44.847 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 401 in 3.8769 ms
+2024-11-09 13:42:34.746 +03:00 [INF] HTTP GET /api/Boards responded 200 in 30.5141 ms
+2024-11-09 13:42:34.813 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 39.1130 ms
+2024-11-09 14:16:19.085 +03:00 [INF] HTTP GET /api/Boards responded 200 in 63.1609 ms
+2024-11-09 14:16:19.355 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 21.8394 ms
+2024-11-09 14:16:56.593 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.2845 ms
+2024-11-09 14:17:01.565 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 4955.8928 ms
+2024-11-09 14:17:04.360 +03:00 [INF] HTTP GET /api/Boards responded 200 in 5.7653 ms
+2024-11-09 14:17:04.432 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 13.7303 ms
+2024-11-09 14:17:11.843 +03:00 [INF] HTTP OPTIONS /api/BoardItems/14 responded 204 in 0.0717 ms
+2024-11-09 14:17:11.853 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 401 in 2.4068 ms
+2024-11-09 14:18:01.154 +03:00 [INF] HTTP GET /api/Boards responded 200 in 5.6873 ms
+2024-11-09 14:18:02.313 +03:00 [INF] HTTP GET /api/Boards responded 200 in 7.0761 ms
+2024-11-09 14:18:02.514 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 9.7257 ms
+2024-11-09 14:18:02.694 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 23.4227 ms
+2024-11-09 14:18:28.922 +03:00 [INF] HTTP OPTIONS /api/BoardItems/15 responded 204 in 0.1593 ms
+2024-11-09 14:18:28.928 +03:00 [INF] HTTP PUT /api/BoardItems/15 responded 401 in 0.2723 ms
+2024-11-09 14:20:57.645 +03:00 [INF] HTTP GET /api/Boards responded 200 in 44.7894 ms
+2024-11-09 14:20:57.962 +03:00 [INF] HTTP GET /api/Boards responded 200 in 10.8586 ms
+2024-11-09 14:20:58.046 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 16.4602 ms
+2024-11-09 14:20:58.116 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 9.5529 ms
+2024-11-09 14:21:37.142 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.0702 ms
+2024-11-09 14:21:39.787 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 2638.9921 ms
+2024-11-09 14:21:42.566 +03:00 [INF] HTTP GET /api/Boards responded 200 in 12.5223 ms
+2024-11-09 14:21:42.645 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 13.6989 ms
+2024-11-09 14:21:46.750 +03:00 [INF] HTTP OPTIONS /api/BoardItems/Update responded 204 in 0.2498 ms
+2024-11-09 14:24:17.836 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 14:24:17.879 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 14:24:17.983 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 14:24:17.985 +03:00 [INF] Hosting environment: Development
+2024-11-09 14:24:17.987 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 14:24:35.865 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 405 in 142.2930 ms
+2024-11-09 14:24:51.369 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 405 in 2.3232 ms
+2024-11-09 14:26:49.957 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-09 14:26:50.278 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-09 14:26:50.617 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-09 14:26:50.620 +03:00 [INF] Hosting environment: Development
+2024-11-09 14:26:50.621 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2024-11-09 14:27:15.366 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 7.0595 ms
+2024-11-09 14:27:20.630 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 5249.6296 ms
+2024-11-09 14:27:23.162 +03:00 [INF] HTTP GET /api/Boards responded 200 in 536.1113 ms
+2024-11-09 14:27:23.395 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 218.5566 ms
+2024-11-09 14:27:29.941 +03:00 [INF] HTTP OPTIONS /api/BoardItems/Update responded 204 in 0.5261 ms
+2024-11-09 14:27:29.977 +03:00 [INF] HTTP PUT /api/BoardItems/Update responded 401 in 15.9814 ms
+2024-11-09 14:28:33.325 +03:00 [INF] HTTP OPTIONS /api/BoardItems/Update responded 204 in 0.2204 ms
+2024-11-09 14:28:33.338 +03:00 [INF] HTTP PUT /api/BoardItems/Update responded 401 in 5.4132 ms
+2024-11-09 14:31:26.673 +03:00 [INF] HTTP GET /api/Boards responded 200 in 33.3726 ms
+2024-11-09 14:31:26.809 +03:00 [INF] HTTP GET /api/Boards responded 200 in 69.6342 ms
+2024-11-09 14:31:26.852 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 23.2039 ms
+2024-11-09 14:31:26.887 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 15.2641 ms
+2024-11-09 14:32:03.777 +03:00 [INF] HTTP GET /api/Boards responded 200 in 9.1891 ms
+2024-11-09 14:32:04.026 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 24.1575 ms
+2024-11-09 14:32:04.657 +03:00 [INF] HTTP GET /api/Boards responded 200 in 5.6118 ms
+2024-11-09 14:32:05.206 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 28.7354 ms
+2024-11-09 14:32:29.519 +03:00 [INF] HTTP GET /api/Boards responded 200 in 66.3873 ms
+2024-11-09 14:32:29.561 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 11.2312 ms
+2024-11-09 14:32:50.944 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.0869 ms
+2024-11-09 14:32:53.399 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 2446.6725 ms
+2024-11-09 14:32:55.764 +03:00 [INF] HTTP GET /api/Boards responded 200 in 7.4160 ms
+2024-11-09 14:32:55.837 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 15.0912 ms
+2024-11-09 14:33:06.014 +03:00 [INF] HTTP OPTIONS /api/BoardItems/14 responded 204 in 0.1378 ms
+2024-11-09 14:33:06.025 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 401 in 4.1458 ms
+2024-11-09 14:35:06.914 +03:00 [INF] HTTP GET /api/Boards responded 200 in 59.0858 ms
+2024-11-09 14:35:06.939 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 16.3047 ms
+2024-11-09 14:35:24.701 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.0631 ms
+2024-11-09 14:35:27.396 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 2682.7533 ms
+2024-11-09 14:35:30.240 +03:00 [INF] HTTP GET /api/Boards responded 200 in 5.2283 ms
+2024-11-09 14:35:30.258 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 10.8173 ms
+2024-11-09 14:35:33.176 +03:00 [INF] HTTP OPTIONS /api/BoardItems/14 responded 204 in 0.0811 ms
+2024-11-09 14:35:33.183 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 401 in 0.1597 ms
+2024-11-09 14:47:21.653 +03:00 [INF] HTTP GET /api/Boards responded 200 in 51.7737 ms
+2024-11-09 14:47:21.846 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 25.5318 ms
+2024-11-09 14:47:54.939 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.6348 ms
+2024-11-09 14:47:56.772 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 1827.0756 ms
+2024-11-09 14:48:07.038 +03:00 [INF] HTTP GET /api/Boards responded 200 in 6.5587 ms
+2024-11-09 14:48:07.103 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 15.6499 ms
+2024-11-09 14:48:18.318 +03:00 [INF] HTTP OPTIONS /api/BoardItems/14 responded 204 in 0.3155 ms
+2024-11-09 14:48:18.323 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 401 in 0.2117 ms
+2024-11-09 14:48:22.398 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 401 in 0.2676 ms
+2024-11-09 15:12:03.195 +03:00 [INF] HTTP OPTIONS /api/Boards responded 204 in 0.1997 ms
+2024-11-09 15:12:04.948 +03:00 [INF] HTTP GET /api/Boards responded 200 in 1737.2180 ms
+2024-11-09 15:12:05.525 +03:00 [INF] HTTP GET /api/Boards responded 200 in 179.2107 ms
+2024-11-09 15:12:06.234 +03:00 [INF] HTTP OPTIONS /api/BoardItems/GetBoardItemsByBoardId/1 responded 204 in 0.0523 ms
+2024-11-09 15:12:06.463 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 134.2918 ms
+2024-11-09 15:12:46.130 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.8900 ms
+2024-11-09 15:12:47.908 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 1771.5274 ms
+2024-11-09 15:12:56.812 +03:00 [INF] HTTP OPTIONS /api/Boards responded 204 in 0.1917 ms
+2024-11-09 15:12:56.849 +03:00 [INF] HTTP GET /api/Boards responded 200 in 31.6465 ms
+2024-11-09 15:12:58.232 +03:00 [INF] HTTP OPTIONS /api/BoardItems/GetBoardItemsByBoardId/1 responded 204 in 0.0457 ms
+2024-11-09 15:12:58.255 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 16.8492 ms
+2024-11-09 15:13:12.739 +03:00 [INF] HTTP OPTIONS /api/BoardItems/14 responded 204 in 0.2029 ms
+2024-11-09 15:13:30.783 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 200 in 18037.8220 ms
+2024-11-09 15:14:07.491 +03:00 [INF] HTTP OPTIONS /api/BoardItems/187 responded 204 in 1.2813 ms
+2024-11-09 15:14:14.319 +03:00 [INF] HTTP PUT /api/BoardItems/187 responded 200 in 6822.0991 ms
+2024-11-09 15:42:49.118 +03:00 [INF] HTTP OPTIONS /api/BoardItems/GetBoardItemsByBoardId/1 responded 204 in 0.0799 ms
+2024-11-09 15:42:49.248 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 124.4101 ms
+2024-11-09 15:42:55.602 +03:00 [INF] HTTP OPTIONS /api/BoardItems/Create responded 204 in 0.0536 ms
+2024-11-09 15:42:55.707 +03:00 [INF] HTTP POST /api/BoardItems/Create responded 401 in 99.4508 ms
+2024-11-09 15:43:40.847 +03:00 [INF] HTTP OPTIONS /api/BoardItems/190 responded 204 in 0.2811 ms
+2024-11-09 15:43:40.953 +03:00 [INF] HTTP PUT /api/BoardItems/190 responded 401 in 98.9151 ms
+2024-11-09 15:43:50.225 +03:00 [INF] HTTP OPTIONS /api/Boards responded 204 in 0.0341 ms
+2024-11-09 15:43:50.384 +03:00 [INF] HTTP GET /api/Boards responded 200 in 153.0032 ms
+2024-11-09 15:43:51.572 +03:00 [INF] HTTP OPTIONS /api/BoardItems/GetBoardItemsByBoardId/1 responded 204 in 0.0328 ms
+2024-11-09 15:43:51.726 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 147.9634 ms
+2024-11-09 15:44:01.639 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.0401 ms
+2024-11-09 15:44:03.407 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 1760.3942 ms
+2024-11-09 15:44:08.615 +03:00 [INF] HTTP OPTIONS /api/Boards responded 204 in 0.0430 ms
+2024-11-09 15:44:08.631 +03:00 [INF] HTTP GET /api/Boards responded 200 in 8.1657 ms
+2024-11-09 15:44:09.759 +03:00 [INF] HTTP OPTIONS /api/BoardItems/GetBoardItemsByBoardId/1 responded 204 in 0.0350 ms
+2024-11-09 15:44:09.778 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 13.8494 ms
+2024-11-09 15:44:14.112 +03:00 [INF] HTTP OPTIONS /api/BoardItems/14 responded 204 in 0.2456 ms
+2024-11-09 15:44:19.717 +03:00 [INF] HTTP PUT /api/BoardItems/14 responded 200 in 5599.0917 ms
+2024-11-09 15:44:25.454 +03:00 [INF] HTTP OPTIONS /api/BoardItems/GetBoardItemsByBoardId/1 responded 204 in 0.0369 ms
+2024-11-09 15:44:25.507 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 46.8994 ms
+2024-11-09 15:44:35.335 +03:00 [INF] HTTP OPTIONS /api/BoardItems/Create responded 204 in 0.1681 ms
+2024-11-09 15:44:43.192 +03:00 [INF] HTTP POST /api/BoardItems/Create responded 200 in 7850.4912 ms
+2024-11-09 15:44:51.400 +03:00 [INF] HTTP OPTIONS /api/Boards responded 204 in 0.0526 ms
+2024-11-09 15:44:51.467 +03:00 [INF] HTTP GET /api/Boards responded 200 in 58.9549 ms
+2024-11-09 15:44:51.979 +03:00 [INF] HTTP OPTIONS /api/BoardItems/GetBoardItemsByBoardId/1 responded 204 in 0.0445 ms
+2024-11-09 15:44:52.008 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 23.6026 ms
+2024-11-09 15:53:25.105 +03:00 [INF] HTTP OPTIONS /api/Boards responded 204 in 0.1883 ms
+2024-11-09 15:53:25.314 +03:00 [INF] HTTP GET /api/Boards responded 200 in 191.2436 ms
+2024-11-09 15:53:26.563 +03:00 [INF] HTTP OPTIONS /api/BoardItems/GetBoardItemsByBoardId/1 responded 204 in 0.0666 ms
+2024-11-09 15:53:26.582 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 13.9808 ms

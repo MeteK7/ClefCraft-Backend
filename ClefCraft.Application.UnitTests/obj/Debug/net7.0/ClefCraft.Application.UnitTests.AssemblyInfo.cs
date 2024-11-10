@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ClefCraft.Application.UnitTests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+777409ea087b048dbb1499fa5a55c0b3cbf8b991")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6b1c7d31cabd1875c19afc9c8b090d7d903ccdc6")]
 [assembly: System.Reflection.AssemblyProductAttribute("ClefCraft.Application.UnitTests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ClefCraft.Application.UnitTests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

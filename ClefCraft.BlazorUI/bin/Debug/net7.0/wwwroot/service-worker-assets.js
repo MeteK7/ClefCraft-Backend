@@ -917,15 +917,15 @@
       "url": "_framework\/icudt_no_CJK.dat"
     },
     {
-      "hash": "sha256-5EgHpXUh0uZ7s0fh6fYi5Khj2ZVTzl9+c6ZkdVJYAMw=",
+      "hash": "sha256-JfyXUnGzBK2C+b78cM6DCRxUKxWxEIp25zPtjbpP4Ag=",
       "url": "_framework\/ClefCraft.BlazorUI.dll"
     },
     {
-      "hash": "sha256-Z0R0YilIu3q8NWVbEzqDZ7R4IjK5EZh0nsXWBbeFSs0=",
+      "hash": "sha256-Xz6GPdPTxsElFovmDv5zeqVWpzBQ9GxbOk3km4fiz3U=",
       "url": "_framework\/ClefCraft.BlazorUI.pdb"
     },
     {
-      "hash": "sha256-+dXcnxVz61m2QpFY9\/adfNclTw3W7w7DODXU1hGkqDE=",
+      "hash": "sha256-YS+kpuILBGa9eHcim+7LW5GKQ\/qTE6Qjw4OJuRTTNLY=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -937,5 +937,5 @@
       "url": "_content\/Blazored.Toast\/Blazored.Toast.bundle.scp.css"
     }
   ],
-  "version": "clLgf+jg"
+  "version": "UNGP0IYN"
 };

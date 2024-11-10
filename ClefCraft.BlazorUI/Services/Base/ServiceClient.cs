@@ -2780,6 +2780,18 @@ namespace ClefCraft.BlazorUI.Services.Base
         [System.Text.Json.Serialization.JsonPropertyName("status")]
         public string Status { get; set; }
 
+        [System.Text.Json.Serialization.JsonPropertyName("createdBy")]
+        public string CreatedBy { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("modifiedBy")]
+        public string ModifiedBy { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("dateCreated")]
+        public System.DateTimeOffset DateCreated { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("dateModified")]
+        public System.DateTimeOffset DateModified { get; set; }
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]

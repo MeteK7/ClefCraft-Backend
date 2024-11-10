@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItemById;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems;
@@ -15,11 +16,13 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
     {
         private readonly IBoardItemRepository _boardItemRepository;
         private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
-        public UpdateBoardItemCommandHandler(IBoardItemRepository boardItemRepository, IMapper mapper)
+        public UpdateBoardItemCommandHandler(IBoardItemRepository boardItemRepository, IMapper mapper, IUserService userService)
         {
             _boardItemRepository = boardItemRepository;
             _mapper = mapper;
+            _userService = userService;
         }
 
         public async Task<BoardItemByIdDto> Handle(UpdateBoardItemCommand request, CancellationToken cancellationToken)

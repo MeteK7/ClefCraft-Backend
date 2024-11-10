@@ -2,7 +2,6 @@
 using ClefCraft.BlazorUI.Contracts;
 using ClefCraft.BlazorUI.Providers;
 using ClefCraft.BlazorUI.Services.Base;
-using ClefCraft.BlazorUI.Services.Base;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace ClefCraft.BlazorUI.Services
