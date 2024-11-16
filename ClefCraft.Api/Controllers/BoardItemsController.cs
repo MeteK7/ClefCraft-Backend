@@ -4,6 +4,7 @@ using ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItemById;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClefCraft.Api.Controllers
@@ -44,6 +45,7 @@ namespace ClefCraft.Api.Controllers
             return Ok(boardColumns);
         }
 
+        [Authorize]
         [HttpPost("Create")]
         public async Task<ActionResult<BoardItemDto>> Create(CreateBoardItemCommand command)
         {
@@ -51,6 +53,7 @@ namespace ClefCraft.Api.Controllers
             return Ok(item);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult<BoardItemByIdDto>> Update(int id, UpdateBoardItemCommand command)
         {

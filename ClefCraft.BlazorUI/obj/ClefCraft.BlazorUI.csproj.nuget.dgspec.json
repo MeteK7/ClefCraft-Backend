@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.BlazorUI\\ClefCraft.BlazorUI.csproj": {}
+    "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.BlazorUI\\ClefCraft.BlazorUI.csproj": {}
   },
   "projects": {
-    "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.BlazorUI\\ClefCraft.BlazorUI.csproj": {
+    "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.BlazorUI\\ClefCraft.BlazorUI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.BlazorUI\\ClefCraft.BlazorUI.csproj",
+        "projectUniqueName": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.BlazorUI\\ClefCraft.BlazorUI.csproj",
         "projectName": "ClefCraft.BlazorUI",
-        "projectPath": "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.BlazorUI\\ClefCraft.BlazorUI.csproj",
-        "packagesPath": "C:\\Users\\mete.kaba\\.nuget\\packages\\",
-        "outputPath": "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.BlazorUI\\obj\\",
+        "projectPath": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.BlazorUI\\ClefCraft.BlazorUI.csproj",
+        "packagesPath": "C:\\Users\\MeteK\\.nuget\\packages\\",
+        "outputPath": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.BlazorUI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\mete.kaba\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\MeteK\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -42,9 +42,8 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "all"
-        },
-        "SdkAnalysisLevel": "9.0.100"
+          "auditMode": "direct"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -82,13 +81,13 @@
             "Microsoft.NET.ILLink.Tasks": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[8.0.11, )",
+              "version": "[8.0.2, )",
               "autoReferenced": true
             },
             "Microsoft.NET.Sdk.WebAssembly.Pack": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[9.0.0, )",
+              "version": "[8.0.2, )",
               "autoReferenced": true
             },
             "System.IdentityModel.Tokens.Jwt": {
@@ -114,7 +113,7 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.NETCore.App.Runtime.Mono.browser-wasm",
-              "version": "[8.0.11, 8.0.11]"
+              "version": "[8.0.2, 8.0.2]"
             }
           ],
           "frameworkReferences": {
@@ -122,7 +121,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
         }
       },
       "runtimes": {
