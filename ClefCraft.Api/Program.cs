@@ -24,7 +24,8 @@ builder.Services.AddCors(options =>
         builder => builder
             .WithOrigins("http://localhost:4200") // Update this URL to your Angular app's URL
             .AllowAnyMethod()
-            .AllowAnyHeader());
+            .AllowAnyHeader()
+            .AllowCredentials());
 });
 
 builder.Services.AddHttpContextAccessor();

@@ -1,0 +1,36 @@
+2024-11-15 15:42:00.902 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-15 15:42:00.961 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-15 15:42:01.085 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-15 15:42:01.090 +03:00 [INF] Hosting environment: Development
+2024-11-15 15:42:01.092 +03:00 [INF] Content root path: C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.Api
+2024-11-15 15:44:58.891 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-15 15:44:58.911 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-15 15:44:58.950 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-15 15:44:58.954 +03:00 [INF] Hosting environment: Development
+2024-11-15 15:44:58.955 +03:00 [INF] Content root path: C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.Api
+2024-11-15 16:46:08.395 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-15 16:46:08.475 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-15 16:46:08.577 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-15 16:46:08.581 +03:00 [INF] Hosting environment: Development
+2024-11-15 16:46:08.583 +03:00 [INF] Content root path: C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.Api
+2024-11-15 16:49:25.510 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-15 16:49:25.542 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-15 16:49:25.592 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-15 16:49:25.594 +03:00 [INF] Hosting environment: Development
+2024-11-15 16:49:25.596 +03:00 [INF] Content root path: C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.Api
+2024-11-15 16:50:07.125 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 6.5305 ms
+2024-11-15 16:50:13.013 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 5863.4493 ms
+2024-11-15 16:51:11.545 +03:00 [INF] HTTP OPTIONS /api/Boards responded 204 in 1.6890 ms
+2024-11-15 16:51:22.755 +03:00 [INF] HTTP OPTIONS /api/Boards responded 204 in 0.1850 ms
+2024-11-15 16:52:02.994 +03:00 [INF] HTTP OPTIONS /api/Boards responded 204 in 0.0998 ms
+2024-11-15 16:58:08.984 +03:00 [INF] Now listening on: https://localhost:7287
+2024-11-15 16:58:09.010 +03:00 [INF] Now listening on: http://localhost:5166
+2024-11-15 16:58:09.043 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-11-15 16:58:09.044 +03:00 [INF] Hosting environment: Development
+2024-11-15 16:58:09.046 +03:00 [INF] Content root path: C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.Api
+2024-11-15 16:59:01.441 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 6.4621 ms
+2024-11-15 16:59:05.148 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 3686.0461 ms
+2024-11-15 16:59:06.531 +03:00 [INF] HTTP OPTIONS /api/Boards responded 204 in 1.6983 ms
+2024-11-15 16:59:07.218 +03:00 [INF] HTTP GET /api/Boards responded 200 in 671.5146 ms
+2024-11-15 16:59:07.226 +03:00 [INF] HTTP OPTIONS /api/BoardItems/GetBoardItemsByBoardId/1 responded 204 in 0.1188 ms
+2024-11-15 16:59:07.533 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 296.9667 ms
