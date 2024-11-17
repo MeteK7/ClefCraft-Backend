@@ -1,4 +1,5 @@
-﻿using ClefCraft.Application.Features.BoardColumn.Queries.GetBoardColumns;
+﻿using ClefCraft.Application.Contracts.Identity;
+using ClefCraft.Application.Features.BoardColumn.Queries.GetBoardColumns;
 using ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem;
 using ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItemById;
@@ -14,10 +15,12 @@ namespace ClefCraft.Api.Controllers
     public class BoardItemsController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly IUserService _userService;
 
-        public BoardItemsController(IMediator mediator)
+        public BoardItemsController(IMediator mediator, IUserService userService)
         {
             _mediator = mediator;
+            _userService = userService;
         }
         //GET: api/<ItemsController> 
         [HttpGet]
@@ -79,5 +82,16 @@ namespace ClefCraft.Api.Controllers
             var updatedItem = await _mediator.Send(command);
             return Ok(updatedItem);
         }
+
+        [HttpGet("GetUserFullName/{userId}")]
+        public async Task<ActionResult<string>> GetUserFullName(string userId)
+        {
+            var user = await _userService.GetEmployee(userId);
+            if (user == null)
+                return NotFound($"User with ID {userId} not found.");
+
+            return Ok($"{user.Firstname} {user.Lastname}");
+        }
+
     }
 }

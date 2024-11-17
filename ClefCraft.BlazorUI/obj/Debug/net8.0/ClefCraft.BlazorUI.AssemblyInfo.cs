@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ClefCraft.BlazorUI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0f8a7d52be858fe637b482036bb707410468e329")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0c022c7afe753479ae0a06f570b0da675680a072")]
 [assembly: System.Reflection.AssemblyProductAttribute("ClefCraft.BlazorUI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ClefCraft.BlazorUI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

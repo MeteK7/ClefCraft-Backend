@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Features.BoardColumn.Queries.GetBoardColumns;
 using MediatR;
@@ -14,25 +15,57 @@ namespace ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems
     {
         private readonly IBoardItemRepository _boardItemRepository;
         private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
-        public GetBoardItemsHandler(IBoardItemRepository boardItemRepository, IMapper mapper)
+        public GetBoardItemsHandler(IBoardItemRepository boardItemRepository, IMapper mapper, IUserService userService)
         {
             _boardItemRepository = boardItemRepository;
             _mapper = mapper;
+            _userService = userService;
         }
+        //public async Task<List<BoardColumnDto>> Handle(GetBoardItemsQuery request, CancellationToken cancellationToken)
+        //{
+        //    if (request.BoardId.HasValue)
+        //    {
+        //        var columns = await _boardItemRepository.GetBoardColumnsWithBoardItems(request.BoardId.Value);
+        //        return _mapper.Map<List<BoardColumnDto>>(columns);
+        //    }
+        //    else
+        //    {
+        //        // Fetch all board columns and items if no specific board is selected
+        //        var allColumns = await _boardItemRepository.GetAllBoardColumnsWithItems();
+        //        return _mapper.Map<List<BoardColumnDto>>(allColumns);
+        //    }
+        //}
+
         public async Task<List<BoardColumnDto>> Handle(GetBoardItemsQuery request, CancellationToken cancellationToken)
         {
-            if (request.BoardId.HasValue)
+            var columns = request.BoardId.HasValue
+                ? await _boardItemRepository.GetBoardColumnsWithBoardItems(request.BoardId.Value)
+                : await _boardItemRepository.GetAllBoardColumnsWithItems();
+
+            var mappedColumns = _mapper.Map<List<BoardColumnDto>>(columns);
+
+            foreach (var column in mappedColumns)
             {
-                var columns = await _boardItemRepository.GetBoardColumnsWithBoardItems(request.BoardId.Value);
-                return _mapper.Map<List<BoardColumnDto>>(columns);
+                foreach (var item in column.BoardItems)
+                {
+                    if (!string.IsNullOrEmpty(item.CreatedBy))
+                    {
+                        var creator = await _userService.GetEmployee(item.CreatedBy);
+                        item.CreatedByFullName = $"{creator.Firstname} {creator.Lastname}";
+                    }
+
+                    if (!string.IsNullOrEmpty(item.ModifiedBy))
+                    {
+                        var modifier = await _userService.GetEmployee(item.ModifiedBy);
+                        item.ModifiedByFullName = $"{modifier.Firstname} {modifier.Lastname}";
+                    }
+                }
             }
-            else
-            {
-                // Fetch all board columns and items if no specific board is selected
-                var allColumns = await _boardItemRepository.GetAllBoardColumnsWithItems();
-                return _mapper.Map<List<BoardColumnDto>>(allColumns);
-            }
+
+            return mappedColumns;
         }
+
     }
 }
