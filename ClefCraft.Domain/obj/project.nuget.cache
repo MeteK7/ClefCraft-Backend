@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "fjp2PkdDBkJmSAWwgHfsQDCAT5p4YXQD/nIL7Qoe9F7MOPpTFKJI10flxFj22TTSXbNfySB11DJo+rj1Ht1tSg==",
+  "dgSpecHash": "ryBkV/0sF6Y=",
   "success": true,
-  "projectFilePath": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Domain\\ClefCraft.Domain.csproj",
+  "projectFilePath": "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.Domain\\ClefCraft.Domain.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

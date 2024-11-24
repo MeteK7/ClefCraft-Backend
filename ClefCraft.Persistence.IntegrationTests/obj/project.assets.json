@@ -4454,23 +4454,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\MeteK\\.nuget\\packages\\": {},
+    "C:\\Users\\mete.kaba\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence.IntegrationTests\\ClefCraft.Persistence.IntegrationTests.csproj",
+      "projectUniqueName": "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.Persistence.IntegrationTests\\ClefCraft.Persistence.IntegrationTests.csproj",
       "projectName": "ClefCraft.Persistence.IntegrationTests",
-      "projectPath": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence.IntegrationTests\\ClefCraft.Persistence.IntegrationTests.csproj",
-      "packagesPath": "C:\\Users\\MeteK\\.nuget\\packages\\",
-      "outputPath": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence.IntegrationTests\\obj\\",
+      "projectPath": "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.Persistence.IntegrationTests\\ClefCraft.Persistence.IntegrationTests.csproj",
+      "packagesPath": "C:\\Users\\mete.kaba\\.nuget\\packages\\",
+      "outputPath": "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.Persistence.IntegrationTests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\MeteK\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\mete.kaba\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -4485,11 +4485,11 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\ClefCraft.Application.csproj": {
-              "projectPath": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\ClefCraft.Application.csproj"
+            "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.Application\\ClefCraft.Application.csproj": {
+              "projectPath": "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.Application\\ClefCraft.Application.csproj"
             },
-            "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\ClefCraft.Persistence.csproj": {
-              "projectPath": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\ClefCraft.Persistence.csproj"
+            "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.Persistence\\ClefCraft.Persistence.csproj": {
+              "projectPath": "C:\\TemsaUG\\Projects\\ClefCraft-Backend\\ClefCraft.Persistence\\ClefCraft.Persistence.csproj"
             }
           }
         }
@@ -4502,8 +4502,9 @@
       "restoreAuditProperties": {
         "enableAudit": "true",
         "auditLevel": "low",
-        "auditMode": "direct"
-      }
+        "auditMode": "all"
+      },
+      "SdkAnalysisLevel": "9.0.100"
     },
     "frameworks": {
       "net8.0": {
@@ -4562,7 +4563,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
