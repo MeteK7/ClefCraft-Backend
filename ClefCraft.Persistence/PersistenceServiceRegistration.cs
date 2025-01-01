@@ -23,6 +23,7 @@ namespace ClefCraft.Persistence
             services.AddScoped<IBoardRepository, BoardRepository>();
             //services.AddScoped<IBoardColumnRepository, BoardColumnRepository>();
             services.AddScoped<IBoardItemRepository, BoardItemRepository>();
+            services.AddScoped<ICalendarEventRepository, CalendarEventRepository>();
 
             return services;
         }

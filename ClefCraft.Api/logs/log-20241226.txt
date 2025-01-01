@@ -1,0 +1,2 @@
+2024-12-26 23:06:24.691 +03:00 [INF] HTTP OPTIONS /api/Calendar/events responded 204 in 0.2700 ms
+2024-12-26 23:06:28.699 +03:00 [INF] HTTP GET /api/Calendar/events responded 200 in 3613.6735 ms

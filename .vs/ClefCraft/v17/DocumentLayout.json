@@ -3,60 +3,168 @@
   "WorkspaceRootPath": "C:\\Projects\\Backend\\ClefCraft-Backend\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{FF6B17A1-90B6-43DA-86AD-D75FF4DB9D4A}|ClefCraft.Identity\\ClefCraft.Identity.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.identity\\configurations\\userconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FF6B17A1-90B6-43DA-86AD-D75FF4DB9D4A}|ClefCraft.Identity\\ClefCraft.Identity.csproj|solutionrelative:clefcraft.identity\\configurations\\userconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\features\\calendar\\queries\\getcalendareventsqueryhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\features\\calendar\\queries\\getcalendareventsqueryhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B651D082-97C3-42C4-8B85-129121A576E5}|ClefCraft.Api\\ClefCraft.Api.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.api\\controllers\\calendarcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B651D082-97C3-42C4-8B85-129121A576E5}|ClefCraft.Api\\ClefCraft.Api.csproj|solutionrelative:clefcraft.api\\controllers\\calendarcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4E54B5B4-68D7-4EF5-8000-7E42E6FBEC82}|ClefCraft.Persistence\\ClefCraft.Persistence.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.persistence\\repositories\\calendareventrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4E54B5B4-68D7-4EF5-8000-7E42E6FBEC82}|ClefCraft.Persistence\\ClefCraft.Persistence.csproj|solutionrelative:clefcraft.persistence\\repositories\\calendareventrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\features\\boarditem\\queries\\getboarditembyid\\getboarditembyidquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\features\\boarditem\\queries\\getboarditembyid\\getboarditembyidquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\mappingprofiles\\calendareventprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\mappingprofiles\\calendareventprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\mappingprofiles\\leavetypeprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\mappingprofiles\\leavetypeprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\mappingprofiles\\boardprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\mappingprofiles\\boardprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\mappingprofiles\\boarditemprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\mappingprofiles\\boarditemprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\mappingprofiles\\leaverequestprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\mappingprofiles\\leaverequestprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\mappingprofiles\\leaveallocationprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\mappingprofiles\\leaveallocationprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\mappingprofiles\\boardcolumnprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\mappingprofiles\\boardcolumnprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\features\\boarditem\\queries\\getboarditems\\getboarditemshandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\features\\boarditem\\queries\\getboarditems\\getboarditemshandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\features\\boarditem\\queries\\getboarditems\\boarditemdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\features\\boarditem\\queries\\getboarditems\\boarditemdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\features\\boarditem\\queries\\getboarditembyid\\getboarditembyidhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\features\\boarditem\\queries\\getboarditembyid\\getboarditembyidhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\features\\boarditem\\commands\\createboarditem\\createboarditemcommandhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\features\\boarditem\\commands\\createboarditem\\createboarditemcommandhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4E54B5B4-68D7-4EF5-8000-7E42E6FBEC82}|ClefCraft.Persistence\\ClefCraft.Persistence.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.persistence\\repositories\\boardrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4E54B5B4-68D7-4EF5-8000-7E42E6FBEC82}|ClefCraft.Persistence\\ClefCraft.Persistence.csproj|solutionrelative:clefcraft.persistence\\repositories\\boardrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4E54B5B4-68D7-4EF5-8000-7E42E6FBEC82}|ClefCraft.Persistence\\ClefCraft.Persistence.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.persistence\\repositories\\boarditemrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4E54B5B4-68D7-4EF5-8000-7E42E6FBEC82}|ClefCraft.Persistence\\ClefCraft.Persistence.csproj|solutionrelative:clefcraft.persistence\\repositories\\boarditemrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\features\\boarditem\\commands\\updateboarditem\\updateboarditemcommandhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\features\\boarditem\\commands\\updateboarditem\\updateboarditemcommandhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4E54B5B4-68D7-4EF5-8000-7E42E6FBEC82}|ClefCraft.Persistence\\ClefCraft.Persistence.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.persistence\\repositories\\leaveallocationrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4E54B5B4-68D7-4EF5-8000-7E42E6FBEC82}|ClefCraft.Persistence\\ClefCraft.Persistence.csproj|solutionrelative:clefcraft.persistence\\repositories\\leaveallocationrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\features\\boarditem\\queries\\getboarditems\\getboarditemsquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\features\\boarditem\\queries\\getboarditems\\getboarditemsquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\features\\calendar\\commands\\createcalendarevent\\createcalendareventcommandhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\features\\calendar\\commands\\createcalendarevent\\createcalendareventcommandhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4E54B5B4-68D7-4EF5-8000-7E42E6FBEC82}|ClefCraft.Persistence\\ClefCraft.Persistence.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.persistence\\databasecontext\\clefcraftdatabasecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4E54B5B4-68D7-4EF5-8000-7E42E6FBEC82}|ClefCraft.Persistence\\ClefCraft.Persistence.csproj|solutionrelative:clefcraft.persistence\\databasecontext\\clefcraftdatabasecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\contracts\\persistence\\iboarditemrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\contracts\\persistence\\iboarditemrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\features\\leaverequest\\queries\\getleaverequestdetail\\getleaverequestdetailqueryhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\features\\leaverequest\\queries\\getleaverequestdetail\\getleaverequestdetailqueryhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\features\\leaverequest\\queries\\getleaverequestdetail\\getleaverequestdetailquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\features\\leaverequest\\queries\\getleaverequestdetail\\getleaverequestdetailquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\features\\boarditem\\queries\\getboarditems\\boarditemdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\features\\boarditem\\queries\\getboarditems\\boarditemdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\contracts\\persistence\\ileaverequestrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\contracts\\persistence\\ileaverequestrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4E54B5B4-68D7-4EF5-8000-7E42E6FBEC82}|ClefCraft.Persistence\\ClefCraft.Persistence.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.persistence\\repositories\\leaverequestrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4E54B5B4-68D7-4EF5-8000-7E42E6FBEC82}|ClefCraft.Persistence\\ClefCraft.Persistence.csproj|solutionrelative:clefcraft.persistence\\repositories\\leaverequestrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\contracts\\persistence\\ileavetyperepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\contracts\\persistence\\ileavetyperepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\contracts\\persistence\\iboardrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\contracts\\persistence\\iboardrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\contracts\\persistence\\igenericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\contracts\\persistence\\igenericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E4BADE4D-62B4-4846-A417-D94D2D7EA2F9}|ClefCraft.Domain\\ClefCraft.Domain.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.domain\\calendareventhistory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E4BADE4D-62B4-4846-A417-D94D2D7EA2F9}|ClefCraft.Domain\\ClefCraft.Domain.csproj|solutionrelative:clefcraft.domain\\calendareventhistory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E4BADE4D-62B4-4846-A417-D94D2D7EA2F9}|ClefCraft.Domain\\ClefCraft.Domain.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.domain\\board.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E4BADE4D-62B4-4846-A417-D94D2D7EA2F9}|ClefCraft.Domain\\ClefCraft.Domain.csproj|solutionrelative:clefcraft.domain\\board.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B651D082-97C3-42C4-8B85-129121A576E5}|ClefCraft.Api\\ClefCraft.Api.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.api\\controllers\\boarditemscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B651D082-97C3-42C4-8B85-129121A576E5}|ClefCraft.Api\\ClefCraft.Api.csproj|solutionrelative:clefcraft.api\\controllers\\boarditemscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{4E54B5B4-68D7-4EF5-8000-7E42E6FBEC82}|ClefCraft.Persistence\\ClefCraft.Persistence.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.persistence\\repositories\\leavetyperepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4E54B5B4-68D7-4EF5-8000-7E42E6FBEC82}|ClefCraft.Persistence\\ClefCraft.Persistence.csproj|solutionrelative:clefcraft.persistence\\repositories\\leavetyperepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{B651D082-97C3-42C4-8B85-129121A576E5}|ClefCraft.Api\\ClefCraft.Api.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.api\\controllers\\boardscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B651D082-97C3-42C4-8B85-129121A576E5}|ClefCraft.Api\\ClefCraft.Api.csproj|solutionrelative:clefcraft.api\\controllers\\boardscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B651D082-97C3-42C4-8B85-129121A576E5}|ClefCraft.Api\\ClefCraft.Api.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.api\\controllers\\boardcolumnscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B651D082-97C3-42C4-8B85-129121A576E5}|ClefCraft.Api\\ClefCraft.Api.csproj|solutionrelative:clefcraft.api\\controllers\\boardcolumnscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FF6B17A1-90B6-43DA-86AD-D75FF4DB9D4A}|ClefCraft.Identity\\ClefCraft.Identity.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.identity\\configurations\\userconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FF6B17A1-90B6-43DA-86AD-D75FF4DB9D4A}|ClefCraft.Identity\\ClefCraft.Identity.csproj|solutionrelative:clefcraft.identity\\configurations\\userconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FF6B17A1-90B6-43DA-86AD-D75FF4DB9D4A}|ClefCraft.Identity\\ClefCraft.Identity.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.identity\\configurations\\userroleconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FF6B17A1-90B6-43DA-86AD-D75FF4DB9D4A}|ClefCraft.Identity\\ClefCraft.Identity.csproj|solutionrelative:clefcraft.identity\\configurations\\userroleconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B651D082-97C3-42C4-8B85-129121A576E5}|ClefCraft.Api\\ClefCraft.Api.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{B651D082-97C3-42C4-8B85-129121A576E5}|ClefCraft.Api\\ClefCraft.Api.csproj|solutionrelative:clefcraft.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FF6B17A1-90B6-43DA-86AD-D75FF4DB9D4A}|ClefCraft.Identity\\ClefCraft.Identity.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.identity\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FF6B17A1-90B6-43DA-86AD-D75FF4DB9D4A}|ClefCraft.Identity\\ClefCraft.Identity.csproj|solutionrelative:clefcraft.identity\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\contracts\\identity\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\contracts\\identity\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E4BADE4D-62B4-4846-A417-D94D2D7EA2F9}|ClefCraft.Domain\\ClefCraft.Domain.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.domain\\boarditem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E4BADE4D-62B4-4846-A417-D94D2D7EA2F9}|ClefCraft.Domain\\ClefCraft.Domain.csproj|solutionrelative:clefcraft.domain\\boarditem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\features\\boarditem\\commands\\updateboarditem\\updateboarditemcommandhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\features\\boarditem\\commands\\updateboarditem\\updateboarditemcommandhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E4BADE4D-62B4-4846-A417-D94D2D7EA2F9}|ClefCraft.Domain\\ClefCraft.Domain.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.domain\\board.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E4BADE4D-62B4-4846-A417-D94D2D7EA2F9}|ClefCraft.Domain\\ClefCraft.Domain.csproj|solutionrelative:clefcraft.domain\\board.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B651D082-97C3-42C4-8B85-129121A576E5}|ClefCraft.Api\\ClefCraft.Api.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.api\\controllers\\boardcolumnscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B651D082-97C3-42C4-8B85-129121A576E5}|ClefCraft.Api\\ClefCraft.Api.csproj|solutionrelative:clefcraft.api\\controllers\\boardcolumnscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FF6B17A1-90B6-43DA-86AD-D75FF4DB9D4A}|ClefCraft.Identity\\ClefCraft.Identity.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.identity\\configurations\\userroleconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FF6B17A1-90B6-43DA-86AD-D75FF4DB9D4A}|ClefCraft.Identity\\ClefCraft.Identity.csproj|solutionrelative:clefcraft.identity\\configurations\\userroleconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FF6B17A1-90B6-43DA-86AD-D75FF4DB9D4A}|ClefCraft.Identity\\ClefCraft.Identity.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.identity\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FF6B17A1-90B6-43DA-86AD-D75FF4DB9D4A}|ClefCraft.Identity\\ClefCraft.Identity.csproj|solutionrelative:clefcraft.identity\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E4BADE4D-62B4-4846-A417-D94D2D7EA2F9}|ClefCraft.Domain\\ClefCraft.Domain.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.domain\\boarditem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E4BADE4D-62B4-4846-A417-D94D2D7EA2F9}|ClefCraft.Domain\\ClefCraft.Domain.csproj|solutionrelative:clefcraft.domain\\boarditem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\models\\identity\\jwtsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -79,18 +187,6 @@
       "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\contracts\\identity\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\contracts\\persistence\\iboarditemrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\contracts\\persistence\\iboarditemrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\contracts\\persistence\\iboardrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\contracts\\persistence\\iboardrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\contracts\\persistence\\igenericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\contracts\\persistence\\igenericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{B651D082-97C3-42C4-8B85-129121A576E5}|ClefCraft.Api\\ClefCraft.Api.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B651D082-97C3-42C4-8B85-129121A576E5}|ClefCraft.Api\\ClefCraft.Api.csproj|solutionrelative:clefcraft.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -99,28 +195,12 @@
       "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\features\\boarditem\\commands\\createboarditem\\createboarditemcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\features\\boarditem\\commands\\createboarditem\\createboarditemcommandhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\features\\boarditem\\commands\\createboarditem\\createboarditemcommandhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B651D082-97C3-42C4-8B85-129121A576E5}|ClefCraft.Api\\ClefCraft.Api.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B651D082-97C3-42C4-8B85-129121A576E5}|ClefCraft.Api\\ClefCraft.Api.csproj|solutionrelative:clefcraft.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\mappingprofiles\\boardcolumnprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\mappingprofiles\\boardcolumnprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{3E14240A-645C-4BD4-ABAC-B459C8AC9077}|ClefCraft.BlazorUI\\ClefCraft.BlazorUI.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.blazorui\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3E14240A-645C-4BD4-ABAC-B459C8AC9077}|ClefCraft.BlazorUI\\ClefCraft.BlazorUI.csproj|solutionrelative:clefcraft.blazorui\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\applicationserviceregistration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\applicationserviceregistration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.application\\mappingprofiles\\boarditemprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{83A21AB7-5BD2-459D-A010-DCB6F57AD31D}|ClefCraft.Application\\ClefCraft.Application.csproj|solutionrelative:clefcraft.application\\mappingprofiles\\boarditemprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
@@ -160,6 +240,14 @@
     {
       "AbsoluteMoniker": "D:0:0:{4E54B5B4-68D7-4EF5-8000-7E42E6FBEC82}|ClefCraft.Persistence\\ClefCraft.Persistence.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.persistence\\migrations\\20241115134631_newmig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4E54B5B4-68D7-4EF5-8000-7E42E6FBEC82}|ClefCraft.Persistence\\ClefCraft.Persistence.csproj|solutionrelative:clefcraft.persistence\\migrations\\20241115134631_newmig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4E54B5B4-68D7-4EF5-8000-7E42E6FBEC82}|ClefCraft.Persistence\\ClefCraft.Persistence.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.persistence\\migrations\\20241225191945_calendar.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4E54B5B4-68D7-4EF5-8000-7E42E6FBEC82}|ClefCraft.Persistence\\ClefCraft.Persistence.csproj|solutionrelative:clefcraft.persistence\\migrations\\20241225191945_calendar.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FF6B17A1-90B6-43DA-86AD-D75FF4DB9D4A}|ClefCraft.Identity\\ClefCraft.Identity.csproj|c:\\projects\\backend\\clefcraft-backend\\clefcraft.identity\\migrations\\20241225192235_calendar.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FF6B17A1-90B6-43DA-86AD-D75FF4DB9D4A}|ClefCraft.Identity\\ClefCraft.Identity.csproj|solutionrelative:clefcraft.identity\\migrations\\20241225192235_calendar.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -169,7 +257,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 277,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 9,
           "Children": [
             {
               "$type": "Bookmark",
@@ -180,366 +268,133 @@
               "Name": "ST:12:0:{2456bd12-ecf7-4988-a4a6-67d49173f565}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "BoardItemRepository.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\Repositories\\BoardItemRepository.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Persistence\\Repositories\\BoardItemRepository.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\Repositories\\BoardItemRepository.cs",
-              "RelativeToolTip": "ClefCraft.Persistence\\Repositories\\BoardItemRepository.cs",
-              "ViewState": "AQIAACgAAAAAAAAAAAA0wBMAAAAfAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-02T20:31:10.182Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "UpdateBoardItemCommandHandler.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Commands\\UpdateBoardItem\\UpdateBoardItemCommandHandler.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Application\\Features\\BoardItem\\Commands\\UpdateBoardItem\\UpdateBoardItemCommandHandler.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Commands\\UpdateBoardItem\\UpdateBoardItemCommandHandler.cs",
-              "RelativeToolTip": "ClefCraft.Application\\Features\\BoardItem\\Commands\\UpdateBoardItem\\UpdateBoardItemCommandHandler.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAADAAAAAAAAAA",
+              "DocumentIndex": 2,
+              "Title": "CalendarController.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\Controllers\\CalendarController.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Api\\Controllers\\CalendarController.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\Controllers\\CalendarController.cs",
+              "RelativeToolTip": "ClefCraft.Api\\Controllers\\CalendarController.cs",
+              "ViewState": "AQIAAAoAAAAAAAAAAAAcwBgAAABFAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-02T20:51:46.111Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-27T08:51:52.101Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 6,
-              "Title": "BoardColumnsController.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\Controllers\\BoardColumnsController.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Api\\Controllers\\BoardColumnsController.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\Controllers\\BoardColumnsController.cs",
-              "RelativeToolTip": "ClefCraft.Api\\Controllers\\BoardColumnsController.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Title": "LeaveTypeProfile.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\MappingProfiles\\LeaveTypeProfile.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\MappingProfiles\\LeaveTypeProfile.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\MappingProfiles\\LeaveTypeProfile.cs",
+              "RelativeToolTip": "ClefCraft.Application\\MappingProfiles\\LeaveTypeProfile.cs",
+              "ViewState": "AQIAAAkAAAAAAAAAAAAAABIAAAA9AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-02T20:50:24.598Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-27T08:53:17.32Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 5,
+              "Title": "CalendarEventProfile.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\MappingProfiles\\CalendarEventProfile.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\MappingProfiles\\CalendarEventProfile.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\MappingProfiles\\CalendarEventProfile.cs",
+              "RelativeToolTip": "ClefCraft.Application\\MappingProfiles\\CalendarEventProfile.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAAjAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-27T08:55:36.914Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "GetBoardItemByIdQuery.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItemById\\GetBoardItemByIdQuery.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItemById\\GetBoardItemByIdQuery.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItemById\\GetBoardItemByIdQuery.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItemById\\GetBoardItemByIdQuery.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-27T08:47:05.494Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "GetCalendarEventsQueryHandler.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\Calendar\\Queries\\GetCalendarEventsQueryHandler.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Features\\Calendar\\Queries\\GetCalendarEventsQueryHandler.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\Calendar\\Queries\\GetCalendarEventsQueryHandler.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Features\\Calendar\\Queries\\GetCalendarEventsQueryHandler.cs",
+              "ViewState": "AQIAAAkAAAAAAAAAAAAcwBkAAAAMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-18T11:03:29.83Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "CalendarEventRepository.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\Repositories\\CalendarEventRepository.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Persistence\\Repositories\\CalendarEventRepository.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\Repositories\\CalendarEventRepository.cs",
+              "RelativeToolTip": "ClefCraft.Persistence\\Repositories\\CalendarEventRepository.cs",
+              "ViewState": "AQIAAAYAAAAAAAAAAAAIwAwAAABKAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-27T08:49:25.639Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
               "Title": "UserConfiguration.cs",
               "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Identity\\Configurations\\UserConfiguration.cs",
               "RelativeDocumentMoniker": "ClefCraft.Identity\\Configurations\\UserConfiguration.cs",
               "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Identity\\Configurations\\UserConfiguration.cs",
               "RelativeToolTip": "ClefCraft.Identity\\Configurations\\UserConfiguration.cs",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAAABQAAAARAAAA",
+              "ViewState": "AQIAAAwAAAAAAAAAAAA3wBwAAAA+AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-15T13:49:50.905Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "BoardItemDto.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItems\\BoardItemDto.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItems\\BoardItemDto.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItems\\BoardItemDto.cs",
-              "RelativeToolTip": "ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItems\\BoardItemDto.cs",
-              "ViewState": "AQIAAAYAAAAAAAAAAAAAABAAAAAnAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-16T19:31:04.858Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "GetBoardItemsHandler.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItems\\GetBoardItemsHandler.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItems\\GetBoardItemsHandler.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItems\\GetBoardItemsHandler.cs",
-              "RelativeToolTip": "ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItems\\GetBoardItemsHandler.cs",
-              "ViewState": "AQIAABkAAAAAAAAAAAAAABkAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-16T19:38:32.884Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "IUserService.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Identity\\IUserService.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Application\\Contracts\\Identity\\IUserService.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Identity\\IUserService.cs",
-              "RelativeToolTip": "ClefCraft.Application\\Contracts\\Identity\\IUserService.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAyAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-17T10:40:22.091Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "BoardItemsController.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\Controllers\\BoardItemsController.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Api\\Controllers\\BoardItemsController.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\Controllers\\BoardItemsController.cs",
-              "RelativeToolTip": "ClefCraft.Api\\Controllers\\BoardItemsController.cs",
-              "ViewState": "AQIAAD0AAAAAAAAAAAAcwE8AAABZAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-15T13:41:44.174Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "BoardsController.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\Controllers\\BoardsController.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Api\\Controllers\\BoardsController.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\Controllers\\BoardsController.cs",
-              "RelativeToolTip": "ClefCraft.Api\\Controllers\\BoardsController.cs",
+              "DocumentIndex": 7,
+              "Title": "BoardProfile.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\MappingProfiles\\BoardProfile.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\MappingProfiles\\BoardProfile.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\MappingProfiles\\BoardProfile.cs",
+              "RelativeToolTip": "ClefCraft.Application\\MappingProfiles\\BoardProfile.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-17T10:37:15.61Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "UserRoleConfiguration.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Identity\\Configurations\\UserRoleConfiguration.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Identity\\Configurations\\UserRoleConfiguration.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Identity\\Configurations\\UserRoleConfiguration.cs",
-              "RelativeToolTip": "ClefCraft.Identity\\Configurations\\UserRoleConfiguration.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-17T10:47:22.234Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\appsettings.json",
-              "RelativeDocumentMoniker": "ClefCraft.Api\\appsettings.json",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\appsettings.json",
-              "RelativeToolTip": "ClefCraft.Api\\appsettings.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAARAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-11-15T13:39:36.708Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-27T08:56:02.266Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 10,
-              "Title": "UserService.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Identity\\Services\\UserService.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Identity\\Services\\UserService.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Identity\\Services\\UserService.cs",
-              "RelativeToolTip": "ClefCraft.Identity\\Services\\UserService.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAawB4AAAAMAAAAAAAAAA==",
+              "Title": "LeaveAllocationProfile.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\MappingProfiles\\LeaveAllocationProfile.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\MappingProfiles\\LeaveAllocationProfile.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\MappingProfiles\\LeaveAllocationProfile.cs",
+              "RelativeToolTip": "ClefCraft.Application\\MappingProfiles\\LeaveAllocationProfile.cs",
+              "ViewState": "AQIAAAkAAAAAAAAAAAAAAA4AAAAxAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-17T10:41:56.429Z"
+              "WhenOpened": "2024-12-27T08:53:03.732Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "Board.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Domain\\Board.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Domain\\Board.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Domain\\Board.cs",
-              "RelativeToolTip": "ClefCraft.Domain\\Board.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-17T10:47:17.462Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "JwtSettings.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Models\\Identity\\JwtSettings.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Application\\Models\\Identity\\JwtSettings.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Models\\Identity\\JwtSettings.cs",
-              "RelativeToolTip": "ClefCraft.Application\\Models\\Identity\\JwtSettings.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-17T10:47:12.186Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "BoardItem.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Domain\\BoardItem.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Domain\\BoardItem.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Domain\\BoardItem.cs",
-              "RelativeToolTip": "ClefCraft.Domain\\BoardItem.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAkAAAAaAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-17T11:06:35.636Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "Employee.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Models\\Identity\\Employee.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Application\\Models\\Identity\\Employee.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Models\\Identity\\Employee.cs",
-              "RelativeToolTip": "ClefCraft.Application\\Models\\Identity\\Employee.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAkAAAAFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-17T10:44:56.007Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "AuthResponse.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Models\\Identity\\AuthResponse.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Application\\Models\\Identity\\AuthResponse.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Models\\Identity\\AuthResponse.cs",
-              "RelativeToolTip": "ClefCraft.Application\\Models\\Identity\\AuthResponse.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-17T10:47:08.1Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "AuthRequest.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Models\\Identity\\AuthRequest.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Application\\Models\\Identity\\AuthRequest.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Models\\Identity\\AuthRequest.cs",
-              "RelativeToolTip": "ClefCraft.Application\\Models\\Identity\\AuthRequest.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-17T10:47:06.459Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
-              "Title": "IAuthService.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Identity\\IAuthService.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Application\\Contracts\\Identity\\IAuthService.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Identity\\IAuthService.cs",
-              "RelativeToolTip": "ClefCraft.Application\\Contracts\\Identity\\IAuthService.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-17T10:46:23.558Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 19,
-              "Title": "IBoardItemRepository.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Persistence\\IBoardItemRepository.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Application\\Contracts\\Persistence\\IBoardItemRepository.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Persistence\\IBoardItemRepository.cs",
-              "RelativeToolTip": "ClefCraft.Application\\Contracts\\Persistence\\IBoardItemRepository.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-17T10:46:05.203Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 20,
-              "Title": "IBoardRepository.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Persistence\\IBoardRepository.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Application\\Contracts\\Persistence\\IBoardRepository.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Persistence\\IBoardRepository.cs",
-              "RelativeToolTip": "ClefCraft.Application\\Contracts\\Persistence\\IBoardRepository.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-17T10:45:59.742Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 21,
-              "Title": "IGenericRepository.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Persistence\\IGenericRepository.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Application\\Contracts\\Persistence\\IGenericRepository.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Persistence\\IGenericRepository.cs",
-              "RelativeToolTip": "ClefCraft.Application\\Contracts\\Persistence\\IGenericRepository.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-17T10:45:41.597Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 22,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Api\\Controllers\\AuthController.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "ClefCraft.Api\\Controllers\\AuthController.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAwAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-17T10:31:38.912Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 24,
-              "Title": "CreateBoardItemCommandHandler.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Commands\\CreateBoardItem\\CreateBoardItemCommandHandler.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Application\\Features\\BoardItem\\Commands\\CreateBoardItem\\CreateBoardItemCommandHandler.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Commands\\CreateBoardItem\\CreateBoardItemCommandHandler.cs",
-              "RelativeToolTip": "ClefCraft.Application\\Features\\BoardItem\\Commands\\CreateBoardItem\\CreateBoardItemCommandHandler.cs",
-              "ViewState": "AQIAABQAAAAAAAAAAIA5wB4AAAAwAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-16T19:20:34.138Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 25,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\Program.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Api\\Program.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\Program.cs",
-              "RelativeToolTip": "ClefCraft.Api\\Program.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAfAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-15T13:56:09.375Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 38,
-              "Title": "20241115134824_newmig.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Identity\\Migrations\\20241115134824_newmig.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Identity\\Migrations\\20241115134824_newmig.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Identity\\Migrations\\20241115134824_newmig.cs",
-              "RelativeToolTip": "ClefCraft.Identity\\Migrations\\20241115134824_newmig.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-15T13:48:24.802Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 39,
-              "Title": "20241115134631_newmig.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\Migrations\\20241115134631_newmig.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Persistence\\Migrations\\20241115134631_newmig.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\Migrations\\20241115134631_newmig.cs",
-              "RelativeToolTip": "ClefCraft.Persistence\\Migrations\\20241115134631_newmig.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-15T13:46:31.735Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 23,
-              "Title": "CreateBoardItemCommand.cs",
-              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Commands\\CreateBoardItem\\CreateBoardItemCommand.cs",
-              "RelativeDocumentMoniker": "ClefCraft.Application\\Features\\BoardItem\\Commands\\CreateBoardItem\\CreateBoardItemCommand.cs",
-              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Commands\\CreateBoardItem\\CreateBoardItemCommand.cs",
-              "RelativeToolTip": "ClefCraft.Application\\Features\\BoardItem\\Commands\\CreateBoardItem\\CreateBoardItemCommand.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAoAAAA/AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-16T19:31:03.543Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 8,
               "Title": "BoardItemProfile.cs",
               "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\MappingProfiles\\BoardItemProfile.cs",
               "RelativeDocumentMoniker": "ClefCraft.Application\\MappingProfiles\\BoardItemProfile.cs",
               "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\MappingProfiles\\BoardItemProfile.cs",
               "RelativeToolTip": "ClefCraft.Application\\MappingProfiles\\BoardItemProfile.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAA9AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-15T13:45:04.453Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 11,
               "Title": "BoardColumnProfile.cs",
               "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\MappingProfiles\\BoardColumnProfile.cs",
               "RelativeDocumentMoniker": "ClefCraft.Application\\MappingProfiles\\BoardColumnProfile.cs",
@@ -551,7 +406,500 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "LeaveRequestProfile.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\MappingProfiles\\LeaveRequestProfile.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\MappingProfiles\\LeaveRequestProfile.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\MappingProfiles\\LeaveRequestProfile.cs",
+              "RelativeToolTip": "ClefCraft.Application\\MappingProfiles\\LeaveRequestProfile.cs",
+              "ViewState": "AQIAAAQAAAAAAAAAAAAmwBAAAAAiAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-27T08:53:14.311Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "GetBoardItemsHandler.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItems\\GetBoardItemsHandler.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItems\\GetBoardItemsHandler.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItems\\GetBoardItemsHandler.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItems\\GetBoardItemsHandler.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-27T08:51:15.98Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "GetBoardItemByIdHandler.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItemById\\GetBoardItemByIdHandler.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItemById\\GetBoardItemByIdHandler.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItemById\\GetBoardItemByIdHandler.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItemById\\GetBoardItemByIdHandler.cs",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAiwAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-27T08:51:27.844Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "CreateBoardItemCommandHandler.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Commands\\CreateBoardItem\\CreateBoardItemCommandHandler.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Features\\BoardItem\\Commands\\CreateBoardItem\\CreateBoardItemCommandHandler.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Commands\\CreateBoardItem\\CreateBoardItemCommandHandler.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Features\\BoardItem\\Commands\\CreateBoardItem\\CreateBoardItemCommandHandler.cs",
+              "ViewState": "AQIAABYAAAAAAAAAAAAgwAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-27T08:51:35.189Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "LeaveAllocationRepository.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\Repositories\\LeaveAllocationRepository.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Persistence\\Repositories\\LeaveAllocationRepository.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\Repositories\\LeaveAllocationRepository.cs",
+              "RelativeToolTip": "ClefCraft.Persistence\\Repositories\\LeaveAllocationRepository.cs",
+              "ViewState": "AQIAABEAAAAAAAAAAAD4vy0AAABIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-27T08:48:45.844Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "GetBoardItemsQuery.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItems\\GetBoardItemsQuery.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItems\\GetBoardItemsQuery.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItems\\GetBoardItemsQuery.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItems\\GetBoardItemsQuery.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-27T08:46:49.558Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "BoardItemRepository.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\Repositories\\BoardItemRepository.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Persistence\\Repositories\\BoardItemRepository.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\Repositories\\BoardItemRepository.cs",
+              "RelativeToolTip": "ClefCraft.Persistence\\Repositories\\BoardItemRepository.cs",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-25T18:22:17.648Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "BoardRepository.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\Repositories\\BoardRepository.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Persistence\\Repositories\\BoardRepository.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\Repositories\\BoardRepository.cs",
+              "RelativeToolTip": "ClefCraft.Persistence\\Repositories\\BoardRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABcAAAAoAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-18T10:22:39.601Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 60,
+              "Title": "20241225191945_Calendar.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\Migrations\\20241225191945_Calendar.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Persistence\\Migrations\\20241225191945_Calendar.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\Migrations\\20241225191945_Calendar.cs",
+              "RelativeToolTip": "ClefCraft.Persistence\\Migrations\\20241225191945_Calendar.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-25T19:19:46.003Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 61,
+              "Title": "20241225192235_Calendar.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Identity\\Migrations\\20241225192235_Calendar.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Identity\\Migrations\\20241225192235_Calendar.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Identity\\Migrations\\20241225192235_Calendar.cs",
+              "RelativeToolTip": "ClefCraft.Identity\\Migrations\\20241225192235_Calendar.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-25T19:22:35.18Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "CreateCalendarEventCommandHandler.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\Calendar\\Commands\\CreateCalendarEvent\\CreateCalendarEventCommandHandler.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Features\\Calendar\\Commands\\CreateCalendarEvent\\CreateCalendarEventCommandHandler.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\Calendar\\Commands\\CreateCalendarEvent\\CreateCalendarEventCommandHandler.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Features\\Calendar\\Commands\\CreateCalendarEvent\\CreateCalendarEventCommandHandler.cs",
+              "ViewState": "AQIAAAkAAAAAAAAAAAAewBQAAAA/AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-18T11:00:51.438Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "ClefCraftDatabaseContext.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\DatabaseContext\\ClefCraftDatabaseContext.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Persistence\\DatabaseContext\\ClefCraftDatabaseContext.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\DatabaseContext\\ClefCraftDatabaseContext.cs",
+              "RelativeToolTip": "ClefCraft.Persistence\\DatabaseContext\\ClefCraftDatabaseContext.cs",
+              "ViewState": "AQIAAA4AAAAAAAAAAIAwwBwAAAAiAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-18T11:08:16.161Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "IBoardItemRepository.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Persistence\\IBoardItemRepository.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Contracts\\Persistence\\IBoardItemRepository.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Persistence\\IBoardItemRepository.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Contracts\\Persistence\\IBoardItemRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAApAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-18T10:43:43.882Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "GetLeaveRequestDetailQueryHandler.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\LeaveRequest\\Queries\\GetLeaveRequestDetail\\GetLeaveRequestDetailQueryHandler.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Features\\LeaveRequest\\Queries\\GetLeaveRequestDetail\\GetLeaveRequestDetailQueryHandler.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\LeaveRequest\\Queries\\GetLeaveRequestDetail\\GetLeaveRequestDetailQueryHandler.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Features\\LeaveRequest\\Queries\\GetLeaveRequestDetail\\GetLeaveRequestDetailQueryHandler.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABoAAAA5AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-18T10:55:41.454Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "GetLeaveRequestDetailQuery.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\LeaveRequest\\Queries\\GetLeaveRequestDetail\\GetLeaveRequestDetailQuery.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Features\\LeaveRequest\\Queries\\GetLeaveRequestDetail\\GetLeaveRequestDetailQuery.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\LeaveRequest\\Queries\\GetLeaveRequestDetail\\GetLeaveRequestDetailQuery.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Features\\LeaveRequest\\Queries\\GetLeaveRequestDetail\\GetLeaveRequestDetailQuery.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-18T10:55:35.813Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "BoardItemDto.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItems\\BoardItemDto.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItems\\BoardItemDto.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItems\\BoardItemDto.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Features\\BoardItem\\Queries\\GetBoardItems\\BoardItemDto.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-18T10:55:19.87Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "ILeaveRequestRepository.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Persistence\\ILeaveRequestRepository.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Contracts\\Persistence\\ILeaveRequestRepository.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Persistence\\ILeaveRequestRepository.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Contracts\\Persistence\\ILeaveRequestRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-18T10:47:38.675Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 27,
+              "Title": "ILeaveTypeRepository.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Persistence\\ILeaveTypeRepository.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Contracts\\Persistence\\ILeaveTypeRepository.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Persistence\\ILeaveTypeRepository.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Contracts\\Persistence\\ILeaveTypeRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-18T10:47:38.067Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "IBoardRepository.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Persistence\\IBoardRepository.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Contracts\\Persistence\\IBoardRepository.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Persistence\\IBoardRepository.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Contracts\\Persistence\\IBoardRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAlAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-17T10:45:59.742Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "LeaveRequestRepository.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\Repositories\\LeaveRequestRepository.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Persistence\\Repositories\\LeaveRequestRepository.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\Repositories\\LeaveRequestRepository.cs",
+              "RelativeToolTip": "ClefCraft.Persistence\\Repositories\\LeaveRequestRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACEAAAAoAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-18T10:22:54.921Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "IGenericRepository.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Persistence\\IGenericRepository.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Contracts\\Persistence\\IGenericRepository.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Persistence\\IGenericRepository.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Contracts\\Persistence\\IGenericRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-17T10:45:41.597Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "CalendarEventHistory.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Domain\\CalendarEventHistory.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Domain\\CalendarEventHistory.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Domain\\CalendarEventHistory.cs",
+              "RelativeToolTip": "ClefCraft.Domain\\CalendarEventHistory.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-18T10:43:16.655Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "LeaveTypeRepository.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\Repositories\\LeaveTypeRepository.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Persistence\\Repositories\\LeaveTypeRepository.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\Repositories\\LeaveTypeRepository.cs",
+              "RelativeToolTip": "ClefCraft.Persistence\\Repositories\\LeaveTypeRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-18T10:23:07.066Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "Board.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Domain\\Board.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Domain\\Board.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Domain\\Board.cs",
+              "RelativeToolTip": "ClefCraft.Domain\\Board.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAhAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-17T10:47:17.462Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "BoardItemsController.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\Controllers\\BoardItemsController.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Api\\Controllers\\BoardItemsController.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\Controllers\\BoardItemsController.cs",
+              "RelativeToolTip": "ClefCraft.Api\\Controllers\\BoardItemsController.cs",
+              "ViewState": "AQIAAEwAAAAAAAAAAAAYwCEAAAAzAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-15T13:41:44.174Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "IUserService.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Identity\\IUserService.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Contracts\\Identity\\IUserService.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Identity\\IUserService.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Contracts\\Identity\\IUserService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAyAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-17T10:40:22.091Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "BoardsController.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\Controllers\\BoardsController.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Api\\Controllers\\BoardsController.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\Controllers\\BoardsController.cs",
+              "RelativeToolTip": "ClefCraft.Api\\Controllers\\BoardsController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAzAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-17T10:37:15.61Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "BoardColumnsController.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\Controllers\\BoardColumnsController.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Api\\Controllers\\BoardColumnsController.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\Controllers\\BoardColumnsController.cs",
+              "RelativeToolTip": "ClefCraft.Api\\Controllers\\BoardColumnsController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-02T20:50:24.598Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "UpdateBoardItemCommandHandler.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Commands\\UpdateBoardItem\\UpdateBoardItemCommandHandler.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Features\\BoardItem\\Commands\\UpdateBoardItem\\UpdateBoardItemCommandHandler.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Commands\\UpdateBoardItem\\UpdateBoardItemCommandHandler.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Features\\BoardItem\\Commands\\UpdateBoardItem\\UpdateBoardItemCommandHandler.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAADAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-02T20:51:46.111Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "UserRoleConfiguration.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Identity\\Configurations\\UserRoleConfiguration.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Identity\\Configurations\\UserRoleConfiguration.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Identity\\Configurations\\UserRoleConfiguration.cs",
+              "RelativeToolTip": "ClefCraft.Identity\\Configurations\\UserRoleConfiguration.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-17T10:47:22.234Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Identity\\Services\\UserService.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Identity\\Services\\UserService.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Identity\\Services\\UserService.cs",
+              "RelativeToolTip": "ClefCraft.Identity\\Services\\UserService.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAawB4AAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-17T10:41:56.429Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 41,
+              "Title": "JwtSettings.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Models\\Identity\\JwtSettings.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Models\\Identity\\JwtSettings.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Models\\Identity\\JwtSettings.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Models\\Identity\\JwtSettings.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-17T10:47:12.186Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "BoardItem.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Domain\\BoardItem.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Domain\\BoardItem.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Domain\\BoardItem.cs",
+              "RelativeToolTip": "ClefCraft.Domain\\BoardItem.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAkAAAAaAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-17T11:06:35.636Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 42,
+              "Title": "Employee.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Models\\Identity\\Employee.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Models\\Identity\\Employee.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Models\\Identity\\Employee.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Models\\Identity\\Employee.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAkAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-17T10:44:56.007Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "AuthResponse.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Models\\Identity\\AuthResponse.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Models\\Identity\\AuthResponse.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Models\\Identity\\AuthResponse.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Models\\Identity\\AuthResponse.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-17T10:47:08.1Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 44,
+              "Title": "AuthRequest.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Models\\Identity\\AuthRequest.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Models\\Identity\\AuthRequest.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Models\\Identity\\AuthRequest.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Models\\Identity\\AuthRequest.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-17T10:47:06.459Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 45,
+              "Title": "IAuthService.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Identity\\IAuthService.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Contracts\\Identity\\IAuthService.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Contracts\\Identity\\IAuthService.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Contracts\\Identity\\IAuthService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-17T10:46:23.558Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 46,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Api\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "ClefCraft.Api\\Controllers\\AuthController.cs",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAwAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-17T10:31:38.912Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 58,
+              "Title": "20241115134824_newmig.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Identity\\Migrations\\20241115134824_newmig.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Identity\\Migrations\\20241115134824_newmig.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Identity\\Migrations\\20241115134824_newmig.cs",
+              "RelativeToolTip": "ClefCraft.Identity\\Migrations\\20241115134824_newmig.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-15T13:48:24.802Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 59,
+              "Title": "20241115134631_newmig.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\Migrations\\20241115134631_newmig.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Persistence\\Migrations\\20241115134631_newmig.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\Migrations\\20241115134631_newmig.cs",
+              "RelativeToolTip": "ClefCraft.Persistence\\Migrations\\20241115134631_newmig.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-15T13:46:31.735Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 47,
+              "Title": "CreateBoardItemCommand.cs",
+              "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Commands\\CreateBoardItem\\CreateBoardItemCommand.cs",
+              "RelativeDocumentMoniker": "ClefCraft.Application\\Features\\BoardItem\\Commands\\CreateBoardItem\\CreateBoardItemCommand.cs",
+              "ToolTip": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\Features\\BoardItem\\Commands\\CreateBoardItem\\CreateBoardItemCommand.cs",
+              "RelativeToolTip": "ClefCraft.Application\\Features\\BoardItem\\Commands\\CreateBoardItem\\CreateBoardItemCommand.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAoAAAA/AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-16T19:31:03.543Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 48,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.BlazorUI\\Program.cs",
               "RelativeDocumentMoniker": "ClefCraft.BlazorUI\\Program.cs",
@@ -563,7 +911,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 49,
               "Title": "ApplicationServiceRegistration.cs",
               "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\ApplicationServiceRegistration.cs",
               "RelativeDocumentMoniker": "ClefCraft.Application\\ApplicationServiceRegistration.cs",
@@ -575,7 +923,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 51,
               "Title": "ClefCraft.Persistence.csproj",
               "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\ClefCraft.Persistence.csproj",
               "RelativeDocumentMoniker": "ClefCraft.Persistence\\ClefCraft.Persistence.csproj",
@@ -587,7 +935,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 52,
               "Title": "ClefCraft.Persistence",
               "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Persistence\\ClefCraft.Persistence.csproj",
               "RelativeDocumentMoniker": "ClefCraft.Persistence\\ClefCraft.Persistence.csproj",
@@ -598,7 +946,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 50,
               "Title": "Microsoft.Common.CurrentVersion.targets",
               "DocumentMoniker": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
               "RelativeDocumentMoniker": "..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
@@ -610,7 +958,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 53,
               "Title": "ClefCraft.Infrastructure",
               "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Infrastructure\\ClefCraft.Infrastructure.csproj",
               "RelativeDocumentMoniker": "ClefCraft.Infrastructure\\ClefCraft.Infrastructure.csproj",
@@ -621,7 +969,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 54,
               "Title": "ClefCraft.Identity",
               "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Identity\\ClefCraft.Identity.csproj",
               "RelativeDocumentMoniker": "ClefCraft.Identity\\ClefCraft.Identity.csproj",
@@ -632,7 +980,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
+              "DocumentIndex": 55,
               "Title": "ClefCraft.Domain",
               "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Domain\\ClefCraft.Domain.csproj",
               "RelativeDocumentMoniker": "ClefCraft.Domain\\ClefCraft.Domain.csproj",
@@ -643,7 +991,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 36,
+              "DocumentIndex": 56,
               "Title": "ClefCraft.Application",
               "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Application\\ClefCraft.Application.csproj",
               "RelativeDocumentMoniker": "ClefCraft.Application\\ClefCraft.Application.csproj",
@@ -654,7 +1002,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 37,
+              "DocumentIndex": 57,
               "Title": "ClefCraft.Api",
               "DocumentMoniker": "C:\\Projects\\Backend\\ClefCraft-Backend\\ClefCraft.Api\\ClefCraft.Api.csproj",
               "RelativeDocumentMoniker": "ClefCraft.Api\\ClefCraft.Api.csproj",
