@@ -549,18 +549,12 @@
           "MediatR.Extensions.Microsoft.DependencyInjection": "11.1.0"
         },
         "runtime": {
-          "ClefCraft.Application.dll": {
-            "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
-          }
+          "ClefCraft.Application.dll": {}
         }
       },
       "ClefCraft.Domain/1.0.0": {
         "runtime": {
-          "ClefCraft.Domain.dll": {
-            "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
-          }
+          "ClefCraft.Domain.dll": {}
         }
       }
     }

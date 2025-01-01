@@ -25,75 +25,120 @@ namespace ClefCraft.BlazorUI.Services.Base
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial interface IClient
     {
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<AuthResponse> LoginAsync(AuthRequest body);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<AuthResponse> LoginAsync(AuthRequest body, System.Threading.CancellationToken cancellationToken);
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<RegistrationResponse> RegisterAsync(RegistrationRequest body);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<RegistrationResponse> RegisterAsync(RegistrationRequest body, System.Threading.CancellationToken cancellationToken);
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Collections.Generic.ICollection<BoardColumnDto>> BoardItemsAllAsync();
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Collections.Generic.ICollection<BoardColumnDto>> BoardItemsAllAsync(System.Threading.CancellationToken cancellationToken);
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<BoardItemDto> BoardItemsGETAsync(int id);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<BoardItemDto> BoardItemsGETAsync(int id, System.Threading.CancellationToken cancellationToken);
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<BoardItemByIdDto> BoardItemsPUTAsync(int id, UpdateBoardItemCommand body);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<BoardItemByIdDto> BoardItemsPUTAsync(int id, UpdateBoardItemCommand body, System.Threading.CancellationToken cancellationToken);
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<BoardColumnDto>> GetBoardItemsByBoardIdAsync(int boardId);
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<BoardColumnDto>> GetBoardItemsByBoardIdAsync(int boardId, System.Threading.CancellationToken cancellationToken);
+
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<BoardItemDto> CreateAsync(CreateBoardItemCommand body);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<BoardItemDto> CreateAsync(CreateBoardItemCommand body, System.Threading.CancellationToken cancellationToken);
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<BoardItemDto> SwitchColumnAsync(UpdateBoardItemCommand body);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<BoardItemDto> SwitchColumnAsync(UpdateBoardItemCommand body, System.Threading.CancellationToken cancellationToken);
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<string> GetUserFullNameAsync(string userId);
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<string> GetUserFullNameAsync(string userId, System.Threading.CancellationToken cancellationToken);
+
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<BoardDto>> BoardsAsync();
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<BoardDto>> BoardsAsync(System.Threading.CancellationToken cancellationToken);
+
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<CalendarEventDto> CreateAsync(CreateCalendarEventCommand body);
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<CalendarEventDto> CreateAsync(CreateCalendarEventCommand body, System.Threading.CancellationToken cancellationToken);
+
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<CalendarEventDto>> EventsAsync(string userId);
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<CalendarEventDto>> EventsAsync(string userId, System.Threading.CancellationToken cancellationToken);
+
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Collections.Generic.ICollection<LeaveAllocationDto>> LeaveAllocationsAllAsync(bool? isLoggedInUser);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Collections.Generic.ICollection<LeaveAllocationDto>> LeaveAllocationsAllAsync(bool? isLoggedInUser, System.Threading.CancellationToken cancellationToken);
 
@@ -115,12 +160,12 @@ namespace ClefCraft.BlazorUI.Services.Base
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task LeaveAllocationsPUTAsync(UpdateLeaveAllocationCommand body, System.Threading.CancellationToken cancellationToken);
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<LeaveAllocationDetailsDto> LeaveAllocationsGETAsync(int id);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<LeaveAllocationDetailsDto> LeaveAllocationsGETAsync(int id, System.Threading.CancellationToken cancellationToken);
 
@@ -133,12 +178,12 @@ namespace ClefCraft.BlazorUI.Services.Base
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task LeaveAllocationsDELETEAsync(int id, System.Threading.CancellationToken cancellationToken);
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Collections.Generic.ICollection<LeaveRequestListDto>> LeaveRequestsAllAsync(bool? isLoggedInUser);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Collections.Generic.ICollection<LeaveRequestListDto>> LeaveRequestsAllAsync(bool? isLoggedInUser, System.Threading.CancellationToken cancellationToken);
 
@@ -160,12 +205,12 @@ namespace ClefCraft.BlazorUI.Services.Base
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task LeaveRequestsPUTAsync(UpdateLeaveRequestCommand body, System.Threading.CancellationToken cancellationToken);
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<LeaveRequestDetailsDto> LeaveRequestsGETAsync(int id);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<LeaveRequestDetailsDto> LeaveRequestsGETAsync(int id, System.Threading.CancellationToken cancellationToken);
 
@@ -196,12 +241,12 @@ namespace ClefCraft.BlazorUI.Services.Base
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task UpdateApprovalAsync(ChangeLeaveRequestApprovalCommand body, System.Threading.CancellationToken cancellationToken);
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Collections.Generic.ICollection<LeaveTypeDto>> LeaveTypesAllAsync();
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Collections.Generic.ICollection<LeaveTypeDto>> LeaveTypesAllAsync(System.Threading.CancellationToken cancellationToken);
 
@@ -214,12 +259,12 @@ namespace ClefCraft.BlazorUI.Services.Base
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task LeaveTypesPOSTAsync(CreateLeaveTypeCommand body, System.Threading.CancellationToken cancellationToken);
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<LeaveTypeDetailsDto> LeaveTypesGETAsync(int id);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<LeaveTypeDetailsDto> LeaveTypesGETAsync(int id, System.Threading.CancellationToken cancellationToken);
 
@@ -275,7 +320,7 @@ namespace ClefCraft.BlazorUI.Services.Base
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<AuthResponse> LoginAsync(AuthRequest body)
         {
@@ -283,7 +328,7 @@ namespace ClefCraft.BlazorUI.Services.Base
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<AuthResponse> LoginAsync(AuthRequest body, System.Threading.CancellationToken cancellationToken)
         {
@@ -357,7 +402,7 @@ namespace ClefCraft.BlazorUI.Services.Base
             }
         }
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<RegistrationResponse> RegisterAsync(RegistrationRequest body)
         {
@@ -365,7 +410,7 @@ namespace ClefCraft.BlazorUI.Services.Base
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<RegistrationResponse> RegisterAsync(RegistrationRequest body, System.Threading.CancellationToken cancellationToken)
         {
@@ -439,7 +484,7 @@ namespace ClefCraft.BlazorUI.Services.Base
             }
         }
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<BoardColumnDto>> BoardItemsAllAsync()
         {
@@ -447,7 +492,7 @@ namespace ClefCraft.BlazorUI.Services.Base
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<BoardColumnDto>> BoardItemsAllAsync(System.Threading.CancellationToken cancellationToken)
         {
@@ -517,7 +562,7 @@ namespace ClefCraft.BlazorUI.Services.Base
             }
         }
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<BoardItemDto> BoardItemsGETAsync(int id)
         {
@@ -525,7 +570,7 @@ namespace ClefCraft.BlazorUI.Services.Base
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<BoardItemDto> BoardItemsGETAsync(int id, System.Threading.CancellationToken cancellationToken)
         {
@@ -599,7 +644,7 @@ namespace ClefCraft.BlazorUI.Services.Base
             }
         }
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<BoardItemByIdDto> BoardItemsPUTAsync(int id, UpdateBoardItemCommand body)
         {
@@ -607,7 +652,7 @@ namespace ClefCraft.BlazorUI.Services.Base
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<BoardItemByIdDto> BoardItemsPUTAsync(int id, UpdateBoardItemCommand body, System.Threading.CancellationToken cancellationToken)
         {
@@ -685,7 +730,7 @@ namespace ClefCraft.BlazorUI.Services.Base
             }
         }
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<BoardColumnDto>> GetBoardItemsByBoardIdAsync(int boardId)
         {
@@ -693,7 +738,7 @@ namespace ClefCraft.BlazorUI.Services.Base
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<BoardColumnDto>> GetBoardItemsByBoardIdAsync(int boardId, System.Threading.CancellationToken cancellationToken)
         {
@@ -767,7 +812,7 @@ namespace ClefCraft.BlazorUI.Services.Base
             }
         }
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<BoardItemDto> CreateAsync(CreateBoardItemCommand body)
         {
@@ -775,7 +820,7 @@ namespace ClefCraft.BlazorUI.Services.Base
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<BoardItemDto> CreateAsync(CreateBoardItemCommand body, System.Threading.CancellationToken cancellationToken)
         {
@@ -849,7 +894,7 @@ namespace ClefCraft.BlazorUI.Services.Base
             }
         }
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<BoardItemDto> SwitchColumnAsync(UpdateBoardItemCommand body)
         {
@@ -857,7 +902,7 @@ namespace ClefCraft.BlazorUI.Services.Base
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<BoardItemDto> SwitchColumnAsync(UpdateBoardItemCommand body, System.Threading.CancellationToken cancellationToken)
         {
@@ -931,7 +976,333 @@ namespace ClefCraft.BlazorUI.Services.Base
             }
         }
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual System.Threading.Tasks.Task<string> GetUserFullNameAsync(string userId)
+        {
+            return GetUserFullNameAsync(userId, System.Threading.CancellationToken.None);
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task<string> GetUserFullNameAsync(string userId, System.Threading.CancellationToken cancellationToken)
+        {
+            if (userId == null)
+                throw new System.ArgumentNullException("userId");
+
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
+
+                    var urlBuilder_ = new System.Text.StringBuilder();
+                
+                    // Operation Path: "api/BoardItems/GetUserFullName/{userId}"
+                    urlBuilder_.Append("api/BoardItems/GetUserFullName/");
+                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(userId, System.Globalization.CultureInfo.InvariantCulture)));
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<string>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<BoardDto>> BoardsAsync()
+        {
+            return BoardsAsync(System.Threading.CancellationToken.None);
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<BoardDto>> BoardsAsync(System.Threading.CancellationToken cancellationToken)
+        {
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
+
+                    var urlBuilder_ = new System.Text.StringBuilder();
+                
+                    // Operation Path: "api/Boards"
+                    urlBuilder_.Append("api/Boards");
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<BoardDto>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual System.Threading.Tasks.Task<CalendarEventDto> CreateAsync(CreateCalendarEventCommand body)
+        {
+            return CreateAsync(body, System.Threading.CancellationToken.None);
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task<CalendarEventDto> CreateAsync(CreateCalendarEventCommand body, System.Threading.CancellationToken cancellationToken)
+        {
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    var json_ = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(body, JsonSerializerSettings);
+                    var content_ = new System.Net.Http.ByteArrayContent(json_);
+                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
+                    request_.Content = content_;
+                    request_.Method = new System.Net.Http.HttpMethod("POST");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
+
+                    var urlBuilder_ = new System.Text.StringBuilder();
+                
+                    // Operation Path: "api/Calendar/create"
+                    urlBuilder_.Append("api/Calendar/create");
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<CalendarEventDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<CalendarEventDto>> EventsAsync(string userId)
+        {
+            return EventsAsync(userId, System.Threading.CancellationToken.None);
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<CalendarEventDto>> EventsAsync(string userId, System.Threading.CancellationToken cancellationToken)
+        {
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
+
+                    var urlBuilder_ = new System.Text.StringBuilder();
+                
+                    // Operation Path: "api/Calendar/events"
+                    urlBuilder_.Append("api/Calendar/events");
+                    urlBuilder_.Append('?');
+                    if (userId != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("userId")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(userId, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    urlBuilder_.Length--;
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<CalendarEventDto>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<LeaveAllocationDto>> LeaveAllocationsAllAsync(bool? isLoggedInUser)
         {
@@ -939,7 +1310,7 @@ namespace ClefCraft.BlazorUI.Services.Base
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<LeaveAllocationDto>> LeaveAllocationsAllAsync(bool? isLoggedInUser, System.Threading.CancellationToken cancellationToken)
         {
@@ -1211,7 +1582,7 @@ namespace ClefCraft.BlazorUI.Services.Base
             }
         }
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<LeaveAllocationDetailsDto> LeaveAllocationsGETAsync(int id)
         {
@@ -1219,7 +1590,7 @@ namespace ClefCraft.BlazorUI.Services.Base
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<LeaveAllocationDetailsDto> LeaveAllocationsGETAsync(int id, System.Threading.CancellationToken cancellationToken)
         {
@@ -1379,7 +1750,7 @@ namespace ClefCraft.BlazorUI.Services.Base
             }
         }
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<LeaveRequestListDto>> LeaveRequestsAllAsync(bool? isLoggedInUser)
         {
@@ -1387,7 +1758,7 @@ namespace ClefCraft.BlazorUI.Services.Base
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<LeaveRequestListDto>> LeaveRequestsAllAsync(bool? isLoggedInUser, System.Threading.CancellationToken cancellationToken)
         {
@@ -1659,7 +2030,7 @@ namespace ClefCraft.BlazorUI.Services.Base
             }
         }
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<LeaveRequestDetailsDto> LeaveRequestsGETAsync(int id)
         {
@@ -1667,7 +2038,7 @@ namespace ClefCraft.BlazorUI.Services.Base
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<LeaveRequestDetailsDto> LeaveRequestsGETAsync(int id, System.Threading.CancellationToken cancellationToken)
         {
@@ -2031,7 +2402,7 @@ namespace ClefCraft.BlazorUI.Services.Base
             }
         }
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<LeaveTypeDto>> LeaveTypesAllAsync()
         {
@@ -2039,7 +2410,7 @@ namespace ClefCraft.BlazorUI.Services.Base
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<LeaveTypeDto>> LeaveTypesAllAsync(System.Threading.CancellationToken cancellationToken)
         {
@@ -2205,7 +2576,7 @@ namespace ClefCraft.BlazorUI.Services.Base
             }
         }
 
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<LeaveTypeDetailsDto> LeaveTypesGETAsync(int id)
         {
@@ -2213,7 +2584,7 @@ namespace ClefCraft.BlazorUI.Services.Base
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<LeaveTypeDetailsDto> LeaveTypesGETAsync(int id, System.Threading.CancellationToken cancellationToken)
         {
@@ -2684,6 +3055,60 @@ namespace ClefCraft.BlazorUI.Services.Base
         [System.Text.Json.Serialization.JsonPropertyName("status")]
         public string Status { get; set; }
 
+        [System.Text.Json.Serialization.JsonPropertyName("createdBy")]
+        public string CreatedBy { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("modifiedBy")]
+        public string ModifiedBy { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("createdByFullName")]
+        public string CreatedByFullName { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("modifiedByFullName")]
+        public string ModifiedByFullName { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("dateCreated")]
+        public System.DateTimeOffset DateCreated { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("dateModified")]
+        public System.DateTimeOffset DateModified { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class CalendarEventDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("subject")]
+        public string Subject { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("location")]
+        public string Location { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("startDate")]
+        public System.DateTimeOffset StartDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("endDate")]
+        public System.DateTimeOffset EndDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("allDayEvent")]
+        public bool AllDayEvent { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("importance")]
+        public string Importance { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("label")]
+        public string Label { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("comment")]
+        public string Comment { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("linkedBoardItemId")]
+        public int? LinkedBoardItemId { get; set; }
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -2719,6 +3144,42 @@ namespace ClefCraft.BlazorUI.Services.Base
 
         [System.Text.Json.Serialization.JsonPropertyName("boardColumnId")]
         public int BoardColumnId { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class CreateCalendarEventCommand
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("subject")]
+        public string Subject { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("location")]
+        public string Location { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("startDate")]
+        public System.DateTimeOffset StartDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("endDate")]
+        public System.DateTimeOffset EndDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("allDayEvent")]
+        public bool AllDayEvent { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("importance")]
+        public string Importance { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("label")]
+        public string Label { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("comment")]
+        public string Comment { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("linkedBoardItemId")]
+        public int? LinkedBoardItemId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("userId")]
+        public string UserId { get; set; }
 
     }
 
