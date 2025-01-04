@@ -3100,9 +3100,6 @@ namespace ClefCraft.BlazorUI.Services.Base
         [System.Text.Json.Serialization.JsonPropertyName("importance")]
         public string Importance { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("label")]
-        public string Label { get; set; }
-
         [System.Text.Json.Serialization.JsonPropertyName("comment")]
         public string Comment { get; set; }
 
@@ -3168,9 +3165,6 @@ namespace ClefCraft.BlazorUI.Services.Base
 
         [System.Text.Json.Serialization.JsonPropertyName("importance")]
         public string Importance { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("label")]
-        public string Label { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("comment")]
         public string Comment { get; set; }

@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "ClefCraft.BlazorUI",
   "resources": {
-    "hash": "sha256-KwtZyI/SMCZ642rOhvJY7aDotxbPB3NS7t0I+MoJxGQ=",
+    "hash": "sha256-EZVNjC/JqULjDhayrMWITpu2FdXVrgJGPswyK4YOjQ4=",
     "jsModuleNative": {
       "dotnet.native.8.0.2.pjri69cx2l.js": "sha256-gPMK16QWoJSTxorlZJqcVtbBRTniIQWlLsJN2O4cJHg="
     },
@@ -224,10 +224,10 @@
       "mscorlib.wasm": "sha256-04e4k5XU8HWGB/dq/2+j84xzzGPflTs0IYWI0OxogVc=",
       "netstandard.wasm": "sha256-gnGZURPnoSmjXuYNCOJi5tt8qn2LRImWgue1Ru3/TDQ=",
       "System.Private.CoreLib.wasm": "sha256-6w3jYr0arcp8jnt4aeqh+AmqrLA6q7jl9rQYAwLzE0M=",
-      "ClefCraft.BlazorUI.wasm": "sha256-ZiVG1oog9OUnhiBSulTba1DZ3DqCyM6ILYrdq1S9JpY="
+      "ClefCraft.BlazorUI.wasm": "sha256-dmN8I5ANF2hoFhDYmdEGF6LVL4+XJp6+Q9jhGEUi2CI="
     },
     "pdb": {
-      "ClefCraft.BlazorUI.pdb": "sha256-n05I3EN0nwlCCL2qbEDpHEOwSAvw/DwXPgPFvnQtSsY="
+      "ClefCraft.BlazorUI.pdb": "sha256-LkaSfOMh2CVmhHk5ZFm3fUKywueerGuJAHg2ZmugBoA="
     }
   },
   "cacheBootResources": true,

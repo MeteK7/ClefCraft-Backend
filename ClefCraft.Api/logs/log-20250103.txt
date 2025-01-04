@@ -1,0 +1,21 @@
+2025-01-03 00:31:55.277 +03:00 [INF] Now listening on: https://localhost:7287
+2025-01-03 00:31:55.329 +03:00 [INF] Now listening on: http://localhost:5166
+2025-01-03 00:31:55.390 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-01-03 00:31:55.393 +03:00 [INF] Hosting environment: Development
+2025-01-03 00:31:55.395 +03:00 [INF] Content root path: C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Api
+2025-01-03 00:32:20.165 +03:00 [INF] HTTP OPTIONS /api/Boards responded 204 in 6.0840 ms
+2025-01-03 00:32:22.708 +03:00 [INF] HTTP GET /api/Boards responded 200 in 2520.3649 ms
+2025-01-03 00:32:22.718 +03:00 [INF] HTTP OPTIONS /api/BoardItems/GetBoardItemsByBoardId/1 responded 204 in 0.4856 ms
+2025-01-03 00:32:23.604 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 878.5654 ms
+2025-01-03 00:32:25.715 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 0.3425 ms
+2025-01-03 00:32:26.006 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 284.7936 ms
+2025-01-03 00:32:27.143 +03:00 [INF] HTTP OPTIONS /api/Calendar/events responded 204 in 0.1364 ms
+2025-01-03 00:32:27.240 +03:00 [INF] HTTP GET /api/Calendar/events responded 200 in 90.1302 ms
+2025-01-03 00:33:23.281 +03:00 [INF] HTTP OPTIONS /api/Boards responded 204 in 0.8531 ms
+2025-01-03 00:33:23.305 +03:00 [INF] HTTP GET /api/Boards responded 200 in 14.9977 ms
+2025-01-03 00:33:23.330 +03:00 [INF] HTTP OPTIONS /api/BoardItems/GetBoardItemsByBoardId/1 responded 204 in 0.1093 ms
+2025-01-03 00:33:23.357 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 20.1067 ms
+2025-01-03 00:33:25.930 +03:00 [INF] HTTP OPTIONS /api/BoardItems/GetBoardItemsByBoardId/2 responded 204 in 0.0574 ms
+2025-01-03 00:33:25.960 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/2 responded 200 in 24.2709 ms
+2025-01-03 00:33:31.211 +03:00 [INF] HTTP OPTIONS /api/Calendar/events responded 204 in 0.0966 ms
+2025-01-03 00:33:31.235 +03:00 [INF] HTTP GET /api/Calendar/events responded 200 in 12.8778 ms
