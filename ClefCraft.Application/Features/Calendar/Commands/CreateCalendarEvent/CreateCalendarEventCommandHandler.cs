@@ -24,19 +24,38 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
 
         public async Task<CalendarEventDto> Handle(CreateCalendarEventCommand request, CancellationToken cancellationToken)
         {
+            //var calendarEvent = new CalendarEvent
+            //{
+            //    Subject = request.Subject,
+            //    Location = request.Location,
+            //    StartDate = request.StartDate,
+            //    EndDate = request.EndDate,
+            //    AllDayEvent = request.AllDayEvent,
+            //    Importance = request.Importance,
+            //    //Label = request.Label,
+            //    Comment = request.Comment,
+            //    LinkedBoardItemId = request.LinkedBoardItemId,
+            //    UserId = request.UserId
+            //};
+
+            
+            var startDate = DateTime.SpecifyKind(request.StartDate, DateTimeKind.Utc); // Convert to server time zone
+            var endDate = DateTime.SpecifyKind(request.EndDate, DateTimeKind.Utc);   // Convert to server time zone
+
             var calendarEvent = new CalendarEvent
             {
                 Subject = request.Subject,
                 Location = request.Location,
-                StartDate = request.StartDate,
-                EndDate = request.EndDate,
+                StartDate = startDate.ToLocalTime(), // Convert to local time for storage
+                EndDate = endDate.ToLocalTime(),   // Convert to local time for storage
                 AllDayEvent = request.AllDayEvent,
                 Importance = request.Importance,
-                Label = request.Label,
                 Comment = request.Comment,
                 LinkedBoardItemId = request.LinkedBoardItemId,
-                UserId = request.UserId
+                UserId = request.UserId,
+                DateCreated = DateTime.UtcNow.ToLocalTime()
             };
+             
 
             await _calendarEventRepository.CreateAsync(calendarEvent);
 

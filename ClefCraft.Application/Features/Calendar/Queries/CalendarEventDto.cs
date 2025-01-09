@@ -15,8 +15,8 @@ namespace ClefCraft.Application.Features.Calendar.Queries
         public DateTime EndDate { get; set; }
         public bool AllDayEvent { get; set; }
         public string Importance { get; set; }
-        public string Label { get; set; }
-        public string Comment { get; set; }
+        //public string Label { get; set; }
+        public string? Comment { get; set; }
         public int? LinkedBoardItemId { get; set; }
     }
 
