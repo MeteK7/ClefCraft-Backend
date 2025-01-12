@@ -1119,9 +1119,6 @@ C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroo
 C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\Microsoft.Bcl.TimeProvider.dll
 C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\webcil\Microsoft.Bcl.TimeProvider.wasm
 C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\ak1tezesvc-yapk1egqlb.gz
-C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\hu9eoakakh-ocqq2cqzs9.gz
-C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\k6djhq7mx1-l0d65xdp7k.gz
-C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\cajw4ue00b-ah7hgwp1t5.gz
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\blazor.webassembly.js
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\dotnet.js
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\dotnet.js.map
@@ -2238,3 +2235,6 @@ C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\ClefCr
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\refint\ClefCraft.BlazorUI.dll
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\ClefCraft.BlazorUI.pdb
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\ref\ClefCraft.BlazorUI.dll
+C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\hu9eoakakh-u8mv1f0p5b.gz
+C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\k6djhq7mx1-54lcaenvxv.gz
+C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\cajw4ue00b-5smr1blnjx.gz

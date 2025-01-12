@@ -159,7 +159,6 @@ namespace ClefCraft.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Location")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ModifiedBy")
@@ -352,8 +351,8 @@ namespace ClefCraft.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2025, 1, 4, 22, 29, 4, 612, DateTimeKind.Local).AddTicks(8374),
-                            DateModified = new DateTime(2025, 1, 4, 22, 29, 4, 612, DateTimeKind.Local).AddTicks(8389),
+                            DateCreated = new DateTime(2025, 1, 10, 15, 45, 21, 248, DateTimeKind.Local).AddTicks(8153),
+                            DateModified = new DateTime(2025, 1, 10, 15, 45, 21, 248, DateTimeKind.Local).AddTicks(8165),
                             DefaultDays = 10,
                             Name = "Vacation"
                         });

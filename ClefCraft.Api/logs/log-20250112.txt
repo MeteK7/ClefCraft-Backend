@@ -1,0 +1,11 @@
+2025-01-12 10:03:06.314 +03:00 [INF] HTTP OPTIONS /api/Calendar/events responded 204 in 2.0044 ms
+2025-01-12 10:03:06.751 +03:00 [INF] HTTP GET /api/Calendar/events responded 200 in 162.1678 ms
+2025-01-12 10:03:27.526 +03:00 [INF] HTTP OPTIONS /api/Auth/login responded 204 in 1.1219 ms
+2025-01-12 10:03:27.663 +03:00 [INF] HTTP POST /api/Auth/login responded 200 in 130.3976 ms
+2025-01-12 10:03:28.856 +03:00 [INF] HTTP OPTIONS /api/Calendar/events responded 204 in 0.0505 ms
+2025-01-12 10:03:28.879 +03:00 [INF] HTTP GET /api/Calendar/events responded 200 in 17.1915 ms
+2025-01-12 10:03:30.886 +03:00 [INF] HTTP OPTIONS /api/Boards responded 204 in 0.0437 ms
+2025-01-12 10:03:30.949 +03:00 [INF] HTTP GET /api/Boards responded 200 in 43.2411 ms
+2025-01-12 10:03:30.962 +03:00 [INF] HTTP OPTIONS /api/BoardItems/GetBoardItemsByBoardId/1 responded 204 in 0.1709 ms
+2025-01-12 10:03:31.011 +03:00 [INF] HTTP GET /api/BoardItems/GetBoardItemsByBoardId/1 responded 200 in 41.0534 ms
+2025-01-12 10:03:39.906 +03:00 [INF] HTTP OPTIONS /api/Calendar/create responded 204 in 0.3499 ms

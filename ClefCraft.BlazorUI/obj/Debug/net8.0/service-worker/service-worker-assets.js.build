@@ -1,5 +1,5 @@
 self.assetsManifest = {
-  "version": "NWMA03vc",
+  "version": "mx7kEFq7",
   "assets": [
     {
       "hash": "sha256-iMJHFY1US5OMMbM5iv0qVC7ORZiYFYVhEYVyhPZgMZ0=",
@@ -30,11 +30,11 @@ self.assetsManifest = {
       "url": "_framework/Blazored.Toast.wasm"
     },
     {
-      "hash": "sha256-ZeBSEYTjXGM0st0rNV86SI3GNRLvZ8BNnvc533/4BZ0=",
+      "hash": "sha256-5Wef1OvtEjxpxx3TiTjdV0Jt2eeUCRUkKa7XmVoQSi8=",
       "url": "_framework/ClefCraft.BlazorUI.pdb"
     },
     {
-      "hash": "sha256-GKaPUdbgFo3AFGNi+VeDtbp/6yU9cJustjcPEU9pE4o=",
+      "hash": "sha256-ogB7AmGspvTcFRuBDsDfZoyKxwE1Kk1+ZBLdmZc3mVI=",
       "url": "_framework/ClefCraft.BlazorUI.wasm"
     },
     {
@@ -842,7 +842,7 @@ self.assetsManifest = {
       "url": "_framework/WindowsBase.wasm"
     },
     {
-      "hash": "sha256-HqBCaJSNUBUfPqxwuqCWJB24k6NYwctTjVJ3fyyVYQ8=",
+      "hash": "sha256-65bC6NH+29nvUHANWo4vQ7TsZIwZ7U7O8XTRowUbyL4=",
       "url": "_framework/blazor.boot.json"
     },
     {

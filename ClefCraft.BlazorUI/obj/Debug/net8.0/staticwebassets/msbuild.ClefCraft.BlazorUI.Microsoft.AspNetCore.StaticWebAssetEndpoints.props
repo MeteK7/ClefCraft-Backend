@@ -4,13 +4,13 @@
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\ClefCraft.BlazorUI.styles.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"ok1ey7qfv8"},{"Name":"integrity","Value":"sha256-iMJHFY1US5OMMbM5iv0qVC7ORZiYFYVhEYVyhPZgMZ0="},{"Name":"label","Value":"ClefCraft.BlazorUI.styles.css"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"3327"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022iMJHFY1US5OMMbM5iv0qVC7ORZiYFYVhEYVyhPZgMZ0=\u0022"},{"Name":"Last-Modified","Value":"Fri, 15 Nov 2024 13:25:42 GMT"},{"Name":"Link","Value":"\u003C_content/Blazored.Toast/Blazored.Toast.bundle.scp.css\u003E; rel=\u0022preload\u0022; as=\u0022style\u0022"}]]]></ResponseHeaders>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"3327"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022iMJHFY1US5OMMbM5iv0qVC7ORZiYFYVhEYVyhPZgMZ0=\u0022"},{"Name":"Last-Modified","Value":"Fri, 10 Jan 2025 06:56:51 GMT"},{"Name":"Link","Value":"\u003C_content/Blazored.Toast/Blazored.Toast.bundle.scp.css\u003E; rel=\u0022preload\u0022; as=\u0022style\u0022"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="ClefCraft.BlazorUI.styles.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\ClefCraft.BlazorUI.styles.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-iMJHFY1US5OMMbM5iv0qVC7ORZiYFYVhEYVyhPZgMZ0="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"3327"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022iMJHFY1US5OMMbM5iv0qVC7ORZiYFYVhEYVyhPZgMZ0=\u0022"},{"Name":"Last-Modified","Value":"Fri, 15 Nov 2024 13:25:42 GMT"},{"Name":"Link","Value":"\u003C_content/Blazored.Toast/Blazored.Toast.bundle.scp.css\u003E; rel=\u0022preload\u0022; as=\u0022style\u0022"}]]]></ResponseHeaders>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"3327"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022iMJHFY1US5OMMbM5iv0qVC7ORZiYFYVhEYVyhPZgMZ0=\u0022"},{"Name":"Last-Modified","Value":"Fri, 10 Jan 2025 06:56:51 GMT"},{"Name":"Link","Value":"\u003C_content/Blazored.Toast/Blazored.Toast.bundle.scp.css\u003E; rel=\u0022preload\u0022; as=\u0022style\u0022"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="css/app.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\app.css'))</AssetFile>

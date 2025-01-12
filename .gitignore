@@ -18,3 +18,4 @@ ClefCraft.Persistence/Migrations/20240909224506_BoardItemUpdated2.Designer.cs
 /ClefCraft.Application/bin
 /ClefCraft.Persistence/obj
 /ClefCraft.Persistence/bin
+ClefCraft.Api/appsettings.json
