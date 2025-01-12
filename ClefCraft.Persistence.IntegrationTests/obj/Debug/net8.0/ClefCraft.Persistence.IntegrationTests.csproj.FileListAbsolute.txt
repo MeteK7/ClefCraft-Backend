@@ -311,7 +311,6 @@ C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Persistence.IntegrationTests\bin
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Persistence.IntegrationTests\bin\Debug\net8.0\System.CodeDom.dll
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Persistence.IntegrationTests\bin\Debug\net8.0\System.Configuration.ConfigurationManager.dll
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Persistence.IntegrationTests\bin\Debug\net8.0\System.Drawing.Common.dll
-C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Persistence.IntegrationTests\bin\Debug\net8.0\System.Formats.Asn1.dll
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Persistence.IntegrationTests\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Persistence.IntegrationTests\bin\Debug\net8.0\System.Management.dll
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.Persistence.IntegrationTests\bin\Debug\net8.0\System.Memory.Data.dll

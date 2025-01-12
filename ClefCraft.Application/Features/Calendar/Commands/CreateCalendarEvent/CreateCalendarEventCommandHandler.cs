@@ -39,21 +39,21 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
             //};
 
             
-            var startDate = DateTime.SpecifyKind(request.StartDate, DateTimeKind.Utc); // Convert to server time zone
-            var endDate = DateTime.SpecifyKind(request.EndDate, DateTimeKind.Utc);   // Convert to server time zone
+            //var startDate = DateTime.SpecifyKind(request.StartDate, DateTimeKind.Utc); // Convert to server time zone
+            //var endDate = DateTime.SpecifyKind(request.EndDate, DateTimeKind.Utc);   // Convert to server time zone
 
             var calendarEvent = new CalendarEvent
             {
                 Subject = request.Subject,
                 Location = request.Location,
-                StartDate = startDate.ToLocalTime(), // Convert to local time for storage
-                EndDate = endDate.ToLocalTime(),   // Convert to local time for storage
+                StartDate = request.StartDate.ToUniversalTime(),
+                EndDate = request.EndDate.ToUniversalTime(),
                 AllDayEvent = request.AllDayEvent,
                 Importance = request.Importance,
                 Comment = request.Comment,
                 LinkedBoardItemId = request.LinkedBoardItemId,
                 UserId = request.UserId,
-                DateCreated = DateTime.UtcNow.ToLocalTime()
+                DateCreated = DateTime.UtcNow // Always use UTC for server timestamps
             };
              
 

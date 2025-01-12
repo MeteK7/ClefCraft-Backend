@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ClefCraft.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6a4a965a54b0e61c2faca80b817e975013c47d0d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c4c2133ff488c7e78bd4443294ef868ebe3b6d85")]
 [assembly: System.Reflection.AssemblyProductAttribute("ClefCraft.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ClefCraft.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

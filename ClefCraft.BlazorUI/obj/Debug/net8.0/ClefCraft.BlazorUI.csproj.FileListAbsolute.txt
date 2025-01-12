@@ -1134,8 +1134,6 @@ C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroo
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\Blazored.Toast.wasm
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\ClefCraft.BlazorUI.pdb
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\ClefCraft.BlazorUI.wasm
-C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\dotnet.native.8.0.2.pjri69cx2l.js
-C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\dotnet.runtime.8.0.2.75t34pa4bb.js
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\Microsoft.AspNetCore.Authorization.wasm
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\Microsoft.AspNetCore.Components.Authorization.wasm
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\Microsoft.AspNetCore.Components.Forms.wasm
@@ -1383,7 +1381,6 @@ C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroo
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\Microsoft.IdentityModel.Abstractions.wasm.gz
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\Microsoft.Extensions.FileProviders.Abstractions.wasm.gz
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\System.Security.Cryptography.OpenSsl.wasm.gz
-C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\dotnet.runtime.8.0.2.75t34pa4bb.js.gz
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\System.Net.Http.Json.wasm.gz
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\System.Reflection.TypeExtensions.wasm.gz
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\Microsoft.Extensions.Configuration.FileExtensions.wasm.gz
@@ -1487,7 +1484,6 @@ C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroo
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\System.Net.WebSockets.wasm.gz
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\System.Runtime.Loader.wasm.gz
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\Microsoft.Extensions.DependencyInjection.Abstractions.wasm.gz
-C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\dotnet.native.8.0.2.pjri69cx2l.js.gz
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\System.IO.Compression.Brotli.wasm.gz
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\System.Net.NameResolution.wasm.gz
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\System.Xml.XPath.wasm.gz
@@ -2216,15 +2212,6 @@ C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compre
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\o2mmv1pzjj.gz
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\y6ihr7uzoj.gz
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\1lgp28mvfp.gz
-C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\a7pjsk5yyx.gz
-C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\2nj6lg5o34.gz
-C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\pjri69cx2l.gz
-C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\1byla3a8sg.gz
-C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\75t34pa4bb.gz
-C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\5ph6n76myh.gz
-C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\168g7g74m1.gz
-C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\8i81g4lq4a.gz
-C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\b2tn9fioqu.gz
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\mkcor36jaw.gz
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\n41atlq1es.gz
 C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\fveyapdap7.gz
@@ -2238,3 +2225,16 @@ C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\ref\Cl
 C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\hu9eoakakh-u8mv1f0p5b.gz
 C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\k6djhq7mx1-54lcaenvxv.gz
 C:\TemsaUG\Projects\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\cajw4ue00b-5smr1blnjx.gz
+C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\dotnet.native.8.0.11.ozuqgm1psj.js
+C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\dotnet.runtime.8.0.11.f1znea4k1f.js
+C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\dotnet.runtime.8.0.11.f1znea4k1f.js.gz
+C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\bin\Debug\net8.0\wwwroot\_framework\dotnet.native.8.0.11.ozuqgm1psj.js.gz
+C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\03y8fpak9f.gz
+C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\4vew1j5c3j.gz
+C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\ozuqgm1psj.gz
+C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\xbu93q9hkb.gz
+C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\f1znea4k1f.gz
+C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\ntkldjhtzt.gz
+C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\mdsmmbmknk.gz
+C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\mzfasb4tlb.gz
+C:\Projects\Backend\ClefCraft-Backend\ClefCraft.BlazorUI\obj\Debug\net8.0\compressed\7pt7mbdui5.gz
