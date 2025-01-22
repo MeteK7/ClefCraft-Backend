@@ -27,6 +27,15 @@ namespace ClefCraft.Persistence.Repositories
                 .Where(e => e.CreatedBy == userId)
                 .ToListAsync();
         }
+
+        public async Task<List<CalendarEvent>> GetWorkHistoryByItemIdAsync(int itemId)
+        {
+            return await _context.CalendarEvents
+                .Where(e => e.LinkedBoardItemId == itemId)
+                .OrderByDescending(e => e.StartDate)
+                .ToListAsync();
+        }
+
     }
 
 }

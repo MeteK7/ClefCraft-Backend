@@ -28,4 +28,11 @@ public class CalendarController : Controller
         return Ok(result);
     }
 
+    [HttpGet("WorkHistory/{itemId}")]
+    public async Task<ActionResult<List<WorkHistoryDto>>> GetWorkHistory(int itemId)
+    {
+        var result = await _mediator.Send(new GetWorkHistoryQuery { ItemId = itemId });
+        return Ok(result);
+    }
+
 }

@@ -26,5 +26,4 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             return _mapper.Map<List<CalendarEventDto>>(events);
         }
     }
-
 }

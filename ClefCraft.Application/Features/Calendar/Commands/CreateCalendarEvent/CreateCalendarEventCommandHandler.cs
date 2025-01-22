@@ -53,7 +53,8 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
                 Comment = request.Comment,
                 LinkedBoardItemId = request.LinkedBoardItemId,
                 UserId = request.UserId,
-                DateCreated = DateTime.UtcNow // Always use UTC for server timestamps
+                DateCreated = DateTime.UtcNow, // Always use UTC for server timestamps
+                DateModified = DateTime.UtcNow
             };
              
 

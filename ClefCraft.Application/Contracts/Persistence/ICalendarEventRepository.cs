@@ -11,5 +11,6 @@ namespace ClefCraft.Application.Contracts.Persistence
     {
         Task<CalendarEvent> GetByDateAsync(DateTime date);
         Task<List<CalendarEvent>> GetByUserIdAsync(string userId);
+        Task<List<CalendarEvent>> GetWorkHistoryByItemIdAsync(int itemId);
     }
 }
