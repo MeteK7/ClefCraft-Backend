@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClefCraft.Persistence.Migrations
 {
     [DbContext(typeof(ClefCraftDatabaseContext))]
-    [Migration("20250112073020_CalendarEvent")]
-    partial class CalendarEvent
+    [Migration("20250223083913_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,6 +62,38 @@ namespace ClefCraft.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BoardColumns");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.BoardColumnMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BoardColumnId")
+                        .HasColumnType("int");
+
                     b.Property<int>("BoardId")
                         .HasColumnType("int");
 
@@ -77,15 +109,13 @@ namespace ClefCraft.Persistence.Migrations
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("BoardColumnId");
 
                     b.HasIndex("BoardId");
 
-                    b.ToTable("BoardColumns");
+                    b.ToTable("BoardColumnMappings");
                 });
 
             modelBuilder.Entity("ClefCraft.Domain.BoardItem", b =>
@@ -96,7 +126,13 @@ namespace ClefCraft.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Assignee")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("BoardColumnId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BoardId")
                         .HasColumnType("int");
 
                     b.Property<string>("CreatedBy")
@@ -111,11 +147,23 @@ namespace ClefCraft.Persistence.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double?>("EstimatedTime")
+                        .HasColumnType("float");
+
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("PriorityId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<double?>("TimeSpent")
+                        .HasColumnType("float");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -125,7 +173,48 @@ namespace ClefCraft.Persistence.Migrations
 
                     b.HasIndex("BoardColumnId");
 
+                    b.HasIndex("BoardId");
+
+                    b.HasIndex("PriorityId");
+
+                    b.HasIndex("StatusId");
+
                     b.ToTable("BoardItems");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.BoardItemTag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BoardItemId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BoardItemId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("BoardItemTags");
                 });
 
             modelBuilder.Entity("ClefCraft.Domain.CalendarEvent", b =>
@@ -354,20 +443,117 @@ namespace ClefCraft.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2025, 1, 12, 10, 30, 19, 541, DateTimeKind.Local).AddTicks(9484),
-                            DateModified = new DateTime(2025, 1, 12, 10, 30, 19, 541, DateTimeKind.Local).AddTicks(9499),
+                            DateCreated = new DateTime(2025, 2, 23, 11, 39, 13, 196, DateTimeKind.Local).AddTicks(8457),
+                            DateModified = new DateTime(2025, 2, 23, 11, 39, 13, 196, DateTimeKind.Local).AddTicks(8475),
                             DefaultDays = 10,
                             Name = "Vacation"
                         });
                 });
 
-            modelBuilder.Entity("ClefCraft.Domain.BoardColumn", b =>
+            modelBuilder.Entity("ClefCraft.Domain.Priority", b =>
                 {
-                    b.HasOne("ClefCraft.Domain.Board", null)
-                        .WithMany("BoardColumns")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Priorities");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.Status", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Statuses");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.Tag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.BoardColumnMapping", b =>
+                {
+                    b.HasOne("ClefCraft.Domain.BoardColumn", "BoardColumn")
+                        .WithMany()
+                        .HasForeignKey("BoardColumnId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClefCraft.Domain.Board", "Board")
+                        .WithMany()
                         .HasForeignKey("BoardId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Board");
+
+                    b.Navigation("BoardColumn");
                 });
 
             modelBuilder.Entity("ClefCraft.Domain.BoardItem", b =>
@@ -378,7 +564,50 @@ namespace ClefCraft.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ClefCraft.Domain.Board", "Board")
+                        .WithMany()
+                        .HasForeignKey("BoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClefCraft.Domain.Priority", "Priority")
+                        .WithMany("BoardItems")
+                        .HasForeignKey("PriorityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClefCraft.Domain.Status", "Status")
+                        .WithMany("BoardItems")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Board");
+
                     b.Navigation("BoardColumn");
+
+                    b.Navigation("Priority");
+
+                    b.Navigation("Status");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.BoardItemTag", b =>
+                {
+                    b.HasOne("ClefCraft.Domain.BoardItem", "BoardItem")
+                        .WithMany("BoardItemTags")
+                        .HasForeignKey("BoardItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClefCraft.Domain.Tag", "Tag")
+                        .WithMany("BoardItemTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BoardItem");
+
+                    b.Navigation("Tag");
                 });
 
             modelBuilder.Entity("ClefCraft.Domain.CalendarEvent", b =>
@@ -423,19 +652,34 @@ namespace ClefCraft.Persistence.Migrations
                     b.Navigation("LeaveType");
                 });
 
-            modelBuilder.Entity("ClefCraft.Domain.Board", b =>
-                {
-                    b.Navigation("BoardColumns");
-                });
-
             modelBuilder.Entity("ClefCraft.Domain.BoardColumn", b =>
                 {
                     b.Navigation("BoardItems");
                 });
 
+            modelBuilder.Entity("ClefCraft.Domain.BoardItem", b =>
+                {
+                    b.Navigation("BoardItemTags");
+                });
+
             modelBuilder.Entity("ClefCraft.Domain.CalendarEvent", b =>
                 {
                     b.Navigation("History");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.Priority", b =>
+                {
+                    b.Navigation("BoardItems");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.Status", b =>
+                {
+                    b.Navigation("BoardItems");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.Tag", b =>
+                {
+                    b.Navigation("BoardItemTags");
                 });
 #pragma warning restore 612, 618
         }

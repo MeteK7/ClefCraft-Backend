@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Identity.DbContext
 {
-    public class CleftCraftIdentityDbContext : IdentityDbContext<ApplicationUser>
+    public class ClefCraftIdentityDbContext : IdentityDbContext<ApplicationUser>
     {
-        public CleftCraftIdentityDbContext(DbContextOptions<CleftCraftIdentityDbContext> options) : base(options)
+        public ClefCraftIdentityDbContext(DbContextOptions<ClefCraftIdentityDbContext> options) : base(options)
         {
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.ApplyConfigurationsFromAssembly(typeof(CleftCraftIdentityDbContext).Assembly);
+            builder.ApplyConfigurationsFromAssembly(typeof(ClefCraftIdentityDbContext).Assembly);
         }
     }
 }

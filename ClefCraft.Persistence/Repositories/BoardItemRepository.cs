@@ -11,28 +11,35 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Persistence.Repositories
 {
-    public class BoardItemRepository : IBoardItemRepository
+    public class BoardItemRepository : GenericRepository<BoardItem>, IBoardItemRepository
     {
-        private readonly ClefCraftDatabaseContext _context;
-
-        public BoardItemRepository(ClefCraftDatabaseContext context)
+        public BoardItemRepository(ClefCraftDatabaseContext context) : base(context)
         {
-            _context = context;
         }
+
         public async Task<List<BoardColumn>> GetAllBoardColumnsWithItems()
         {
-            return await _context.BoardColumns
-                                 .Include(c => c.BoardItems)
-                                 .ToListAsync();
+            var columnMappings = await _context.BoardColumnMappings
+                                               .Include(m => m.BoardColumn)
+                                               .ThenInclude(c => c.BoardItems)
+                                               .ToListAsync();
+
+            return columnMappings.Select(m => m.BoardColumn).ToList();
         }
 
         public async Task<List<BoardColumn>> GetBoardColumnsWithBoardItems(int boardId)
         {
-            return await _context.BoardColumns
-                                 .Where(c => c.BoardId == boardId)  // Filter by boardId
-                                 .Include(c => c.BoardItems)
-                                 .ToListAsync();
+            var columnMappings = await _context.BoardColumnMappings
+                                               .Where(m => m.BoardId == boardId)
+                                               .Include(m => m.BoardColumn)
+                                               .ThenInclude(c => c.BoardItems
+                                                                  .Where(i => i.BoardId == boardId)) // 🔹 FILTER ITEMS BY BOARD
+                                               .ToListAsync();
+
+            return columnMappings.Select(m => m.BoardColumn).ToList();
         }
+
+
         public async Task<BoardItem> GetBoardItemById(int id)
         {
             return await _context.BoardItems.FirstOrDefaultAsync(bi => bi.Id == id);

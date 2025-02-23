@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Domain
 {
-    public class Board:BaseEntity
+    public class Status : BaseEntity
     {
-        public int Id { get; set; }
-        public string Title { get; set; }
+        public string Name { get; set; }
+        public ICollection<BoardItem> BoardItems { get; set; } = new List<BoardItem>();
     }
 }

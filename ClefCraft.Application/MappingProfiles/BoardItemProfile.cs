@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItemById;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems;
+using ClefCraft.Application.Features.Tag.Queries.GetTags;
 using ClefCraft.Domain;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace ClefCraft.Application.MappingProfiles
             // Mapping between BoardItem and BoardItemDto
             CreateMap<BoardItem, BoardItemDto>().ReverseMap();
             CreateMap<BoardItem, BoardItemByIdDto>().ReverseMap();
+            CreateMap<Tag, TagDto>().ReverseMap();
         }
     }
 }

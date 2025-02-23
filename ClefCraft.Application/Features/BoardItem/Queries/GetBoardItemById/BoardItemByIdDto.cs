@@ -12,5 +12,11 @@ namespace ClefCraft.Application.Features.BoardItem.Queries.GetBoardItemById
         public string Title { get; set; }
         public string Description { get; set; }
         public string Status { get; set; }
+        public string Priority { get; set; } // Low, Medium, High
+        public List<string> Tags { get; set; } = new List<string>();
+        public string Assignee { get; set; }
+        public DateTime DueDate { get; set; }
+        public double EstimatedTime { get; set; } // In hours
+        public double TimeSpent { get; set; }
     }
 }

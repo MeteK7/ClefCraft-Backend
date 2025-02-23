@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Application.Contracts.Persistence
 {
-    public interface IBoardRepository : IGenericRepository<Board>
+    public interface ITagRepository : IGenericRepository<Tag>
     {
-        Task<List<Board>> GetBoards();
+        Task<List<Tag>> GetTags();
+        Task<List<Tag>> GetTagsByIdsAsync(List<int> tagIds);
     }
 }
