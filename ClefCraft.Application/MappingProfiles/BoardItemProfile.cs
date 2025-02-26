@@ -16,7 +16,13 @@ namespace ClefCraft.Application.MappingProfiles
         public BoardItemProfile()
         {
             // Mapping between BoardItem and BoardItemDto
-            CreateMap<BoardItem, BoardItemDto>().ReverseMap();
+            CreateMap<BoardItem, BoardItemDto>()
+                .ForMember(dest => dest.Tags,
+                    opt => opt.MapFrom(src =>
+                        src.BoardItemTags.Select(bt => new TagDto { Id = bt.Tag.Id, Name = bt.Tag.Name }).ToList()
+                        )
+                    )
+                .ReverseMap();
             CreateMap<BoardItem, BoardItemByIdDto>().ReverseMap();
             CreateMap<Tag, TagDto>().ReverseMap();
         }

@@ -33,10 +33,19 @@ namespace ClefCraft.Persistence.Repositories
                                                .Where(m => m.BoardId == boardId)
                                                .Include(m => m.BoardColumn)
                                                .ThenInclude(c => c.BoardItems
-                                                                  .Where(i => i.BoardId == boardId)) // 🔹 FILTER ITEMS BY BOARD
-                                               .ToListAsync();
+                                                                  .Where(i => i.BoardId == boardId)) // Filter BoardItems by BoardId
+                                               .ThenInclude(i => i.BoardItemTags) // Include BoardItemTags
+                                               .ThenInclude(bt => bt.Tag) // Include associated Tag
+                                               .ToListAsync(); // Execute the query asynchronously
 
             return columnMappings.Select(m => m.BoardColumn).ToList();
+        }
+        public async Task<List<BoardItemTag>> GetBoardItemTagsByBoardItemId(int boardItemId)
+        {
+            return await _context.BoardItemTags
+                                 .Where(bit => bit.BoardItemId == boardItemId)
+                                 .Include(bit => bit.Tag) // Include related Tag
+                                 .ToListAsync(); // Get the list of BoardItemTags
         }
 
 

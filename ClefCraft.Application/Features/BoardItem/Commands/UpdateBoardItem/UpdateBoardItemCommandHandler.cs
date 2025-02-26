@@ -47,6 +47,7 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
                 throw new ApplicationException($"Board item with ID {request.Id} not found.");
             }
 
+            // Update the non-nullable properties
             boardItem.Title = request.Title ?? boardItem.Title;
             boardItem.Description = request.Description ?? boardItem.Description;
 
@@ -60,22 +61,57 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
                 boardItem.Priority = await _priorityRepository.GetByIdAsync(request.PriorityId.Value);
             }
 
+            // Handle tag updates
             if (request.TagIds != null)
             {
-                boardItem.BoardItemTags = (await _tagRepository.GetTagsByIdsAsync(request.TagIds))
-                    .Select(tag => new BoardItemTag { BoardItem = boardItem, Tag = tag })
-                    .ToList();
+                // Fetch the current tags associated with the board item from the BoardItemTags table
+                var currentTagIds = await _boardItemRepository.GetBoardItemTagsByBoardItemId(boardItem.Id);
+
+                var existingTagIds = currentTagIds.Select(bit => bit.TagId).ToList();
+
+                // Determine tags to add and remove
+                var tagsToAdd = request.TagIds.Except(existingTagIds).ToList();
+                var tagsToRemove = existingTagIds.Except(request.TagIds).ToList();
+
+                // Remove old tags from BoardItemTags
+                foreach (var tagId in tagsToRemove)
+                {
+                    var tagToRemove = currentTagIds.FirstOrDefault(bit => bit.TagId == tagId);
+                    if (tagToRemove != null)
+                    {
+                        boardItem.BoardItemTags.Remove(tagToRemove);
+                    }
+                }
+
+                // Add new tags to BoardItemTags
+                foreach (var tagId in tagsToAdd)
+                {
+                    var tag = await _tagRepository.GetByIdAsync(tagId);
+                    if (tag != null)
+                    {
+                        boardItem.BoardItemTags.Add(new BoardItemTag
+                        {
+                            BoardItemId = boardItem.Id,
+                            TagId = tagId,
+                            Tag = tag
+                        });
+                    }
+                }
             }
 
+            // Update the rest of the properties
             boardItem.Assignee = request.Assignee ?? boardItem.Assignee;
             boardItem.DueDate = request.DueDate ?? boardItem.DueDate;
             boardItem.EstimatedTime = request.EstimatedTime ?? boardItem.EstimatedTime;
             boardItem.TimeSpent = request.TimeSpent ?? boardItem.TimeSpent;
             boardItem.BoardColumnId = request.BoardColumnId;
 
+            // Save the updated board item
             await _boardItemRepository.UpdateBoardItem(boardItem);
 
+            // Return the updated board item details as a DTO
             return _mapper.Map<BoardItemByIdDto>(boardItem);
         }
+
     }
 }

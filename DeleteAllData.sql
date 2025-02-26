@@ -22,6 +22,7 @@ DELETE FROM db_clefcraft.dbo.Tags;
 DBCC CHECKIDENT ('db_clefcraft.dbo.Boards', RESEED, 0);
 DBCC CHECKIDENT ('db_clefcraft.dbo.BoardColumns', RESEED, 0);
 DBCC CHECKIDENT ('db_clefcraft.dbo.BoardItems', RESEED, 0);
+DBCC CHECKIDENT ('db_clefcraft.dbo.BoardColumnMappings', RESEED, 0);
 DBCC CHECKIDENT ('db_clefcraft.dbo.Priorities', RESEED, 0);
 DBCC CHECKIDENT ('db_clefcraft.dbo.Statuses', RESEED, 0);
 DBCC CHECKIDENT ('db_clefcraft.dbo.Tags', RESEED, 0);

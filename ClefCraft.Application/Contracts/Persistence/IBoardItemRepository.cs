@@ -11,6 +11,7 @@ namespace ClefCraft.Application.Contracts.Persistence
     {
         Task<List<BoardColumn>> GetAllBoardColumnsWithItems();
         Task<List<BoardColumn>> GetBoardColumnsWithBoardItems(int boardId);
+        Task<List<BoardItemTag>> GetBoardItemTagsByBoardItemId(int boardItemId);
         Task<BoardItem> GetBoardItemById(int id);
         Task AddBoardItem(BoardItem BoardItem);
         Task UpdateBoardItem(BoardItem BoardItem);
