@@ -7,6 +7,12 @@ DELETE FROM db_clefcraft.dbo.BoardColumns;
 -- Finally, delete from the parent table (Boards)
 DELETE FROM db_clefcraft.dbo.Boards;
 
+DELETE FROM db_clefcraft.dbo.BoardColumnMappings;
+
+DELETE FROM db_clefcraft.dbo.Priorities;
+DELETE FROM db_clefcraft.dbo.Statuses;
+DELETE FROM db_clefcraft.dbo.Tags;
+
 -- If you want to reset identity columns, use TRUNCATE instead (if no foreign key constraints)
 -- TRUNCATE TABLE dbo.BoardItems;
 -- TRUNCATE TABLE dbo.BoardColumns;
@@ -16,3 +22,7 @@ DELETE FROM db_clefcraft.dbo.Boards;
 DBCC CHECKIDENT ('db_clefcraft.dbo.Boards', RESEED, 0);
 DBCC CHECKIDENT ('db_clefcraft.dbo.BoardColumns', RESEED, 0);
 DBCC CHECKIDENT ('db_clefcraft.dbo.BoardItems', RESEED, 0);
+DBCC CHECKIDENT ('db_clefcraft.dbo.BoardColumnMappings', RESEED, 0);
+DBCC CHECKIDENT ('db_clefcraft.dbo.Priorities', RESEED, 0);
+DBCC CHECKIDENT ('db_clefcraft.dbo.Statuses', RESEED, 0);
+DBCC CHECKIDENT ('db_clefcraft.dbo.Tags', RESEED, 0);

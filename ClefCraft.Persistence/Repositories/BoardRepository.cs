@@ -10,13 +10,10 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Persistence.Repositories
 {
-    public class BoardRepository:IBoardRepository
+    public class BoardRepository: GenericRepository<Board>, IBoardRepository
     {
-        private readonly ClefCraftDatabaseContext _context;
-
-        public BoardRepository(ClefCraftDatabaseContext context)
+        public BoardRepository(ClefCraftDatabaseContext context) : base(context)
         {
-            _context = context;
         }
 
         public async Task<List<Board>> GetBoards()

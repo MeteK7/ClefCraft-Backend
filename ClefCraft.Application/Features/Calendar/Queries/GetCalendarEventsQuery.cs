@@ -11,5 +11,4 @@ namespace ClefCraft.Application.Features.Calendar.Queries
     {
         public string UserId { get; set; }
     }
-
 }

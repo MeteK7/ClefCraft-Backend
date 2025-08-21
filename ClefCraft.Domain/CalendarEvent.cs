@@ -21,5 +21,4 @@ namespace ClefCraft.Domain
         public virtual BoardItem LinkedBoardItem { get; set; }
         public List<CalendarEventHistory> History { get; set; }
     }
-
 }

@@ -1,17 +1,24 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent;
+using ClefCraft.Application.Features.Calendar.Commands.DeleteCalendarAttachment;
+using ClefCraft.Application.Features.Calendar.Commands.UploadCalendarAttachment;
 using ClefCraft.Application.Features.Calendar.Queries;
+using ClefCraft.Application.Features.Calendar.Queries.GetCalendarAttachments;
+using ClefCraft.Identity.Services;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
 [ApiController]
 public class CalendarController : Controller
 {
     private readonly IMediator _mediator;
+    private readonly IUserService _userService;
 
-    public CalendarController(IMediator mediator)
+    public CalendarController(IMediator mediator, IUserService userService)
     {
         _mediator = mediator;
+        _userService = userService;
     }
 
     [HttpPost("create")]
@@ -22,9 +29,12 @@ public class CalendarController : Controller
     }
 
     [HttpGet("events")]
-    public async Task<ActionResult<List<CalendarEventDto>>> GetEvents([FromQuery] string userId)
+    public async Task<ActionResult<List<CalendarEventDto>>> GetEvents()
     {
-        var result = await _mediator.Send(new GetCalendarEventsQuery { UserId = userId });
+        var result = await _mediator.Send(new GetCalendarEventsQuery
+        {
+            UserId = _userService.UserId
+        });
         return Ok(result);
     }
 
@@ -35,4 +45,31 @@ public class CalendarController : Controller
         return Ok(result);
     }
 
+    [HttpPost("{eventId}/attachments")]
+    public async Task<IActionResult> UploadAttachment(int eventId, [FromForm] List<IFormFile> files)
+    {
+        var command = new UploadCalendarAttachmentCommand
+        {
+            EventId = eventId,
+            Files = files,
+            UserId = _userService.UserId
+        };
+
+        var uploaded = await _mediator.Send(command);
+        return Ok(uploaded);
+    }
+
+    [HttpGet("{eventId}/attachments")]
+    public async Task<IActionResult> GetAttachments(int eventId)
+    {
+        var result = await _mediator.Send(new GetAttachmentsQuery { EventId = eventId });
+        return Ok(result);
+    }
+
+    [HttpDelete("attachments/{id}")]
+    public async Task<IActionResult> DeleteAttachment(int id)
+    {
+        await _mediator.Send(new DeleteAttachmentCommand { Id = id });
+        return NoContent();
+    }
 }
