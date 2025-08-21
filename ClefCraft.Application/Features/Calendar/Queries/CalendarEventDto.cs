@@ -18,5 +18,4 @@ namespace ClefCraft.Application.Features.Calendar.Queries
         public string? Comment { get; set; }
         public int? LinkedBoardItemId { get; set; }
     }
-
 }

@@ -15,5 +15,4 @@ namespace ClefCraft.Domain
         public string ChangeDescription { get; set; }
         public string ChangedBy { get; set; }
     }
-
 }
