@@ -23,13 +23,13 @@ namespace ClefCraft.Identity
         {
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
-            services.AddDbContext<CleftCraftIdentityDbContext>(options =>
+            services.AddDbContext<ClefCraftIdentityDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("ClefCraftDatabaseConnectionString"));
             });
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<CleftCraftIdentityDbContext>
+                .AddEntityFrameworkStores<ClefCraftIdentityDbContext>
                 ().AddDefaultTokenProviders();
 
             services.AddTransient<IAuthService, AuthService>();

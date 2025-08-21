@@ -4,6 +4,7 @@ using ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem;
 using ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItemById;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems;
+using ClefCraft.Application.Features.Tag.Queries.GetTags;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -93,5 +94,12 @@ namespace ClefCraft.Api.Controllers
             return Ok($"{user.Firstname} {user.Lastname}");
         }
 
+
+        [HttpGet("GetTags")]
+        public async Task<ActionResult<List<TagDto>>> GetTags()
+        {
+            var boardColumns = await _mediator.Send(new GetTagsQuery());
+            return Ok(boardColumns);
+        }
     }
 }

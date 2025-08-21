@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\ClefCraft.BlazorUI.props" />
-</Project>

@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Application.Contracts.Persistence
 {
-    public interface IBoardItemRepository
+    public interface IBoardItemRepository : IGenericRepository<BoardItem>
     {
         Task<List<BoardColumn>> GetAllBoardColumnsWithItems();
         Task<List<BoardColumn>> GetBoardColumnsWithBoardItems(int boardId);
+        Task<List<BoardItemTag>> GetBoardItemTagsByBoardItemId(int boardItemId);
         Task<BoardItem> GetBoardItemById(int id);
         Task AddBoardItem(BoardItem BoardItem);
         Task UpdateBoardItem(BoardItem BoardItem);

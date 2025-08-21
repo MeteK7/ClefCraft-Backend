@@ -11,28 +11,44 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Persistence.Repositories
 {
-    public class BoardItemRepository : IBoardItemRepository
+    public class BoardItemRepository : GenericRepository<BoardItem>, IBoardItemRepository
     {
-        private readonly ClefCraftDatabaseContext _context;
-
-        public BoardItemRepository(ClefCraftDatabaseContext context)
+        public BoardItemRepository(ClefCraftDatabaseContext context) : base(context)
         {
-            _context = context;
         }
+
         public async Task<List<BoardColumn>> GetAllBoardColumnsWithItems()
         {
-            return await _context.BoardColumns
-                                 .Include(c => c.BoardItems)
-                                 .ToListAsync();
+            var columnMappings = await _context.BoardColumnMappings
+                                               .Include(m => m.BoardColumn)
+                                               .ThenInclude(c => c.BoardItems)
+                                               .ToListAsync();
+
+            return columnMappings.Select(m => m.BoardColumn).ToList();
         }
 
         public async Task<List<BoardColumn>> GetBoardColumnsWithBoardItems(int boardId)
         {
-            return await _context.BoardColumns
-                                 .Where(c => c.BoardId == boardId)  // Filter by boardId
-                                 .Include(c => c.BoardItems)
-                                 .ToListAsync();
+            var columnMappings = await _context.BoardColumnMappings
+                                               .Where(m => m.BoardId == boardId)
+                                               .Include(m => m.BoardColumn)
+                                               .ThenInclude(c => c.BoardItems
+                                                                  .Where(i => i.BoardId == boardId)) // Filter BoardItems by BoardId
+                                               .ThenInclude(i => i.BoardItemTags) // Include BoardItemTags
+                                               .ThenInclude(bt => bt.Tag) // Include associated Tag
+                                               .ToListAsync(); // Execute the query asynchronously
+
+            return columnMappings.Select(m => m.BoardColumn).ToList();
         }
+        public async Task<List<BoardItemTag>> GetBoardItemTagsByBoardItemId(int boardItemId)
+        {
+            return await _context.BoardItemTags
+                                 .Where(bit => bit.BoardItemId == boardItemId)
+                                 .Include(bit => bit.Tag) // Include related Tag
+                                 .ToListAsync(); // Get the list of BoardItemTags
+        }
+
+
         public async Task<BoardItem> GetBoardItemById(int id)
         {
             return await _context.BoardItems.FirstOrDefaultAsync(bi => bi.Id == id);

@@ -3128,6 +3128,24 @@ namespace ClefCraft.BlazorUI.Services.Base
         [System.Text.Json.Serialization.JsonPropertyName("status")]
         public string Status { get; set; }
 
+        [System.Text.Json.Serialization.JsonPropertyName("priority")]
+        public string Priority { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("tags")]
+        public System.Collections.Generic.ICollection<string> Tags { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("assignee")]
+        public string Assignee { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("dueDate")]
+        public System.DateTimeOffset DueDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("estimatedTime")]
+        public double EstimatedTime { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("timeSpent")]
+        public double TimeSpent { get; set; }
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -3145,6 +3163,24 @@ namespace ClefCraft.BlazorUI.Services.Base
 
         [System.Text.Json.Serialization.JsonPropertyName("status")]
         public string Status { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("priority")]
+        public string Priority { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("tags")]
+        public System.Collections.Generic.ICollection<string> Tags { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("assignee")]
+        public string Assignee { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("dueDate")]
+        public System.DateTimeOffset DueDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("estimatedTime")]
+        public double EstimatedTime { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("timeSpent")]
+        public double TimeSpent { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("createdBy")]
         public string CreatedBy { get; set; }
@@ -3558,8 +3594,26 @@ namespace ClefCraft.BlazorUI.Services.Base
         [System.Text.Json.Serialization.JsonPropertyName("description")]
         public string Description { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("status")]
-        public string Status { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("statusId")]
+        public int? StatusId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("priorityId")]
+        public int? PriorityId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("tagIds")]
+        public System.Collections.Generic.ICollection<int> TagIds { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("assignee")]
+        public string Assignee { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("dueDate")]
+        public System.DateTimeOffset? DueDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("estimatedTime")]
+        public double? EstimatedTime { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("timeSpent")]
+        public double? TimeSpent { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("boardColumnId")]
         public int BoardColumnId { get; set; }
@@ -3627,8 +3681,8 @@ namespace ClefCraft.BlazorUI.Services.Base
     public partial class WorkHistoryDto
     {
 
-        [System.Text.Json.Serialization.JsonPropertyName("timestamp")]
-        public System.DateTimeOffset Timestamp { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("dateCreated")]
+        public System.DateTimeOffset DateCreated { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("actionBy")]
         public string ActionBy { get; set; }

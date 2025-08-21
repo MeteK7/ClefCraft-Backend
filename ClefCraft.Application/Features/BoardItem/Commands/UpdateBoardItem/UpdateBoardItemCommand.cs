@@ -13,7 +13,13 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
         public int Id { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }
-        public string? Status { get; set; }
+        public int? StatusId { get; set; }
+        public int? PriorityId { get; set; }
+        public List<int>? TagIds { get; set; }
+        public string? Assignee { get; set; }
+        public DateTime? DueDate { get; set; }
+        public double? EstimatedTime { get; set; }
+        public double? TimeSpent { get; set; }
         public int BoardColumnId { get; set; }
     }
 }
