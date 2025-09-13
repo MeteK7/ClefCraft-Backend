@@ -1,17 +1,18 @@
 ﻿using ClefCraft.Application.Contracts.FileAttachment;
-using ClefCraft.Application.Features.Calendar.Queries; // For CalendarEventAttachmentDto
-using Microsoft.AspNetCore.Hosting; // ✅ Required
-using Microsoft.AspNetCore.Http;    // For IFormFile
+using ClefCraft.Application.Features.Calendar.Queries;
+using Microsoft.AspNetCore.Hosting; 
+using Microsoft.AspNetCore.Http;    
 
 namespace ClefCraft.Infrastructure.FileAttachmentService
 {
     public class FileAttachmentService : IFileAttachmentService
     {
-        private readonly IHostingEnvironment _env;
+        private readonly string _attachmentsRoot;
 
-        public FileAttachmentService(IHostingEnvironment env)
+        public FileAttachmentService()
         {
-            _env = env;
+            _attachmentsRoot = @"C:\Projects\Backend\Files\CalendarAttachments";
+            Directory.CreateDirectory(_attachmentsRoot);
         }
 
         public async Task<CalendarEventAttachmentDto> SaveAttachmentAsync(int eventId, IFormFile file, string userId)
@@ -19,7 +20,7 @@ namespace ClefCraft.Infrastructure.FileAttachmentService
             if (file == null || file.Length == 0)
                 throw new ArgumentException("Invalid file.");
 
-            var folderPath = Path.Combine(_env.WebRootPath, "uploads", "calendar", eventId.ToString());
+            var folderPath = Path.Combine(_attachmentsRoot, eventId.ToString());
             Directory.CreateDirectory(folderPath);
 
             var safeFileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
@@ -33,7 +34,7 @@ namespace ClefCraft.Infrastructure.FileAttachmentService
             return new CalendarEventAttachmentDto
             {
                 FileName = file.FileName,
-                StoredFilePath = Path.Combine("uploads", "calendar", eventId.ToString(), safeFileName).Replace("\\", "/"),
+                StoredFilePath = fullPath,
                 FileSize = file.Length,
                 ContentType = file.ContentType,
                 UploadedAt = DateTime.UtcNow,
@@ -41,11 +42,12 @@ namespace ClefCraft.Infrastructure.FileAttachmentService
             };
         }
 
-        public Task DeleteAttachmentFileAsync(string relativePath)
+        public Task DeleteAttachmentFileAsync(string relativeOrFullPath)
         {
-            var fullPath = Path.Combine(_env.WebRootPath, relativePath);
-            if (File.Exists(fullPath))
-                File.Delete(fullPath);
+            var path = relativeOrFullPath;
+
+            if (File.Exists(path))
+                File.Delete(path);
 
             return Task.CompletedTask;
         }

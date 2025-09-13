@@ -11,18 +11,18 @@ namespace ClefCraft.Application.Features.Calendar.Queries.GetCalendarAttachments
 {
     public class GetAttachmentsQueryHandler : IRequestHandler<GetAttachmentsQuery, List<CalendarEventAttachmentDto>>
     {
-        private readonly ICalendarEventAttachmentRepository _repo;
+        private readonly ICalendarEventAttachmentRepository _attachmentRepo;
         private readonly IMapper _mapper;
 
-        public GetAttachmentsQueryHandler(ICalendarEventAttachmentRepository repo, IMapper mapper)
+        public GetAttachmentsQueryHandler(ICalendarEventAttachmentRepository attachmentRepo, IMapper mapper)
         {
-            _repo = repo;
+            _attachmentRepo = attachmentRepo;
             _mapper = mapper;
         }
 
         public async Task<List<CalendarEventAttachmentDto>> Handle(GetAttachmentsQuery request, CancellationToken cancellationToken)
         {
-            var items = await _repo.GetByEventIdAsync(request.EventId);
+            var items = await _attachmentRepo.GetByEventIdAsync(request.EventId);
             return _mapper.Map<List<CalendarEventAttachmentDto>>(items);
         }
     }

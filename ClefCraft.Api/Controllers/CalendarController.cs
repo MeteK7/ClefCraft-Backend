@@ -66,6 +66,23 @@ public class CalendarController : Controller
         return Ok(result);
     }
 
+    [HttpGet("attachments/download/{id}")]
+    public async Task<IActionResult> DownloadAttachment(int id)
+    {
+        var attachment = await _mediator.Send(new GetAttachmentByIdQuery { Id = id });
+        if (attachment == null)
+            return NotFound();
+
+        var memory = new MemoryStream();
+        using (var stream = new FileStream(attachment.StoredFilePath, FileMode.Open, FileAccess.Read))
+        {
+            await stream.CopyToAsync(memory);
+        }
+        memory.Position = 0;
+        return File(memory, attachment.ContentType, attachment.FileName);
+    }
+
+
     [HttpDelete("attachments/{id}")]
     public async Task<IActionResult> DeleteAttachment(int id)
     {
