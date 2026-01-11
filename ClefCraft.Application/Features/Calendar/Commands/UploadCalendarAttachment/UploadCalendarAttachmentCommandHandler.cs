@@ -16,10 +16,14 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UploadCalendarAttachm
     public class UploadCalendarAttachmentCommandHandler : IRequestHandler<UploadCalendarAttachmentCommand, List<CalendarEventAttachmentDto>>
     {
         private readonly IFileAttachmentService _fileService;
+        private readonly ICalendarEventAttachmentRepository _attachmentRepo;
 
-        public UploadCalendarAttachmentCommandHandler(IFileAttachmentService fileService)
+        public UploadCalendarAttachmentCommandHandler(
+            IFileAttachmentService fileService,
+            ICalendarEventAttachmentRepository attachmentRepo)
         {
             _fileService = fileService;
+            _attachmentRepo = attachmentRepo;
         }
 
         public async Task<List<CalendarEventAttachmentDto>> Handle(UploadCalendarAttachmentCommand request, CancellationToken cancellationToken)
@@ -28,8 +32,28 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UploadCalendarAttachm
 
             foreach (var file in request.Files)
             {
-                var result = await _fileService.SaveAttachmentAsync(request.EventId, file, request.UserId);
-                uploaded.Add(result);
+                // 1️⃣ Save file to disk
+                var dto = await _fileService.SaveAttachmentAsync(request.EventId, file, request.UserId);
+
+                // 2️⃣ Save record to database
+                var entity = new ClefCraft.Domain.CalendarEventAttachment
+                {
+                    CalendarEventId = request.EventId,
+                    FileName = dto.FileName,
+                    StoredFilePath = dto.StoredFilePath,
+                    FileSize = dto.FileSize,
+                    ContentType = dto.ContentType,
+                    UploadedAt = dto.UploadedAt,
+                    UploadedBy = dto.UploadedBy,
+                    DateCreated = DateTime.UtcNow,
+                    CreatedBy = request.UserId
+                };
+
+                await _attachmentRepo.CreateAsync(entity);
+
+                // 3️⃣ Return DTO with database-generated Id
+                dto.Id = entity.Id;
+                uploaded.Add(dto);
             }
 
             return uploaded;
