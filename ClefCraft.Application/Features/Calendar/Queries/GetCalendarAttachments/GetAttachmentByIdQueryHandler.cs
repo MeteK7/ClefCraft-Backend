@@ -22,7 +22,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries.GetCalendarAttachments
 
         public async Task<CalendarEventAttachmentDto> Handle(GetAttachmentByIdQuery request, CancellationToken cancellationToken)
         {
-            var attachment = await _attachmentRepo.GetByIdAsync(request.Id);
+            var attachment = await _attachmentRepo.GetByIdReadOnlyAsync(request.Id);
             if (attachment == null) return null;
 
             return _mapper.Map<CalendarEventAttachmentDto>(attachment);

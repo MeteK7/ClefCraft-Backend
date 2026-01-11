@@ -1,6 +1,7 @@
 ﻿using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent;
 using ClefCraft.Application.Features.Calendar.Commands.DeleteCalendarAttachment;
+using ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent;
 using ClefCraft.Application.Features.Calendar.Commands.UploadCalendarAttachment;
 using ClefCraft.Application.Features.Calendar.Queries;
 using ClefCraft.Application.Features.Calendar.Queries.GetCalendarAttachments;
@@ -24,6 +25,18 @@ public class CalendarController : Controller
     [HttpPost("create")]
     public async Task<ActionResult<CalendarEventDto>> CreateEvent([FromBody] CreateCalendarEventCommand command)
     {
+        var result = await _mediator.Send(command);
+        return Ok(result);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<CalendarEventDto>> UpdateEvent(
+    int id,
+    [FromBody] UpdateCalendarEventCommand command)
+    {
+        if (id != command.Id)
+            return BadRequest();
+
         var result = await _mediator.Send(command);
         return Ok(result);
     }

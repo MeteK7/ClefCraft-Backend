@@ -54,6 +54,13 @@ namespace ClefCraft.Persistence.Repositories
             return await _context.BoardItems.FirstOrDefaultAsync(bi => bi.Id == id);
         }
 
+        public async Task<List<BoardItem>> GetByIdsAsync(List<int> ids)
+        {
+            return await _context.BoardItems
+                .Where(bi => ids.Contains(bi.Id))
+                .ToListAsync();
+        }
+
         public async Task AddBoardItem(BoardItem boardItem)
         {
             await _context.BoardItems.AddAsync(boardItem);

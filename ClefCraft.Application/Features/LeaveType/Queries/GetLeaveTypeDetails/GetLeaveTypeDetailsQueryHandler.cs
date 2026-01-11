@@ -24,7 +24,7 @@ namespace ClefCraft.Application.Features.LeaveType.Queries.GetLeaveTypeDetails
         public async Task<LeaveTypeDetailsDto> Handle(GetLeaveTypeDetailsQuery request, CancellationToken cancellationToken)
         {
             //Query the database
-            var leaveType = await _leaveTypeRepository.GetByIdAsync(request.Id);
+            var leaveType = await _leaveTypeRepository.GetByIdReadOnlyAsync(request.Id);
 
             //Verify that record exists
             if (leaveType == null)
