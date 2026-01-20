@@ -13,5 +13,8 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem
         public string Title { get; set; }
         public string Description { get; set; }
         public int BoardColumnId { get; set; }
+        public int BoardId { get; set; }
+        public int StatusId { get; set; }
+        public int PriorityId { get; set; }
     }
 }
