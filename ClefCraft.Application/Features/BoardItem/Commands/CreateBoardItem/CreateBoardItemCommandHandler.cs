@@ -33,7 +33,10 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem
                 Title = request.Title,
                 Description = request.Description,
                 BoardColumnId = request.BoardColumnId,
-                CreatedBy = userId,
+                BoardId = request.BoardId,
+                StatusId = request.StatusId,
+                PriorityId = request.PriorityId,
+                CreatedBy = userId
             };
 
             await _boardItemRepository.AddBoardItem(boardItem);
