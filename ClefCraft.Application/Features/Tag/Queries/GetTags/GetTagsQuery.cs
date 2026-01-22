@@ -9,5 +9,6 @@ namespace ClefCraft.Application.Features.Tag.Queries.GetTags
 {
     public class GetTagsQuery:IRequest<List<TagDto>>
     {
+        public int BoardId { get; set; }
     }
 }

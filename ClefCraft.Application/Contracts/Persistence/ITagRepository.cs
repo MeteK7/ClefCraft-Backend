@@ -11,5 +11,6 @@ namespace ClefCraft.Application.Contracts.Persistence
     {
         Task<List<Tag>> GetTags();
         Task<List<Tag>> GetTagsByIdsAsync(List<int> tagIds);
+        Task<List<Tag>> GetTagsByBoardIdAsync(int boardId);
     }
 }

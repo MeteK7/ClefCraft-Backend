@@ -96,9 +96,13 @@ namespace ClefCraft.Api.Controllers
 
 
         [HttpGet("GetTags")]
-        public async Task<ActionResult<List<TagDto>>> GetTags()
+        public async Task<ActionResult<List<TagDto>>> GetTags([FromQuery] int boardId)
         {
-            var boardColumns = await _mediator.Send(new GetTagsQuery());
+            var boardColumns = await _mediator.Send(new GetTagsQuery()
+            {
+                BoardId=boardId
+            });
+
             return Ok(boardColumns);
         }
     }
