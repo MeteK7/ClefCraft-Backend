@@ -4,6 +4,8 @@ using ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem;
 using ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItemById;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems;
+using ClefCraft.Application.Features.Priority.Queries.GetPriorities;
+using ClefCraft.Application.Features.Status.Queries.GetStatuses;
 using ClefCraft.Application.Features.Tag.Queries.GetTags;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -104,6 +106,18 @@ namespace ClefCraft.Api.Controllers
             });
 
             return Ok(boardColumns);
+        }
+
+        [HttpGet("GetStatuses")]
+        public async Task<ActionResult<List<StatusDto>>> GetStatuses()
+        {
+            return Ok(await _mediator.Send(new GetStatusesQuery()));
+        }
+
+        [HttpGet("GetPriorities")]
+        public async Task<ActionResult<List<PriorityDto>>> GetPriorities()
+        {
+            return Ok(await _mediator.Send(new GetPrioritiesQuery()));
         }
     }
 }

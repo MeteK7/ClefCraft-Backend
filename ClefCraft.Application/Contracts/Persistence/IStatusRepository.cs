@@ -9,5 +9,6 @@ namespace ClefCraft.Application.Contracts.Persistence
 {
     public interface IStatusRepository : IGenericRepository<Status>
     {
+        Task<List<Status>> GetStatusesAsync();
     }
 }
