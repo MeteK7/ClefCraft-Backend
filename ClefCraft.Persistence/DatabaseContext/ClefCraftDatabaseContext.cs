@@ -29,6 +29,7 @@ namespace ClefCraft.Persistence.DatabaseContext
         public DbSet<CalendarEvent> CalendarEvents { get; set; }
         public DbSet<CalendarEventAttachment> CalendarEventAttachments { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<BoardTag> BoardTags { get; set; }
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Priority> Priorities { get; set; }
         public DbSet<BoardItemTag> BoardItemTags { get; set; }

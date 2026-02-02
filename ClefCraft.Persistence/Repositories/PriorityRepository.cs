@@ -1,6 +1,7 @@
 ﻿using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Domain;
 using ClefCraft.Persistence.DatabaseContext;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,16 @@ namespace ClefCraft.Persistence.Repositories
         public PriorityRepository(ClefCraftDatabaseContext dbContext) : base(dbContext)
         {
 
+        }
+        public async Task<List<Priority>> GetPrioritiesAsync()
+        {
+            return await _context.Priorities
+                .Select(p => new Priority
+                {
+                    Id = p.Id,
+                    Name = p.Name
+                })
+                .ToListAsync();
         }
     }
 }

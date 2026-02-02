@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ClefCraft.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -251,6 +251,36 @@ namespace ClefCraft.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BoardTags",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BoardId = table.Column<int>(type: "int", nullable: false),
+                    TagId = table.Column<int>(type: "int", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BoardTags", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BoardTags_Boards_BoardId",
+                        column: x => x.BoardId,
+                        principalTable: "Boards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BoardTags_Tags_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "BoardItemTags",
                 columns: table => new
                 {
@@ -311,6 +341,35 @@ namespace ClefCraft.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CalendarEventAttachments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CalendarEventId = table.Column<int>(type: "int", nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StoredFilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileSize = table.Column<long>(type: "bigint", nullable: false),
+                    ContentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UploadedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UploadedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CalendarEventAttachments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CalendarEventAttachments_CalendarEvents_CalendarEventId",
+                        column: x => x.CalendarEventId,
+                        principalTable: "CalendarEvents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CalendarEventHistory",
                 columns: table => new
                 {
@@ -339,7 +398,7 @@ namespace ClefCraft.Persistence.Migrations
             migrationBuilder.InsertData(
                 table: "LeaveTypes",
                 columns: new[] { "Id", "CreatedBy", "DateCreated", "DateModified", "DefaultDays", "ModifiedBy", "Name" },
-                values: new object[] { 1, null, new DateTime(2025, 2, 23, 11, 39, 13, 196, DateTimeKind.Local).AddTicks(8457), new DateTime(2025, 2, 23, 11, 39, 13, 196, DateTimeKind.Local).AddTicks(8475), 10, null, "Vacation" });
+                values: new object[] { 1, null, new DateTime(2026, 1, 23, 2, 32, 32, 688, DateTimeKind.Local).AddTicks(7831), new DateTime(2026, 1, 23, 2, 32, 32, 688, DateTimeKind.Local).AddTicks(7852), 10, null, "Vacation" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_BoardColumnMappings_BoardColumnId",
@@ -382,6 +441,21 @@ namespace ClefCraft.Persistence.Migrations
                 column: "TagId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BoardTags_BoardId",
+                table: "BoardTags",
+                column: "BoardId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BoardTags_TagId",
+                table: "BoardTags",
+                column: "TagId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CalendarEventAttachments_CalendarEventId",
+                table: "CalendarEventAttachments",
+                column: "CalendarEventId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CalendarEventHistory_CalendarEventId",
                 table: "CalendarEventHistory",
                 column: "CalendarEventId");
@@ -410,6 +484,12 @@ namespace ClefCraft.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "BoardItemTags");
+
+            migrationBuilder.DropTable(
+                name: "BoardTags");
+
+            migrationBuilder.DropTable(
+                name: "CalendarEventAttachments");
 
             migrationBuilder.DropTable(
                 name: "CalendarEventHistory");

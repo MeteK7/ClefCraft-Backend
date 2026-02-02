@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClefCraft.Persistence.Migrations
 {
     [DbContext(typeof(ClefCraftDatabaseContext))]
-    [Migration("20250223083913_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20260122233233_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -217,6 +217,41 @@ namespace ClefCraft.Persistence.Migrations
                     b.ToTable("BoardItemTags");
                 });
 
+            modelBuilder.Entity("ClefCraft.Domain.BoardTag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BoardId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BoardId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("BoardTags");
+                });
+
             modelBuilder.Entity("ClefCraft.Domain.CalendarEvent", b =>
                 {
                     b.Property<int>("Id")
@@ -272,6 +307,58 @@ namespace ClefCraft.Persistence.Migrations
                     b.HasIndex("LinkedBoardItemId");
 
                     b.ToTable("CalendarEvents");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.CalendarEventAttachment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CalendarEventId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("FileSize")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StoredFilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UploadedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UploadedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CalendarEventId");
+
+                    b.ToTable("CalendarEventAttachments");
                 });
 
             modelBuilder.Entity("ClefCraft.Domain.CalendarEventHistory", b =>
@@ -443,8 +530,8 @@ namespace ClefCraft.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2025, 2, 23, 11, 39, 13, 196, DateTimeKind.Local).AddTicks(8457),
-                            DateModified = new DateTime(2025, 2, 23, 11, 39, 13, 196, DateTimeKind.Local).AddTicks(8475),
+                            DateCreated = new DateTime(2026, 1, 23, 2, 32, 32, 688, DateTimeKind.Local).AddTicks(7831),
+                            DateModified = new DateTime(2026, 1, 23, 2, 32, 32, 688, DateTimeKind.Local).AddTicks(7852),
                             DefaultDays = 10,
                             Name = "Vacation"
                         });
@@ -610,6 +697,25 @@ namespace ClefCraft.Persistence.Migrations
                     b.Navigation("Tag");
                 });
 
+            modelBuilder.Entity("ClefCraft.Domain.BoardTag", b =>
+                {
+                    b.HasOne("ClefCraft.Domain.Board", "Board")
+                        .WithMany("BoardTags")
+                        .HasForeignKey("BoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClefCraft.Domain.Tag", "Tag")
+                        .WithMany("BoardTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Board");
+
+                    b.Navigation("Tag");
+                });
+
             modelBuilder.Entity("ClefCraft.Domain.CalendarEvent", b =>
                 {
                     b.HasOne("ClefCraft.Domain.BoardItem", "LinkedBoardItem")
@@ -617,6 +723,17 @@ namespace ClefCraft.Persistence.Migrations
                         .HasForeignKey("LinkedBoardItemId");
 
                     b.Navigation("LinkedBoardItem");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.CalendarEventAttachment", b =>
+                {
+                    b.HasOne("ClefCraft.Domain.CalendarEvent", "CalendarEvent")
+                        .WithMany()
+                        .HasForeignKey("CalendarEventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CalendarEvent");
                 });
 
             modelBuilder.Entity("ClefCraft.Domain.CalendarEventHistory", b =>
@@ -652,6 +769,11 @@ namespace ClefCraft.Persistence.Migrations
                     b.Navigation("LeaveType");
                 });
 
+            modelBuilder.Entity("ClefCraft.Domain.Board", b =>
+                {
+                    b.Navigation("BoardTags");
+                });
+
             modelBuilder.Entity("ClefCraft.Domain.BoardColumn", b =>
                 {
                     b.Navigation("BoardItems");
@@ -680,6 +802,8 @@ namespace ClefCraft.Persistence.Migrations
             modelBuilder.Entity("ClefCraft.Domain.Tag", b =>
                 {
                     b.Navigation("BoardItemTags");
+
+                    b.Navigation("BoardTags");
                 });
 #pragma warning restore 612, 618
         }

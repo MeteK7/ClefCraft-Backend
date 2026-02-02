@@ -22,7 +22,9 @@ namespace ClefCraft.Application.Features.Tag.Queries.GetTags
 
         public async Task<List<TagDto>> Handle(GetTagsQuery request, CancellationToken cancellationToken)
         {
-            var tags=await _tagRepository.GetTags();
+            var tags = await _tagRepository
+                .GetTagsByBoardIdAsync(request.BoardId);
+
             return _mapper.Map<List<TagDto>>(tags);
         }
     }
