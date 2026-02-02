@@ -25,7 +25,7 @@ namespace ClefCraft.Application.Features.Priority.Queries.GetPriorities
             GetPrioritiesQuery request,
             CancellationToken cancellationToken)
         {
-            var priorities = await _repo.GetPrioritiesAsync();
+            var priorities = await _repo.GetPrioritiesByBoardIdAsync(request.BoardId);
             return _mapper.Map<List<PriorityDto>>(priorities);
         }
     }

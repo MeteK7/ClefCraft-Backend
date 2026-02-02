@@ -1,4 +1,5 @@
-﻿using ClefCraft.Application.Contracts.Persistence;
+﻿using Azure.Core;
+using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Domain;
 using ClefCraft.Persistence.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
@@ -29,17 +30,39 @@ namespace ClefCraft.Persistence.Repositories
 
         public async Task<List<BoardColumn>> GetBoardColumnsWithBoardItems(int boardId)
         {
-            var columnMappings = await _context.BoardColumnMappings
-                                               .Where(m => m.BoardId == boardId)
-                                               .Include(m => m.BoardColumn)
-                                               .ThenInclude(c => c.BoardItems
-                                                                  .Where(i => i.BoardId == boardId)) // Filter BoardItems by BoardId
-                                               .ThenInclude(i => i.BoardItemTags) // Include BoardItemTags
-                                               .ThenInclude(bt => bt.Tag) // Include associated Tag
-                                               .ToListAsync(); // Execute the query asynchronously
-
-            return columnMappings.Select(m => m.BoardColumn).ToList();
+            return await _context.BoardColumns
+                .Where(bc =>
+                    _context.BoardColumnMappings
+                        .Any(m => m.BoardId == boardId && m.BoardColumnId == bc.Id))
+                .Include(bc => bc.BoardItems
+                    .Where(bi => bi.BoardId == boardId))
+                    .ThenInclude(bi => bi.BoardItemStatus)
+                        .ThenInclude(s => s.Status)
+                .Include(bc => bc.BoardItems
+                    .Where(bi => bi.BoardId == boardId))
+                    .ThenInclude(bi => bi.BoardItemPriority)
+                        .ThenInclude(p => p.Priority)
+                .Include(bc => bc.BoardItems
+                    .Where(bi => bi.BoardId == boardId))
+                    .ThenInclude(bi => bi.BoardItemTags)
+                        .ThenInclude(t => t.Tag)
+                .ToListAsync();
         }
+
+        public async Task<BoardItemStatus?> GetBoardItemStatusByBoardItemId(int boardItemId)
+        {
+            return await _context.BoardItemStatuses
+                .Include(x => x.Status)
+                .FirstOrDefaultAsync(x => x.BoardItemId == boardItemId);
+        }
+
+        public async Task<BoardItemPriority?> GetBoardItemPriorityByBoardItemId(int boardItemId)
+        {
+            return await _context.BoardItemPriorities
+                .Include(x => x.Priority)
+                .FirstOrDefaultAsync(x => x.BoardItemId == boardItemId);
+        }
+
         public async Task<List<BoardItemTag>> GetBoardItemTagsByBoardItemId(int boardItemId)
         {
             return await _context.BoardItemTags
@@ -49,9 +72,16 @@ namespace ClefCraft.Persistence.Repositories
         }
 
 
-        public async Task<BoardItem> GetBoardItemById(int id)
+        public async Task<BoardItem?> GetBoardItemById(int id)
         {
-            return await _context.BoardItems.FirstOrDefaultAsync(bi => bi.Id == id);
+            return await _context.BoardItems
+                .Include(b => b.BoardItemStatus)
+                    .ThenInclude(s => s.Status)
+                .Include(b => b.BoardItemPriority)
+                    .ThenInclude(p => p.Priority)
+                .Include(b => b.BoardItemTags)
+                    .ThenInclude(t => t.Tag)
+                .FirstOrDefaultAsync(b => b.Id == id);
         }
 
         public async Task<List<BoardItem>> GetByIdsAsync(List<int> ids)
@@ -77,8 +107,6 @@ namespace ClefCraft.Persistence.Repositories
 
         public async Task UpdateBoardItem(BoardItem boardItem)
         {
-            _context.BoardItems.Update(boardItem); // Mark the entity as modified
-
             try
             {
                 await _context.SaveChangesAsync();

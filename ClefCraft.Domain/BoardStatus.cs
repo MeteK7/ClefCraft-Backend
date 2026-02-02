@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Domain
 {
-    public class BoardTag : BaseEntity
+    public class BoardStatus : BaseEntity
     {
         public int? BoardId { get; set; }
         public Board? Board { get; set; }
 
-        public int TagId { get; set; }
-        public Tag Tag { get; set; }
+        public int StatusId { get; set; }
+        public Status Status { get; set; }
     }
 }

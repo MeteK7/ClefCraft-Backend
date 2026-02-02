@@ -34,8 +34,6 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem
                 Description = request.Description,
                 BoardColumnId = request.BoardColumnId,
                 BoardId = request.BoardId,
-                StatusId = request.StatusId,
-                PriorityId = request.PriorityId,
                 CreatedBy = userId
             };
 

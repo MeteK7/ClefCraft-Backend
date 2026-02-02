@@ -53,49 +53,60 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
 
             if (request.StatusId.HasValue)
             {
-                boardItem.Status = await _statusRepository.GetByIdAsync(request.StatusId.Value);
+                if (boardItem.BoardItemStatus == null)
+                {
+                    boardItem.BoardItemStatus = new BoardItemStatus
+                    {
+                        BoardItemId = boardItem.Id,
+                        StatusId = request.StatusId.Value
+                    };
+                }
+                else
+                {
+                    boardItem.BoardItemStatus.StatusId = request.StatusId.Value;
+                }
             }
 
             if (request.PriorityId.HasValue)
             {
-                boardItem.Priority = await _priorityRepository.GetByIdAsync(request.PriorityId.Value);
+                if (boardItem.BoardItemPriority == null)
+                {
+                    boardItem.BoardItemPriority = new BoardItemPriority
+                    {
+                        BoardItemId = boardItem.Id,
+                        PriorityId = request.PriorityId.Value
+                    };
+                }
+                else
+                {
+                    boardItem.BoardItemPriority.PriorityId = request.PriorityId.Value;
+                }
             }
 
             // Handle tag updates
             if (request.TagIds != null)
             {
                 // Fetch the current tags associated with the board item from the BoardItemTags table
-                var currentTagIds = await _boardItemRepository.GetBoardItemTagsByBoardItemId(boardItem.Id);
+                var existingTagIds =
+                    boardItem.BoardItemTags.Select(t => t.TagId).ToList();
 
-                var existingTagIds = currentTagIds.Select(bit => bit.TagId).ToList();
-
-                // Determine tags to add and remove
                 var tagsToAdd = request.TagIds.Except(existingTagIds).ToList();
                 var tagsToRemove = existingTagIds.Except(request.TagIds).ToList();
 
-                // Remove old tags from BoardItemTags
-                foreach (var tagId in tagsToRemove)
-                {
-                    var tagToRemove = currentTagIds.FirstOrDefault(bit => bit.TagId == tagId);
-                    if (tagToRemove != null)
-                    {
-                        boardItem.BoardItemTags.Remove(tagToRemove);
-                    }
-                }
+                // Remove
+                boardItem.BoardItemTags
+                    .Where(t => tagsToRemove.Contains(t.TagId))
+                    .ToList()
+                    .ForEach(t => boardItem.BoardItemTags.Remove(t));
 
-                // Add new tags to BoardItemTags
+                // Add
                 foreach (var tagId in tagsToAdd)
                 {
-                    var tag = await _tagRepository.GetByIdAsync(tagId);
-                    if (tag != null)
+                    boardItem.BoardItemTags.Add(new BoardItemTag
                     {
-                        boardItem.BoardItemTags.Add(new BoardItemTag
-                        {
-                            BoardItemId = boardItem.Id,
-                            TagId = tagId,
-                            Tag = tag
-                        });
-                    }
+                        BoardItemId = boardItem.Id,
+                        TagId = tagId
+                    });
                 }
             }
 

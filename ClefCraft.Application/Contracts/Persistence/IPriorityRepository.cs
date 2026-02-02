@@ -10,5 +10,6 @@ namespace ClefCraft.Application.Contracts.Persistence
     public interface IPriorityRepository : IGenericRepository<Priority>
     {
         Task<List<Priority>> GetPrioritiesAsync();
+        Task<List<Priority>> GetPrioritiesByBoardIdAsync(int boardId);
     }
 }

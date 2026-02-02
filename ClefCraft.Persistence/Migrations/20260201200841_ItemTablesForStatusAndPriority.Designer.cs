@@ -4,6 +4,7 @@ using ClefCraft.Persistence.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClefCraft.Persistence.Migrations
 {
     [DbContext(typeof(ClefCraftDatabaseContext))]
-    partial class ClefCraftDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20260201200841_ItemTablesForStatusAndPriority")]
+    partial class ItemTablesForStatusAndPriority
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -207,8 +210,7 @@ namespace ClefCraft.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BoardItemId")
-                        .IsUnique();
+                    b.HasIndex("BoardItemId");
 
                     b.HasIndex("PriorityId");
 
@@ -243,8 +245,7 @@ namespace ClefCraft.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BoardItemId")
-                        .IsUnique();
+                    b.HasIndex("BoardItemId");
 
                     b.HasIndex("StatusId");
 
@@ -294,7 +295,7 @@ namespace ClefCraft.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("BoardId")
+                    b.Property<int>("BoardId")
                         .HasColumnType("int");
 
                     b.Property<string>("CreatedBy")
@@ -329,7 +330,7 @@ namespace ClefCraft.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("BoardId")
+                    b.Property<int>("BoardId")
                         .HasColumnType("int");
 
                     b.Property<string>("CreatedBy")
@@ -364,7 +365,7 @@ namespace ClefCraft.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("BoardId")
+                    b.Property<int>("BoardId")
                         .HasColumnType("int");
 
                     b.Property<string>("CreatedBy")
@@ -669,8 +670,8 @@ namespace ClefCraft.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2026, 2, 3, 0, 17, 38, 714, DateTimeKind.Local).AddTicks(3109),
-                            DateModified = new DateTime(2026, 2, 3, 0, 17, 38, 714, DateTimeKind.Local).AddTicks(3123),
+                            DateCreated = new DateTime(2026, 2, 1, 23, 8, 40, 171, DateTimeKind.Local).AddTicks(984),
+                            DateModified = new DateTime(2026, 2, 1, 23, 8, 40, 171, DateTimeKind.Local).AddTicks(1001),
                             DefaultDays = 10,
                             Name = "Vacation"
                         });
@@ -812,8 +813,8 @@ namespace ClefCraft.Persistence.Migrations
             modelBuilder.Entity("ClefCraft.Domain.BoardItemPriority", b =>
                 {
                     b.HasOne("ClefCraft.Domain.BoardItem", "BoardItem")
-                        .WithOne("BoardItemPriority")
-                        .HasForeignKey("ClefCraft.Domain.BoardItemPriority", "BoardItemId")
+                        .WithMany("BoardItemPriorities")
+                        .HasForeignKey("BoardItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -831,8 +832,8 @@ namespace ClefCraft.Persistence.Migrations
             modelBuilder.Entity("ClefCraft.Domain.BoardItemStatus", b =>
                 {
                     b.HasOne("ClefCraft.Domain.BoardItem", "BoardItem")
-                        .WithOne("BoardItemStatus")
-                        .HasForeignKey("ClefCraft.Domain.BoardItemStatus", "BoardItemId")
+                        .WithMany("BoardItemStatuses")
+                        .HasForeignKey("BoardItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -869,8 +870,10 @@ namespace ClefCraft.Persistence.Migrations
             modelBuilder.Entity("ClefCraft.Domain.BoardPriority", b =>
                 {
                     b.HasOne("ClefCraft.Domain.Board", "Board")
-                        .WithMany("BoardPriorities")
-                        .HasForeignKey("BoardId");
+                        .WithMany()
+                        .HasForeignKey("BoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ClefCraft.Domain.Priority", "Priority")
                         .WithMany()
@@ -886,8 +889,10 @@ namespace ClefCraft.Persistence.Migrations
             modelBuilder.Entity("ClefCraft.Domain.BoardStatus", b =>
                 {
                     b.HasOne("ClefCraft.Domain.Board", "Board")
-                        .WithMany("BoardStatuses")
-                        .HasForeignKey("BoardId");
+                        .WithMany()
+                        .HasForeignKey("BoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ClefCraft.Domain.Status", "Status")
                         .WithMany()
@@ -904,7 +909,9 @@ namespace ClefCraft.Persistence.Migrations
                 {
                     b.HasOne("ClefCraft.Domain.Board", "Board")
                         .WithMany("BoardTags")
-                        .HasForeignKey("BoardId");
+                        .HasForeignKey("BoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ClefCraft.Domain.Tag", "Tag")
                         .WithMany("BoardTags")
@@ -972,10 +979,6 @@ namespace ClefCraft.Persistence.Migrations
 
             modelBuilder.Entity("ClefCraft.Domain.Board", b =>
                 {
-                    b.Navigation("BoardPriorities");
-
-                    b.Navigation("BoardStatuses");
-
                     b.Navigation("BoardTags");
                 });
 
@@ -986,11 +989,9 @@ namespace ClefCraft.Persistence.Migrations
 
             modelBuilder.Entity("ClefCraft.Domain.BoardItem", b =>
                 {
-                    b.Navigation("BoardItemPriority")
-                        .IsRequired();
+                    b.Navigation("BoardItemPriorities");
 
-                    b.Navigation("BoardItemStatus")
-                        .IsRequired();
+                    b.Navigation("BoardItemStatuses");
 
                     b.Navigation("BoardItemTags");
                 });
