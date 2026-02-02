@@ -26,5 +26,18 @@ namespace ClefCraft.Persistence.Repositories
                 })
                 .ToListAsync();
         }
+
+        public async Task<List<Priority>> GetPrioritiesByBoardIdAsync(int boardId)
+        {
+            return await _context.BoardPriorities
+                .Where(bp => bp.BoardId == boardId || bp.BoardId == null)
+                .Select(bp => new Priority
+                {
+                    Id = bp.Priority.Id,
+                    Name = bp.Priority.Name
+                })
+                .Distinct()
+                .ToListAsync();
+        }
     }
 }

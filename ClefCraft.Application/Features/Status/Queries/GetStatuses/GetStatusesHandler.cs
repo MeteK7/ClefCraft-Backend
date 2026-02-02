@@ -21,11 +21,9 @@ namespace ClefCraft.Application.Features.Status.Queries.GetStatuses
             _mapper = mapper;
         }
 
-        public async Task<List<StatusDto>> Handle(
-            GetStatusesQuery request,
-            CancellationToken cancellationToken)
+        public async Task<List<StatusDto>> Handle(GetStatusesQuery request, CancellationToken cancellationToken)
         {
-            var statuses = await _repo.GetStatusesAsync();
+            var statuses = await _repo.GetStatusesByBoardIdAsync(request.BoardId);
             return _mapper.Map<List<StatusDto>>(statuses);
         }
     }

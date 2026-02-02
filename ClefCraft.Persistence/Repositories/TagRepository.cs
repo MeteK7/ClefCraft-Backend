@@ -34,7 +34,7 @@ namespace ClefCraft.Persistence.Repositories
         public async Task<List<Tag>> GetTagsByBoardIdAsync(int boardId)
         {
             return await _context.BoardTags
-                .Where(bt => bt.BoardId == boardId || bt.BoardId == 0)
+                .Where(bt => bt.BoardId == boardId || bt.BoardId == null)
                 .Select(bt => new Tag
                 {
                     Id = bt.Tag.Id,

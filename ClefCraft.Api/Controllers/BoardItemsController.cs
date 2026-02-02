@@ -109,15 +109,21 @@ namespace ClefCraft.Api.Controllers
         }
 
         [HttpGet("GetStatuses")]
-        public async Task<ActionResult<List<StatusDto>>> GetStatuses()
+        public async Task<ActionResult<List<StatusDto>>> GetStatuses([FromQuery] int boardId)
         {
-            return Ok(await _mediator.Send(new GetStatusesQuery()));
+            return Ok(await _mediator.Send(new GetStatusesQuery
+            {
+                BoardId = boardId
+            }));
         }
 
         [HttpGet("GetPriorities")]
-        public async Task<ActionResult<List<PriorityDto>>> GetPriorities()
+        public async Task<ActionResult<List<PriorityDto>>> GetPriorities([FromQuery] int boardId)
         {
-            return Ok(await _mediator.Send(new GetPrioritiesQuery()));
+            return Ok(await _mediator.Send(new GetPrioritiesQuery
+            {
+                BoardId = boardId
+            }));
         }
     }
 }

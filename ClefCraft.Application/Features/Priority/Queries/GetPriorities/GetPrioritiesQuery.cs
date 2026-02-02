@@ -9,5 +9,6 @@ namespace ClefCraft.Application.Features.Priority.Queries.GetPriorities
 {
     public class GetPrioritiesQuery : IRequest<List<PriorityDto>>
     {
+        public int BoardId { get; set; }
     }
 }

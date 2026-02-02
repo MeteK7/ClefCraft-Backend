@@ -29,10 +29,14 @@ namespace ClefCraft.Persistence.DatabaseContext
         public DbSet<CalendarEvent> CalendarEvents { get; set; }
         public DbSet<CalendarEventAttachment> CalendarEventAttachments { get; set; }
         public DbSet<Tag> Tags { get; set; }
-        public DbSet<BoardTag> BoardTags { get; set; }
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Priority> Priorities { get; set; }
+        public DbSet<BoardTag> BoardTags { get; set; }
+        public DbSet<BoardStatus> BoardStatuses { get; set; }
+        public DbSet<BoardPriority> BoardPriorities { get; set; }
         public DbSet<BoardItemTag> BoardItemTags { get; set; }
+        public DbSet<BoardItemStatus> BoardItemStatuses { get; set; }
+        public DbSet<BoardItemPriority> BoardItemPriorities { get; set; }
         public DbSet<BoardColumnMapping> BoardColumnMappings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

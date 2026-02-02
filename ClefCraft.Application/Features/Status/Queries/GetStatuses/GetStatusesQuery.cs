@@ -9,5 +9,6 @@ namespace ClefCraft.Application.Features.Status.Queries.GetStatuses
 {
     public class GetStatusesQuery : IRequest<List<StatusDto>>
     {
+        public int BoardId { get; set; }
     }
 }
