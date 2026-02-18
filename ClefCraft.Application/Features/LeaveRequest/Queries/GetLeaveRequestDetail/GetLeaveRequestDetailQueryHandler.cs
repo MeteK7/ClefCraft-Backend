@@ -32,7 +32,7 @@ namespace ClefCraft.Application.Features.LeaveRequest.Queries.GetLeaveRequestDet
                 throw new NotFoundException(nameof(LeaveRequest), request.Id);
 
             //Add employee details as needed
-            leaveRequest.Employee = await _userService.GetEmployee(leaveRequest.RequestingEmployeeId);
+            leaveRequest.Employee = await _userService.GetUser(leaveRequest.RequestingEmployeeId);
 
             return leaveRequest;
         }

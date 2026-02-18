@@ -6,7 +6,7 @@ namespace ClefCraft.Application.Features.LeaveRequest.Queries.GetLeaveRequestLis
     public class LeaveRequestListDto
     {
         public int Id { get; set; }
-        public Employee Employee { get; set; }
+        public User Employee { get; set; }
         public string RequestingEmployeeId { get; set; }
         public LeaveTypeDto LeaveType { get; set; }
         public DateTime DateRequested { get; set; }

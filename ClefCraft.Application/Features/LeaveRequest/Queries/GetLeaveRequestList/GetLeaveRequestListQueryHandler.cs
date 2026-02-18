@@ -34,7 +34,7 @@ namespace ClefCraft.Application.Features.LeaveRequest.Queries.GetLeaveRequestLis
                 var userId = _userService.UserId;
                 leaveRequests = await _leaveRequestRepository.GetLeaveRequestsWithDetails(userId);
 
-                var employee = await _userService.GetEmployee(userId);
+                var employee = await _userService.GetUser(userId);
                 requests = _mapper.Map<List<LeaveRequestListDto>>(leaveRequests);
                 foreach (var req in requests)
                 {
@@ -47,7 +47,7 @@ namespace ClefCraft.Application.Features.LeaveRequest.Queries.GetLeaveRequestLis
                 requests = _mapper.Map<List<LeaveRequestListDto>>(leaveRequests);
                 foreach (var req in requests)
                 {
-                    req.Employee = await _userService.GetEmployee(req.RequestingEmployeeId);
+                    req.Employee = await _userService.GetUser(req.RequestingEmployeeId);
                 }
             }
 

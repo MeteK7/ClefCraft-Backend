@@ -9,8 +9,11 @@ namespace ClefCraft.Application.Contracts.Identity
 {
     public interface IUserService
     {
-        Task<List<Employee>> GetEmployees();
-        Task<Employee> GetEmployee(string userId);
+
+        Task<List<Assignee>> GetAssignees();
+        Task<Assignee> GetAssignee(string userId);
+        Task<List<User>> GetEmployees();
+        Task<User> GetUser(string userId);
         public string UserId { get; }
     }
 }
