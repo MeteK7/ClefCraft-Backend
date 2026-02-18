@@ -38,13 +38,13 @@ namespace ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems
                 {
                     if (!string.IsNullOrEmpty(item.CreatedBy))
                     {
-                        var creator = await _userService.GetEmployee(item.CreatedBy);
+                        var creator = await _userService.GetUser(item.CreatedBy);
                         item.CreatedByFullName = $"{creator.Firstname} {creator.Lastname}";
                     }
 
                     if (!string.IsNullOrEmpty(item.ModifiedBy))
                     {
-                        var modifier = await _userService.GetEmployee(item.ModifiedBy);
+                        var modifier = await _userService.GetUser(item.ModifiedBy);
                         item.ModifiedByFullName = $"{modifier.Firstname} {modifier.Lastname}";
                     }
                 }

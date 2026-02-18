@@ -3,6 +3,7 @@ using ClefCraft.Application.Models.Identity;
 using ClefCraft.Identity.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,22 +26,22 @@ namespace ClefCraft.Identity.Services
 
         public string UserId { get => _contextAccessor.HttpContext?.User?.FindFirstValue("uid"); }
 
-        public async Task<Employee> GetEmployee(string userId)
+        public async Task<User> GetUser(string userId)
         {
-            var employee = await _userManager.FindByIdAsync(userId);
-            return new Employee
+            var user = await _userManager.FindByIdAsync(userId);
+            return new User
             {
-                Email = employee.Email,
-                Id = employee.Id,
-                Firstname = employee.FirstName,
-                Lastname = employee.LastName
+                Email = user.Email,
+                Id = user.Id,
+                Firstname = user.FirstName,
+                Lastname = user.LastName
             };
         }
 
-        public async Task<List<Employee>> GetEmployees()
+        public async Task<List<User>> GetEmployees()
         {
             var employees = await _userManager.GetUsersInRoleAsync("Employee");
-            return employees.Select(q => new Employee
+            return employees.Select(q => new User
             {
                 Id = q.Id,
                 Email = q.Email,
@@ -48,5 +49,35 @@ namespace ClefCraft.Identity.Services
                 Lastname = q.LastName
             }).ToList();
         }
+
+        public async Task<List<Assignee>> GetAssignees()
+        {
+            // Pull ALL users — no role coupling
+            var users = await _userManager.Users.ToListAsync();
+
+            return users.Select(u => new Assignee
+            {
+                Id = u.Id,
+                Email = u.Email,
+                Firstname = u.FirstName,
+                Lastname = u.LastName
+            }).ToList();
+        }
+
+        public async Task<Assignee?> GetAssignee(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return null;
+
+            return new Assignee
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Firstname = user.FirstName,
+                Lastname = user.LastName
+            };
+        }
+
+
     }
 }

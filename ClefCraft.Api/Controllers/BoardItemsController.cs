@@ -89,7 +89,7 @@ namespace ClefCraft.Api.Controllers
         [HttpGet("GetUserFullName/{userId}")]
         public async Task<ActionResult<string>> GetUserFullName(string userId)
         {
-            var user = await _userService.GetEmployee(userId);
+            var user = await _userService.GetUser(userId);
             if (user == null)
                 return NotFound($"User with ID {userId} not found.");
 
