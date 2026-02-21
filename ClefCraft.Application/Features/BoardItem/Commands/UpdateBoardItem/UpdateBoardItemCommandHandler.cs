@@ -111,7 +111,7 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
             }
 
             // Update the rest of the properties
-            boardItem.Assignee = request.Assignee ?? boardItem.Assignee;
+            boardItem.AssigneeId = request.AssigneeId ?? boardItem.AssigneeId;
             boardItem.DueDate = request.DueDate ?? boardItem.DueDate;
             boardItem.EstimatedTime = request.EstimatedTime ?? boardItem.EstimatedTime;
             boardItem.TimeSpent = request.TimeSpent ?? boardItem.TimeSpent;
@@ -120,8 +120,11 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
             // Save the updated board item
             await _boardItemRepository.UpdateBoardItem(boardItem);
 
+            // Reload fresh state with navigation properties
+            var updatedItem = await _boardItemRepository.GetBoardItemById(boardItem.Id);
+
             // Return the updated board item details as a DTO
-            return _mapper.Map<BoardItemByIdDto>(boardItem);
+            return _mapper.Map<BoardItemByIdDto>(updatedItem);
         }
 
     }

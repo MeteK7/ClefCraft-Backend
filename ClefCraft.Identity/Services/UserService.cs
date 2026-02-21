@@ -78,6 +78,22 @@ namespace ClefCraft.Identity.Services
             };
         }
 
+        public async Task<List<User>> GetUsersByIds(List<string> userIds)
+        {
+            if (userIds == null || !userIds.Any())
+                return new List<User>();
 
+            var users = await _userManager.Users
+                .Where(u => userIds.Contains(u.Id))
+                .ToListAsync();
+
+            return users.Select(u => new User
+            {
+                Id = u.Id,
+                Email = u.Email,
+                Firstname = u.FirstName,
+                Lastname = u.LastName
+            }).ToList();
+        }
     }
 }

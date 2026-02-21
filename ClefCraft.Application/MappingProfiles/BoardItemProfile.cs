@@ -34,7 +34,10 @@ namespace ClefCraft.Application.MappingProfiles
                 .ForMember(dest => dest.Tags,
                     opt => opt.MapFrom(src =>
                         src.BoardItemTags.Select(bt => bt.Tag).ToList()
-                    ));
+                    ))
+
+                .ForMember(dest => dest.AssigneeId,
+                    opt => opt.MapFrom(src => src.AssigneeId));
 
             CreateMap<BoardItem, BoardItemByIdDto>();
             CreateMap<Tag, TagDto>().ReverseMap();

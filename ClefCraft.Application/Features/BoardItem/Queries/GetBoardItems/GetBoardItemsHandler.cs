@@ -32,20 +32,47 @@ namespace ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems
 
             var mappedColumns = _mapper.Map<List<BoardColumnDto>>(columns);
 
+            // Collect ALL user IDs (distinct)
+            var userIds = mappedColumns
+                .SelectMany(c => c.BoardItems)
+                .SelectMany(i => new[]
+                {
+            i.CreatedBy,
+            i.ModifiedBy,
+            i.AssigneeId
+                })
+                .Where(id => !string.IsNullOrEmpty(id))
+                .Distinct()
+                .ToList();
+
+            // Fetch all users in ONE query
+            var users = await _userService.GetUsersByIds(userIds);
+
+            // Convert to dictionary for O(1) lookup
+            var userDictionary = users.ToDictionary(u => u.Id);
+
+            // Map FullNames without extra DB calls
             foreach (var column in mappedColumns)
             {
                 foreach (var item in column.BoardItems)
                 {
-                    if (!string.IsNullOrEmpty(item.CreatedBy))
+                    if (!string.IsNullOrEmpty(item.CreatedBy)
+                        && userDictionary.TryGetValue(item.CreatedBy, out var creator))
                     {
-                        var creator = await _userService.GetUser(item.CreatedBy);
                         item.CreatedByFullName = $"{creator.Firstname} {creator.Lastname}";
                     }
 
-                    if (!string.IsNullOrEmpty(item.ModifiedBy))
+                    if (!string.IsNullOrEmpty(item.ModifiedBy)
+                        && userDictionary.TryGetValue(item.ModifiedBy, out var modifier))
                     {
-                        var modifier = await _userService.GetUser(item.ModifiedBy);
                         item.ModifiedByFullName = $"{modifier.Firstname} {modifier.Lastname}";
+                    }
+
+                    if (!string.IsNullOrEmpty(item.AssigneeId)
+                        && userDictionary.TryGetValue(item.AssigneeId, out var assignee))
+                    {
+                        item.AssigneeFirstName = assignee.Firstname;
+                        item.AssigneeLastName = assignee.Lastname;
                     }
                 }
             }

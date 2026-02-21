@@ -23,8 +23,9 @@ namespace ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems
         public PriorityDto Priority { get; set; }
 
         public List<TagDto> Tags { get; set; } = new();
-
-        public string Assignee { get; set; }
+        public string AssigneeId { get; set; }
+        public string AssigneeFirstName { get; set; }
+        public string AssigneeLastName { get; set; }
         public DateTime? DueDate { get; set; }
 
         public double? EstimatedTime { get; set; }

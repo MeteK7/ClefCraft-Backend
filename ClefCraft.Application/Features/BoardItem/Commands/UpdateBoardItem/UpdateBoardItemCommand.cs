@@ -16,7 +16,7 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
         public int? StatusId { get; set; }
         public int? PriorityId { get; set; }
         public List<int>? TagIds { get; set; }
-        public string? Assignee { get; set; }
+        public string? AssigneeId { get; set; }
         public DateTime? DueDate { get; set; }
         public double? EstimatedTime { get; set; }
         public double? TimeSpent { get; set; }
