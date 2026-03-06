@@ -36,10 +36,16 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
             if (string.IsNullOrWhiteSpace(request.Subject))
                 throw new ValidationException("Subject is required.");
 
+            if (!request.AllDayEvent)
+            {
+                if (request.StartDate >= request.EndDate)
+                    throw new ValidationException("End time must be after start time.");
+            }
+
             entity.Subject = request.Subject;
             entity.Location = request.Location;
-            entity.StartDate = request.StartDate.ToUniversalTime();
-            entity.EndDate = request.EndDate.ToUniversalTime();
+            entity.StartDate = request.StartDate;
+            entity.EndDate = request.EndDate;
             entity.AllDayEvent = request.AllDayEvent;
             entity.Importance = request.Importance;
             entity.Comment = request.Comment;
