@@ -51,6 +51,17 @@ public class CalendarController : Controller
         return Ok(result);
     }
 
+    [HttpGet("event-types")]
+    public async Task<ActionResult<List<EventTypeDto>>> GetEventTypes()
+    {
+        var result = await _mediator.Send(new GetEventTypesQuery
+        {
+            UserId = _userService.UserId
+        });
+
+        return Ok(result);
+    }
+
     [HttpGet("WorkHistory/{itemId}")]
     public async Task<ActionResult<List<WorkHistoryDto>>> GetWorkHistory(int itemId)
     {

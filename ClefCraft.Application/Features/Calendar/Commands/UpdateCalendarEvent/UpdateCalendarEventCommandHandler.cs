@@ -47,6 +47,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
             entity.StartDate = request.StartDate;
             entity.EndDate = request.EndDate;
             entity.AllDayEvent = request.AllDayEvent;
+            entity.EventTypeId = request.EventTypeId;
             entity.Importance = request.Importance;
             entity.Comment = request.Comment;
             entity.DateModified = DateTime.UtcNow;

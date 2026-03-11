@@ -28,24 +28,6 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
 
         public async Task<CalendarEventDto> Handle(CreateCalendarEventCommand request, CancellationToken cancellationToken)
         {
-            //var calendarEvent = new CalendarEvent
-            //{
-            //    Subject = request.Subject,
-            //    Location = request.Location,
-            //    StartDate = request.StartDate,
-            //    EndDate = request.EndDate,
-            //    AllDayEvent = request.AllDayEvent,
-            //    Importance = request.Importance,
-            //    //Label = request.Label,
-            //    Comment = request.Comment,
-            //    LinkedBoardItemId = request.LinkedBoardItemId,
-            //    UserId = request.UserId
-            //};
-
-
-            //var startDate = DateTime.SpecifyKind(request.StartDate, DateTimeKind.Utc); // Convert to server time zone
-            //var endDate = DateTime.SpecifyKind(request.EndDate, DateTimeKind.Utc);   // Convert to server time zone
-
             if (!request.AllDayEvent)
             {
                 if (request.StartDate >= request.EndDate)
@@ -59,6 +41,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,
                 AllDayEvent = request.AllDayEvent,
+                EventTypeId = request.EventTypeId,
                 Importance = request.Importance,
                 Comment = request.Comment,
                 LinkedBoardItemId = request.LinkedBoardItemId,

@@ -28,6 +28,7 @@ namespace ClefCraft.Persistence
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<IStatusRepository, StatusRepository>();
             services.AddScoped<IPriorityRepository, PriorityRepository>();
+            services.AddScoped<IEventTypeRepository, EventTypeRepository>();
 
             return services;
         }
