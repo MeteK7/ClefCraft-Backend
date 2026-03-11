@@ -15,6 +15,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
         public DateTimeOffset StartDate { get; set; }
         public DateTimeOffset EndDate { get; set; }
         public bool AllDayEvent { get; set; }
+        public int? EventTypeId { get; set; }
         public string Importance { get; set; }
         public string? Comment { get; set; }
         public int? LinkedBoardItemId { get; set; }
