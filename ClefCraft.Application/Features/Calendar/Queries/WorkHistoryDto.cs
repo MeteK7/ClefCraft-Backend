@@ -9,6 +9,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
     public class WorkHistoryDto
     {
         public DateTime DateCreated { get; set; }
-        public string ActionBy { get; set; }
+        public string ActionByUserId { get; set; }  
+        public string ActionByFullName { get; set; } 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
 using MediatR;
 using System;
@@ -13,16 +14,44 @@ namespace ClefCraft.Application.Features.Calendar.Queries
     {
         private readonly ICalendarEventRepository _calendarEventRepository;
         private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
-        public GetWorkHistoryQueryHandler(ICalendarEventRepository calendarEventRepository, IMapper mapper)
+        public GetWorkHistoryQueryHandler(ICalendarEventRepository calendarEventRepository, IMapper mapper, IUserService userService)
         {
             _calendarEventRepository = calendarEventRepository;
             _mapper = mapper;
+            _userService = userService;
         }
-        public async Task<List<WorkHistoryDto>> Handle(GetWorkHistoryQuery request, CancellationToken cancellationToken)
+        public async Task<List<WorkHistoryDto>> Handle(
+            GetWorkHistoryQuery request,
+            CancellationToken cancellationToken)
         {
-            var history = await _calendarEventRepository.GetWorkHistoryByItemIdAsync(request.ItemId);
-            return _mapper.Map<List<WorkHistoryDto>>(history);
+            var history = await _calendarEventRepository
+                .GetWorkHistoryByItemIdAsync(request.ItemId);
+
+            var userIds = history
+                .Select(h => h.CreatedBy) // or h.UserId
+                .Where(userId => !string.IsNullOrEmpty(userId))
+                .Distinct()
+                .ToList();
+
+            var users = await _userService.GetUsersByIds(userIds);
+
+            var result = history.Select(h =>
+            {
+                var user = users.FirstOrDefault(u => u.Id == h.CreatedBy);
+
+                return new WorkHistoryDto
+                {
+                    DateCreated = h.StartDate.UtcDateTime,
+                    ActionByUserId = h.CreatedBy,
+                    ActionByFullName = user != null
+                        ? $"{user.Firstname} {user.Lastname}"
+                        : "Unknown"
+                };
+            }).ToList();
+
+            return result;
         }
     }
 }
