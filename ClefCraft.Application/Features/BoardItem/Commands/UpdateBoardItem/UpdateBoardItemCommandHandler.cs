@@ -123,8 +123,21 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
             // Reload fresh state with navigation properties
             var updatedItem = await _boardItemRepository.GetBoardItemById(boardItem.Id);
 
-            // Return the updated board item details as a DTO
-            return _mapper.Map<BoardItemByIdDto>(updatedItem);
+            var dto = _mapper.Map<BoardItemByIdDto>(updatedItem);
+
+            // 🔥 Populate assignee manually
+            if (!string.IsNullOrEmpty(updatedItem.AssigneeId))
+            {
+                var assignee = await _userService.GetAssignee(updatedItem.AssigneeId);
+
+                if (assignee != null)
+                {
+                    dto.AssigneeFirstName = assignee.Firstname;
+                    dto.AssigneeLastName = assignee.Lastname;
+                }
+            }
+
+            return dto;
         }
 
     }
