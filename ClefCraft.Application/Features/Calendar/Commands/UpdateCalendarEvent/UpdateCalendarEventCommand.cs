@@ -19,5 +19,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
         public int? EventTypeId { get; set; }
         public string Importance { get; set; }
         public string? Comment { get; set; }
+        public bool IsRecurring { get; set; }
+        public string? RecurrenceRuleJson { get; set; }
     }
 }
