@@ -10,5 +10,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
     public class GetCalendarEventsQuery : IRequest<List<CalendarEventDto>>
     {
         public string UserId { get; set; }
+        public DateTimeOffset RangeStart { get; set; }
+        public DateTimeOffset RangeEnd { get; set; }
     }
 }

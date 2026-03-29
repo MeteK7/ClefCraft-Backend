@@ -46,6 +46,8 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
                 Comment = request.Comment,
                 LinkedBoardItemId = request.LinkedBoardItemId,
                 UserId = _userService.UserId,
+                IsRecurring = request.IsRecurring,
+                RecurrenceRuleJson = request.RecurrenceRuleJson,
                 DateCreated = DateTime.UtcNow, // Always use UTC for server timestamps
                 DateModified = DateTime.UtcNow
             };

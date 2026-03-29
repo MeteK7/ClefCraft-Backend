@@ -42,12 +42,17 @@ public class CalendarController : Controller
     }
 
     [HttpGet("events")]
-    public async Task<ActionResult<List<CalendarEventDto>>> GetEvents()
+    public async Task<ActionResult<List<CalendarEventDto>>> GetEvents(
+        [FromQuery] DateTimeOffset rangeStart,
+        [FromQuery] DateTimeOffset rangeEnd)
     {
         var result = await _mediator.Send(new GetCalendarEventsQuery
         {
-            UserId = _userService.UserId
+            UserId = _userService.UserId,
+            RangeStart = rangeStart,
+            RangeEnd = rangeEnd
         });
+
         return Ok(result);
     }
 

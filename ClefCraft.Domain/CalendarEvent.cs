@@ -20,6 +20,8 @@ namespace ClefCraft.Domain
         public string? Comment { get; set; }
         public string UserId { get; set; }
         public int? LinkedBoardItemId { get; set; }
+        public bool IsRecurring { get; set; }
+        public string? RecurrenceRuleJson { get; set; }
         public virtual BoardItem LinkedBoardItem { get; set; }
         public List<CalendarEventHistory> History { get; set; }
     }

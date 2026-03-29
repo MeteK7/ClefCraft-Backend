@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
+using ClefCraft.Application.Common.Helpers;
 using ClefCraft.Application.Contracts.Persistence;
+using ClefCraft.Domain;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace ClefCraft.Application.Features.Calendar.Queries
 {
@@ -36,10 +34,47 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             var events = await _calendarEventRepository
                 .GetByUserIdAsync(request.UserId);
 
-            var eventDtos = _mapper.Map<List<CalendarEventDto>>(events);
+            // 2️ Prepare list for expanded events
+            var expandedEvents = new List<CalendarEventDto>();
 
-            // 2️ Enrich linked board items
-            var linkedIds = eventDtos
+            foreach (var e in events)
+            {
+                // Non-recurring → just map
+                if (!e.IsRecurring || string.IsNullOrEmpty(e.RecurrenceRuleJson))
+                {
+                    expandedEvents.Add(_mapper.Map<CalendarEventDto>(e));
+                    continue;
+                }
+
+                // Recurring → parse rule and expand
+                RecurrenceRule? rule = null;
+                try
+                {
+                    rule = JsonSerializer.Deserialize<RecurrenceRule>(e.RecurrenceRuleJson);
+                }
+                catch
+                {
+                    // fallback: skip invalid recurrence rules
+                    expandedEvents.Add(_mapper.Map<CalendarEventDto>(e));
+                    continue;
+                }
+
+                if (rule != null)
+                {
+                    var occurrences = RecurrenceHelper.ExpandEvent(e, rule, request.RangeStart, request.RangeEnd);
+                    foreach (var occurrence in occurrences)
+                    {
+                        // Preserve EventTypeId and LinkedBoardItemId for later enrichment
+                        occurrence.EventTypeId = e.EventTypeId;
+                        occurrence.LinkedBoardItemId = e.LinkedBoardItemId;
+                        occurrence.IsRecurring = true;
+                        expandedEvents.Add(occurrence);
+                    }
+                }
+            }
+
+            // 3️ Enrich linked board items
+            var linkedIds = expandedEvents
                 .Where(e => e.LinkedBoardItemId.HasValue)
                 .Select(e => e.LinkedBoardItemId!.Value)
                 .Distinct()
@@ -55,7 +90,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
                     bi => bi.Title
                 );
 
-                foreach (var dto in eventDtos)
+                foreach (var dto in expandedEvents)
                 {
                     if (dto.LinkedBoardItemId is int boardItemId &&
                         boardItemMap.TryGetValue(boardItemId, out var title))
@@ -65,8 +100,8 @@ namespace ClefCraft.Application.Features.Calendar.Queries
                 }
             }
 
-            // 3️ Enrich EventType info (Name + Color)
-            var typeIds = eventDtos
+            // 4️ Enrich EventType info (Name + Color)
+            var typeIds = expandedEvents
                 .Where(e => e.EventTypeId.HasValue)
                 .Select(e => e.EventTypeId!.Value)
                 .Distinct()
@@ -74,14 +109,12 @@ namespace ClefCraft.Application.Features.Calendar.Queries
 
             if (typeIds.Any())
             {
-                // Fetch all EventTypes for the user
                 var types = await _eventTypeRepository.GetByUserIdAsync(request.UserId);
-
                 var typeMap = types
                     .Where(t => typeIds.Contains(t.Id))
                     .ToDictionary(t => t.Id);
 
-                foreach (var dto in eventDtos)
+                foreach (var dto in expandedEvents)
                 {
                     if (dto.EventTypeId is int typeId &&
                         typeMap.TryGetValue(typeId, out var type))
@@ -92,7 +125,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
                 }
             }
 
-            return eventDtos;
+            return expandedEvents;
         }
     }
 }
