@@ -50,6 +50,8 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
             entity.EventTypeId = request.EventTypeId;
             entity.Importance = request.Importance;
             entity.Comment = request.Comment;
+            entity.IsRecurring = request.IsRecurring;
+            entity.RecurrenceRuleJson = request.RecurrenceRuleJson;
             entity.DateModified = DateTime.UtcNow;
 
             await _calendarEventRepository.UpdateAsync(entity);
