@@ -2,6 +2,7 @@
 using ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent;
 using ClefCraft.Application.Features.Calendar.Commands.DeleteCalendarAttachment;
 using ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent;
+using ClefCraft.Application.Features.Calendar.Commands.UpdateSingleOccurrence;
 using ClefCraft.Application.Features.Calendar.Commands.UploadCalendarAttachment;
 using ClefCraft.Application.Features.Calendar.Queries;
 using ClefCraft.Application.Features.Calendar.Queries.GetCalendarAttachments;
@@ -116,6 +117,14 @@ public class CalendarController : Controller
     public async Task<IActionResult> DeleteAttachment(int id)
     {
         await _mediator.Send(new DeleteAttachmentCommand { Id = id });
+        return NoContent();
+    }
+
+    [HttpPut("occurrence")]
+    public async Task<IActionResult> UpdateSingleOccurrence(
+    UpdateSingleOccurrenceCommand command)
+    {
+        await _mediator.Send(command);
         return NoContent();
     }
 }

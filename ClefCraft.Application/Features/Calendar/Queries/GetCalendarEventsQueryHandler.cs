@@ -39,6 +39,11 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             // 2️ Prepare list for expanded events
             var expandedEvents = new List<CalendarEventDto>();
 
+            var eventIds = events.Select(e => e.Id).ToList();
+
+            var exceptions = await _calendarEventExceptionRepository
+                .GetByEventIdsAsync(eventIds);
+
             foreach (var e in events)
             {
                 // Non-recurring → just map
@@ -61,18 +66,13 @@ namespace ClefCraft.Application.Features.Calendar.Queries
                     continue;
                 }
 
-                var eventIds = events.Select(e => e.Id).ToList();
-
-                var exceptions = await _calendarEventExceptionRepository
-                    .GetByEventIdsAsync(eventIds);
-
                 if (rule != null)
                 {
                     var occurrences = RecurrenceHelper.ExpandEvent(e,
-    rule,
-    exceptions,
-    request.RangeStart,
-    request.RangeEnd);
+                        rule,
+                        exceptions,
+                        request.RangeStart,
+                        request.RangeEnd);
                     foreach (var occurrence in occurrences)
                     {
                         // Preserve EventTypeId and LinkedBoardItemId for later enrichment

@@ -44,7 +44,7 @@ namespace ClefCraft.Application.Common.Helpers
                 {
                     foreach (var day in rule.DaysOfWeek)
                     {
-                        var next = GetNextWeekday(current, day);
+                        var next = GetNextWeekday(current.AddDays(-1), day);
 
                         if (next >= rangeStart && next <= rangeEnd)
                         {
@@ -66,7 +66,7 @@ namespace ClefCraft.Application.Common.Helpers
 
                             var exception = exceptions.FirstOrDefault(x =>
                                 x.CalendarEventId == ev.Id &&
-                                x.OccurrenceDate.Date == occurrenceDate.Date);
+                                x.OccurrenceDate == DateOnly.FromDateTime(occurrenceDate.UtcDateTime));
 
                             if (exception != null)
                             {
@@ -110,7 +110,7 @@ namespace ClefCraft.Application.Common.Helpers
 
                     var exception = exceptions.FirstOrDefault(x =>
                         x.CalendarEventId == ev.Id &&
-                        x.OccurrenceDate.Date == occurrenceDate.Date);
+                        x.OccurrenceDate == DateOnly.FromDateTime(occurrenceDate.UtcDateTime));
 
                     if (exception != null)
                     {

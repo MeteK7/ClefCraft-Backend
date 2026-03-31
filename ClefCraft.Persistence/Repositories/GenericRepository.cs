@@ -51,6 +51,7 @@ namespace ClefCraft.Persistence.Repositories
 
         public async Task UpdateAsync(T entity)
         {
+            _context.Update(entity);
             await _context.SaveChangesAsync();
         }
     }
