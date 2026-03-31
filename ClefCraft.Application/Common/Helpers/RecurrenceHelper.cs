@@ -21,6 +21,7 @@ namespace ClefCraft.Application.Common.Helpers
         public static List<CalendarEventDto> ExpandEvent(
             CalendarEvent ev,
             RecurrenceRule rule,
+            List<CalendarEventException> exceptions,
             DateTimeOffset rangeStart,
             DateTimeOffset rangeEnd)
         {
@@ -47,7 +48,7 @@ namespace ClefCraft.Application.Common.Helpers
 
                         if (next >= rangeStart && next <= rangeEnd)
                         {
-                            result.Add(new CalendarEventDto
+                            var dto = new CalendarEventDto
                             {
                                 Id = ev.Id,
                                 Subject = ev.Subject,
@@ -58,7 +59,27 @@ namespace ClefCraft.Application.Common.Helpers
                                 Importance = ev.Importance,
                                 Comment = ev.Comment,
                                 LinkedBoardItemId = ev.LinkedBoardItemId
-                            });
+                            };
+
+                            // 👉 APPLY EXCEPTION HERE
+                            var occurrenceDate = next;
+
+                            var exception = exceptions.FirstOrDefault(x =>
+                                x.CalendarEventId == ev.Id &&
+                                x.OccurrenceDate.Date == occurrenceDate.Date);
+
+                            if (exception != null)
+                            {
+                                if (exception.IsCancelled)
+                                    continue;
+
+                                dto.Subject = exception.Subject ?? dto.Subject;
+                                dto.Comment = exception.Comment ?? dto.Comment;
+                                dto.StartDate = exception.StartDate ?? dto.StartDate;
+                                dto.EndDate = exception.EndDate ?? dto.EndDate;
+                            }
+
+                            result.Add(dto);
 
                             occurrences++;
                         }
@@ -71,7 +92,7 @@ namespace ClefCraft.Application.Common.Helpers
                 // ✅ DEFAULT FLOW (daily/monthly/yearly)
                 if (current >= rangeStart)
                 {
-                    result.Add(new CalendarEventDto
+                    var dto = new CalendarEventDto
                     {
                         Id = ev.Id,
                         Subject = ev.Subject,
@@ -82,7 +103,27 @@ namespace ClefCraft.Application.Common.Helpers
                         Importance = ev.Importance,
                         Comment = ev.Comment,
                         LinkedBoardItemId = ev.LinkedBoardItemId
-                    });
+                    };
+
+                    // 👉 APPLY EXCEPTION HERE
+                    var occurrenceDate = current;
+
+                    var exception = exceptions.FirstOrDefault(x =>
+                        x.CalendarEventId == ev.Id &&
+                        x.OccurrenceDate.Date == occurrenceDate.Date);
+
+                    if (exception != null)
+                    {
+                        if (exception.IsCancelled)
+                            continue;
+
+                        dto.Subject = exception.Subject ?? dto.Subject;
+                        dto.Comment = exception.Comment ?? dto.Comment;
+                        dto.StartDate = exception.StartDate ?? dto.StartDate;
+                        dto.EndDate = exception.EndDate ?? dto.EndDate;
+                    }
+
+                    result.Add(dto);
 
                     occurrences++;
                 }
