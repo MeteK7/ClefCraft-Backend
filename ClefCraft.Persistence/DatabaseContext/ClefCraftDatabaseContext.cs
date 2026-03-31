@@ -27,6 +27,7 @@ namespace ClefCraft.Persistence.DatabaseContext
         public DbSet<BoardColumn> BoardColumns { get; set; }
         public DbSet<BoardItem> BoardItems { get; set; }
         public DbSet<CalendarEvent> CalendarEvents { get; set; }
+        public DbSet<CalendarEventException> CalendarEventExceptions { get; set; }
         public DbSet<EventType> EventTypes { get; set; }
         public DbSet<CalendarEventAttachment> CalendarEventAttachments { get; set; }
         public DbSet<Tag> Tags { get; set; }
@@ -43,6 +44,11 @@ namespace ClefCraft.Persistence.DatabaseContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ClefCraftDatabaseContext).Assembly);
+
+            modelBuilder.Entity<CalendarEventException>()
+                .HasIndex(x => new { x.CalendarEventId, x.OccurrenceDate })
+                .IsUnique();
+
             base.OnModelCreating(modelBuilder);
         }
 

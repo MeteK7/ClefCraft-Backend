@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Application.Contracts.Persistence
 {
-    public class ICalendarEventExceptionRepository : IGenericRepository<CalendarEventException>
+    public interface ICalendarEventExceptionRepository : IGenericRepository<CalendarEventException>
     {
+        Task<CalendarEventException?> GetByEventAndDate(int eventId, DateOnly date);
+        Task UpsertAsync(CalendarEventException exception);
+        Task<List<CalendarEventException>> GetByEventIdsAsync(List<int> eventIds);
     }
 }
