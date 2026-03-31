@@ -3,6 +3,7 @@ using ClefCraft.Application.Common.Helpers;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Domain;
 using MediatR;
+using System;
 using System.Text.Json;
 
 namespace ClefCraft.Application.Features.Calendar.Queries
@@ -10,6 +11,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
     public class GetCalendarEventsQueryHandler : IRequestHandler<GetCalendarEventsQuery, List<CalendarEventDto>>
     {
         private readonly ICalendarEventRepository _calendarEventRepository;
+        private readonly ICalendarEventExceptionRepository _calendarEventExceptionRepository;
         private readonly IBoardItemRepository _boardItemRepository;
         private readonly IEventTypeRepository _eventTypeRepository;
         private readonly IMapper _mapper;
@@ -59,9 +61,18 @@ namespace ClefCraft.Application.Features.Calendar.Queries
                     continue;
                 }
 
+                var eventIds = events.Select(e => e.Id).ToList();
+
+                var exceptions = await _calendarEventExceptionRepository
+                    .GetByEventIdsAsync(eventIds);
+
                 if (rule != null)
                 {
-                    var occurrences = RecurrenceHelper.ExpandEvent(e, rule, request.RangeStart, request.RangeEnd);
+                    var occurrences = RecurrenceHelper.ExpandEvent(e,
+    rule,
+    exceptions,
+    request.RangeStart,
+    request.RangeEnd);
                     foreach (var occurrence in occurrences)
                     {
                         // Preserve EventTypeId and LinkedBoardItemId for later enrichment
