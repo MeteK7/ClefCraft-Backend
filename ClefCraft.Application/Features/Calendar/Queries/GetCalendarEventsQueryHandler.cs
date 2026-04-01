@@ -18,11 +18,13 @@ namespace ClefCraft.Application.Features.Calendar.Queries
 
         public GetCalendarEventsQueryHandler(
             ICalendarEventRepository calendarEventRepository,
+            ICalendarEventExceptionRepository calendarEventExceptionRepository,
             IBoardItemRepository boardItemRepository,
             IEventTypeRepository eventTypeRepository,
             IMapper mapper)
         {
             _calendarEventRepository = calendarEventRepository;
+            _calendarEventExceptionRepository = calendarEventExceptionRepository;
             _boardItemRepository = boardItemRepository;
             _eventTypeRepository = eventTypeRepository;
             _mapper = mapper;
