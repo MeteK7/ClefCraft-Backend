@@ -1,11 +1,13 @@
 using ClefCraft.Api.Middleware;
 using ClefCraft.Application;
+using ClefCraft.Application.Contracts.AI;
 using ClefCraft.Application.Contracts.FileAttachment;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Identity;
 using ClefCraft.Identity.Services;
 using ClefCraft.Infrastructure;
 using ClefCraft.Infrastructure.FileAttachmentService;
+using ClefCraft.Infrastructure.Services;
 using ClefCraft.Persistence;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -31,6 +33,10 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials());
+});
+builder.Services.AddHttpClient<IAIService, AIService>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:8000");
 });
 //builder.Services.AddCors(options =>
 //{
