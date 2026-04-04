@@ -37,13 +37,42 @@ namespace ClefCraft.Infrastructure.Services
                 payload
             );
 
-            response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"AI ERROR: {response.StatusCode} - {error}");
+            }
 
             var result = await response.Content.ReadFromJsonAsync<PredictionResponse>();
 
             return result.Predictions.First();
         }
+
+        public async Task<List<double>> PredictBatchAsync(List<AIEventDto> events)
+        {
+            var payload = events.Select(ev => new
+            {
+                UserId = ev.UserId,
+                StartDate = ev.StartDate,
+                EndDate = ev.EndDate,
+                Importance = ev.Importance,
+                IsRecurring = ev.IsRecurring
+            }).ToList();
+
+            var response = await _httpClient.PostAsJsonAsync("/predict", payload);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"AI ERROR: {response.StatusCode} - {error}");
+            }
+
+            var result = await response.Content.ReadFromJsonAsync<PredictionResponse>();
+
+            return result.Predictions;
+        }
     }
+
 
     public class PredictionResponse
     {

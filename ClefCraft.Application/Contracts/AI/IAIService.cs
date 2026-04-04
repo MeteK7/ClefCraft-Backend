@@ -10,5 +10,6 @@ namespace ClefCraft.Application.Contracts.AI
     public interface IAIService
     {
         Task<double> PredictAttendanceAsync(AIEventDto ev);
+        Task<List<double>> PredictBatchAsync(List<AIEventDto> ev);
     }
 }

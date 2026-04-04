@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ClefCraft.Application.Common.Helpers;
+using ClefCraft.Application.Contracts.AI;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Domain;
 using MediatR;
@@ -14,6 +15,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
         private readonly ICalendarEventExceptionRepository _calendarEventExceptionRepository;
         private readonly IBoardItemRepository _boardItemRepository;
         private readonly IEventTypeRepository _eventTypeRepository;
+        private readonly IAIService _aiService;
         private readonly IMapper _mapper;
 
         public GetCalendarEventsQueryHandler(
@@ -21,12 +23,14 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             ICalendarEventExceptionRepository calendarEventExceptionRepository,
             IBoardItemRepository boardItemRepository,
             IEventTypeRepository eventTypeRepository,
+            IAIService aiService,
             IMapper mapper)
         {
             _calendarEventRepository = calendarEventRepository;
             _calendarEventExceptionRepository = calendarEventExceptionRepository;
             _boardItemRepository = boardItemRepository;
             _eventTypeRepository = eventTypeRepository;
+            _aiService = aiService;
             _mapper = mapper;
         }
 
@@ -136,6 +140,24 @@ namespace ClefCraft.Application.Features.Calendar.Queries
                         dto.EventColor = type.Color;
                     }
                 }
+            }
+
+            var aiInputs = expandedEvents.Select(dto => new AIEventDto
+            {
+                UserId = request.UserId,
+                StartDate = dto.StartDate,
+                EndDate = dto.EndDate,
+                Importance = dto.Importance,
+                IsRecurring = dto.IsRecurring
+            }).ToList();
+
+            Console.WriteLine($"Sending {aiInputs.Count} events to AI");
+
+            var predictions = await _aiService.PredictBatchAsync(aiInputs);
+
+            for (int i = 0; i < expandedEvents.Count; i++)
+            {
+                expandedEvents[i].AttendanceScore = predictions[i];
             }
 
             return expandedEvents;
