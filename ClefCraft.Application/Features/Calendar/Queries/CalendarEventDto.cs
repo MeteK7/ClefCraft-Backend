@@ -23,5 +23,6 @@ namespace ClefCraft.Application.Features.Calendar.Queries
         public string? RecurrenceRuleJson { get; set; }
         public int? LinkedBoardItemId { get; set; }
         public string? LinkedBoardItemTitle { get; set; }
+        public double? AttendanceScore { get; set; }
     }
 }
