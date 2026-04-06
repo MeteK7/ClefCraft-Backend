@@ -28,6 +28,7 @@ namespace ClefCraft.Persistence.DatabaseContext
         public DbSet<BoardItem> BoardItems { get; set; }
         public DbSet<CalendarEvent> CalendarEvents { get; set; }
         public DbSet<CalendarEventException> CalendarEventExceptions { get; set; }
+        public DbSet<CalendarEventExceptionHistory> CalendarEventExceptionHistories { get; set; }
         public DbSet<EventType> EventTypes { get; set; }
         public DbSet<CalendarEventAttachment> CalendarEventAttachments { get; set; }
         public DbSet<Tag> Tags { get; set; }
@@ -40,6 +41,10 @@ namespace ClefCraft.Persistence.DatabaseContext
         public DbSet<BoardItemStatus> BoardItemStatuses { get; set; }
         public DbSet<BoardItemPriority> BoardItemPriorities { get; set; }
         public DbSet<BoardColumnMapping> BoardColumnMappings { get; set; }
+        public DbSet<ActivityLog> ActivityLogs { get; set; }
+        public DbSet<EntitySnapshot> EntitySnapshots { get; set; }
+        public DbSet<UserInteractionSignal> UserInteractionSignals { get; set; }
+        public DbSet<TaskLifecycle> TaskLifecycles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
