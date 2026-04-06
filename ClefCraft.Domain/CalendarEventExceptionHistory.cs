@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Domain
 {
-    public class CalendarEventHistory : BaseEntity
+    public class CalendarEventExceptionHistory : BaseEntity
     {
         public int CalendarEventId { get; set; }
         public CalendarEvent CalendarEvent { get; set; }

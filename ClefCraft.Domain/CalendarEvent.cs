@@ -23,6 +23,6 @@ namespace ClefCraft.Domain
         public bool IsRecurring { get; set; }
         public string? RecurrenceRuleJson { get; set; }
         public virtual BoardItem LinkedBoardItem { get; set; }
-        public List<CalendarEventHistory> History { get; set; }
+        public List<CalendarEventExceptionHistory> History { get; set; }
     }
 }
