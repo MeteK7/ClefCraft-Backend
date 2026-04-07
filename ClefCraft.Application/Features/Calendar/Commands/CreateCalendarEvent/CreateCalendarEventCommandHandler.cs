@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ClefCraft.Application.Contracts.Identity;
+using ClefCraft.Application.Contracts.Logging;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Features.Calendar.Queries;
 using ClefCraft.Domain;
@@ -18,12 +19,14 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
         private readonly ICalendarEventRepository _calendarEventRepository;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
+        private readonly IActivityLogger _activityLogger;
 
-        public CreateCalendarEventCommandHandler(ICalendarEventRepository calendarEventRepository, IMapper mapper, IUserService userService)
+        public CreateCalendarEventCommandHandler(ICalendarEventRepository calendarEventRepository, IMapper mapper, IUserService userService, IActivityLogger activityLogger)
         {
             _calendarEventRepository = calendarEventRepository;
             _mapper = mapper;
             _userService = userService;
+            _activityLogger = activityLogger;
         }
 
         public async Task<CalendarEventDto> Handle(CreateCalendarEventCommand request, CancellationToken cancellationToken)
@@ -51,9 +54,21 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
                 DateCreated = DateTime.UtcNow, // Always use UTC for server timestamps
                 DateModified = DateTime.UtcNow
             };
-             
+
 
             await _calendarEventRepository.CreateAsync(calendarEvent);
+
+            await _activityLogger.LogAsync(
+                "CalendarEvent",
+                calendarEvent.Id,
+                "CREATED",
+                new
+                {
+                    calendarEvent.StartDate,
+                    calendarEvent.EndDate,
+                    calendarEvent.Importance,
+                    calendarEvent.IsRecurring
+                });
 
             return _mapper.Map<CalendarEventDto>(calendarEvent);
         }

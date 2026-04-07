@@ -1,6 +1,8 @@
-﻿using ClefCraft.Application.Contracts.Persistence;
+﻿using ClefCraft.Application.Contracts.Logging;
+using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Persistence.DatabaseContext;
 using ClefCraft.Persistence.Repositories;
+using ClefCraft.Persistence.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +32,7 @@ namespace ClefCraft.Persistence
             services.AddScoped<IStatusRepository, StatusRepository>();
             services.AddScoped<IPriorityRepository, PriorityRepository>();
             services.AddScoped<IEventTypeRepository, EventTypeRepository>();
+            services.AddScoped<IActivityLogger, ActivityLogger>();
 
             return services;
         }
