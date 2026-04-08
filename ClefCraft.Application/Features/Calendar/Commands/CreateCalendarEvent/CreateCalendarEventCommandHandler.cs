@@ -61,7 +61,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
             await _activityLogger.LogAsync(
                 "CalendarEvent",
                 calendarEvent.Id,
-                "CREATED",
+                "EVENT_SCHEDULED",
                 new
                 {
                     calendarEvent.StartDate,
