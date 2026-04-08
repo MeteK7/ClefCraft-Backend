@@ -91,8 +91,8 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
                     "IMPORTANCE_CHANGED",
                     new
                     {
-                        Previous = previousStart, // wrong field, see below
-                                                  // use a before-capture variable like previousImportance
+                        Previous = entity.Importance,
+                        New = request.Importance
                     });
             }
 

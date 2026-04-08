@@ -1,14 +1,15 @@
 ﻿using AutoMapper;
+using ClefCraft.Application.Contracts.Analytics;
+using ClefCraft.Application.Contracts.Identity;
+using ClefCraft.Application.Contracts.Persistence;
+using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems;
+using ClefCraft.Domain;
 using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ClefCraft.Domain;
-using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems;
-using ClefCraft.Application.Contracts.Persistence;
-using ClefCraft.Application.Contracts.Identity;
 
 namespace ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem
 {
@@ -17,12 +18,14 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem
         private readonly IBoardItemRepository _boardItemRepository;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
+        private readonly ITaskLifecycleService _taskLifecycleService;
 
-        public CreateBoardItemCommandHandler(IBoardItemRepository boardItemRepository, IMapper mapper, IUserService userService)
+        public CreateBoardItemCommandHandler(IBoardItemRepository boardItemRepository, IMapper mapper, IUserService userService, ITaskLifecycleService taskLifecycleService)
         {
             _boardItemRepository = boardItemRepository;
             _mapper = mapper;
             _userService = userService;
+            _taskLifecycleService = taskLifecycleService;
         }
 
         public async Task<BoardItemDto> Handle(CreateBoardItemCommand request, CancellationToken cancellationToken)
@@ -38,6 +41,7 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem
             };
 
             await _boardItemRepository.AddBoardItem(boardItem);
+            await _taskLifecycleService.EnsureCreatedAsync(boardItem.Id);
 
             return _mapper.Map<BoardItemDto>(boardItem);
         }

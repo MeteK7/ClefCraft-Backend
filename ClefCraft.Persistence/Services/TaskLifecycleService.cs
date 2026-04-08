@@ -1,6 +1,7 @@
 ﻿using ClefCraft.Application.Contracts.Analytics;
 using ClefCraft.Domain;
 using ClefCraft.Persistence.DatabaseContext;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;

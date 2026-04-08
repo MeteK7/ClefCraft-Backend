@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ClefCraft.Application.Common.Helpers;
 using ClefCraft.Application.Contracts.AI;
+using ClefCraft.Application.Contracts.Analytics;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Domain;
 using MediatR;
@@ -17,6 +18,8 @@ namespace ClefCraft.Application.Features.Calendar.Queries
         private readonly IEventTypeRepository _eventTypeRepository;
         private readonly IAIService _aiService;
         private readonly IMapper _mapper;
+        private readonly IUserInteractionService _interactionService;
+        private readonly IAIDataRepository _aiDataRepository;
 
         public GetCalendarEventsQueryHandler(
             ICalendarEventRepository calendarEventRepository,
@@ -24,7 +27,9 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             IBoardItemRepository boardItemRepository,
             IEventTypeRepository eventTypeRepository,
             IAIService aiService,
-            IMapper mapper)
+            IMapper mapper,
+            IUserInteractionService interactionService,
+            IAIDataRepository aiDataRepository)
         {
             _calendarEventRepository = calendarEventRepository;
             _calendarEventExceptionRepository = calendarEventExceptionRepository;
@@ -32,34 +37,29 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             _eventTypeRepository = eventTypeRepository;
             _aiService = aiService;
             _mapper = mapper;
+            _interactionService = interactionService;
+            _aiDataRepository = aiDataRepository;
         }
 
         public async Task<List<CalendarEventDto>> Handle(
             GetCalendarEventsQuery request,
             CancellationToken cancellationToken)
         {
-            // 1️ Get all events for the user
-            var events = await _calendarEventRepository
-                .GetByUserIdAsync(request.UserId);
+            var events = await _calendarEventRepository.GetByUserIdAsync(request.UserId);
 
-            // 2️ Prepare list for expanded events
             var expandedEvents = new List<CalendarEventDto>();
-
             var eventIds = events.Select(e => e.Id).ToList();
 
-            var exceptions = await _calendarEventExceptionRepository
-                .GetByEventIdsAsync(eventIds);
+            var exceptions = await _calendarEventExceptionRepository.GetByEventIdsAsync(eventIds);
 
             foreach (var e in events)
             {
-                // Non-recurring → just map
                 if (!e.IsRecurring || string.IsNullOrEmpty(e.RecurrenceRuleJson))
                 {
                     expandedEvents.Add(_mapper.Map<CalendarEventDto>(e));
                     continue;
                 }
 
-                // Recurring → parse rule and expand
                 RecurrenceRule? rule = null;
                 try
                 {
@@ -67,21 +67,17 @@ namespace ClefCraft.Application.Features.Calendar.Queries
                 }
                 catch
                 {
-                    // fallback: skip invalid recurrence rules
                     expandedEvents.Add(_mapper.Map<CalendarEventDto>(e));
                     continue;
                 }
 
                 if (rule != null)
                 {
-                    var occurrences = RecurrenceHelper.ExpandEvent(e,
-                        rule,
-                        exceptions,
-                        request.RangeStart,
-                        request.RangeEnd);
+                    var occurrences = RecurrenceHelper.ExpandEvent(
+                        e, rule, exceptions, request.RangeStart, request.RangeEnd);
+
                     foreach (var occurrence in occurrences)
                     {
-                        // Preserve EventTypeId and LinkedBoardItemId for later enrichment
                         occurrence.EventTypeId = e.EventTypeId;
                         occurrence.LinkedBoardItemId = e.LinkedBoardItemId;
                         occurrence.IsRecurring = true;
@@ -90,7 +86,13 @@ namespace ClefCraft.Application.Features.Calendar.Queries
                 }
             }
 
-            // 3️ Enrich linked board items
+            // 🔥 VIEW tracking
+            foreach (var e in expandedEvents)
+            {
+                await _interactionService.TrackAsync("VIEW", "CalendarEvent", e.Id, 0.2);
+            }
+
+            // 🔥 Board enrichment
             var linkedIds = expandedEvents
                 .Where(e => e.LinkedBoardItemId.HasValue)
                 .Select(e => e.LinkedBoardItemId!.Value)
@@ -102,63 +104,74 @@ namespace ClefCraft.Application.Features.Calendar.Queries
                 var boardItems = await _boardItemRepository
                     .GetByIdsAsync(linkedIds);
 
-                var boardItemMap = boardItems.ToDictionary(
-                    bi => bi.Id,
-                    bi => bi.Title
+                var boardMap = boardItems.ToDictionary(
+                    b => b.Id,
+                    b => b.Title
                 );
 
                 foreach (var dto in expandedEvents)
                 {
-                    if (dto.LinkedBoardItemId is int boardItemId &&
-                        boardItemMap.TryGetValue(boardItemId, out var title))
+                    if (dto.LinkedBoardItemId is int id &&
+                        boardMap.TryGetValue(id, out var title))
                     {
                         dto.LinkedBoardItemTitle = title;
                     }
                 }
             }
 
-            // 4️ Enrich EventType info (Name + Color)
-            var typeIds = expandedEvents
-                .Where(e => e.EventTypeId.HasValue)
-                .Select(e => e.EventTypeId!.Value)
-                .Distinct()
-                .ToList();
+            // 🔥 AI DATA
+            var logs = await _aiDataRepository.GetEventLogs(expandedEvents.Select(e => e.Id).ToList());
+            var signals = await _aiDataRepository.GetEventSignals(expandedEvents.Select(e => e.Id).ToList());
+            var lifecycles = await _aiDataRepository.GetTaskLifecycles(linkedIds);
 
-            if (typeIds.Any())
+            var aiInputs = expandedEvents.Select(dto =>
             {
-                var types = await _eventTypeRepository.GetByUserIdAsync(request.UserId);
-                var typeMap = types
-                    .Where(t => typeIds.Contains(t.Id))
-                    .ToDictionary(t => t.Id);
+                var eventLogs = logs.Where(l => l.EntityId == dto.Id).ToList();
+                var eventSignals = signals.Where(s => s.EntityId == dto.Id).ToList();
 
-                foreach (var dto in expandedEvents)
-                {
-                    if (dto.EventTypeId is int typeId &&
-                        typeMap.TryGetValue(typeId, out var type))
+                var reschedules = eventLogs.Where(l => l.ActionType == "EVENT_RESCHEDULED").ToList();
+
+                var avgShift = reschedules.Any()
+                    ? reschedules.Select(l =>
                     {
-                        dto.EventTypeName = type.Name;
-                        dto.EventColor = type.Color;
-                    }
-                }
-            }
+                        var meta = JsonSerializer.Deserialize<JsonElement>(l.MetadataJson ?? "{}");
+                        return meta.TryGetProperty("DaysShifted", out var v) ? v.GetDouble() : 0;
+                    }).Average()
+                    : 0;
 
-            var aiInputs = expandedEvents.Select(dto => new AIEventDto
-            {
-                UserId = request.UserId,
-                StartDate = dto.StartDate,
-                EndDate = dto.EndDate,
-                Importance = dto.Importance,
-                IsRecurring = dto.IsRecurring
+                var lifecycle = dto.LinkedBoardItemId.HasValue
+                    ? lifecycles.FirstOrDefault(l => l.BoardItemId == dto.LinkedBoardItemId)
+                    : null;
+
+                return new AIEventDto
+                {
+                    UserId = request.UserId,
+                    EventId = dto.Id,
+                    StartDate = dto.StartDate,
+                    EndDate = dto.EndDate,
+                    DurationMinutes = (dto.EndDate - dto.StartDate).TotalMinutes,
+                    HourOfDay = dto.StartDate.Hour,
+                    DayOfWeek = (int)dto.StartDate.DayOfWeek,
+
+                    Importance = dto.Importance,
+                    IsRecurring = dto.IsRecurring,
+
+                    RescheduleCount = reschedules.Count,
+                    AvgDaysRescheduled = avgShift,
+                    EditCount = eventLogs.Count(l => l.ActionType == "UPDATED"),
+                    ViewSignalValue = eventSignals.Where(s => s.SignalType == "VIEW").Sum(s => s.Value),
+
+                    HasLinkedTask = dto.LinkedBoardItemId.HasValue,
+                    LinkedTaskReopenCount = lifecycle?.ReopenCount,
+                    LinkedTaskStatusChanges = lifecycle?.StatusChangeCount,
+                    LinkedTaskCompletionRate = lifecycle?.CompletedAt != null ? 1 : 0
+                };
             }).ToList();
-
-            Console.WriteLine($"Sending {aiInputs.Count} events to AI");
 
             var predictions = await _aiService.PredictBatchAsync(aiInputs);
 
             for (int i = 0; i < expandedEvents.Count; i++)
-            {
                 expandedEvents[i].AttendanceScore = predictions[i];
-            }
 
             return expandedEvents;
         }
