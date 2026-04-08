@@ -55,7 +55,20 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
                 DateModified = DateTime.UtcNow
             };
 
+
             await _calendarEventRepository.CreateAsync(calendarEvent);
+
+            await _activityLogger.LogAsync(
+                "CalendarEvent",
+                calendarEvent.Id,
+                "EVENT_SCHEDULED",
+                new
+                {
+                    calendarEvent.StartDate,
+                    calendarEvent.EndDate,
+                    calendarEvent.Importance,
+                    calendarEvent.IsRecurring
+                });
 
             return _mapper.Map<CalendarEventDto>(calendarEvent);
         }

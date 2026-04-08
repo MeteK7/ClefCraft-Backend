@@ -33,6 +33,7 @@ namespace ClefCraft.Persistence
             services.AddScoped<IPriorityRepository, PriorityRepository>();
             services.AddScoped<IEventTypeRepository, EventTypeRepository>();
             services.AddScoped<IActivityLogger, ActivityLogger>();
+            services.AddScoped<IUserInteractionService, UserInteractionService>();
 
             return services;
         }
