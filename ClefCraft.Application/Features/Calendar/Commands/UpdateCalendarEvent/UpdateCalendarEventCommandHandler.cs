@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ClefCraft.Application.Contracts.Identity;
+using ClefCraft.Application.Contracts.Logging;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Exceptions;
 using ClefCraft.Application.Features.Calendar.Queries;
@@ -17,13 +18,19 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
     public class UpdateCalendarEventCommandHandler : IRequestHandler<UpdateCalendarEventCommand, CalendarEventDto>
     {
         private readonly ICalendarEventRepository _calendarEventRepository;
+        private readonly IActivityLogger _activityLogger;
         private readonly IMapper _mapper;
 
-        public UpdateCalendarEventCommandHandler(ICalendarEventRepository calendarEventRepository, IMapper mapper)
+        public UpdateCalendarEventCommandHandler(
+            ICalendarEventRepository calendarEventRepository,
+            IActivityLogger activityLogger,
+            IMapper mapper)
         {
             _calendarEventRepository = calendarEventRepository;
+            _activityLogger = activityLogger;
             _mapper = mapper;
         }
+
         public async Task<CalendarEventDto> Handle(
             UpdateCalendarEventCommand request,
             CancellationToken cancellationToken)
@@ -36,11 +43,14 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
             if (string.IsNullOrWhiteSpace(request.Subject))
                 throw new ValidationException("Subject is required.");
 
-            if (!request.AllDayEvent)
-            {
-                if (request.StartDate >= request.EndDate)
-                    throw new ValidationException("End time must be after start time.");
-            }
+            if (!request.AllDayEvent && request.StartDate >= request.EndDate)
+                throw new ValidationException("End time must be after start time.");
+
+            // Capture BEFORE state for behavioral logging
+            var wasRescheduled = entity.StartDate != request.StartDate || entity.EndDate != request.EndDate;
+            var importanceChanged = entity.Importance != request.Importance;
+            var previousStart = entity.StartDate;
+            var previousEnd = entity.EndDate;
 
             entity.Subject = request.Subject;
             entity.Location = request.Location;
@@ -55,6 +65,36 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
             entity.DateModified = DateTime.UtcNow;
 
             await _calendarEventRepository.UpdateAsync(entity);
+
+            // Log WHAT changed, not just THAT it changed
+            if (wasRescheduled)
+            {
+                await _activityLogger.LogAsync(
+                    "CalendarEvent",
+                    entity.Id,
+                    "EVENT_RESCHEDULED",
+                    new
+                    {
+                        PreviousStart = previousStart,
+                        PreviousEnd = previousEnd,
+                        NewStart = request.StartDate,
+                        NewEnd = request.EndDate,
+                        DaysShifted = (request.StartDate - previousStart).TotalDays
+                    });
+            }
+
+            if (importanceChanged)
+            {
+                await _activityLogger.LogAsync(
+                    "CalendarEvent",
+                    entity.Id,
+                    "IMPORTANCE_CHANGED",
+                    new
+                    {
+                        Previous = entity.Importance,
+                        New = request.Importance
+                    });
+            }
 
             return _mapper.Map<CalendarEventDto>(entity);
         }

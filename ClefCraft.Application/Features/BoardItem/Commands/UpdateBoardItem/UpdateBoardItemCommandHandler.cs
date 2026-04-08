@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ClefCraft.Application.Contracts.Analytics;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItemById;
@@ -21,6 +22,7 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
         private readonly ITagRepository _tagRepository;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
+        private readonly ITaskLifecycleService _taskLifecycleService;
 
         public UpdateBoardItemCommandHandler(
             IBoardItemRepository boardItemRepository,
@@ -28,7 +30,8 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
             IPriorityRepository priorityRepository,
             ITagRepository tagRepository,
             IMapper mapper,
-            IUserService userService)
+            IUserService userService,
+            ITaskLifecycleService taskLifecycleService)
         {
             _boardItemRepository = boardItemRepository;
             _statusRepository = statusRepository;
@@ -36,11 +39,14 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
             _tagRepository = tagRepository;
             _mapper = mapper;
             _userService = userService;
+            _taskLifecycleService = taskLifecycleService;
         }
 
         public async Task<BoardItemByIdDto> Handle(UpdateBoardItemCommand request, CancellationToken cancellationToken)
         {
             var boardItem = await _boardItemRepository.GetBoardItemById(request.Id);
+            var previousStatusId = boardItem.BoardItemStatus?.StatusId;
+            var previousAssignee = boardItem.AssigneeId;
 
             if (boardItem == null)
             {
@@ -119,6 +125,26 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
 
             // Save the updated board item
             await _boardItemRepository.UpdateBoardItem(boardItem);
+
+            // 🔥 Lifecycle tracking
+            await _taskLifecycleService.RecordStatusChangeAsync(boardItem.Id);
+
+            if (previousAssignee != request.AssigneeId)
+            {
+                await _taskLifecycleService.RecordAssigneeChangeAsync(boardItem.Id);
+            }
+
+            // ⚠️ replace 3 with your actual Completed status id
+            const int COMPLETED_STATUS_ID = 3;
+
+            if (previousStatusId != request.StatusId)
+            {
+                if (request.StatusId == COMPLETED_STATUS_ID)
+                    await _taskLifecycleService.RecordCompletionAsync(boardItem.Id);
+
+                if (previousStatusId == COMPLETED_STATUS_ID && request.StatusId != COMPLETED_STATUS_ID)
+                    await _taskLifecycleService.RecordReopenAsync(boardItem.Id);
+            }
 
             // Reload fresh state with navigation properties
             var updatedItem = await _boardItemRepository.GetBoardItemById(boardItem.Id);

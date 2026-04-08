@@ -1,4 +1,5 @@
-﻿using ClefCraft.Application.Contracts.Logging;
+﻿using ClefCraft.Application.Contracts.Analytics;
+using ClefCraft.Application.Contracts.Logging;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Persistence.DatabaseContext;
 using ClefCraft.Persistence.Repositories;
