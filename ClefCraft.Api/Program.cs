@@ -7,7 +7,7 @@ using ClefCraft.Identity;
 using ClefCraft.Identity.Services;
 using ClefCraft.Infrastructure;
 using ClefCraft.Infrastructure.FileAttachmentService;
-using ClefCraft.Infrastructure.Services;
+using ClefCraft.Infrastructure.Services.AI;
 using ClefCraft.Persistence;
 using Microsoft.OpenApi.Models;
 using Serilog;

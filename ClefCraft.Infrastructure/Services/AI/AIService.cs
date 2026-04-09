@@ -7,7 +7,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ClefCraft.Infrastructure.Services
+namespace ClefCraft.Infrastructure.Services.AI
 {
     public class AIService : IAIService
     {
@@ -24,11 +24,11 @@ namespace ClefCraft.Infrastructure.Services
             {
             new
             {
-                UserId = ev.UserId,
-                StartDate = ev.StartDate,
-                EndDate = ev.EndDate,
-                Importance = ev.Importance,
-                IsRecurring = ev.IsRecurring
+                ev.UserId,
+                ev.StartDate,
+                ev.EndDate,
+                ev.Importance,
+                ev.IsRecurring
             }
         };
 
@@ -52,11 +52,11 @@ namespace ClefCraft.Infrastructure.Services
         {
             var payload = events.Select(ev => new
             {
-                UserId = ev.UserId,
-                StartDate = ev.StartDate,
-                EndDate = ev.EndDate,
-                Importance = ev.Importance,
-                IsRecurring = ev.IsRecurring
+                ev.UserId,
+                ev.StartDate,
+                ev.EndDate,
+                ev.Importance,
+                ev.IsRecurring
             }).ToList();
 
             var response = await _httpClient.PostAsJsonAsync("/predict", payload);
