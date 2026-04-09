@@ -1,5 +1,6 @@
 ﻿using ClefCraft.Application.Contracts.Analytics;
 using ClefCraft.Application.Contracts.Identity;
+using ClefCraft.Application.Models.Analytics;
 using ClefCraft.Domain;
 using ClefCraft.Persistence.DatabaseContext;
 using System;
@@ -32,6 +33,25 @@ namespace ClefCraft.Persistence.Services
                 Value = value,
                 Timestamp = DateTime.UtcNow
             });
+        }
+
+        public async Task TrackBatchAsync(IEnumerable<Interaction> interactions)
+        {
+            var utcNow = DateTime.UtcNow;
+            var userId = _userService.UserId;
+
+            var signals = interactions.Select(i => new UserInteractionSignal
+            {
+                UserId = userId,
+                SignalType = i.SignalType,
+                EntityType = i.EntityType,
+                EntityId = i.EntityId,
+                Value = i.Value,
+                Timestamp = utcNow
+            });
+
+            await _context.UserInteractionSignals.AddRangeAsync(signals);
+            await _context.SaveChangesAsync();
         }
     }
 }
