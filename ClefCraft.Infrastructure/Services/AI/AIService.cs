@@ -22,20 +22,33 @@ namespace ClefCraft.Infrastructure.Services.AI
         {
             var payload = new[]
             {
-            new
-            {
-                ev.UserId,
-                ev.StartDate,
-                ev.EndDate,
-                ev.Importance,
-                ev.IsRecurring
-            }
-        };
+        new
+        {
+            ev.UserId,
+            ev.EventId,
 
-            var response = await _httpClient.PostAsJsonAsync(
-                "http://localhost:8000/predict",
-                payload
-            );
+            ev.StartDate,
+            ev.EndDate,
+            ev.DurationMinutes,
+            ev.HourOfDay,
+            ev.DayOfWeek,
+            ev.IsRecurring,
+
+            ev.Importance,
+
+            ev.RescheduleCount,
+            ev.AvgDaysRescheduled,
+            ev.EditCount,
+            ev.ViewSignalValue,
+
+            ev.HasLinkedTask,
+            ev.LinkedTaskReopenCount,
+            ev.LinkedTaskStatusChanges,
+            ev.LinkedTaskCompletionRate
+        }
+    };
+
+            var response = await _httpClient.PostAsJsonAsync("/predict", payload);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -45,7 +58,7 @@ namespace ClefCraft.Infrastructure.Services.AI
 
             var result = await response.Content.ReadFromJsonAsync<PredictionResponse>();
 
-            return result.Predictions.First();
+            return result?.Predictions?.FirstOrDefault() ?? 0;
         }
 
         public async Task<List<double>> PredictBatchAsync(List<AIEventDto> events)
@@ -53,10 +66,30 @@ namespace ClefCraft.Infrastructure.Services.AI
             var payload = events.Select(ev => new
             {
                 ev.UserId,
+                ev.EventId,
+
+                // Temporal
                 ev.StartDate,
                 ev.EndDate,
+                ev.DurationMinutes,
+                ev.HourOfDay,
+                ev.DayOfWeek,
+                ev.IsRecurring,
+
+                // Declared
                 ev.Importance,
-                ev.IsRecurring
+
+                // Behavioral signals
+                ev.RescheduleCount,
+                ev.AvgDaysRescheduled,
+                ev.EditCount,
+                ev.ViewSignalValue,
+
+                // Task context
+                ev.HasLinkedTask,
+                ev.LinkedTaskReopenCount,
+                ev.LinkedTaskStatusChanges,
+                ev.LinkedTaskCompletionRate
             }).ToList();
 
             var response = await _httpClient.PostAsJsonAsync("/predict", payload);
@@ -69,7 +102,7 @@ namespace ClefCraft.Infrastructure.Services.AI
 
             var result = await response.Content.ReadFromJsonAsync<PredictionResponse>();
 
-            return result.Predictions;
+            return result?.Predictions ?? new List<double>();
         }
     }
 

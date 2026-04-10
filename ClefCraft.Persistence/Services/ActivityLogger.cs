@@ -42,7 +42,6 @@ namespace ClefCraft.Persistence.Services
             };
 
             await _context.ActivityLogs.AddAsync(log);
-            // ❗ DO NOT call SaveChanges here
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Persistence;
+using ClefCraft.Application.Features.Calendar.Queries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
