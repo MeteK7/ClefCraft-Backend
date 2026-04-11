@@ -1,4 +1,5 @@
 ﻿using ClefCraft.Application.Contracts.Analytics;
+using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Logging;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Persistence.DatabaseContext;
@@ -33,8 +34,10 @@ namespace ClefCraft.Persistence
             services.AddScoped<IStatusRepository, StatusRepository>();
             services.AddScoped<IPriorityRepository, PriorityRepository>();
             services.AddScoped<IEventTypeRepository, EventTypeRepository>();
+            services.AddScoped<IAIDataRepository, AIDataRepository>();
             services.AddScoped<IActivityLogger, ActivityLogger>();
             services.AddScoped<IUserInteractionService, UserInteractionService>();
+            services.AddScoped<ITaskLifecycleService, TaskLifecycleService>();
 
             return services;
         }
