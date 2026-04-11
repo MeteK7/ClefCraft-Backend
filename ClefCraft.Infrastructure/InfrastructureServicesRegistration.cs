@@ -1,8 +1,10 @@
-﻿using ClefCraft.Application.Contracts.Email;
+﻿using ClefCraft.Application.Contracts.Calendar;
+using ClefCraft.Application.Contracts.Email;
 using ClefCraft.Application.Contracts.Logging;
 using ClefCraft.Application.Models.Email;
 using ClefCraft.Infrastructure.EmailService;
 using ClefCraft.Infrastructure.Logging;
+using ClefCraft.Infrastructure.Services.Calendar;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,6 +17,11 @@ namespace ClefCraft.Infrastructure
             services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
+            services.AddScoped<IEventExpansionService, EventExpansionService>();
+            services.AddScoped<IEventEnrichmentService, EventEnrichmentService>();
+            services.AddScoped<IEventAnalyticsService, EventAnalyticsService>();
+            services.AddScoped<IAttendancePredictionService, AttendancePredictionService>();
+
             return services;
         }
     }
