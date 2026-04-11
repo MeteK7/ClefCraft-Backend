@@ -3,8 +3,6 @@ using ClefCraft.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClefCraft.Application.Common.Helpers
 {
@@ -14,21 +12,38 @@ namespace ClefCraft.Application.Common.Helpers
         {
             int currentDay = (int)start.DayOfWeek;
             int diff = (targetDay - currentDay + 7) % 7;
-
-            return start.AddDays(diff);
+            return start.AddDays(diff == 0 ? 7 : diff); // always move forward
         }
 
-        public static List<CalendarEventDto> ExpandEvent(
+        private static CalendarEvent ApplyException(CalendarEvent occurrence, CalendarEvent ev, List<CalendarEventException> exceptions)
+        {
+            var exception = exceptions.FirstOrDefault(x =>
+                x.CalendarEventId == ev.Id &&
+                x.OccurrenceDate == DateOnly.FromDateTime(occurrence.StartDate.UtcDateTime));
+
+            if (exception != null)
+            {
+                if (exception.IsCancelled)
+                    return null;
+
+                occurrence.Subject = exception.Subject ?? occurrence.Subject;
+                occurrence.Comment = exception.Comment ?? occurrence.Comment;
+                occurrence.StartDate = exception.StartDate ?? occurrence.StartDate;
+                occurrence.EndDate = exception.EndDate ?? occurrence.EndDate;
+            }
+
+            return occurrence;
+        }
+
+        public static List<CalendarEvent> ExpandEvent(
             CalendarEvent ev,
             RecurrenceRule rule,
             List<CalendarEventException> exceptions,
             DateTimeOffset rangeStart,
             DateTimeOffset rangeEnd)
         {
-            var result = new List<CalendarEventDto>();
-
+            var result = new List<CalendarEvent>();
             var current = ev.StartDate;
-
             int occurrences = 0;
 
             while (current <= rangeEnd)
@@ -39,16 +54,15 @@ namespace ClefCraft.Application.Common.Helpers
                 if (rule.EndDate.HasValue && current > rule.EndDate)
                     break;
 
-                // ✅ SPECIAL HANDLING FOR WEEKLY
                 if (rule.Frequency == "WEEKLY" && rule.DaysOfWeek?.Any() == true)
                 {
                     foreach (var day in rule.DaysOfWeek)
                     {
-                        var next = GetNextWeekday(current.AddDays(-1), day);
+                        var next = GetNextWeekday(current, day);
 
                         if (next >= rangeStart && next <= rangeEnd)
                         {
-                            var dto = new CalendarEventDto
+                            var occurrence = new CalendarEvent
                             {
                                 Id = ev.Id,
                                 Subject = ev.Subject,
@@ -58,30 +72,16 @@ namespace ClefCraft.Application.Common.Helpers
                                 EventTypeId = ev.EventTypeId,
                                 Importance = ev.Importance,
                                 Comment = ev.Comment,
-                                LinkedBoardItemId = ev.LinkedBoardItemId
+                                LinkedBoardItemId = ev.LinkedBoardItemId,
+                                IsRecurring = false
                             };
 
-                            // 👉 APPLY EXCEPTION HERE
-                            var occurrenceDate = next;
-
-                            var exception = exceptions.FirstOrDefault(x =>
-                                x.CalendarEventId == ev.Id &&
-                                x.OccurrenceDate == DateOnly.FromDateTime(occurrenceDate.UtcDateTime));
-
-                            if (exception != null)
+                            occurrence = ApplyException(occurrence, ev, exceptions);
+                            if (occurrence != null)
                             {
-                                if (exception.IsCancelled)
-                                    continue;
-
-                                dto.Subject = exception.Subject ?? dto.Subject;
-                                dto.Comment = exception.Comment ?? dto.Comment;
-                                dto.StartDate = exception.StartDate ?? dto.StartDate;
-                                dto.EndDate = exception.EndDate ?? dto.EndDate;
+                                result.Add(occurrence);
+                                occurrences++;
                             }
-
-                            result.Add(dto);
-
-                            occurrences++;
                         }
                     }
 
@@ -89,10 +89,9 @@ namespace ClefCraft.Application.Common.Helpers
                     continue;
                 }
 
-                // ✅ DEFAULT FLOW (daily/monthly/yearly)
                 if (current >= rangeStart)
                 {
-                    var dto = new CalendarEventDto
+                    var occurrence = new CalendarEvent
                     {
                         Id = ev.Id,
                         Subject = ev.Subject,
@@ -102,30 +101,16 @@ namespace ClefCraft.Application.Common.Helpers
                         EventTypeId = ev.EventTypeId,
                         Importance = ev.Importance,
                         Comment = ev.Comment,
-                        LinkedBoardItemId = ev.LinkedBoardItemId
+                        LinkedBoardItemId = ev.LinkedBoardItemId,
+                        IsRecurring = false
                     };
 
-                    // 👉 APPLY EXCEPTION HERE
-                    var occurrenceDate = current;
-
-                    var exception = exceptions.FirstOrDefault(x =>
-                        x.CalendarEventId == ev.Id &&
-                        x.OccurrenceDate == DateOnly.FromDateTime(occurrenceDate.UtcDateTime));
-
-                    if (exception != null)
+                    occurrence = ApplyException(occurrence, ev, exceptions);
+                    if (occurrence != null)
                     {
-                        if (exception.IsCancelled)
-                            continue;
-
-                        dto.Subject = exception.Subject ?? dto.Subject;
-                        dto.Comment = exception.Comment ?? dto.Comment;
-                        dto.StartDate = exception.StartDate ?? dto.StartDate;
-                        dto.EndDate = exception.EndDate ?? dto.EndDate;
+                        result.Add(occurrence);
+                        occurrences++;
                     }
-
-                    result.Add(dto);
-
-                    occurrences++;
                 }
 
                 current = rule.Frequency switch
@@ -133,7 +118,7 @@ namespace ClefCraft.Application.Common.Helpers
                     "DAILY" => current.AddDays(rule.Interval),
                     "MONTHLY" => current.AddMonths(rule.Interval),
                     "YEARLY" => current.AddYears(rule.Interval),
-                    _ => current.AddDays(1)
+                    _ => throw new NotSupportedException($"Unsupported frequency: {rule.Frequency}")
                 };
             }
 
