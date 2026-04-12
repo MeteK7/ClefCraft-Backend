@@ -2,12 +2,7 @@
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace ClefCraft.Infrastructure.Services.Calendar
 {
@@ -41,13 +36,12 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                 try
                 {
                     var rule = JsonSerializer.Deserialize<RecurrenceRule>(e.RecurrenceRuleJson);
-
-                    var occurrences = RecurrenceHelper.ExpandEvent(
-                        e, rule, exceptions, start, end);
+                    var occurrences = RecurrenceHelper.ExpandEvent(e, rule, exceptions, start, end);
 
                     foreach (var occ in occurrences)
                     {
-                        // ✅ ensure uniqueness
+                        // FIX: use a deterministic positive synthetic ID that
+                        // won't clash with real DB rows and is never negative.
                         occ.Id = GenerateInstanceId(e.Id, occ.StartDate);
                         result.Add(occ);
                     }
@@ -61,9 +55,16 @@ namespace ClefCraft.Infrastructure.Services.Calendar
             return result;
         }
 
-        private int GenerateInstanceId(int baseId, DateTimeOffset date)
+        /// <summary>
+        /// Produces a stable, positive synthetic ID for a virtual recurring instance.
+        /// Kept separate from real DB IDs by using a large offset so accidental
+        /// collisions with persisted rows are extremely unlikely.
+        /// </summary>
+        private static int GenerateInstanceId(int baseId, DateTimeOffset date)
         {
-            return HashCode.Combine(baseId, date);
+            // Combine and mask to a positive int (clear the sign bit).
+            int raw = HashCode.Combine(baseId, date.UtcTicks);
+            return raw & 0x7FFFFFFF; // always non-negative
         }
     }
 }

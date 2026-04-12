@@ -1,10 +1,5 @@
 ﻿using ClefCraft.Application.Contracts.AI;
 using ClefCraft.Application.Contracts.Calendar;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClefCraft.Infrastructure.Services.Calendar
 {
@@ -19,6 +14,9 @@ namespace ClefCraft.Infrastructure.Services.Calendar
 
         public async Task<Dictionary<int, double>> PredictAsync(List<AIEventDto> inputs)
         {
+            if (!inputs.Any())
+                return new Dictionary<int, double>();
+
             var predictions = await _aiService.PredictBatchAsync(inputs);
 
             return inputs

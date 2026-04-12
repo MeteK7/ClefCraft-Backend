@@ -2,11 +2,7 @@
 using ClefCraft.Application.Contracts.Logging;
 using ClefCraft.Domain;
 using ClefCraft.Persistence.DatabaseContext;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace ClefCraft.Persistence.Services
 {
@@ -36,12 +32,14 @@ namespace ClefCraft.Persistence.Services
                 EntityId = entityId,
                 ActionType = actionType,
                 MetadataJson = metadata != null
-                    ? System.Text.Json.JsonSerializer.Serialize(metadata)
+                    ? JsonSerializer.Serialize(metadata)
                     : null,
                 Timestamp = DateTime.UtcNow
             };
 
             await _context.ActivityLogs.AddAsync(log);
+
+            await _context.SaveChangesAsync();
         }
     }
 }
