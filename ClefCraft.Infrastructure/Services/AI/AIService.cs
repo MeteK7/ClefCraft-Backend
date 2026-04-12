@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Infrastructure.Services.AI
 {
+    /// <summary>
+    /// HTTP client wrapper for the Python AI microservice.
+    /// Kept in Services/AI (not Services/Calendar) because it is a
+    /// generic transport layer that is not calendar-specific.
+    /// </summary>
     public class AIService : IAIService
     {
         private readonly HttpClient _httpClient;
@@ -18,47 +23,11 @@ namespace ClefCraft.Infrastructure.Services.AI
             _httpClient = httpClient;
         }
 
+        // Single-event convenience method — delegates to the batch path (DRY).
         public async Task<double> PredictAttendanceAsync(AIEventDto ev)
         {
-            var payload = new[]
-            {
-        new
-        {
-            ev.UserId,
-            ev.EventId,
-
-            ev.StartDate,
-            ev.EndDate,
-            ev.DurationMinutes,
-            ev.HourOfDay,
-            ev.DayOfWeek,
-            ev.IsRecurring,
-
-            ev.Importance,
-
-            ev.RescheduleCount,
-            ev.AvgDaysRescheduled,
-            ev.EditCount,
-            ev.ViewSignalValue,
-
-            ev.HasLinkedTask,
-            ev.LinkedTaskReopenCount,
-            ev.LinkedTaskStatusChanges,
-            ev.LinkedTaskCompletionRate
-        }
-    };
-
-            var response = await _httpClient.PostAsJsonAsync("/predict", payload);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                var error = await response.Content.ReadAsStringAsync();
-                throw new Exception($"AI ERROR: {response.StatusCode} - {error}");
-            }
-
-            var result = await response.Content.ReadFromJsonAsync<PredictionResponse>();
-
-            return result?.Predictions?.FirstOrDefault() ?? 0;
+            var results = await PredictBatchAsync(new List<AIEventDto> { ev });
+            return results.FirstOrDefault();
         }
 
         public async Task<List<double>> PredictBatchAsync(List<AIEventDto> events)
@@ -97,18 +66,18 @@ namespace ClefCraft.Infrastructure.Services.AI
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();
-                throw new Exception($"AI ERROR: {response.StatusCode} - {error}");
+                throw new AIServiceException(
+                    $"AI prediction failed [{response.StatusCode}]: {error}");
             }
 
             var result = await response.Content.ReadFromJsonAsync<PredictionResponse>();
 
-            return result?.Predictions ?? new List<double>();
+            // Guard: if the service returns fewer results than inputs, pad with 0.
+            var predictions = result?.Predictions ?? new List<double>();
+            while (predictions.Count < events.Count)
+                predictions.Add(0);
+
+            return predictions;
         }
-    }
-
-
-    public class PredictionResponse
-    {
-        public List<double> Predictions { get; set; }
     }
 }
