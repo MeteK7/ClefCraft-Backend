@@ -3,12 +3,7 @@ using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Features.Calendar.Queries;
 using ClefCraft.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace ClefCraft.Infrastructure.Services.Calendar
 {
@@ -26,6 +21,7 @@ namespace ClefCraft.Infrastructure.Services.Calendar
             string userId)
         {
             var eventIds = events.Select(e => e.Id).ToList();
+
             var linkedIds = events
                 .Where(e => e.LinkedBoardItemId.HasValue)
                 .Select(e => e.LinkedBoardItemId!.Value)
@@ -34,14 +30,18 @@ namespace ClefCraft.Infrastructure.Services.Calendar
 
             var logs = await _repo.GetEventLogs(eventIds);
             var signals = await _repo.GetEventSignals(eventIds);
-            var lifecycles = await _repo.GetTaskLifecycles(linkedIds);
+            var lifecycles = linkedIds.Any()
+                ? await _repo.GetTaskLifecycles(linkedIds)
+                : new List<TaskLifecycle>();
 
-            // ✅ O(1) lookups
-            var logsMap = logs.GroupBy(x => x.EntityId)
-                              .ToDictionary(g => g.Key, g => g.ToList());
+            // O(1) lookups
+            var logsMap = logs
+                .GroupBy(x => x.EntityId)
+                .ToDictionary(g => g.Key, g => g.ToList());
 
-            var signalsMap = signals.GroupBy(x => x.EntityId)
-                                    .ToDictionary(g => g.Key, g => g.ToList());
+            var signalsMap = signals
+                .GroupBy(x => x.EntityId)
+                .ToDictionary(g => g.Key, g => g.ToList());
 
             var lifecycleMap = lifecycles.ToDictionary(x => x.BoardItemId);
 
@@ -60,14 +60,22 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                 var avgShift = reschedules.Any()
                     ? reschedules.Average(l =>
                     {
-                        var meta = JsonSerializer.Deserialize<JsonElement>(l.MetadataJson ?? "{}");
-                        return meta.TryGetProperty("DaysShifted", out var v)
-                            ? v.GetDouble()
-                            : 0;
+                        try
+                        {
+                            var meta = JsonSerializer.Deserialize<JsonElement>(l.MetadataJson ?? "{}");
+                            return meta.TryGetProperty("DaysShifted", out var v) ? v.GetDouble() : 0;
+                        }
+                        catch
+                        {
+                            return 0;
+                        }
                     })
                     : 0;
 
-                lifecycleMap.TryGetValue(dto.LinkedBoardItemId ?? -1, out var lifecycle);
+                // FIX: guard with HasValue before dictionary lookup
+                TaskLifecycle? lifecycle = null;
+                if (dto.LinkedBoardItemId.HasValue)
+                    lifecycleMap.TryGetValue(dto.LinkedBoardItemId.Value, out lifecycle);
 
                 return new AIEventDto
                 {
@@ -78,21 +86,18 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                     DurationMinutes = (dto.EndDate - dto.StartDate).TotalMinutes,
                     HourOfDay = dto.StartDate.Hour,
                     DayOfWeek = (int)dto.StartDate.DayOfWeek,
-
                     Importance = dto.Importance,
                     IsRecurring = dto.IsRecurring,
-
                     RescheduleCount = reschedules.Count,
                     AvgDaysRescheduled = avgShift,
                     EditCount = eventLogs.Count(l => l.ActionType == "UPDATED"),
                     ViewSignalValue = eventSignals
                         .Where(s => s.SignalType == "VIEW")
                         .Sum(s => s.Value),
-
                     HasLinkedTask = dto.LinkedBoardItemId.HasValue,
                     LinkedTaskReopenCount = lifecycle?.ReopenCount,
                     LinkedTaskStatusChanges = lifecycle?.StatusChangeCount,
-                    LinkedTaskCompletionRate = lifecycle?.CompletedAt != null ? 1 : 0
+                    LinkedTaskCompletionRate = lifecycle?.CompletedAt != null ? 1.0 : 0.0
                 };
             }).ToList();
         }

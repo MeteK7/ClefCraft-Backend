@@ -3,11 +3,6 @@ using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Models.Analytics;
 using ClefCraft.Domain;
 using ClefCraft.Persistence.DatabaseContext;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClefCraft.Persistence.Services
 {
@@ -16,13 +11,19 @@ namespace ClefCraft.Persistence.Services
         private readonly ClefCraftDatabaseContext _context;
         private readonly IUserService _userService;
 
-        public UserInteractionService(ClefCraftDatabaseContext context, IUserService userService)
+        public UserInteractionService(
+            ClefCraftDatabaseContext context,
+            IUserService userService)
         {
             _context = context;
             _userService = userService;
         }
 
-        public async Task TrackAsync(string signalType, string entityType, int entityId, double value = 1)
+        public async Task TrackAsync(
+            string signalType,
+            string entityType,
+            int entityId,
+            double value = 1)
         {
             await _context.UserInteractionSignals.AddAsync(new UserInteractionSignal
             {
@@ -33,6 +34,8 @@ namespace ClefCraft.Persistence.Services
                 Value = value,
                 Timestamp = DateTime.UtcNow
             });
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task TrackBatchAsync(IEnumerable<Interaction> interactions)
