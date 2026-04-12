@@ -95,8 +95,8 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                         .Where(s => s.SignalType == "VIEW")
                         .Sum(s => s.Value),
                     HasLinkedTask = dto.LinkedBoardItemId.HasValue,
-                    LinkedTaskReopenCount = lifecycle?.ReopenCount,
-                    LinkedTaskStatusChanges = lifecycle?.StatusChangeCount,
+                    LinkedTaskReopenCount = lifecycle?.ReopenCount ?? 0,
+                    LinkedTaskStatusChanges = lifecycle?.StatusChangeCount ?? 0,
                     LinkedTaskCompletionRate = lifecycle?.CompletedAt != null ? 1.0 : 0.0
                 };
             }).ToList();
