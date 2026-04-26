@@ -17,6 +17,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
         private readonly IAttendancePredictionService _predictionService;
         private readonly IUserInteractionService _interactionService;
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
         public GetCalendarEventsQueryHandler(
             ICalendarEventRepository eventRepo,
@@ -25,7 +26,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             IEventAnalyticsService analyticsService,
             IAttendancePredictionService predictionService,
             IUserInteractionService interactionService,
-            IMapper mapper)
+            IMapper mapper, IUnitOfWork unitOfWork)
         {
             _eventRepo = eventRepo;
             _expansionService = expansionService;
@@ -34,6 +35,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             _predictionService = predictionService;
             _interactionService = interactionService;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<List<CalendarEventDto>> Handle(
@@ -66,6 +68,8 @@ namespace ClefCraft.Application.Features.Calendar.Queries
 
             // 7. Predict attendance
             var scores = await _predictionService.PredictAsync(aiInputs);
+
+            await _unitOfWork.SaveChangesAsync();
 
             // 8. Apply scores
             foreach (var dto in dtos)

@@ -38,8 +38,6 @@ namespace ClefCraft.Persistence.Services
             };
 
             await _context.ActivityLogs.AddAsync(log);
-
-            await _context.SaveChangesAsync();
         }
     }
 }

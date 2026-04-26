@@ -5,6 +5,7 @@ using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Persistence.DatabaseContext;
 using ClefCraft.Persistence.Repositories;
 using ClefCraft.Persistence.Services;
+using ClefCraft.Persistence.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,6 +39,7 @@ namespace ClefCraft.Persistence
             services.AddScoped<IActivityLogger, ActivityLogger>();
             services.AddScoped<IUserInteractionService, UserInteractionService>();
             services.AddScoped<ITaskLifecycleService, TaskLifecycleService>();
+            services.AddScoped<IUnitOfWork, EfUnitOfWork>();
 
             return services;
         }
