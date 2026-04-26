@@ -34,8 +34,6 @@ namespace ClefCraft.Persistence.Services
                 Value = value,
                 Timestamp = DateTime.UtcNow
             });
-
-            await _context.SaveChangesAsync();
         }
 
         public async Task TrackBatchAsync(IEnumerable<Interaction> interactions)
@@ -54,7 +52,6 @@ namespace ClefCraft.Persistence.Services
             });
 
             await _context.UserInteractionSignals.AddRangeAsync(signals);
-            await _context.SaveChangesAsync();
         }
     }
 }

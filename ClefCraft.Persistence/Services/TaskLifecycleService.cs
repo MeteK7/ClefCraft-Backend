@@ -31,7 +31,6 @@ namespace ClefCraft.Persistence.Services
                     BoardItemId = boardItemId,
                     CreatedAt = DateTime.UtcNow
                 });
-                await _context.SaveChangesAsync();
             }
         }
 
@@ -41,7 +40,6 @@ namespace ClefCraft.Persistence.Services
             if (lc == null || lc.FirstWorkedAt.HasValue) return;
 
             lc.FirstWorkedAt = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
         }
 
         public async Task RecordCompletionAsync(int boardItemId)
@@ -50,7 +48,6 @@ namespace ClefCraft.Persistence.Services
             if (lc == null) return;
 
             lc.CompletedAt = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
         }
 
         public async Task RecordReopenAsync(int boardItemId)
@@ -60,7 +57,6 @@ namespace ClefCraft.Persistence.Services
 
             lc.ReopenCount++;
             lc.CompletedAt = null; // it's open again
-            await _context.SaveChangesAsync();
         }
 
         public async Task RecordStatusChangeAsync(int boardItemId)
@@ -69,7 +65,6 @@ namespace ClefCraft.Persistence.Services
             if (lc == null) return;
 
             lc.StatusChangeCount++;
-            await _context.SaveChangesAsync();
         }
 
         public async Task RecordAssigneeChangeAsync(int boardItemId)
@@ -78,7 +73,6 @@ namespace ClefCraft.Persistence.Services
             if (lc == null) return;
 
             lc.AssigneeChangeCount++;
-            await _context.SaveChangesAsync();
         }
 
         private async Task<TaskLifecycle?> Get(int boardItemId) =>

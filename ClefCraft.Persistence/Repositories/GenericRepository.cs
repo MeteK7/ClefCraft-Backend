@@ -22,13 +22,11 @@ namespace ClefCraft.Persistence.Repositories
         public async Task CreateAsync(T entity)
         {
             await _context.AddAsync(entity);
-            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(T entity)
         {
             _context.Remove(entity);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<IReadOnlyList<T>> GetAsync()
