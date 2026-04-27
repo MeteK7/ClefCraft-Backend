@@ -20,15 +20,18 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
         private readonly ICalendarEventRepository _calendarEventRepository;
         private readonly IActivityLogger _activityLogger;
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
         public UpdateCalendarEventCommandHandler(
             ICalendarEventRepository calendarEventRepository,
             IActivityLogger activityLogger,
-            IMapper mapper)
+            IMapper mapper,
+            IUnitOfWork unitOfWork)
         {
             _calendarEventRepository = calendarEventRepository;
             _activityLogger = activityLogger;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<CalendarEventDto> Handle(
@@ -65,6 +68,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
             entity.DateModified = DateTime.UtcNow;
 
             await _calendarEventRepository.UpdateAsync(entity);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             // Log WHAT changed, not just THAT it changed
             if (wasRescheduled)
