@@ -97,8 +97,11 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                     HasLinkedTask = dto.LinkedBoardItemId.HasValue,
                     LinkedTaskReopenCount = lifecycle?.ReopenCount ?? 0,
                     LinkedTaskStatusChanges = lifecycle?.StatusChangeCount ?? 0,
-                    LinkedTaskCompletionRate = lifecycle?.CompletedAt != null ? 1.0 : 0.0
-                };
+                    LinkedTaskCompletionRate =
+                        lifecycle != null && lifecycle.CreatedAt != default
+                        ? (lifecycle.CompletedAt != null ? 1.0 : 0.0)
+                        : 0.5
+                                    };
             }).ToList();
         }
     }
