@@ -13,5 +13,18 @@ namespace ClefCraft.Domain.Common
         public string? CreatedBy { get; set; }
         public DateTime? DateModified { get; set; }
         public string? ModifiedBy { get; set; }
+
+        private readonly List<object> _domainEvents = new();
+        public IReadOnlyCollection<object> DomainEvents => _domainEvents.AsReadOnly();
+
+        public void AddDomainEvent(object eventItem)
+        {
+            _domainEvents.Add(eventItem);
+        }
+
+        public void ClearDomainEvents()
+        {
+            _domainEvents.Clear();
+        }
     }
 }

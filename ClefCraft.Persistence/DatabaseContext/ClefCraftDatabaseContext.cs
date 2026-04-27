@@ -62,117 +62,44 @@ namespace ClefCraft.Persistence.DatabaseContext
             var utcNow = DateTime.UtcNow;
             var userId = _userService.UserId;
 
-            // STEP 1: Prepare activity logs BEFORE saving
-            var activityLogs = new List<ActivityLog>();
-
-            var entries = ChangeTracker.Entries<BaseEntity>()
-                .Where(e => e.State == EntityState.Added
-                         || e.State == EntityState.Modified
-                         || e.State == EntityState.Deleted)
-                .ToList();
-
-            foreach (var entry in entries)
+            // ✅ KEEP audit logic
+            foreach (var entry in ChangeTracker.Entries<BaseEntity>())
             {
-                // 🔹 Maintain your existing audit fields
                 if (entry.State == EntityState.Added)
                 {
                     entry.Entity.DateCreated = utcNow;
                     entry.Entity.CreatedBy = userId;
                 }
 
-                if (entry.State == EntityState.Modified || entry.State == EntityState.Added)
+                if (entry.State == EntityState.Modified)
                 {
                     entry.Entity.DateModified = utcNow;
                     entry.Entity.ModifiedBy = userId;
                 }
-
-                // 🔹 Skip logging for ActivityLog itself (avoid infinite loop)
-                if (entry.Entity is ActivityLog)
-                    continue;
-
-                // 🔹 Build Activity Log
-                var entityType = entry.Entity.GetType().Name;
-
-                string actionType = entry.State switch
-                {
-                    EntityState.Added => "CREATED",
-                    EntityState.Modified => "UPDATED",
-                    EntityState.Deleted => "DELETED",
-                    _ => "UNKNOWN"
-                };
-
-                Dictionary<string, object>? changes = null;
-
-                // Only track property changes for updates
-                if (entry.State == EntityState.Modified)
-                {
-                    changes = new Dictionary<string, object>();
-
-                    foreach (var prop in entry.Properties)
-                    {
-                        if (!prop.IsModified)
-                            continue;
-
-                        var original = prop.OriginalValue;
-                        var current = prop.CurrentValue;
-
-                        if (Equals(original, current))
-                            continue;
-
-                        // Avoid noisy/system fields
-                        if (prop.Metadata.Name is "DateModified" or "ModifiedBy")
-                            continue;
-
-                        changes[prop.Metadata.Name] = new
-                        {
-                            Old = original,
-                            New = current
-                        };
-                    }
-
-                    // If nothing meaningful changed → skip log
-                    if (!changes.Any())
-                        continue;
-                }
-
-                activityLogs.Add(new ActivityLog
-                {
-                    UserId = userId,
-                    EntityType = entityType,
-                    EntityId = entry.Entity.Id, // might be 0 for new, will fix after save
-                    ActionType = actionType,
-                    MetadataJson = changes != null
-                        ? System.Text.Json.JsonSerializer.Serialize(changes)
-                        : null,
-                    Timestamp = utcNow
-                });
             }
 
-            // STEP 2: Save main entities FIRST
+            // ✅ Collect domain events BEFORE save
+            var domainEvents = ChangeTracker
+                .Entries<BaseEntity>()
+                .SelectMany(e => e.Entity.DomainEvents)
+                .ToList();
+
             var result = await base.SaveChangesAsync(cancellationToken);
 
-            // STEP 3: Fix IDs for newly created entities
-            foreach (var log in activityLogs.Where(l => l.EntityId == 0))
+            // ✅ Dispatch AFTER commit (important)
+            foreach (var domainEvent in domainEvents)
             {
-                var matchingEntry = entries.FirstOrDefault(e =>
-                    e.Entity.GetType().Name == log.EntityType &&
-                    e.State == EntityState.Added);
-
-                if (matchingEntry != null)
-                {
-                    log.EntityId = matchingEntry.Entity.Id;
-                }
+                // TODO: inject IMediator and publish
+                // await _mediator.Publish(domainEvent);
             }
 
-            // STEP 4: Save logs (NO recursion issue now)
-            if (activityLogs.Any())
+            // ✅ Clear events
+            foreach (var entry in ChangeTracker.Entries<BaseEntity>())
             {
-                await ActivityLogs.AddRangeAsync(activityLogs, cancellationToken);
-                await base.SaveChangesAsync(cancellationToken);
+                entry.Entity.ClearDomainEvents();
             }
 
             return result;
         }
-
     }
 }
