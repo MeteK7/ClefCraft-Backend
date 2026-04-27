@@ -54,6 +54,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
             var importanceChanged = entity.Importance != request.Importance;
             var previousStart = entity.StartDate;
             var previousEnd = entity.EndDate;
+            var previousImportance = entity.Importance;
 
             entity.Subject = request.Subject;
             entity.Location = request.Location;
@@ -68,7 +69,6 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
             entity.DateModified = DateTime.UtcNow;
 
             await _calendarEventRepository.UpdateAsync(entity);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             // Log WHAT changed, not just THAT it changed
             if (wasRescheduled)
@@ -95,10 +95,12 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
                     "IMPORTANCE_CHANGED",
                     new
                     {
-                        Previous = entity.Importance,
+                        Previous = previousImportance,
                         New = request.Importance
                     });
             }
+
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return _mapper.Map<CalendarEventDto>(entity);
         }
