@@ -21,10 +21,22 @@ namespace ClefCraft.Persistence.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<List<CalendarEvent>> GetByUserIdAsync(string userId)
+        /// <summary>
+        /// Returns events that START within [windowStart, windowEnd] OR are recurring
+        /// (recurring events need the window applied after expansion).
+        /// Filters by the dedicated UserId column, not the audit CreatedBy column.
+        /// </summary>
+        public async Task<List<CalendarEvent>> GetByUserIdAsync(
+            string userId,
+            DateTimeOffset windowStart,
+            DateTimeOffset windowEnd)
         {
             return await _context.CalendarEvents
-                .Where(e => e.CreatedBy == userId)
+                .Where(e => e.UserId == userId &&                      // ← use UserId, not CreatedBy
+                            (e.IsRecurring ||                          // recurring: expand in memory
+                             (e.StartDate >= windowStart &&            // one-off: filter in DB
+                              e.StartDate <= windowEnd)))
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -33,6 +45,7 @@ namespace ClefCraft.Persistence.Repositories
             return await _context.CalendarEvents
                 .Where(e => e.LinkedBoardItemId != null && e.LinkedBoardItemId == itemId)
                 .OrderByDescending(e => e.StartDate)
+                .AsNoTracking()
                 .ToListAsync();
         }
     }
