@@ -17,6 +17,7 @@ namespace ClefCraft.Application.MappingProfiles
             CreateMap<CalendarEvent, WorkHistoryDto>().ReverseMap();
             CreateMap<CalendarEventAttachment, CalendarEventAttachmentDto>().ReverseMap();
             CreateMap<EventType, EventTypeDto>().ReverseMap();
+
         }
     }
 }

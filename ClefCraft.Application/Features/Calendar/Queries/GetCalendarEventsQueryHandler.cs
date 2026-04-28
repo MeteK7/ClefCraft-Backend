@@ -42,41 +42,41 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             GetCalendarEventsQuery request,
             CancellationToken cancellationToken)
         {
-            // 1. Fetch raw events for this user
-            var events = await _eventRepo.GetByUserIdAsync(request.UserId);
+            // 1. Fetch raw events within the window (date filtering now in the repository)
+            var events = await _eventRepo.GetByUserIdAsync(
+                request.UserId, request.RangeStart, request.RangeEnd);
 
-            // 2. Expand recurring events within the requested window
+            // 2. Expand recurring events
             var expanded = await _expansionService.ExpandAsync(
                 events, request.RangeStart, request.RangeEnd);
 
-            // 3. Map to DTOs and filter to the requested range
+            // 3. Map to DTOs and trim to window
             var dtos = expanded
                 .Select(e => _mapper.Map<CalendarEventDto>(e))
-                // FIX: discard occurrences that fall outside the window
                 .Where(e => e.StartDate < request.RangeEnd && e.EndDate > request.RangeStart)
                 .ToList();
 
-            // 4. Track views in batch
-            await _interactionService.TrackBatchAsync(
-                dtos.Select(e => new Interaction("VIEW", "CalendarEvent", e.Id, 0.2)));
-
-            // 5. Enrich with board-item titles
+            // 4. Enrich with board-item titles
             await _enrichmentService.EnrichAsync(dtos);
 
-            // 6. Build AI feature vectors
+            // 5. Build AI feature vectors BEFORE recording the view signal
+            //    (prevents the current-session view from leaking into the prediction features)
             var aiInputs = await _analyticsService.BuildAsync(dtos, request.UserId);
 
-            // 7. Predict attendance
+            // 6. Predict attendance
             var scores = await _predictionService.PredictAsync(aiInputs);
 
-            await _unitOfWork.SaveChangesAsync();
-
-            // 8. Apply scores
+            // 7. Apply scores
             foreach (var dto in dtos)
             {
                 if (scores.TryGetValue(dto.Id, out var score))
                     dto.AttendanceScore = score;
             }
+
+            await _interactionService.TrackBatchAsync(
+                dtos.Select(e => new Interaction("VIEW", "CalendarEvent", e.Id, 0.2)));
+
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return dtos;
         }
