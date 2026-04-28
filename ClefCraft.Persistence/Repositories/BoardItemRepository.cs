@@ -94,27 +94,11 @@ namespace ClefCraft.Persistence.Repositories
         public async Task AddBoardItem(BoardItem boardItem)
         {
             await _context.BoardItems.AddAsync(boardItem);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException ex)
-            {
-                // Log the exception or inspect ex.InnerException for more details
-                throw new ApplicationException("An error occurred while saving the BoardItem", ex);
-            }
         }
 
         public async Task UpdateBoardItem(BoardItem boardItem)
         {
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException ex)
-            {
-                throw new ApplicationException("An error occurred while updating the BoardItem", ex);
-            }
+            _context.BoardItems.Update(boardItem);
         }
     }
 }

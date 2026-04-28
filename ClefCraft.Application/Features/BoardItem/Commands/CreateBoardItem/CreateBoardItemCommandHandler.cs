@@ -19,13 +19,15 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly ITaskLifecycleService _taskLifecycleService;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CreateBoardItemCommandHandler(IBoardItemRepository boardItemRepository, IMapper mapper, IUserService userService, ITaskLifecycleService taskLifecycleService)
+        public CreateBoardItemCommandHandler(IBoardItemRepository boardItemRepository, IMapper mapper, IUserService userService, ITaskLifecycleService taskLifecycleService, IUnitOfWork unitOfWork)
         {
             _boardItemRepository = boardItemRepository;
             _mapper = mapper;
             _userService = userService;
             _taskLifecycleService = taskLifecycleService;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<BoardItemDto> Handle(CreateBoardItemCommand request, CancellationToken cancellationToken)
@@ -42,6 +44,8 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem
 
             await _boardItemRepository.AddBoardItem(boardItem);
             await _taskLifecycleService.EnsureCreatedAsync(boardItem.Id);
+
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return _mapper.Map<BoardItemDto>(boardItem);
         }
