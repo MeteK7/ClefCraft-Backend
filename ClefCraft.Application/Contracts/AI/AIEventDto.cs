@@ -27,7 +27,7 @@ namespace ClefCraft.Application.Contracts.AI
         public int DayOfWeek { get; set; }
         public bool IsRecurring { get; set; }
 
-        // User-declared importance (converted to numeric)
+        // Importance (now strongly typed)
         public EventImportance Importance { get; set; }
 
         // Behavioral signals
@@ -37,11 +37,11 @@ namespace ClefCraft.Application.Contracts.AI
         public double ViewSignalValue { get; set; }
         public bool HasLinkedTask { get; set; }
 
-        // Task context
+        // Task context (⚠️ MUST MATCH PYTHON MODEL)
         public int LinkedTaskReopenCount { get; set; }
         public int LinkedTaskStatusChanges { get; set; }
 
-        // 🔥 FIXED: real signal instead of fake "rate"
-        public bool IsTaskCompleted { get; set; }
+        // ✅ KEEP THIS — model depends on it
+        public double LinkedTaskCompletionRate { get; set; }
     }
 }
