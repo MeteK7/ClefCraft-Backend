@@ -34,7 +34,6 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                 ? await _repo.GetTaskLifecycles(linkedIds)
                 : new List<TaskLifecycle>();
 
-            // O(1) lookups
             var logsMap = logs
                 .GroupBy(x => x.EntityId)
                 .ToDictionary(g => g.Key, g => g.ToList());
@@ -72,7 +71,6 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                     })
                     : 0;
 
-                // FIX: guard with HasValue before dictionary lookup
                 TaskLifecycle? lifecycle = null;
                 if (dto.LinkedBoardItemId.HasValue)
                     lifecycleMap.TryGetValue(dto.LinkedBoardItemId.Value, out lifecycle);
@@ -86,7 +84,10 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                     DurationMinutes = (dto.EndDate - dto.StartDate).TotalMinutes,
                     HourOfDay = dto.StartDate.Hour,
                     DayOfWeek = (int)dto.StartDate.DayOfWeek,
-                    Importance = dto.Importance,
+
+                    // ✅ Convert string → enum safely
+                    Importance = MapImportance(dto.Importance),
+
                     IsRecurring = dto.IsRecurring,
                     RescheduleCount = reschedules.Count,
                     AvgDaysRescheduled = avgShift,
@@ -94,15 +95,26 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                     ViewSignalValue = eventSignals
                         .Where(s => s.SignalType == "VIEW")
                         .Sum(s => s.Value),
+
                     HasLinkedTask = dto.LinkedBoardItemId.HasValue,
+
                     LinkedTaskReopenCount = lifecycle?.ReopenCount ?? 0,
                     LinkedTaskStatusChanges = lifecycle?.StatusChangeCount ?? 0,
-                    LinkedTaskCompletionRate =
-                        lifecycle != null && lifecycle.CreatedAt != default
-                        ? (lifecycle.CompletedAt != null ? 1.0 : 0.0)
-                        : 0.5
-                                    };
+
+                    // ✅ Clear binary signal
+                    IsTaskCompleted = lifecycle?.CompletedAt != null
+                };
             }).ToList();
+        }
+
+        private static EventImportance MapImportance(string? importance)
+        {
+            return importance?.ToLower() switch
+            {
+                "low" => EventImportance.Low,
+                "high" => EventImportance.High,
+                _ => EventImportance.Medium
+            };
         }
     }
 }
