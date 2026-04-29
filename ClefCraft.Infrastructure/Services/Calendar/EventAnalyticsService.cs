@@ -34,12 +34,10 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                 ? await _repo.GetTaskLifecycles(linkedIds)
                 : new List<TaskLifecycle>();
 
-            var logsMap = logs
-                .GroupBy(x => x.EntityId)
+            var logsMap = logs.GroupBy(x => x.EntityId)
                 .ToDictionary(g => g.Key, g => g.ToList());
 
-            var signalsMap = signals
-                .GroupBy(x => x.EntityId)
+            var signalsMap = signals.GroupBy(x => x.EntityId)
                 .ToDictionary(g => g.Key, g => g.ToList());
 
             var lifecycleMap = lifecycles.ToDictionary(x => x.BoardItemId);
@@ -85,13 +83,13 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                     HourOfDay = dto.StartDate.Hour,
                     DayOfWeek = (int)dto.StartDate.DayOfWeek,
 
-                    // ✅ Convert string → enum safely
                     Importance = MapImportance(dto.Importance),
 
                     IsRecurring = dto.IsRecurring,
                     RescheduleCount = reschedules.Count,
                     AvgDaysRescheduled = avgShift,
                     EditCount = eventLogs.Count(l => l.ActionType == "UPDATED"),
+
                     ViewSignalValue = eventSignals
                         .Where(s => s.SignalType == "VIEW")
                         .Sum(s => s.Value),
@@ -101,8 +99,10 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                     LinkedTaskReopenCount = lifecycle?.ReopenCount ?? 0,
                     LinkedTaskStatusChanges = lifecycle?.StatusChangeCount ?? 0,
 
-                    // ✅ Clear binary signal
-                    IsTaskCompleted = lifecycle?.CompletedAt != null
+                    // ✅ Better approximation of "completion rate"
+                    LinkedTaskCompletionRate = lifecycle == null
+                        ? 0.0
+                        : (lifecycle.CompletedAt != null ? 1.0 : 0.0)
                 };
             }).ToList();
         }
