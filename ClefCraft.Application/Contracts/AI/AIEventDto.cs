@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Application.Contracts.AI
 {
+    public enum EventImportance
+    {
+        Low = 0,
+        Medium = 1,
+        High = 2
+    }
+
     public class AIEventDto
     {
         // Identity
@@ -20,19 +27,21 @@ namespace ClefCraft.Application.Contracts.AI
         public int DayOfWeek { get; set; }
         public bool IsRecurring { get; set; }
 
-        // User-declared importance (weak signal)
-        public string Importance { get; set; }
+        // User-declared importance (converted to numeric)
+        public EventImportance Importance { get; set; }
 
-        // Behavioral signals (strong signals)
-        public int RescheduleCount { get; set; }       // from ActivityLog EVENT_RESCHEDULED
-        public double AvgDaysRescheduled { get; set; } // how far it gets pushed each time
-        public int EditCount { get; set; }             // UPDATED actions on this event
-        public double ViewSignalValue { get; set; }    // from UserInteractionSignal VIEW
-        public bool HasLinkedTask { get; set; }        // linked board item = commitment signal
+        // Behavioral signals
+        public int RescheduleCount { get; set; }
+        public double AvgDaysRescheduled { get; set; }
+        public int EditCount { get; set; }
+        public double ViewSignalValue { get; set; }
+        public bool HasLinkedTask { get; set; }
 
-        // Task context signals (if linked)
-        public int? LinkedTaskReopenCount { get; set; }
-        public int? LinkedTaskStatusChanges { get; set; }
-        public double? LinkedTaskCompletionRate { get; set; } // historical for this user
+        // Task context
+        public int LinkedTaskReopenCount { get; set; }
+        public int LinkedTaskStatusChanges { get; set; }
+
+        // 🔥 FIXED: real signal instead of fake "rate"
+        public bool IsTaskCompleted { get; set; }
     }
 }

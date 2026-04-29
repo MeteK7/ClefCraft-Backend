@@ -40,8 +40,6 @@ namespace ClefCraft.Infrastructure.Services.Calendar
 
                     foreach (var occ in occurrences)
                     {
-                        // FIX: use a deterministic positive synthetic ID that
-                        // won't clash with real DB rows and is never negative.
                         occ.Id = GenerateInstanceId(e.Id, occ.StartDate);
                         result.Add(occ);
                     }
@@ -55,16 +53,10 @@ namespace ClefCraft.Infrastructure.Services.Calendar
             return result;
         }
 
-        /// <summary>
-        /// Produces a stable, positive synthetic ID for a virtual recurring instance.
-        /// Kept separate from real DB IDs by using a large offset so accidental
-        /// collisions with persisted rows are extremely unlikely.
-        /// </summary>
         private static int GenerateInstanceId(int baseId, DateTimeOffset date)
         {
-            // Combine and mask to a positive int (clear the sign bit).
             int raw = HashCode.Combine(baseId, date.UtcTicks);
-            return raw & 0x7FFFFFFF; // always non-negative
+            return raw & 0x7FFFFFFF;
         }
     }
 }
