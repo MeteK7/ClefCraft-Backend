@@ -91,7 +91,7 @@ namespace ClefCraft.Infrastructure.Services.AI
                 HasLinkedTask = ev.HasLinkedTask,
                 LinkedTaskReopenCount = ev.LinkedTaskReopenCount,
                 LinkedTaskStatusChanges = ev.LinkedTaskStatusChanges,
-                IsTaskCompleted = ev.IsTaskCompleted
+                LinkedTaskCompletionRate = ev.LinkedTaskCompletionRate
             };
         }
     }
@@ -119,7 +119,7 @@ namespace ClefCraft.Infrastructure.Services.AI
         public bool HasLinkedTask { get; set; }
         public int LinkedTaskReopenCount { get; set; }
         public int LinkedTaskStatusChanges { get; set; }
-        public bool IsTaskCompleted { get; set; }
+        public double LinkedTaskCompletionRate { get; set; }
     }
 
     internal class PredictionResponse

@@ -11,9 +11,7 @@ namespace ClefCraft.Domain
     {
         public string EntityType { get; set; }
         public int EntityId { get; set; }
-
         public string SnapshotJson { get; set; }
-
         public DateTime CreatedAt { get; set; }
     }
 }
