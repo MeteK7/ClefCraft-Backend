@@ -26,7 +26,8 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             IEventAnalyticsService analyticsService,
             IAttendancePredictionService predictionService,
             IUserInteractionService interactionService,
-            IMapper mapper, IUnitOfWork unitOfWork)
+            IMapper mapper,
+            IUnitOfWork unitOfWork)
         {
             _eventRepo = eventRepo;
             _expansionService = expansionService;
@@ -42,15 +43,16 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             GetCalendarEventsQuery request,
             CancellationToken cancellationToken)
         {
-            // 1. Fetch raw events within the window (date filtering now in the repository)
+            // 1. Fetch raw events within the window
             var events = await _eventRepo.GetByUserIdAsync(
                 request.UserId, request.RangeStart, request.RangeEnd);
 
-            // 2. Expand recurring events
+            // 2. Expand recurring events (BaseEventId is populated here)
             var expanded = await _expansionService.ExpandAsync(
                 events, request.RangeStart, request.RangeEnd);
 
             // 3. Map to DTOs and trim to window
+            //    BaseEventId is mapped by convention from CalendarEvent → CalendarEventDto
             var dtos = expanded
                 .Select(e => _mapper.Map<CalendarEventDto>(e))
                 .Where(e => e.StartDate < request.RangeEnd && e.EndDate > request.RangeStart)
@@ -59,8 +61,9 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             // 4. Enrich with board-item titles
             await _enrichmentService.EnrichAsync(dtos);
 
-            // 5. Build AI feature vectors BEFORE recording the view signal
-            //    (prevents the current-session view from leaking into the prediction features)
+            // 5. Build AI feature vectors using BaseEventId so analytics queries
+            //    hit real DB records even for expanded recurring occurrences.
+            //    This runs BEFORE recording the view signal to prevent leakage.
             var aiInputs = await _analyticsService.BuildAsync(dtos, request.UserId);
 
             // 6. Predict attendance
@@ -69,12 +72,15 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             // 7. Apply scores
             foreach (var dto in dtos)
             {
-                if (scores.TryGetValue(dto.Id, out var score))
+                if (scores.TryGetValue(dto.BaseEventId, out var score))
                     dto.AttendanceScore = score;
             }
 
+            // 8. Track view signals using BaseEventId (real FK, not synthetic occurrence ID)
+            //    Note: this is a deliberate side effect in a query handler — kept here
+            //    because the view signal must be recorded atomically with the response.
             await _interactionService.TrackBatchAsync(
-                dtos.Select(e => new Interaction("VIEW", "CalendarEvent", e.Id, 0.2)));
+                dtos.Select(e => new Interaction("VIEW", "CalendarEvent", e.BaseEventId, 0.2)));
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
