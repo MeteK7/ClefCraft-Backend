@@ -19,18 +19,19 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
         private readonly ICalendarEventRepository _calendarEventRepository;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
-        private readonly IActivityLogger _activityLogger;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CreateCalendarEventCommandHandler(ICalendarEventRepository calendarEventRepository, IMapper mapper, IUserService userService, IActivityLogger activityLogger, IUnitOfWork unitOfWork)
+        public CreateCalendarEventCommandHandler(
+            ICalendarEventRepository calendarEventRepository,
+            IMapper mapper,
+            IUserService userService,
+            IUnitOfWork unitOfWork)
         {
             _calendarEventRepository = calendarEventRepository;
             _mapper = mapper;
             _userService = userService;
-            _activityLogger = activityLogger;
             _unitOfWork = unitOfWork;
         }
-
         public async Task<CalendarEventDto> Handle(CreateCalendarEventCommand request, CancellationToken cancellationToken)
         {
             if (!request.AllDayEvent)
