@@ -18,7 +18,8 @@ namespace ClefCraft.Identity.Configurations
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.UserId)
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(100);
 
             builder.Property(x => x.SignalType)
                 .IsRequired()

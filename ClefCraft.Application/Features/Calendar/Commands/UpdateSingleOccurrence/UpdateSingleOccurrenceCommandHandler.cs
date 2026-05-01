@@ -9,24 +9,22 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSingleOccurrence
 {
-    public class UpdateSingleOccurrenceCommandHandler
-        : IRequestHandler<UpdateSingleOccurrenceCommand>
+    public class UpdateSingleOccurrenceCommandHandler : IRequestHandler<UpdateSingleOccurrenceCommand>
     {
         private readonly ICalendarEventExceptionRepository _repo;
+        private readonly IUnitOfWork _unitOfWork;
 
         public UpdateSingleOccurrenceCommandHandler(
-            ICalendarEventExceptionRepository repo)
+            ICalendarEventExceptionRepository repo,
+            IUnitOfWork unitOfWork)
         {
             _repo = repo;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task<Unit> Handle(
-            UpdateSingleOccurrenceCommand request,
-            CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateSingleOccurrenceCommand request, CancellationToken cancellationToken)
         {
-            var exception = await _repo.GetByEventAndDate(
-                request.EventId,
-                request.OccurrenceDate);
+            var exception = await _repo.GetByEventAndDate(request.EventId, request.OccurrenceDate);
 
             if (exception == null)
             {
@@ -37,7 +35,6 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSingleOccurrenc
                 };
             }
 
-            // Apply overrides
             exception.Comment = request.Comment ?? exception.Comment;
             exception.Subject = request.Subject ?? exception.Subject;
             exception.StartDate = request.StartDate ?? exception.StartDate;
@@ -47,6 +44,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSingleOccurrenc
                 exception.IsCancelled = request.IsCancelled.Value;
 
             await _repo.UpsertAsync(exception);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;
         }

@@ -24,9 +24,16 @@ namespace ClefCraft.Persistence.Repositories
             await _context.AddAsync(entity);
         }
 
-        public async Task DeleteAsync(T entity)
+        public Task UpdateAsync(T entity)
+        {
+            _context.Update(entity);
+            return Task.CompletedTask;
+        }
+
+        public Task DeleteAsync(T entity)
         {
             _context.Remove(entity);
+            return Task.CompletedTask;
         }
 
         public async Task<IReadOnlyList<T>> GetAsync()
@@ -36,20 +43,12 @@ namespace ClefCraft.Persistence.Repositories
 
         public async Task<T?> GetByIdAsync(int id)
         {
-            return await _context.Set<T>()
-                .FirstOrDefaultAsync(e => e.Id == id);
+            return await _context.Set<T>().FirstOrDefaultAsync(e => e.Id == id);
         }
 
         public async Task<T?> GetByIdReadOnlyAsync(int id)
         {
-            return await _context.Set<T>()
-                .AsNoTracking()
-                .FirstOrDefaultAsync(e => e.Id == id);
-        }
-
-        public async Task UpdateAsync(T entity)
-        {
-            _context.Update(entity);
+            return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
         }
     }
 }

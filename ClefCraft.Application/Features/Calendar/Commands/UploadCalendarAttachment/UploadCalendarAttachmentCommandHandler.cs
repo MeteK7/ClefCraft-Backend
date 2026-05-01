@@ -17,26 +17,29 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UploadCalendarAttachm
     {
         private readonly IFileAttachmentService _fileService;
         private readonly ICalendarEventAttachmentRepository _attachmentRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
         public UploadCalendarAttachmentCommandHandler(
             IFileAttachmentService fileService,
-            ICalendarEventAttachmentRepository attachmentRepo)
+            ICalendarEventAttachmentRepository attachmentRepo,
+            IUnitOfWork unitOfWork)
         {
             _fileService = fileService;
             _attachmentRepo = attachmentRepo;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<CalendarEventAttachmentDto>> Handle(UploadCalendarAttachmentCommand request, CancellationToken cancellationToken)
+        public async Task<List<CalendarEventAttachmentDto>> Handle(
+            UploadCalendarAttachmentCommand request,
+            CancellationToken cancellationToken)
         {
-            var uploaded = new List<CalendarEventAttachmentDto>();
+            var entities = new List<(CalendarEventAttachmentDto Dto, CalendarEventAttachment Entity)>();
 
             foreach (var file in request.Files)
             {
-                // 1️⃣ Save file to disk
                 var dto = await _fileService.SaveAttachmentAsync(request.EventId, file, request.UserId);
 
-                // 2️⃣ Save record to database
-                var entity = new ClefCraft.Domain.CalendarEventAttachment
+                var entity = new CalendarEventAttachment
                 {
                     CalendarEventId = request.EventId,
                     FileName = dto.FileName,
@@ -50,13 +53,17 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UploadCalendarAttachm
                 };
 
                 await _attachmentRepo.CreateAsync(entity);
-
-                // 3️⃣ Return DTO with database-generated Id
-                dto.Id = entity.Id;
-                uploaded.Add(dto);
+                entities.Add((dto, entity));
             }
 
-            return uploaded;
+            // Save all at once so EF assigns real IDs
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            // Now entity.Id is populated
+            foreach (var (dto, entity) in entities)
+                dto.Id = entity.Id;
+
+            return entities.Select(x => x.Dto).ToList();
         }
     }
 }

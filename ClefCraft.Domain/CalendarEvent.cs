@@ -22,7 +22,7 @@ namespace ClefCraft.Domain
         public int? LinkedBoardItemId { get; set; }
         public bool IsRecurring { get; set; }
         public string? RecurrenceRuleJson { get; set; }
-        public virtual BoardItem LinkedBoardItem { get; set; }
-        public List<CalendarEventExceptionHistory> History { get; set; }
+        public virtual BoardItem? LinkedBoardItem { get; set; }  // nullable to match nullable FK
+        public List<CalendarEventExceptionHistory> History { get; set; } = new();  // initialized to avoid null refs
     }
 }
