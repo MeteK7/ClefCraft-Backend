@@ -14,15 +14,15 @@ namespace ClefCraft.Application.MappingProfiles
         public CalendarEventProfile()
         {
             CreateMap<CalendarEvent, CalendarEventDto>()
-                .ForMember(dest => dest.EventTypeName, opt => opt.MapFrom(src => src.EventType != null ? src.EventType.Name : null))
-                .ForMember(dest => dest.EventColor, opt => opt.MapFrom(src => src.EventType != null ? src.EventType.Color : null));
+                .ForMember(dest => dest.EventTypeName,
+                    opt => opt.MapFrom(src => src.EventType != null ? src.EventType.Name : null))
+                .ForMember(dest => dest.EventColor,
+                    opt => opt.MapFrom(src => src.EventType != null ? src.EventType.Color : null));
+            // BaseEventId maps by convention (same name on both sides)
 
-            // ReverseMap is intentionally separate — CalendarEventDto → CalendarEvent
-            // shouldn't try to map EventTypeName/EventColor back
             CreateMap<CalendarEventDto, CalendarEvent>()
                 .ForMember(dest => dest.EventType, opt => opt.Ignore());
 
-            CreateMap<CalendarEvent, WorkHistoryDto>().ReverseMap();
             CreateMap<CalendarEventAttachment, CalendarEventAttachmentDto>().ReverseMap();
             CreateMap<EventType, EventTypeDto>().ReverseMap();
         }
