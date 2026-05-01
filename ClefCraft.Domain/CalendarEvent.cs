@@ -1,6 +1,7 @@
 ﻿using ClefCraft.Domain.Common;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,5 +25,13 @@ namespace ClefCraft.Domain
         public string? RecurrenceRuleJson { get; set; }
         public virtual BoardItem? LinkedBoardItem { get; set; }  // nullable to match nullable FK
         public List<CalendarEventExceptionHistory> History { get; set; } = new();  // initialized to avoid null refs
+
+        /// <summary>
+        /// Transient. For expanded recurring occurrences this holds the original
+        /// CalendarEvent.Id so analytics and interaction tracking use real DB IDs.
+        /// Not persisted.
+        /// </summary>
+        [NotMapped]
+        public int BaseEventId { get; set; }
     }
 }

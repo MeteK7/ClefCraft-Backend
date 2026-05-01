@@ -29,6 +29,8 @@ namespace ClefCraft.Infrastructure.Services.Calendar
             {
                 if (!e.IsRecurring || string.IsNullOrEmpty(e.RecurrenceRuleJson))
                 {
+                    // Non-recurring: BaseEventId == its own Id
+                    e.BaseEventId = e.Id;
                     result.Add(e);
                     continue;
                 }
@@ -40,12 +42,14 @@ namespace ClefCraft.Infrastructure.Services.Calendar
 
                     foreach (var occ in occurrences)
                     {
+                        occ.BaseEventId = e.Id; // preserve original before overwriting
                         occ.Id = GenerateInstanceId(e.Id, occ.StartDate);
                         result.Add(occ);
                     }
                 }
                 catch
                 {
+                    e.BaseEventId = e.Id;
                     result.Add(e);
                 }
             }
