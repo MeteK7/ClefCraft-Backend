@@ -9,7 +9,7 @@ namespace ClefCraft.Application.Contracts.Persistence
 {
     public interface ICalendarEventExceptionRepository : IGenericRepository<CalendarEventException>
     {
-        Task<CalendarEventException?> GetByEventAndDate(int eventId, DateOnly date);
+        Task<CalendarEventException?> GetByEventAndDate(int eventId, DateTimeOffset date);
         Task UpsertAsync(CalendarEventException exception);
         Task<List<CalendarEventException>> GetByEventIdsAsync(List<int> eventIds);
     }

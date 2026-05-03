@@ -10,8 +10,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSingleOccurrenc
     public class UpdateSingleOccurrenceCommand : IRequest
     {
         public int EventId { get; set; }
-        public DateOnly OccurrenceDate { get; set; }
-
+        public DateTimeOffset OccurrenceDate { get; set; }
         public string? Subject { get; set; }
         public string? Comment { get; set; }
         public DateTimeOffset? StartDate { get; set; }

@@ -20,7 +20,7 @@ namespace ClefCraft.Persistence.Repositories
 
         public async Task<CalendarEventException?> GetByEventAndDate(
             int eventId,
-            DateOnly date)
+            DateTimeOffset date)
         {
             return await _context.CalendarEventExceptions
                 .FirstOrDefaultAsync(x =>

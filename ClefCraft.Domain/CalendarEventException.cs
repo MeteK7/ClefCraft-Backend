@@ -12,7 +12,7 @@ namespace ClefCraft.Domain
         public int CalendarEventId { get; set; }
 
         // Identifies WHICH occurrence
-        public DateOnly OccurrenceDate { get; set; }
+        public DateTimeOffset OccurrenceDate { get; set; }
 
         // Overrides (only applied if not null)
         public string? Subject { get; set; }
