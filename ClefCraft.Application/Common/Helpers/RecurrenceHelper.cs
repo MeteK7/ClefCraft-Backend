@@ -17,9 +17,10 @@ namespace ClefCraft.Application.Common.Helpers
 
         private static CalendarEvent ApplyException(CalendarEvent occurrence, CalendarEvent ev, List<CalendarEventException> exceptions)
         {
+            var occurrenceDate = DateOnly.FromDateTime(occurrence.StartDate.UtcDateTime);
             var exception = exceptions.FirstOrDefault(x =>
                 x.CalendarEventId == ev.Id &&
-                x.OccurrenceDate == DateOnly.FromDateTime(occurrence.StartDate.UtcDateTime));
+                DateOnly.FromDateTime(x.OccurrenceDate.UtcDateTime) == occurrenceDate);
 
             if (exception != null)
             {
@@ -73,7 +74,8 @@ namespace ClefCraft.Application.Common.Helpers
                                 Importance = ev.Importance,
                                 Comment = ev.Comment,
                                 LinkedBoardItemId = ev.LinkedBoardItemId,
-                                IsRecurring = false
+                                IsRecurring = ev.IsRecurring,      
+                                RecurrenceRuleJson = ev.RecurrenceRuleJson
                             };
 
                             occurrence = ApplyException(occurrence, ev, exceptions);
@@ -102,7 +104,8 @@ namespace ClefCraft.Application.Common.Helpers
                         Importance = ev.Importance,
                         Comment = ev.Comment,
                         LinkedBoardItemId = ev.LinkedBoardItemId,
-                        IsRecurring = false
+                        IsRecurring = ev.IsRecurring,
+                        RecurrenceRuleJson = ev.RecurrenceRuleJson
                     };
 
                     occurrence = ApplyException(occurrence, ev, exceptions);

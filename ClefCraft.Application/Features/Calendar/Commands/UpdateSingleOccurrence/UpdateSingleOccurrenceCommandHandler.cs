@@ -1,6 +1,7 @@
 ﻿using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Domain;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,8 +44,16 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSingleOccurrenc
             if (request.IsCancelled.HasValue)
                 exception.IsCancelled = request.IsCancelled.Value;
 
-            await _repo.UpsertAsync(exception);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            try
+            {
+                await _repo.UpsertAsync(exception);
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
+            }
+            catch (DbUpdateException ex)
+            {
+                // This will show the actual SQL error
+                throw new Exception(ex.InnerException?.Message ?? ex.Message, ex);
+            }
 
             return Unit.Value;
         }
