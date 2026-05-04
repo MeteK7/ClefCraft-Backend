@@ -60,8 +60,6 @@ namespace ClefCraft.Persistence.Repositories
 
                 existing.DateModified = DateTime.UtcNow;
             }
-
-            await _context.SaveChangesAsync();
         }
     }
 }
