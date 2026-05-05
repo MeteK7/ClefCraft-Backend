@@ -41,6 +41,14 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSingleOccurrenc
             exception.StartDate = request.StartDate ?? exception.StartDate;
             exception.EndDate = request.EndDate ?? exception.EndDate;
 
+            if (request.Location != null && request.Location.HasValue)
+            {
+                exception.Location = request.Location.Value; // can be null → delete
+            }
+
+            exception.Importance = request.Importance ?? exception.Importance;
+            exception.EventTypeId = request.EventTypeId ?? exception.EventTypeId;
+
             if (request.IsCancelled.HasValue)
                 exception.IsCancelled = request.IsCancelled.Value;
 
