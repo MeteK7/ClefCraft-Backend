@@ -13,14 +13,13 @@ namespace ClefCraft.Domain
 
         // Identifies WHICH occurrence
         public DateTimeOffset OccurrenceDate { get; set; }
-
-        // Overrides (only applied if not null)
         public string? Subject { get; set; }
         public string? Comment { get; set; }
         public DateTimeOffset? StartDate { get; set; }
         public DateTimeOffset? EndDate { get; set; }
-
-        // Special cases
+        public string? Location { get; set; }
+        public string? Importance { get; set; }
+        public int? EventTypeId { get; set; }
         public bool IsCancelled { get; set; } = false;
 
         public CalendarEvent CalendarEvent { get; set; }

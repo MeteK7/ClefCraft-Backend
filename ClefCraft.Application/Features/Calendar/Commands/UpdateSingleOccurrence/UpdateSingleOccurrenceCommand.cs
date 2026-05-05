@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using ClefCraft.Application.Common.Models;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,9 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSingleOccurrenc
         public string? Comment { get; set; }
         public DateTimeOffset? StartDate { get; set; }
         public DateTimeOffset? EndDate { get; set; }
-
+        public Optional<string?>? Location { get; set; }
+        public string? Importance { get; set; }
+        public int? EventTypeId { get; set; }
         public bool? IsCancelled { get; set; }
     }
 }
