@@ -3,6 +3,7 @@ using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Features.Calendar.Queries;
 using ClefCraft.Domain;
+using ClefCraft.Domain.Enums;
 using System.Text.Json;
 
 namespace ClefCraft.Infrastructure.Services.Calendar
@@ -107,12 +108,12 @@ namespace ClefCraft.Infrastructure.Services.Calendar
             }).ToList();
         }
 
-        private static EventImportance MapImportance(string? importance)
+        private static EventImportance MapImportance(ImportanceLevel importance)
         {
-            return importance?.ToLower() switch
+            return importance switch
             {
-                "low" => EventImportance.Low,
-                "high" => EventImportance.High,
+                ImportanceLevel.Low => EventImportance.Low,
+                ImportanceLevel.High => EventImportance.High,
                 _ => EventImportance.Medium
             };
         }

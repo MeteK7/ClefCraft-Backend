@@ -1,4 +1,5 @@
 ﻿using ClefCraft.Application.Features.Calendar.Queries;
+using ClefCraft.Domain.Enums;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
         public DateTimeOffset EndDate { get; set; }
         public bool AllDayEvent { get; set; }
         public int? EventTypeId { get; set; }
-        public string Importance { get; set; }
+        public ImportanceLevel Importance { get; set; }
         public string? Comment { get; set; }
         public bool IsRecurring { get; set; }
         public string? RecurrenceRuleJson { get; set; }
