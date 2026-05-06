@@ -1,4 +1,5 @@
 ﻿using ClefCraft.Domain.Common;
+using ClefCraft.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -17,7 +18,7 @@ namespace ClefCraft.Domain
         public bool AllDayEvent { get; set; }
         public int? EventTypeId { get; set; }
         public EventType? EventType { get; set; }
-        public string Importance { get; set; }
+        public ImportanceLevel Importance { get; set; }
         public string? Comment { get; set; }
         public string UserId { get; set; }
         public int? LinkedBoardItemId { get; set; }

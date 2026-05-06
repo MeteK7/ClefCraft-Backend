@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClefCraft.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,7 +25,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
         public int? EventTypeId { get; set; }
         public string? EventTypeName { get; set; }
         public string? EventColor { get; set; }
-        public string Importance { get; set; }
+        public ImportanceLevel Importance { get; set; }
         public string? Comment { get; set; }
         public bool IsRecurring { get; set; }
         public string? RecurrenceRuleJson { get; set; }
