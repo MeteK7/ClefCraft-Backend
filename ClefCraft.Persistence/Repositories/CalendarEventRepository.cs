@@ -32,9 +32,10 @@ namespace ClefCraft.Persistence.Repositories
             DateTimeOffset windowEnd)
         {
             return await _context.CalendarEvents
-                .Where(e => e.UserId == userId &&                      // ← use UserId, not CreatedBy
-                            (e.IsRecurring ||                          // recurring: expand in memory
-                             (e.StartDate >= windowStart &&            // one-off: filter in DB
+                .Include(e => e.EventType)
+                .Where(e => e.UserId == userId &&
+                            (e.IsRecurring ||
+                             (e.StartDate >= windowStart &&
                               e.StartDate <= windowEnd)))
                 .AsNoTracking()
                 .ToListAsync();
