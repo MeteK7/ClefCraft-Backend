@@ -72,6 +72,9 @@ namespace ClefCraft.Persistence.DatabaseContext
                 .HasIndex(x => new { x.SeriesUid, x.OccurrenceDate })
                 .IsUnique();
 
+            modelBuilder.Entity<CalendarEvent>()
+                .HasIndex(x => x.SeriesUid);
+
             base.OnModelCreating(modelBuilder);
         }
 
