@@ -12,7 +12,8 @@ namespace ClefCraft.Infrastructure.Services.Calendar
     {
         private readonly ICalendarEventExceptionRepository _exceptionRepo;
 
-        public EventExpansionService(ICalendarEventExceptionRepository exceptionRepo)
+        public EventExpansionService(
+            ICalendarEventExceptionRepository exceptionRepo)
         {
             _exceptionRepo = exceptionRepo;
         }
@@ -23,23 +24,33 @@ namespace ClefCraft.Infrastructure.Services.Calendar
             DateTimeOffset rangeEnd)
         {
             var seriesUids = events
-                .Select(e => e.BaseEventId.ToString())
+                .Where(e => !string.IsNullOrWhiteSpace(e.SeriesUid))
+                .Select(e => e.SeriesUid)
                 .Distinct()
                 .ToList();
 
-            var exceptions = await _exceptionRepo.GetBySeriesUids(seriesUids);
+            var exceptions =
+                await _exceptionRepo.GetBySeriesUids(seriesUids);
 
             var result = new List<CalendarEventInstanceDto>();
 
             foreach (var ev in events)
             {
-                if (!ev.IsRecurring || string.IsNullOrEmpty(ev.RecurrenceRuleJson))
+                // Ensure analytics identity always exists
+                ev.BaseEventId = ev.Id;
+
+                if (!ev.IsRecurring ||
+                    string.IsNullOrWhiteSpace(ev.RecurrenceRuleJson))
                 {
                     result.Add(ToDto(ev, ev.StartDate));
                     continue;
                 }
 
-                var rule = JsonSerializer.Deserialize<RecurrenceRule>(ev.RecurrenceRuleJson);
+                var rule = JsonSerializer.Deserialize<RecurrenceRule>(
+                    ev.RecurrenceRuleJson);
+
+                if (rule == null)
+                    continue;
 
                 var occurrences = RecurrenceHelper.ExpandEvent(
                     ev,
@@ -57,23 +68,40 @@ namespace ClefCraft.Infrastructure.Services.Calendar
             return result;
         }
 
-        private CalendarEventInstanceDto ToDto(CalendarEvent ev, DateTimeOffset date)
+        private CalendarEventInstanceDto ToDto(
+            CalendarEvent ev,
+            DateTimeOffset occurrenceDate)
         {
+            var occurrenceKey =
+                $"{ev.SeriesUid}_{occurrenceDate.UtcDateTime:yyyyMMddHHmmss}";
+
             return new CalendarEventInstanceDto
             {
+                // Physical DB row
                 Id = ev.Id,
+
+                // Analytics identity
                 BaseEventId = ev.BaseEventId,
 
+                // Logical recurrence identity
+                SeriesUid = ev.SeriesUid,
+
+                // Stable UI identity
+                OccurrenceKey = occurrenceKey,
+
+                // Exact occurrence identity
+                OccurrenceDate = occurrenceDate,
                 Subject = ev.Subject,
                 Location = ev.Location,
                 Comment = ev.Comment,
-
-                StartDate = date,
-                EndDate = date + (ev.EndDate - ev.StartDate),
-
+                StartDate = ev.StartDate,
+                EndDate = ev.EndDate,
                 AllDayEvent = ev.AllDayEvent,
                 EventTypeId = ev.EventTypeId,
-                Importance = ev.Importance
+                Importance = ev.Importance,
+                IsRecurring = ev.IsRecurring,
+                RecurrenceRuleJson = ev.RecurrenceRuleJson,
+                LinkedBoardItemId = ev.LinkedBoardItemId
             };
         }
     }
