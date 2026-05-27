@@ -1,7 +1,9 @@
 ﻿using ClefCraft.Application.Common.Helpers;
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Persistence;
+using ClefCraft.Application.Features.Calendar.Queries;
 using ClefCraft.Domain;
+using System.Collections.Generic;
 using System.Text.Json;
 
 namespace ClefCraft.Infrastructure.Services.Calendar
@@ -10,57 +12,97 @@ namespace ClefCraft.Infrastructure.Services.Calendar
     {
         private readonly ICalendarEventExceptionRepository _exceptionRepo;
 
-        public EventExpansionService(ICalendarEventExceptionRepository exceptionRepo)
+        public EventExpansionService(
+            ICalendarEventExceptionRepository exceptionRepo)
         {
             _exceptionRepo = exceptionRepo;
         }
 
-        public async Task<List<CalendarEvent>> ExpandAsync(
+        public async Task<List<CalendarEventInstanceDto>> ExpandAsync(
             List<CalendarEvent> events,
-            DateTimeOffset start,
-            DateTimeOffset end)
+            DateTimeOffset rangeStart,
+            DateTimeOffset rangeEnd)
         {
-            var eventIds = events.Select(e => e.Id).ToList();
-            var exceptions = await _exceptionRepo.GetByEventIdsAsync(eventIds);
+            var seriesUids = events
+                .Where(e => !string.IsNullOrWhiteSpace(e.SeriesUid))
+                .Select(e => e.SeriesUid)
+                .Distinct()
+                .ToList();
 
-            var result = new List<CalendarEvent>();
+            var exceptions =
+                await _exceptionRepo.GetBySeriesUids(seriesUids);
 
-            foreach (var e in events)
+            var result = new List<CalendarEventInstanceDto>();
+
+            foreach (var ev in events)
             {
-                if (!e.IsRecurring || string.IsNullOrEmpty(e.RecurrenceRuleJson))
+                // Ensure analytics identity always exists
+                ev.BaseEventId = ev.Id;
+
+                if (!ev.IsRecurring ||
+                    string.IsNullOrWhiteSpace(ev.RecurrenceRuleJson))
                 {
-                    // Non-recurring: BaseEventId == its own Id
-                    e.BaseEventId = e.Id;
-                    result.Add(e);
+                    result.Add(ToDto(ev, ev.StartDate));
                     continue;
                 }
 
-                try
-                {
-                    var rule = JsonSerializer.Deserialize<RecurrenceRule>(e.RecurrenceRuleJson);
-                    var occurrences = RecurrenceHelper.ExpandEvent(e, rule, exceptions, start, end);
+                var rule = JsonSerializer.Deserialize<RecurrenceRule>(
+                    ev.RecurrenceRuleJson);
 
-                    foreach (var occ in occurrences)
-                    {
-                        occ.BaseEventId = e.Id; // preserve original before overwriting
-                        occ.Id = GenerateInstanceId(e.Id, occ.StartDate);
-                        result.Add(occ);
-                    }
-                }
-                catch
+                if (rule == null)
+                    continue;
+
+                var occurrences = RecurrenceHelper.ExpandEvent(
+                    ev,
+                    rule,
+                    exceptions,
+                    rangeStart,
+                    rangeEnd);
+
+                foreach (var occ in occurrences)
                 {
-                    e.BaseEventId = e.Id;
-                    result.Add(e);
+                    result.Add(ToDto(occ, occ.StartDate));
                 }
             }
 
             return result;
         }
 
-        private static int GenerateInstanceId(int baseId, DateTimeOffset date)
+        private CalendarEventInstanceDto ToDto(
+            CalendarEvent ev,
+            DateTimeOffset occurrenceDate)
         {
-            int raw = HashCode.Combine(baseId, date.UtcTicks);
-            return raw & 0x7FFFFFFF;
+            var occurrenceKey =
+                $"{ev.SeriesUid}_{occurrenceDate.UtcDateTime:yyyyMMddHHmmss}";
+
+            return new CalendarEventInstanceDto
+            {
+                // Physical DB row
+                Id = ev.Id,
+
+                // Analytics identity
+                BaseEventId = ev.BaseEventId,
+
+                // Logical recurrence identity
+                SeriesUid = ev.SeriesUid,
+
+                // Stable UI identity
+                OccurrenceKey = occurrenceKey,
+
+                // Exact occurrence identity
+                OccurrenceDate = occurrenceDate,
+                Subject = ev.Subject,
+                Location = ev.Location,
+                Comment = ev.Comment,
+                StartDate = ev.StartDate,
+                EndDate = ev.EndDate,
+                AllDayEvent = ev.AllDayEvent,
+                EventTypeId = ev.EventTypeId,
+                Importance = ev.Importance,
+                IsRecurring = ev.IsRecurring,
+                RecurrenceRuleJson = ev.RecurrenceRuleJson,
+                LinkedBoardItemId = ev.LinkedBoardItemId
+            };
         }
     }
 }

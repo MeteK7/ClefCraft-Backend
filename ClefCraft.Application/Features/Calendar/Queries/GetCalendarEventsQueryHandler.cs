@@ -64,7 +64,12 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             // 5. Build AI feature vectors using BaseEventId so analytics queries
             //    hit real DB records even for expanded recurring occurrences.
             //    This runs BEFORE recording the view signal to prevent leakage.
-            var aiInputs = await _analyticsService.BuildAsync(dtos, request.UserId);
+            var uniqueDtos = dtos
+            .GroupBy(x => x.BaseEventId)
+            .Select(g => g.First())
+            .ToList();
+
+            var aiInputs = await _analyticsService.BuildAsync(uniqueDtos, request.UserId);
 
             // 6. Predict attendance
             var scores = await _predictionService.PredictAsync(aiInputs);

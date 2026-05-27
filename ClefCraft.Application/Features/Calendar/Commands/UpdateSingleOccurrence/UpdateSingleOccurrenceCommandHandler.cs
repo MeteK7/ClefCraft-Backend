@@ -25,43 +25,33 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSingleOccurrenc
 
         public async Task<Unit> Handle(UpdateSingleOccurrenceCommand request, CancellationToken cancellationToken)
         {
-            var exception = await _repo.GetByEventAndDate(request.EventId, request.OccurrenceDate);
+            // IMPORTANT: now lookup is SeriesUid + OccurrenceDate
+            var exception = await _repo.GetBySeriesAndDate(
+                request.SeriesUid,
+                request.OccurrenceDate);
 
             if (exception == null)
             {
                 exception = new CalendarEventException
                 {
-                    CalendarEventId = request.EventId,
+                    SeriesUid = request.SeriesUid,
                     OccurrenceDate = request.OccurrenceDate
                 };
             }
 
-            exception.Comment = request.Comment ?? exception.Comment;
             exception.Subject = request.Subject ?? exception.Subject;
+            exception.Comment = request.Comment ?? exception.Comment;
             exception.StartDate = request.StartDate ?? exception.StartDate;
             exception.EndDate = request.EndDate ?? exception.EndDate;
 
             if (request.Location != null && request.Location.HasValue)
-            {
-                exception.Location = request.Location.Value; // can be null → delete
-            }
+                exception.Location = request.Location.Value;
 
-            exception.Importance = request.Importance ?? exception.Importance;
             exception.EventTypeId = request.EventTypeId ?? exception.EventTypeId;
+            exception.IsCancelled = request.IsCancelled ?? exception.IsCancelled;
 
-            if (request.IsCancelled.HasValue)
-                exception.IsCancelled = request.IsCancelled.Value;
-
-            try
-            {
-                await _repo.UpsertAsync(exception);
-                await _unitOfWork.SaveChangesAsync(cancellationToken);
-            }
-            catch (DbUpdateException ex)
-            {
-                // This will show the actual SQL error
-                throw new Exception(ex.InnerException?.Message ?? ex.Message, ex);
-            }
+            await _repo.UpsertAsync(exception);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;
         }

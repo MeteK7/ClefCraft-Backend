@@ -151,27 +151,5 @@ namespace ClefCraft.API.Controllers
             await _mediator.Send(command);
             return NoContent();
         }
-
-        // PATCH /api/Calendar/events/{baseEventId}/occurrences/from
-        [HttpPatch("events/{baseEventId}/occurrences/from")]
-        public async Task<IActionResult> UpdateFromOccurrence(
-            int baseEventId,
-            [FromBody] UpdateFromOccurrenceCommand command)
-        {
-            command.BaseEventId = baseEventId;
-            var result = await _mediator.Send(command);
-            return Ok(result);
-        }
-
-        // PATCH /api/Calendar/events/{baseEventId}/series
-        [HttpPatch("events/{baseEventId}/series")]
-        public async Task<IActionResult> UpdateSeries(
-            int baseEventId,
-            [FromBody] UpdateCalendarSeriesCommand command)
-        {
-            command.BaseEventId = baseEventId;
-            var result = await _mediator.Send(command);
-            return Ok(result);
-        }
     }
 }
