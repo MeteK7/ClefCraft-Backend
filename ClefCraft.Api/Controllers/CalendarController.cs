@@ -10,7 +10,6 @@ using ClefCraft.Identity.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using ClefCraft.Application.Features.Calendar.Commands.UpdateFromOccurrence;
 
 namespace ClefCraft.API.Controllers
 {
