@@ -9,14 +9,20 @@ namespace ClefCraft.Application.Features.Calendar.Queries
 {
     public class CalendarEventDto
     {
+        // Physical DB row
         public int Id { get; set; }
 
-        /// <summary>
-        /// For expanded recurring occurrences this is the original series event ID.
-        /// Equals Id for non-recurring events.
-        /// </summary>
+        // Analytics/tracking identity
         public int BaseEventId { get; set; }
 
+        // Logical recurrence family identity
+        public string? SeriesUid { get; set; }
+
+        // Stable UI identity for generated occurrences
+        public string? OccurrenceKey { get; set; }
+        
+        // Original occurrence date
+        public DateTimeOffset? OccurrenceDate { get; set; }
         public string Subject { get; set; }
         public string? Location { get; set; }
         public DateTimeOffset StartDate { get; set; }
