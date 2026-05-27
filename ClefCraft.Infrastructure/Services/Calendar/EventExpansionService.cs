@@ -1,7 +1,9 @@
 ﻿using ClefCraft.Application.Common.Helpers;
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Persistence;
+using ClefCraft.Application.Features.Calendar.Queries;
 using ClefCraft.Domain;
+using System.Collections.Generic;
 using System.Text.Json;
 
 namespace ClefCraft.Infrastructure.Services.Calendar
@@ -15,52 +17,64 @@ namespace ClefCraft.Infrastructure.Services.Calendar
             _exceptionRepo = exceptionRepo;
         }
 
-        public async Task<List<CalendarEvent>> ExpandAsync(
+        public async Task<List<CalendarEventInstanceDto>> ExpandAsync(
             List<CalendarEvent> events,
-            DateTimeOffset start,
-            DateTimeOffset end)
+            DateTimeOffset rangeStart,
+            DateTimeOffset rangeEnd)
         {
-            var eventIds = events.Select(e => e.Id).ToList();
-            var exceptions = await _exceptionRepo.GetByEventIdsAsync(eventIds);
+            var seriesUids = events
+                .Select(e => e.BaseEventId.ToString())
+                .Distinct()
+                .ToList();
 
-            var result = new List<CalendarEvent>();
+            var exceptions = await _exceptionRepo.GetBySeriesUids(seriesUids);
 
-            foreach (var e in events)
+            var result = new List<CalendarEventInstanceDto>();
+
+            foreach (var ev in events)
             {
-                if (!e.IsRecurring || string.IsNullOrEmpty(e.RecurrenceRuleJson))
+                if (!ev.IsRecurring || string.IsNullOrEmpty(ev.RecurrenceRuleJson))
                 {
-                    // Non-recurring: BaseEventId == its own Id
-                    e.BaseEventId = e.Id;
-                    result.Add(e);
+                    result.Add(ToDto(ev, ev.StartDate));
                     continue;
                 }
 
-                try
-                {
-                    var rule = JsonSerializer.Deserialize<RecurrenceRule>(e.RecurrenceRuleJson);
-                    var occurrences = RecurrenceHelper.ExpandEvent(e, rule, exceptions, start, end);
+                var rule = JsonSerializer.Deserialize<RecurrenceRule>(ev.RecurrenceRuleJson);
 
-                    foreach (var occ in occurrences)
-                    {
-                        occ.BaseEventId = e.Id; // preserve original before overwriting
-                        occ.Id = GenerateInstanceId(e.Id, occ.StartDate);
-                        result.Add(occ);
-                    }
-                }
-                catch
+                var occurrences = RecurrenceHelper.ExpandEvent(
+                    ev,
+                    rule,
+                    exceptions,
+                    rangeStart,
+                    rangeEnd);
+
+                foreach (var occ in occurrences)
                 {
-                    e.BaseEventId = e.Id;
-                    result.Add(e);
+                    result.Add(ToDto(occ, occ.StartDate));
                 }
             }
 
             return result;
         }
 
-        private static int GenerateInstanceId(int baseId, DateTimeOffset date)
+        private CalendarEventInstanceDto ToDto(CalendarEvent ev, DateTimeOffset date)
         {
-            int raw = HashCode.Combine(baseId, date.UtcTicks);
-            return raw & 0x7FFFFFFF;
+            return new CalendarEventInstanceDto
+            {
+                Id = ev.Id,
+                BaseEventId = ev.BaseEventId,
+
+                Subject = ev.Subject,
+                Location = ev.Location,
+                Comment = ev.Comment,
+
+                StartDate = date,
+                EndDate = date + (ev.EndDate - ev.StartDate),
+
+                AllDayEvent = ev.AllDayEvent,
+                EventTypeId = ev.EventTypeId,
+                Importance = ev.Importance
+            };
         }
     }
 }

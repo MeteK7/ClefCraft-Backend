@@ -26,8 +26,16 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                 var predictions = await _aiService.PredictBatchAsync(inputs);
 
                 return inputs
-                    .Select((input, index) => new { input.EventId, Score = predictions[index] })
-                    .ToDictionary(x => x.EventId, x => x.Score);
+                    .Select((input, index) => new
+                    {
+                        input.EventId,
+                        Score = predictions[index]
+                    })
+                    .GroupBy(x => x.EventId)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.Last().Score
+                    );
             }
             catch (AIPredictionException ex)
             {

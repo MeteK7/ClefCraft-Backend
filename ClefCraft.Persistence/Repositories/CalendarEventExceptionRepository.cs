@@ -18,36 +18,36 @@ namespace ClefCraft.Persistence.Repositories
         {
         }
 
-        public async Task<CalendarEventException?> GetByEventAndDate(
-            int eventId,
-            DateTimeOffset date)
+        public async Task<CalendarEventException?> GetBySeriesAndDate(string seriesUid, DateTimeOffset date)
         {
             return await _context.CalendarEventExceptions
                 .FirstOrDefaultAsync(x =>
-                    x.CalendarEventId == eventId &&
+                    x.SeriesUid == seriesUid &&
                     x.OccurrenceDate == date);
         }
 
-        public async Task<List<CalendarEventException>> GetByEventIdsAsync(
-            List<int> eventIds)
+        public async Task<List<CalendarEventException>> GetBySeriesUid(string seriesUid)
         {
             return await _context.CalendarEventExceptions
-                .Where(x => eventIds.Contains(x.CalendarEventId))
+                .Where(x => x.SeriesUid == seriesUid)
+                .ToListAsync();
+        }
+
+        public async Task<List<CalendarEventException>> GetBySeriesUids(List<string> seriesUids)
+        {
+            return await _context.CalendarEventExceptions
+                .Where(x => seriesUids.Contains(x.SeriesUid))
                 .ToListAsync();
         }
 
         public async Task UpsertAsync(CalendarEventException exception)
         {
-            var existing = await _context.CalendarEventExceptions
-                .FirstOrDefaultAsync(x =>
-                    x.CalendarEventId == exception.CalendarEventId &&
-                    x.OccurrenceDate == exception.OccurrenceDate);
+            var existing = await GetBySeriesAndDate(exception.SeriesUid, exception.OccurrenceDate);
 
             if (existing == null)
             {
                 exception.DateCreated = DateTime.UtcNow;
                 exception.DateModified = DateTime.UtcNow;
-
                 await _context.CalendarEventExceptions.AddAsync(exception);
             }
             else
@@ -57,6 +57,8 @@ namespace ClefCraft.Persistence.Repositories
                 existing.StartDate = exception.StartDate;
                 existing.EndDate = exception.EndDate;
                 existing.IsCancelled = exception.IsCancelled;
+                existing.Location = exception.Location;
+                existing.EventTypeId = exception.EventTypeId;
 
                 existing.DateModified = DateTime.UtcNow;
             }

@@ -18,7 +18,9 @@ namespace ClefCraft.Application.MappingProfiles
                     opt => opt.MapFrom(src => src.EventType != null ? src.EventType.Name : null))
                 .ForMember(dest => dest.EventColor,
                     opt => opt.MapFrom(src => src.EventType != null ? src.EventType.Color : null));
-            // BaseEventId maps by convention (same name on both sides)
+
+            // ADD THIS
+            CreateMap<CalendarEventInstanceDto, CalendarEventDto>();
 
             CreateMap<CalendarEventDto, CalendarEvent>()
                 .ForMember(dest => dest.EventType, opt => opt.Ignore());
