@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ClefCraft.Application.Contracts.Persistence;
+using ClefCraft.Application.Contracts.Calendar;
 using MediatR;
 using System;
 using System.Collections.Generic;

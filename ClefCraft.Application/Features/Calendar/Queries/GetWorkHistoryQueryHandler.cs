@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
-using ClefCraft.Application.Contracts.Persistence;
 using MediatR;
 using System;
 using System.Collections.Generic;

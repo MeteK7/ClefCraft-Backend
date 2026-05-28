@@ -1,11 +1,12 @@
-﻿using ClefCraft.Domain;
+﻿using ClefCraft.Application.Contracts.Persistence;
+using ClefCraft.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ClefCraft.Application.Contracts.Persistence
+namespace ClefCraft.Application.Contracts.Calendar
 {
     public interface ICalendarEventRepository : IGenericRepository<CalendarEvent>
     {

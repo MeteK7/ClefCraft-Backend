@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using ClefCraft.Application.Contracts.FileAttachment;
+using ClefCraft.Application.Contracts.Calendar;
 
 namespace ClefCraft.Application.Features.Calendar.Commands.UploadCalendarAttachment
 {

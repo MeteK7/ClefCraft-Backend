@@ -1,4 +1,4 @@
-﻿using ClefCraft.Application.Contracts.Persistence;
+﻿using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Domain;
 using ClefCraft.Persistence.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
@@ -11,57 +11,102 @@ using System.Threading.Tasks;
 namespace ClefCraft.Persistence.Repositories
 {
     public class CalendarEventExceptionRepository
-        : GenericRepository<CalendarEventException>, ICalendarEventExceptionRepository
+        : GenericRepository<CalendarEventException>,
+          ICalendarEventExceptionRepository
     {
-        public CalendarEventExceptionRepository(ClefCraftDatabaseContext context)
+        public CalendarEventExceptionRepository(
+            ClefCraftDatabaseContext context)
             : base(context)
         {
         }
 
-        public async Task<CalendarEventException?> GetBySeriesAndDate(string seriesUid, DateTimeOffset date)
+        public async Task<CalendarEventException?> GetBySeriesAndDate(
+            string seriesUid,
+            DateTimeOffset occurrenceDate)
         {
+            // Normalise to UTC date-only for the comparison so that timezone
+            // shifts in the occurrence key do not produce false misses.
+            var occurrenceDateUtc = occurrenceDate.UtcDateTime.Date;
+
             return await _context.CalendarEventExceptions
                 .FirstOrDefaultAsync(x =>
                     x.SeriesUid == seriesUid &&
-                    x.OccurrenceDate == date);
+                    x.OccurrenceDate.UtcDateTime.Date == occurrenceDateUtc);
         }
 
-        public async Task<List<CalendarEventException>> GetBySeriesUid(string seriesUid)
+        public async Task<List<CalendarEventException>> GetBySeriesUid(
+            string seriesUid)
         {
             return await _context.CalendarEventExceptions
                 .Where(x => x.SeriesUid == seriesUid)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
-        public async Task<List<CalendarEventException>> GetBySeriesUids(List<string> seriesUids)
+        public async Task<List<CalendarEventException>> GetBySeriesUids(
+            IEnumerable<string> seriesUids)
         {
+            var uids = seriesUids.ToList();
+
+            if (!uids.Any())
+                return new List<CalendarEventException>();
+
             return await _context.CalendarEventExceptions
-                .Where(x => seriesUids.Contains(x.SeriesUid))
+                .Where(x => uids.Contains(x.SeriesUid))
+                .AsNoTracking()
                 .ToListAsync();
         }
 
         public async Task UpsertAsync(CalendarEventException exception)
         {
-            var existing = await GetBySeriesAndDate(exception.SeriesUid, exception.OccurrenceDate);
+            var existing = await GetBySeriesAndDate(
+                exception.SeriesUid,
+                exception.OccurrenceDate);
 
             if (existing == null)
             {
-                exception.DateCreated = DateTime.UtcNow;
-                exception.DateModified = DateTime.UtcNow;
                 await _context.CalendarEventExceptions.AddAsync(exception);
             }
             else
             {
+                // Map all mutable fields onto the tracked entity so EF
+                // picks up the change without detach/attach gymnastics.
                 existing.Subject = exception.Subject;
                 existing.Comment = exception.Comment;
                 existing.StartDate = exception.StartDate;
                 existing.EndDate = exception.EndDate;
-                existing.IsCancelled = exception.IsCancelled;
                 existing.Location = exception.Location;
                 existing.EventTypeId = exception.EventTypeId;
+                existing.IsCancelled = exception.IsCancelled;
 
-                existing.DateModified = DateTime.UtcNow;
+                _context.CalendarEventExceptions.Update(existing);
             }
+        }
+
+        public async Task DeleteFromDateAsync(
+            string seriesUid,
+            DateTimeOffset fromDate)
+        {
+            var fromUtc = fromDate.UtcDateTime.Date;
+
+            var toDelete = await _context.CalendarEventExceptions
+                .Where(x =>
+                    x.SeriesUid == seriesUid &&
+                    x.OccurrenceDate.UtcDateTime.Date >= fromUtc)
+                .ToListAsync();
+
+            if (toDelete.Any())
+                _context.CalendarEventExceptions.RemoveRange(toDelete);
+        }
+
+        public async Task DeleteAllForSeriesAsync(string seriesUid)
+        {
+            var toDelete = await _context.CalendarEventExceptions
+                .Where(x => x.SeriesUid == seriesUid)
+                .ToListAsync();
+
+            if (toDelete.Any())
+                _context.CalendarEventExceptions.RemoveRange(toDelete);
         }
     }
 }

@@ -2,14 +2,16 @@
 using ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent;
 using ClefCraft.Application.Features.Calendar.Commands.DeleteCalendarAttachment;
 using ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent;
+using ClefCraft.Application.Features.Calendar.Commands.UpdateFromOccurrence;
+using ClefCraft.Application.Features.Calendar.Commands.UpdateSeries;
 using ClefCraft.Application.Features.Calendar.Commands.UpdateSingleOccurrence;
 using ClefCraft.Application.Features.Calendar.Commands.UploadCalendarAttachment;
 using ClefCraft.Application.Features.Calendar.Queries;
 using ClefCraft.Application.Features.Calendar.Queries.GetCalendarAttachments;
 using ClefCraft.Identity.Services;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ClefCraft.API.Controllers
 {
@@ -32,6 +34,10 @@ namespace ClefCraft.API.Controllers
             _env = env;
         }
 
+        // ======================================================================
+        // SINGLE-EVENT CRUD
+        // ======================================================================
+
         [HttpPost]
         public async Task<ActionResult<CalendarEventDto>> CreateEvent(
             [FromBody] CreateCalendarEventCommand command)
@@ -51,6 +57,10 @@ namespace ClefCraft.API.Controllers
             var result = await _mediator.Send(command);
             return Ok(result);
         }
+
+        // ======================================================================
+        // QUERY
+        // ======================================================================
 
         [HttpGet("events")]
         public async Task<ActionResult<List<CalendarEventDto>>> GetEvents(
@@ -79,9 +89,74 @@ namespace ClefCraft.API.Controllers
         [HttpGet("work-history/{itemId}")]
         public async Task<ActionResult<List<WorkHistoryDto>>> GetWorkHistory(int itemId)
         {
-            var result = await _mediator.Send(new GetWorkHistoryQuery { ItemId = itemId });
+            var result = await _mediator.Send(
+                new GetWorkHistoryQuery { ItemId = itemId });
             return Ok(result);
         }
+
+        // ======================================================================
+        // OCCURRENCE-LEVEL RECURRENCE EDITS
+        // ======================================================================
+
+        /// <summary>
+        /// Edit or cancel a single occurrence without affecting any other
+        /// occurrence in the series.
+        /// Angular: updateSingleOccurrence()
+        /// </summary>
+        [HttpPut("occurrence")]
+        public async Task<IActionResult> UpdateSingleOccurrence(
+            [FromBody] UpdateSingleOccurrenceCommand command)
+        {
+            await _mediator.Send(command);
+            return NoContent();
+        }
+
+        /// <summary>
+        /// "This and following" — splits the series at the given occurrence
+        /// and applies new properties to everything from that point onward.
+        /// Angular: updateFromOccurrence()
+        /// </summary>
+        [HttpPut("occurrence/from")]
+        public async Task<IActionResult> UpdateFromOccurrence(
+            [FromBody] UpdateFromOccurrenceCommand command)
+        {
+            await _mediator.Send(command);
+            return NoContent();
+        }
+
+        // ======================================================================
+        // SERIES-LEVEL RECURRENCE EDITS
+        // ======================================================================
+
+        /// <summary>
+        /// Update all occurrences AND clear per-occurrence exceptions.
+        /// Use when the user accepts that their individual overrides will be lost.
+        /// Angular: updateSeriesOverrideAll()
+        /// </summary>
+        [HttpPut("series/override-all")]
+        public async Task<IActionResult> UpdateSeriesOverrideAll(
+            [FromBody] UpdateSeriesOverrideAllCommand command)
+        {
+            await _mediator.Send(command);
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Update series-level defaults while keeping per-occurrence
+        /// CalendarEventException overrides intact.
+        /// Angular: updateSeriesPreserveExceptions()
+        /// </summary>
+        [HttpPut("series/preserve-exceptions")]
+        public async Task<IActionResult> UpdateSeriesPreserveExceptions(
+            [FromBody] UpdateSeriesPreserveExceptionsCommand command)
+        {
+            await _mediator.Send(command);
+            return NoContent();
+        }
+
+        // ======================================================================
+        // ATTACHMENTS
+        // ======================================================================
 
         [HttpPost("{eventId}/attachments")]
         public async Task<IActionResult> UploadAttachment(
@@ -101,19 +176,20 @@ namespace ClefCraft.API.Controllers
         [HttpGet("{eventId}/attachments")]
         public async Task<IActionResult> GetAttachments(int eventId)
         {
-            var result = await _mediator.Send(new GetAttachmentsQuery { EventId = eventId });
+            var result = await _mediator.Send(
+                new GetAttachmentsQuery { EventId = eventId });
             return Ok(result);
         }
 
         [HttpGet("attachments/download/{id}")]
         public async Task<IActionResult> DownloadAttachment(int id)
         {
-            var attachment = await _mediator.Send(new GetAttachmentByIdQuery { Id = id });
+            var attachment = await _mediator.Send(
+                new GetAttachmentByIdQuery { Id = id });
+
             if (attachment == null)
                 return NotFound();
 
-            // Guard against path traversal: resolve and verify the path sits inside
-            // the expected uploads directory before opening the file.
             var uploadsRoot = Path.GetFullPath(
                 Path.Combine(_env.ContentRootPath, "uploads"));
             var fullPath = Path.GetFullPath(attachment.StoredFilePath);
@@ -128,7 +204,8 @@ namespace ClefCraft.API.Controllers
                 return NotFound();
 
             var memory = new MemoryStream();
-            await using (var stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read))
+            await using (var stream = new FileStream(
+                fullPath, FileMode.Open, FileAccess.Read))
             {
                 await stream.CopyToAsync(memory);
             }
@@ -141,14 +218,6 @@ namespace ClefCraft.API.Controllers
         public async Task<IActionResult> DeleteAttachment(int id)
         {
             await _mediator.Send(new DeleteAttachmentCommand { Id = id });
-            return NoContent();
-        }
-
-        [HttpPut("occurrence")]
-        public async Task<IActionResult> UpdateSingleOccurrence(
-            [FromBody] UpdateSingleOccurrenceCommand command)
-        {
-            await _mediator.Send(command);
             return NoContent();
         }
     }

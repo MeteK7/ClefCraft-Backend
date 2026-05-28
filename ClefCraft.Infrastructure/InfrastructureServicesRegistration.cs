@@ -17,7 +17,7 @@ namespace ClefCraft.Infrastructure
             services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
-            services.AddScoped<IEventExpansionService, EventExpansionService>();
+            services.AddScoped<IRecurringEventProjectionService, RecurringEventProjectionService>();
             services.AddScoped<IEventEnrichmentService, EventEnrichmentService>();
             services.AddScoped<IEventAnalyticsService, EventAnalyticsService>();
             services.AddScoped<IAttendancePredictionService, AttendancePredictionService>();
