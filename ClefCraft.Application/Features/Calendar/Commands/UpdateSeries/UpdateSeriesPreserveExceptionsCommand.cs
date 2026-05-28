@@ -5,16 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ClefCraft.Application.Features.Calendar.Commands.SplitSeriesFromOccurrence
+namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSeries
 {
-    public class SplitSeriesFromOccurrenceCommand : IRequest
+    public class UpdateSeriesPreserveExceptionsCommand : IRequest
     {
-        public int SegmentId { get; set; }
-        public DateTimeOffset SplitDate { get; set; }
+        public string SeriesUid { get; set; }
 
         public string? Subject { get; set; }
         public string? Location { get; set; }
         public string? Comment { get; set; }
+
         public string? RecurrenceRuleJson { get; set; }
     }
 }

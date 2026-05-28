@@ -11,7 +11,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
         : IRequestHandler<GetCalendarEventsQuery, List<CalendarEventDto>>
     {
         private readonly ICalendarEventRepository _eventRepo;
-        private readonly IEventExpansionService _expansionService;
+        private readonly IRecurringEventProjectionService _projectionService;
         private readonly IEventEnrichmentService _enrichmentService;
         private readonly IEventAnalyticsService _analyticsService;
         private readonly IAttendancePredictionService _predictionService;
@@ -21,7 +21,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
 
         public GetCalendarEventsQueryHandler(
             ICalendarEventRepository eventRepo,
-            IEventExpansionService expansionService,
+            IRecurringEventProjectionService projectionService,
             IEventEnrichmentService enrichmentService,
             IEventAnalyticsService analyticsService,
             IAttendancePredictionService predictionService,
@@ -30,7 +30,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             IUnitOfWork unitOfWork)
         {
             _eventRepo = eventRepo;
-            _expansionService = expansionService;
+            _projectionService = projectionService;
             _enrichmentService = enrichmentService;
             _analyticsService = analyticsService;
             _predictionService = predictionService;
@@ -48,8 +48,10 @@ namespace ClefCraft.Application.Features.Calendar.Queries
                 request.UserId, request.RangeStart, request.RangeEnd);
 
             // 2. Expand recurring events (BaseEventId is populated here)
-            var expanded = await _expansionService.ExpandAsync(
-                events, request.RangeStart, request.RangeEnd);
+            var expanded = await _projectionService.ProjectAsync(
+                events,
+                request.RangeStart,
+                request.RangeEnd);
 
             // 3. Map to DTOs and trim to window
             //    BaseEventId is mapped by convention from CalendarEvent → CalendarEventDto

@@ -59,6 +59,9 @@ namespace ClefCraft.Persistence.DatabaseContext
         public DbSet<UserInteractionSignal> UserInteractionSignals { get; set; }
         public DbSet<TaskLifecycle> TaskLifecycles { get; set; }
 
+        public DbSet<RecurrenceSeries> RecurrenceSeries { get; set; }
+        public DbSet<CalendarEventSegment> CalendarEventSegments { get; set; }
+
         // =========================
         // Model Configuration
         // =========================

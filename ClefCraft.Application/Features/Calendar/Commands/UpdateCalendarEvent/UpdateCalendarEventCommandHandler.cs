@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Logging;
 using ClefCraft.Application.Contracts.Persistence;

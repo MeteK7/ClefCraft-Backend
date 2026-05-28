@@ -1,4 +1,5 @@
-﻿using ClefCraft.Application.Contracts.Persistence;
+﻿using ClefCraft.Application.Contracts.Calendar;
+using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

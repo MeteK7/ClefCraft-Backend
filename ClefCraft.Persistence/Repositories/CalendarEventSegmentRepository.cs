@@ -1,4 +1,4 @@
-﻿using ClefCraft.Application.Contracts.Persistence;
+﻿using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Domain;
 using ClefCraft.Persistence.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
