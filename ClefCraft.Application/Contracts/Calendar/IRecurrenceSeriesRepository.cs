@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Application.Contracts.Calendar
 {
-    public interface IRecurrenceSeriesRepository
+    public interface IRecurrenceSeriesRepository : IGenericRepository<RecurrenceSeries>
     {
         /// <summary>
         /// Retrieves the series — including its ordered segments — by the

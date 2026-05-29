@@ -16,7 +16,7 @@ namespace ClefCraft.Application.Contracts.Calendar
     /// the physical CalendarEvent row may be superseded by a segment split
     /// while the SeriesUid remains the stable series identity.
     /// </summary>
-    public interface ICalendarEventExceptionRepository
+    public interface ICalendarEventExceptionRepository : IGenericRepository<CalendarEventException>
     {
         /// <summary>
         /// Returns the exception for a specific occurrence in a series, or null.

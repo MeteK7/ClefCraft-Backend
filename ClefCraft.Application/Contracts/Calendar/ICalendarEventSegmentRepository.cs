@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Application.Contracts.Calendar
 {
-    public interface ICalendarEventSegmentRepository
+    public interface ICalendarEventSegmentRepository : IGenericRepository<CalendarEventSegment>
     {
         Task<CalendarEventSegment?> GetByIdAsync(int id);
 

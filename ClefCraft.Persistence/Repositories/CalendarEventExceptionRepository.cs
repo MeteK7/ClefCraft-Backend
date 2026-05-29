@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ClefCraft.Persistence.Repositories
 {
@@ -24,14 +25,12 @@ namespace ClefCraft.Persistence.Repositories
             string seriesUid,
             DateTimeOffset occurrenceDate)
         {
-            // Normalise to UTC date-only for the comparison so that timezone
-            // shifts in the occurrence key do not produce false misses.
-            var occurrenceDateUtc = occurrenceDate.UtcDateTime.Date;
+            var date = occurrenceDate.UtcDateTime.Date;
 
             return await _context.CalendarEventExceptions
                 .FirstOrDefaultAsync(x =>
                     x.SeriesUid == seriesUid &&
-                    x.OccurrenceDate.UtcDateTime.Date == occurrenceDateUtc);
+                    x.OccurrenceDate >= date);
         }
 
         public async Task<List<CalendarEventException>> GetBySeriesUid(
@@ -87,12 +86,12 @@ namespace ClefCraft.Persistence.Repositories
             string seriesUid,
             DateTimeOffset fromDate)
         {
-            var fromUtc = fromDate.UtcDateTime.Date;
+            var fromUtc = fromDate.ToUniversalTime();
 
             var toDelete = await _context.CalendarEventExceptions
                 .Where(x =>
                     x.SeriesUid == seriesUid &&
-                    x.OccurrenceDate.UtcDateTime.Date >= fromUtc)
+                    x.OccurrenceDate >= fromUtc)
                 .ToListAsync();
 
             if (toDelete.Any())
