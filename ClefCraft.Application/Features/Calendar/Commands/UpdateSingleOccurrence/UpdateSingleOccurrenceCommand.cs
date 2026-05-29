@@ -26,7 +26,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSingleOccurrenc
         public DateTimeOffset? StartDate { get; set; }
         public DateTimeOffset? EndDate { get; set; }
 
-        public Optional<string?>? Location { get; set; }
+        public string? Location { get; set; }
 
         public string? Importance { get; set; }
         public int? EventTypeId { get; set; }
