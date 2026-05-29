@@ -35,70 +35,50 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateFromOccurrence
             UpdateFromOccurrenceCommand request,
             CancellationToken cancellationToken)
         {
-            // ------------------------------------------------------------------
-            // 1. Resolve the series.
-            // ------------------------------------------------------------------
             var series = await _seriesRepo.GetBySeriesUidAsync(request.SeriesUid);
 
             if (series == null)
                 throw new NotFoundException(
                     nameof(RecurrenceSeries), request.SeriesUid);
 
-            // ------------------------------------------------------------------
-            // 2. Find the segment that is active at OccurrenceDate.
-            //    Uses [EffectiveFrom, EffectiveTo) interval semantics — the same
-            //    convention used by GetActiveSegmentAsync.
-            // ------------------------------------------------------------------
             var activeSegment = await _segmentRepo.GetActiveSegmentAsync(
                 series.Id,
                 request.OccurrenceDate);
 
-            if (activeSegment == null)
-            {
-                // The series exists but has no segment covering OccurrenceDate.
-                // This can happen for legacy events that were never migrated.
-                // Raise a clear error so the caller can decide whether to
-                // trigger a migration or surface a UX message.
-                throw new InvalidOperationException(
-                    $"No active segment found for series '{request.SeriesUid}' " +
-                    $"at occurrence date {request.OccurrenceDate:O}. " +
-                    "The series may need to be migrated to the segment architecture first.");
-            }
-
-            // ------------------------------------------------------------------
-            // 3. Close the active segment at OccurrenceDate.
-            //
-            //    EffectiveTo is exclusive (half-open interval), so setting it
-            //    to OccurrenceDate means the last occurrence covered by this
-            //    segment is the one immediately before OccurrenceDate.
-            // ------------------------------------------------------------------
+            // IMPORTANT: close the current segment at the split point
             activeSegment.EffectiveTo = request.OccurrenceDate;
+            await _segmentRepo.UpdateAsync(activeSegment);
 
-            // ------------------------------------------------------------------
-            // 4. Build the new segment starting at OccurrenceDate.
-            //    Inherit everything from the current segment, then apply the
-            //    caller-supplied overrides on top.
-            // ------------------------------------------------------------------
-            var duration = activeSegment.EndDate - activeSegment.StartDate;
-            var newStart = request.StartDate ?? request.OccurrenceDate;
-            var newEnd = request.EndDate ?? (newStart + duration);
+            var originalDuration =
+                activeSegment.EndDate - activeSegment.StartDate;
+
+            // IMPORTANT:
+            // The new segment recurrence MUST anchor on the edited occurrence.
+            // Otherwise the occurrence at the split boundary is skipped.
+            var occurrenceStart =
+                request.StartDate ?? request.OccurrenceDate;
+
+            var occurrenceEnd =
+                request.EndDate ?? (occurrenceStart + originalDuration);
 
             var newSegment = new CalendarEventSegment
             {
                 RecurrenceSeriesId = series.Id,
+
+                // start strictly AFTER split
                 EffectiveFrom = request.OccurrenceDate,
-                EffectiveTo = null,              // open-ended
+
+                EffectiveTo = null,
 
                 Subject = request.Subject ?? activeSegment.Subject,
                 Location = request.Location ?? activeSegment.Location,
                 Comment = request.Comment ?? activeSegment.Comment,
 
-                StartDate = newStart,
-                EndDate = newEnd,
+                StartDate = occurrenceStart,
+                EndDate = occurrenceEnd,
 
                 IsRecurring = activeSegment.IsRecurring,
-                RecurrenceRuleJson =
-                    request.RecurrenceRuleJson ?? activeSegment.RecurrenceRuleJson,
+                RecurrenceRuleJson = request.RecurrenceRuleJson ?? activeSegment.RecurrenceRuleJson,
 
                 Importance = request.Importance ?? activeSegment.Importance,
                 EventTypeId = request.EventTypeId ?? activeSegment.EventTypeId
@@ -106,17 +86,6 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateFromOccurrence
 
             await _segmentRepo.CreateAsync(newSegment);
 
-            // ------------------------------------------------------------------
-            // 5. Purge future exceptions.
-            //
-            //    Per-occurrence overrides that were created against the OLD
-            //    segment definition are no longer semantically valid once the
-            //    segment has been replaced.  Delete them so they don't ghost
-            //    into the newly defined recurrence pattern.
-            //
-            //    Exceptions BEFORE OccurrenceDate are intentionally preserved
-            //    — they belong to the unchanged historical segment.
-            // ------------------------------------------------------------------
             await _exceptionRepo.DeleteFromDateAsync(
                 request.SeriesUid,
                 request.OccurrenceDate);
