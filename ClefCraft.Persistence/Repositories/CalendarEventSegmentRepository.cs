@@ -30,7 +30,6 @@ namespace ClefCraft.Persistence.Repositories
                 .Include(x => x.RecurrenceSeries)
                 .Where(x => x.RecurrenceSeries.SeriesUid == seriesUid)
                 .OrderBy(x => x.EffectiveFrom)
-                .AsNoTracking()
                 .ToListAsync();
         }
 
