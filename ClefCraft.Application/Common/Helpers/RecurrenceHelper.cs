@@ -54,32 +54,23 @@ namespace ClefCraft.Application.Common.Helpers
             RecurrenceRule rule,
             List<CalendarEventException> exceptions,
             DateTimeOffset rangeStart,
-            DateTimeOffset rangeEnd)
+            DateTimeOffset rangeEnd) // rangeEnd is NOW EXCLUSIVE
         {
             var result = new List<CalendarEvent>();
-
             var current = sourceEvent.StartDate;
-
             var generated = 0;
 
-            while (current <= rangeEnd)
+            while (current < rangeEnd) // ← was <=, now strictly 
             {
-                if (rule.Count.HasValue &&
-                    generated >= rule.Count.Value)
-                {
+                if (rule.Count.HasValue && generated >= rule.Count.Value)
                     break;
-                }
 
-                if (rule.EndDate.HasValue &&
-                    current > rule.EndDate.Value)
-                {
+                if (rule.EndDate.HasValue && current > rule.EndDate.Value)
                     break;
-                }
 
                 if (current >= rangeStart)
                 {
-                    var duration =
-                        sourceEvent.EndDate - sourceEvent.StartDate;
+                    var duration = sourceEvent.EndDate - sourceEvent.StartDate;
 
                     var occurrence = new CalendarEvent
                     {
@@ -95,38 +86,25 @@ namespace ClefCraft.Application.Common.Helpers
                         EventTypeId = sourceEvent.EventTypeId,
                         Importance = sourceEvent.Importance,
                         IsRecurring = true,
-                        RecurrenceRuleJson =
-                            sourceEvent.RecurrenceRuleJson,
-                        LinkedBoardItemId =
-                            sourceEvent.LinkedBoardItemId
+                        RecurrenceRuleJson = sourceEvent.RecurrenceRuleJson,
+                        LinkedBoardItemId = sourceEvent.LinkedBoardItemId
                     };
 
-                    occurrence = ApplyException(
-                        occurrence,
-                        sourceEvent,
-                        exceptions);
+                    occurrence = ApplyException(occurrence, sourceEvent, exceptions);
 
                     if (occurrence != null)
-                    {
                         result.Add(occurrence);
-                    }
                 }
 
                 generated++;
 
                 current = rule.Frequency switch
                 {
-                    "DAILY" =>
-                        current.AddDays(rule.Interval),
-                    "WEEKLY" =>
-                        current.AddDays(7 * rule.Interval),
-                    "MONTHLY" =>
-                        current.AddMonths(rule.Interval),
-                    "YEARLY" =>
-                        current.AddYears(rule.Interval),
-
-                    _ => throw new NotSupportedException(
-                        $"Unsupported frequency: {rule.Frequency}")
+                    "DAILY" => current.AddDays(rule.Interval),
+                    "WEEKLY" => current.AddDays(7 * rule.Interval),
+                    "MONTHLY" => current.AddMonths(rule.Interval),
+                    "YEARLY" => current.AddYears(rule.Interval),
+                    _ => throw new NotSupportedException($"Unsupported frequency: {rule.Frequency}")
                 };
             }
 
