@@ -163,21 +163,16 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                 if (rule == null)
                     continue;
 
-                var effectiveRangeStart =
-                    segment.EffectiveFrom > rangeStart
-                        ? segment.EffectiveFrom
-                        : rangeStart;
+                var effectiveRangeStart = segment.EffectiveFrom > rangeStart
+                    ? segment.EffectiveFrom
+                    : rangeStart;
 
-                var effectiveRangeEnd =
-                    segment.EffectiveTo.HasValue
-                        ? (
-                            segment.EffectiveTo.Value < rangeEnd
-                                ? segment.EffectiveTo.Value
-                                : rangeEnd
-                          )
-                        : rangeEnd;
+                var effectiveRangeEnd = segment.EffectiveTo.HasValue
+                    ? (segment.EffectiveTo.Value < rangeEnd ? segment.EffectiveTo.Value : rangeEnd)
+                    : rangeEnd;
 
-                if (effectiveRangeStart >= effectiveRangeEnd)
+                // FIX: Allow matching evaluation boundaries if the segment contains occurrences exactly on the line
+                if (effectiveRangeStart > effectiveRangeEnd)
                     continue;
 
                 var virtualEvent =

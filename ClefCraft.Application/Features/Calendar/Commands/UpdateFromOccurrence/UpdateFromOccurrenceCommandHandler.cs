@@ -45,35 +45,32 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateFromOccurrence
                 series.Id,
                 request.OccurrenceDate);
 
-            // IMPORTANT: close the current segment at the split point
+            if (activeSegment == null)
+                throw new NotFoundException(nameof(CalendarEventSegment), request.OccurrenceDate.ToString());
+
+            // 1. Cap the old segment strictly BEFORE the targeted split occurrence date
             activeSegment.EffectiveTo = request.OccurrenceDate;
             await _segmentRepo.UpdateAsync(activeSegment);
 
-            var originalDuration =
-                activeSegment.EndDate - activeSegment.StartDate;
+            var originalDuration = activeSegment.EndDate - activeSegment.StartDate;
 
-            // IMPORTANT:
-            // The new segment recurrence MUST anchor on the edited occurrence.
-            // Otherwise the occurrence at the split boundary is skipped.
-            var occurrenceStart =
-                request.StartDate ?? request.OccurrenceDate;
-
-            var occurrenceEnd =
-                request.EndDate ?? (occurrenceStart + originalDuration);
+            // 2. The new segment recurrence anchors on the newly edited modifications
+            var occurrenceStart = request.StartDate ?? request.OccurrenceDate;
+            var occurrenceEnd = request.EndDate ?? (occurrenceStart + originalDuration);
 
             var newSegment = new CalendarEventSegment
             {
                 RecurrenceSeriesId = series.Id,
 
-                // start strictly AFTER split
+                // EffectiveFrom matches the occurrenceDate exactly so it captures the "This" step
                 EffectiveFrom = request.OccurrenceDate,
-
                 EffectiveTo = null,
 
                 Subject = request.Subject ?? activeSegment.Subject,
                 Location = request.Location ?? activeSegment.Location,
                 Comment = request.Comment ?? activeSegment.Comment,
 
+                // Anchor point for generating future recurrences in this new chain
                 StartDate = occurrenceStart,
                 EndDate = occurrenceEnd,
 
@@ -86,6 +83,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateFromOccurrence
 
             await _segmentRepo.CreateAsync(newSegment);
 
+            // 3. Clear downstream exceptions because they are overridden by the new design rules
             await _exceptionRepo.DeleteFromDateAsync(
                 request.SeriesUid,
                 request.OccurrenceDate);
