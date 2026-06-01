@@ -22,5 +22,6 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
         public bool IsRecurring { get; set; }
         public string? RecurrenceRuleJson { get; set; }
         public int? LinkedBoardItemId { get; set; }
+        public List<int> ReminderMinutes { get; set; } = new();
     }
 }
