@@ -23,6 +23,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
         private readonly ICalendarEventSegmentRepository _segmentRepo;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
+        public readonly IReminderSchedulerService _reminderSchedulerService;
         private readonly IUnitOfWork _unitOfWork;
 
         public CreateCalendarEventCommandHandler(
@@ -31,6 +32,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
             ICalendarEventSegmentRepository segmentRepo,
             IMapper mapper,
             IUserService userService,
+            IReminderSchedulerService reminderSchedulerService,
             IUnitOfWork unitOfWork)
         {
             _calendarEventRepository = calendarEventRepository;
@@ -38,6 +40,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
             _segmentRepo = segmentRepo;
             _mapper = mapper;
             _userService = userService;
+            _reminderSchedulerService = reminderSchedulerService;
             _unitOfWork = unitOfWork;
         }
 
