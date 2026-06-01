@@ -16,5 +16,7 @@ namespace ClefCraft.Domain
         public int MinutesBeforeStart { get; set; }
 
         public bool IsEnabled { get; set; } = true;
+        public bool IsSent { get; set; }
+        public DateTimeOffset? SentAt { get; set; }
     }
 }

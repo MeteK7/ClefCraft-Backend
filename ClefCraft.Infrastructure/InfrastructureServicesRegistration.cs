@@ -21,6 +21,8 @@ namespace ClefCraft.Infrastructure
             services.AddScoped<IEventEnrichmentService, EventEnrichmentService>();
             services.AddScoped<IEventAnalyticsService, EventAnalyticsService>();
             services.AddScoped<IAttendancePredictionService, AttendancePredictionService>();
+            services.AddScoped<IReminderSchedulerService, ReminderSchedulerService>();
+            services.AddHostedService<NotificationBackgroundService>();
 
             return services;
         }
