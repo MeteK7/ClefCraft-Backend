@@ -22,37 +22,53 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
         private readonly IActivityLogger _activityLogger;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IReminderSchedulerService _reminderSchedulerService;
 
         public UpdateCalendarEventCommandHandler(
             ICalendarEventRepository calendarEventRepository,
             IActivityLogger activityLogger,
             IMapper mapper,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IReminderSchedulerService reminderSchedulerService)
         {
             _calendarEventRepository = calendarEventRepository;
             _activityLogger = activityLogger;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _reminderSchedulerService = reminderSchedulerService;
         }
 
         public async Task<CalendarEventDto> Handle(
             UpdateCalendarEventCommand request,
             CancellationToken cancellationToken)
         {
-            var entity = await _calendarEventRepository.GetByIdAsync(request.Id);
+            var entity =
+                await _calendarEventRepository
+                    .GetByIdAsync(request.Id);
 
             if (entity == null)
-                throw new NotFoundException(nameof(CalendarEvent), request.Id);
+                throw new NotFoundException(
+                    nameof(CalendarEvent),
+                    request.Id);
 
             if (string.IsNullOrWhiteSpace(request.Subject))
-                throw new ValidationException("Subject is required.");
+                throw new ValidationException(
+                    "Subject is required.");
 
-            if (!request.AllDayEvent && request.StartDate >= request.EndDate)
-                throw new ValidationException("End time must be after start time.");
+            if (!request.AllDayEvent &&
+                request.StartDate >= request.EndDate)
+            {
+                throw new ValidationException(
+                    "End time must be after start time.");
+            }
 
-            // Capture BEFORE state for behavioral logging
-            var wasRescheduled = entity.StartDate != request.StartDate || entity.EndDate != request.EndDate;
-            var importanceChanged = entity.Importance != request.Importance;
+            var wasRescheduled =
+                entity.StartDate != request.StartDate ||
+                entity.EndDate != request.EndDate;
+
+            var importanceChanged =
+                entity.Importance != request.Importance;
+
             var previousStart = entity.StartDate;
             var previousEnd = entity.EndDate;
             var previousImportance = entity.Importance;
@@ -71,7 +87,6 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
 
             await _calendarEventRepository.UpdateAsync(entity);
 
-            // Log WHAT changed, not just THAT it changed
             if (wasRescheduled)
             {
                 await _activityLogger.LogAsync(
@@ -84,7 +99,9 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
                         PreviousEnd = previousEnd,
                         NewStart = request.StartDate,
                         NewEnd = request.EndDate,
-                        DaysShifted = (request.StartDate - previousStart).TotalDays
+                        DaysShifted =
+                            (request.StartDate - previousStart)
+                            .TotalDays
                     });
             }
 
@@ -101,7 +118,19 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
                     });
             }
 
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(
+                cancellationToken);
+
+            if (wasRescheduled)
+            {
+                await _reminderSchedulerService
+                    .RescheduleAsync(
+                        entity,
+                        cancellationToken);
+
+                await _unitOfWork.SaveChangesAsync(
+                    cancellationToken);
+            }
 
             return _mapper.Map<CalendarEventDto>(entity);
         }

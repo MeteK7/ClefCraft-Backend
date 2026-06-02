@@ -12,5 +12,9 @@ namespace ClefCraft.Application.Contracts.Calendar
         Task ScheduleAsync(
             CalendarEvent calendarEvent,
             CancellationToken cancellationToken);
+
+        Task RescheduleAsync(
+            CalendarEvent calendarEvent,
+            CancellationToken cancellationToken);
     }
 }
