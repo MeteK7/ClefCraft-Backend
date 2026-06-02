@@ -1,4 +1,5 @@
-﻿using ClefCraft.Domain;
+﻿using ClefCraft.Application.Contracts.Persistence;
+using ClefCraft.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,15 +8,9 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Application.Contracts.Calendar
 {
-    public interface ICalendarReminderRepository
+    public interface ICalendarReminderRepository : IGenericRepository<CalendarReminder>
     {
         Task<List<CalendarReminder>> GetByEventIdAsync(
-            int eventId);
-
-        Task CreateAsync(
-            CalendarReminder reminder);
-
-        Task DeleteByEventIdAsync(
             int eventId);
     }
 }
