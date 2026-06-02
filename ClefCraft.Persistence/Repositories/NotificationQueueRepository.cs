@@ -20,8 +20,7 @@ namespace ClefCraft.Persistence.Repositories
         {
         }
 
-        public async Task<List<NotificationQueue>> GetPendingAsync(
-            DateTimeOffset utcNow)
+        public async Task<List<NotificationQueue>> GetPendingAsync(DateTimeOffset utcNow)
         {
             return await _context.Set<NotificationQueue>()
                 .Where(x =>
@@ -29,6 +28,17 @@ namespace ClefCraft.Persistence.Repositories
                     x.ScheduledFor <= utcNow)
                 .OrderBy(x => x.ScheduledFor)
                 .ToListAsync();
+        }
+
+        public async Task DeletePendingByEventIdAsync(int calendarEventId)
+        {
+            var pending = await _context.NotificationQueues
+                .Where(x =>
+                    x.CalendarEventId == calendarEventId &&
+                    !x.IsProcessed)
+                .ToListAsync();
+
+            _context.NotificationQueues.RemoveRange(pending);
         }
     }
 }

@@ -10,7 +10,8 @@ namespace ClefCraft.Application.Contracts.Calendar
 {
     public interface INotificationQueueRepository : IGenericRepository<NotificationQueue>
     {
-        Task<List<NotificationQueue>> GetPendingAsync(
-            DateTimeOffset utcNow);
+        Task<List<NotificationQueue>> GetPendingAsync(DateTimeOffset utcNow);
+
+        Task DeletePendingByEventIdAsync(int calendarEventId);
     }
 }
