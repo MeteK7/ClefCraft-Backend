@@ -108,6 +108,8 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
                 await _reminderSchedulerService.ScheduleAsync(
                     calendarEvent,
                     cancellationToken);
+
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
             }
 
             // =====================================================

@@ -55,5 +55,17 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                     });
             }
         }
+
+        public async Task RescheduleAsync(
+            CalendarEvent calendarEvent,
+            CancellationToken cancellationToken)
+        {
+            await _queueRepo.DeletePendingByEventIdAsync(
+                calendarEvent.Id);
+
+            await ScheduleAsync(
+                calendarEvent,
+                cancellationToken);
+        }
     }
 }
