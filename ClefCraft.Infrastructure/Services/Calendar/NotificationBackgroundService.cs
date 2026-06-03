@@ -20,37 +20,36 @@ namespace ClefCraft.Infrastructure.Services.Calendar
             _scopeFactory = scopeFactory;
         }
 
-        protected override async Task ExecuteAsync(
-            CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                using var scope =
-                    _scopeFactory.CreateScope();
-
-                var queueRepo =
-                    scope.ServiceProvider
-                        .GetRequiredService<
-                            INotificationQueueRepository>();
-
-                var pending =
-                    await queueRepo.GetPendingAsync(
-                        DateTimeOffset.UtcNow);
-
-                foreach (var item in pending)
+                try
                 {
-                    Console.WriteLine(
-                        $"REMINDER: {item.Message}");
+                    using var scope = _scopeFactory.CreateScope();
 
-                    item.IsProcessed = true;
-                    item.ProcessedAt = DateTimeOffset.UtcNow;
+                    var queueRepo =
+                        scope.ServiceProvider.GetRequiredService<INotificationQueueRepository>();
 
-                    await queueRepo.UpdateAsync(item);
+                    var pending =
+                        await queueRepo.GetPendingAsync(DateTimeOffset.UtcNow);
+
+                    foreach (var item in pending)
+                    {
+                        Console.WriteLine($"REMINDER: {item.Message}");
+
+                        item.IsProcessed = true;
+                        item.ProcessedAt = DateTimeOffset.UtcNow;
+
+                        await queueRepo.UpdateAsync(item);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Reminder service error: {ex.Message}");
                 }
 
-                await Task.Delay(
-                    TimeSpan.FromMinutes(1),
-                    stoppingToken);
+                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
             }
         }
     }
