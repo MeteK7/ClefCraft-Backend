@@ -12,5 +12,6 @@ namespace ClefCraft.Application.Contracts.Calendar
     {
         Task<List<CalendarReminder>> GetByEventIdAsync(
             int eventId);
+        Task<List<CalendarReminder>> GetByEventIdsAsync(List<int> eventIds);
     }
 }

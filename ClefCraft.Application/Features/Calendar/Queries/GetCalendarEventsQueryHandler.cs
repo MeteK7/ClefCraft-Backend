@@ -16,6 +16,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
         private readonly IEventAnalyticsService _analyticsService;
         private readonly IAttendancePredictionService _predictionService;
         private readonly IUserInteractionService _interactionService;
+        private readonly ICalendarReminderRepository _reminderRepo;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
@@ -26,6 +27,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             IEventAnalyticsService analyticsService,
             IAttendancePredictionService predictionService,
             IUserInteractionService interactionService,
+            ICalendarReminderRepository reminderRepo,
             IMapper mapper,
             IUnitOfWork unitOfWork)
         {
@@ -35,6 +37,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             _analyticsService = analyticsService;
             _predictionService = predictionService;
             _interactionService = interactionService;
+            _reminderRepo = reminderRepo;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -54,11 +57,36 @@ namespace ClefCraft.Application.Features.Calendar.Queries
                 request.RangeEnd);
 
             // 3. Map to DTOs and trim to window
-            //    BaseEventId is mapped by convention from CalendarEvent → CalendarEventDto
             var dtos = expanded
                 .Select(e => _mapper.Map<CalendarEventDto>(e))
                 .Where(e => e.StartDate < request.RangeEnd && e.EndDate > request.RangeStart)
                 .ToList();
+
+            // 3.1 Load reminders in a single query (NO N+1)
+            var eventIds = dtos.Select(x => x.Id).Distinct().ToList();
+
+            var reminders = await _reminderRepo.GetByEventIdsAsync(eventIds);
+
+            // group into lookup: EventId → reminder minutes
+            var reminderLookup = reminders
+                .GroupBy(r => r.CalendarEventId)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Select(x => x.MinutesBeforeStart).ToList()
+                );
+
+            // attach to DTOs
+            foreach (var dto in dtos)
+            {
+                if (reminderLookup.TryGetValue(dto.Id, out var minutes))
+                {
+                    dto.ReminderMinutes = minutes;
+                }
+                else
+                {
+                    dto.ReminderMinutes = new List<int>();
+                }
+            }
 
             // 4. Enrich with board-item titles
             await _enrichmentService.EnrichAsync(dtos);
