@@ -56,6 +56,16 @@ namespace ClefCraft.Api.Middleware
                         Detail = NotFound.InnerException?.Message,
                     };
                     break;
+                //FOR DETAILED ERROR INFORMATION, UNCOMMENT THE BELOW CASE AND COMMENT THE DEFAULT CASE
+                //default:
+                //    problem = new CustomProblemDetails
+                //    {
+                //        Title = ex.Message,
+                //        Status = (int)statusCode,
+                //        Type = nameof(HttpStatusCode.InternalServerError),
+                //        Detail = ex.ToString()
+                //    };
+                //    break;
                 default:
                     problem = new CustomProblemDetails
                     {
