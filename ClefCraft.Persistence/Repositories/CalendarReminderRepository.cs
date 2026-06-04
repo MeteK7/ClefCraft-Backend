@@ -27,5 +27,12 @@ namespace ClefCraft.Persistence.Repositories
                 .Where(x => x.CalendarEventId == eventId)
                 .ToListAsync();
         }
+
+        public async Task<List<CalendarReminder>> GetByEventIdsAsync(List<int> eventIds)
+        {
+            return await _context.CalendarReminders
+                .Where(r => eventIds.Contains(r.CalendarEventId))
+                .ToListAsync();
+        }
     }
 }
