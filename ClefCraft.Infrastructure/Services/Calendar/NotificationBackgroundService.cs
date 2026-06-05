@@ -1,4 +1,5 @@
 ﻿using ClefCraft.Application.Contracts.Calendar;
+using Microsoft.AspNet.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -9,15 +10,17 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Infrastructure.Services.Calendar
 {
-    public class NotificationBackgroundService
-        : BackgroundService
+    public class NotificationBackgroundService : BackgroundService
     {
         private readonly IServiceScopeFactory _scopeFactory;
+        private readonly INotificationHubService _notificationHubService; // Injected contract
 
         public NotificationBackgroundService(
-            IServiceScopeFactory scopeFactory)
+            IServiceScopeFactory scopeFactory,
+            INotificationHubService notificationHubService)
         {
             _scopeFactory = scopeFactory;
+            _notificationHubService = notificationHubService;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -27,20 +30,23 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                 try
                 {
                     using var scope = _scopeFactory.CreateScope();
-
-                    var queueRepo =
-                        scope.ServiceProvider.GetRequiredService<INotificationQueueRepository>();
-
-                    var pending =
-                        await queueRepo.GetPendingAsync(DateTimeOffset.UtcNow);
+                    var queueRepo = scope.ServiceProvider.GetRequiredService<INotificationQueueRepository>();
+                    var pending = await queueRepo.GetPendingAsync(DateTimeOffset.UtcNow);
 
                     foreach (var item in pending)
                     {
-                        Console.WriteLine($"REMINDER: {item.Message}");
+                        if (!string.IsNullOrEmpty(item.UserId))
+                        {
+                            // Call the abstracted app layer interface safely
+                            await _notificationHubService.SendReminderToUserAsync(
+                                item.UserId,
+                                item.CalendarEventId,
+                                item.Message,
+                                stoppingToken);
+                        }
 
                         item.IsProcessed = true;
                         item.ProcessedAt = DateTimeOffset.UtcNow;
-
                         await queueRepo.UpdateAsync(item);
                     }
                 }
