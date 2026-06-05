@@ -1,3 +1,4 @@
+using ClefCraft.Api.Hubs;
 using ClefCraft.Api.Middleware;
 using ClefCraft.Application;
 using ClefCraft.Application.Contracts.AI;
@@ -47,6 +48,7 @@ builder.Services.AddHttpClient<IAIService, AIService>(client =>
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IFileAttachmentService, FileAttachmentService>();
+builder.Services.AddSignalR();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -103,5 +105,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<NotificationHub>("/hubs/notifications");
 
 app.Run();
