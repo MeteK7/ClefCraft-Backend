@@ -1,7 +1,9 @@
 using ClefCraft.Api.Hubs;
 using ClefCraft.Api.Middleware;
+using ClefCraft.Api.Services;
 using ClefCraft.Application;
 using ClefCraft.Application.Contracts.AI;
+using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.FileAttachment;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Identity;
@@ -49,6 +51,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IFileAttachmentService, FileAttachmentService>();
 builder.Services.AddSignalR();
+builder.Services.AddScoped<INotificationHubService, NotificationHubService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
