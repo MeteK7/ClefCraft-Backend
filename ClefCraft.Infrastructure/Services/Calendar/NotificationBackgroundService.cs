@@ -13,14 +13,11 @@ namespace ClefCraft.Infrastructure.Services.Calendar
     public class NotificationBackgroundService : BackgroundService
     {
         private readonly IServiceScopeFactory _scopeFactory;
-        private readonly INotificationHubService _notificationHubService; // Injected contract
 
-        public NotificationBackgroundService(
-            IServiceScopeFactory scopeFactory,
-            INotificationHubService notificationHubService)
+        // Only inject the scope factory to prevent captive dependencies
+        public NotificationBackgroundService(IServiceScopeFactory scopeFactory)
         {
             _scopeFactory = scopeFactory;
-            _notificationHubService = notificationHubService;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -30,15 +27,18 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                 try
                 {
                     using var scope = _scopeFactory.CreateScope();
+
+                    // Resolve BOTH repositories and services safely inside the scope
                     var queueRepo = scope.ServiceProvider.GetRequiredService<INotificationQueueRepository>();
+                    var notificationHubService = scope.ServiceProvider.GetRequiredService<INotificationHubService>();
+
                     var pending = await queueRepo.GetPendingAsync(DateTimeOffset.UtcNow);
 
                     foreach (var item in pending)
                     {
                         if (!string.IsNullOrEmpty(item.UserId))
                         {
-                            // Call the abstracted app layer interface safely
-                            await _notificationHubService.SendReminderToUserAsync(
+                            await notificationHubService.SendReminderToUserAsync(
                                 item.UserId,
                                 item.CalendarEventId,
                                 item.Message,
@@ -52,6 +52,7 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                 }
                 catch (Exception ex)
                 {
+                    // Ensure you use Serilog or Console explicitly so you see errors if this drops
                     Console.WriteLine($"Reminder service error: {ex.Message}");
                 }
 
