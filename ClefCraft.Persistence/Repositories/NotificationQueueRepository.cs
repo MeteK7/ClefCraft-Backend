@@ -1,4 +1,5 @@
 ﻿using ClefCraft.Application.Contracts.Calendar;
+using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Domain;
 using ClefCraft.Persistence.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClefCraft.Persistence.Repositories
@@ -14,10 +16,13 @@ namespace ClefCraft.Persistence.Repositories
         : GenericRepository<NotificationQueue>,
           INotificationQueueRepository
     {
+        private readonly IUnitOfWork _unitOfWork;
+
         public NotificationQueueRepository(
-            ClefCraftDatabaseContext context)
+            ClefCraftDatabaseContext context, IUnitOfWork unitOfWork)
             : base(context)
         {
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<List<NotificationQueue>> GetPendingAsync(DateTimeOffset utcNow)
@@ -39,6 +44,8 @@ namespace ClefCraft.Persistence.Repositories
                 .ToListAsync();
 
             _context.NotificationQueues.RemoveRange(pending);
+            await _unitOfWork.SaveChangesAsync();
+
         }
     }
 }

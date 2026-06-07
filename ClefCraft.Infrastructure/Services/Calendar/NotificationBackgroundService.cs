@@ -1,4 +1,5 @@
 ﻿using ClefCraft.Application.Contracts.Calendar;
+using ClefCraft.Application.Contracts.Persistence;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,31 +29,37 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                 {
                     using var scope = _scopeFactory.CreateScope();
 
-                    // Resolve BOTH repositories and services safely inside the scope
                     var queueRepo = scope.ServiceProvider.GetRequiredService<INotificationQueueRepository>();
                     var notificationHubService = scope.ServiceProvider.GetRequiredService<INotificationHubService>();
+                    // 1. Resolve the Unit of Work to commit changes safely
+                    var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
                     var pending = await queueRepo.GetPendingAsync(DateTimeOffset.UtcNow);
 
-                    foreach (var item in pending)
+                    if (pending != null && pending.Any())
                     {
-                        if (!string.IsNullOrEmpty(item.UserId))
+                        foreach (var item in pending)
                         {
-                            await notificationHubService.SendReminderToUserAsync(
-                                item.UserId,
-                                item.CalendarEventId,
-                                item.Message,
-                                stoppingToken);
+                            if (!string.IsNullOrEmpty(item.UserId))
+                            {
+                                await notificationHubService.SendReminderToUserAsync(
+                                    item.UserId,
+                                    item.CalendarEventId,
+                                    item.Message,
+                                    stoppingToken);
+                            }
+
+                            item.IsProcessed = true;
+                            item.ProcessedAt = DateTimeOffset.UtcNow;
+                            await queueRepo.UpdateAsync(item);
                         }
 
-                        item.IsProcessed = true;
-                        item.ProcessedAt = DateTimeOffset.UtcNow;
-                        await queueRepo.UpdateAsync(item);
+                        // Now securely saved inside the repository context boundary!
+                        await unitOfWork.SaveChangesAsync(stoppingToken);
                     }
                 }
                 catch (Exception ex)
                 {
-                    // Ensure you use Serilog or Console explicitly so you see errors if this drops
                     Console.WriteLine($"Reminder service error: {ex.Message}");
                 }
 
