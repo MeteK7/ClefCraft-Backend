@@ -52,6 +52,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IFileAttachmentService, FileAttachmentService>();
 builder.Services.AddSignalR();
+builder.Services.AddSingleton<Microsoft.AspNetCore.SignalR.IUserIdProvider, ClefCraft.Identity.Providers.CustomUserIdProvider>();
 builder.Services.AddSingleton<INotificationHubService, NotificationHubService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
