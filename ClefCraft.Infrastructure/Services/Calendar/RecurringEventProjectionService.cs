@@ -252,6 +252,8 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                 EndDate = ev.EndDate,
                 AllDayEvent = ev.AllDayEvent,
                 EventTypeId = ev.EventTypeId,
+                EventTypeName = ev.EventType?.Name,
+                EventColor = ev.EventType?.Color,
                 Importance = ev.Importance,
                 IsRecurring = ev.IsRecurring,
                 RecurrenceRuleJson =

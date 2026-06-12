@@ -10,7 +10,6 @@ namespace ClefCraft.Application.Features.Calendar.Queries
     public class CalendarEventInstanceDto
     {
         public int Id { get; set; }
-        // IMPORTANT: original event identity for grouping / analytics
         public int BaseEventId { get; set; }
         public string? SeriesUid { get; set; }
         public string OccurrenceKey { get; set; }
@@ -21,6 +20,8 @@ namespace ClefCraft.Application.Features.Calendar.Queries
         public DateTimeOffset EndDate { get; set; }
         public bool AllDayEvent { get; set; }
         public int? EventTypeId { get; set; }
+        public string? EventTypeName { get; set; }
+        public string? EventColor { get; set; }
         public ImportanceLevel Importance { get; set; }
         public string? Comment { get; set; }
         public bool IsRecurring { get; set; }
