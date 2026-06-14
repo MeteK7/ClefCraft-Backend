@@ -23,6 +23,7 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly ITaskLifecycleService _taskLifecycleService;
+        private readonly IUnitOfWork _unitOfWork; // Added for architectural parity
 
         public UpdateBoardItemCommandHandler(
             IBoardItemRepository boardItemRepository,
@@ -31,7 +32,8 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
             ITagRepository tagRepository,
             IMapper mapper,
             IUserService userService,
-            ITaskLifecycleService taskLifecycleService)
+            ITaskLifecycleService taskLifecycleService,
+            IUnitOfWork unitOfWork)
         {
             _boardItemRepository = boardItemRepository;
             _statusRepository = statusRepository;
@@ -40,18 +42,22 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
             _mapper = mapper;
             _userService = userService;
             _taskLifecycleService = taskLifecycleService;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<BoardItemByIdDto> Handle(UpdateBoardItemCommand request, CancellationToken cancellationToken)
         {
             var boardItem = await _boardItemRepository.GetBoardItemById(request.Id);
-            var previousStatusId = boardItem.BoardItemStatus?.StatusId;
-            var previousAssignee = boardItem.AssigneeId;
 
+            // Fix 1: Validate existence BEFORE accessing properties
             if (boardItem == null)
             {
                 throw new ApplicationException($"Board item with ID {request.Id} not found.");
             }
+
+            // Capture initial states safely
+            var previousStatusId = boardItem.BoardItemStatus?.StatusId;
+            var previousAssignee = boardItem.AssigneeId;
 
             // Update the non-nullable properties
             boardItem.Title = request.Title ?? boardItem.Title;
@@ -92,20 +98,16 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
             // Handle tag updates
             if (request.TagIds != null)
             {
-                // Fetch the current tags associated with the board item from the BoardItemTags table
-                var existingTagIds =
-                    boardItem.BoardItemTags.Select(t => t.TagId).ToList();
+                var existingTagIds = boardItem.BoardItemTags.Select(t => t.TagId).ToList();
 
                 var tagsToAdd = request.TagIds.Except(existingTagIds).ToList();
                 var tagsToRemove = existingTagIds.Except(request.TagIds).ToList();
 
-                // Remove
                 boardItem.BoardItemTags
                     .Where(t => tagsToRemove.Contains(t.TagId))
                     .ToList()
                     .ForEach(t => boardItem.BoardItemTags.Remove(t));
 
-                // Add
                 foreach (var tagId in tagsToAdd)
                 {
                     boardItem.BoardItemTags.Add(new BoardItemTag
@@ -123,35 +125,40 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
             boardItem.TimeSpent = request.TimeSpent ?? boardItem.TimeSpent;
             boardItem.BoardColumnId = request.BoardColumnId;
 
-            // Save the updated board item
+            // Update state in change tracker
             await _boardItemRepository.UpdateBoardItem(boardItem);
 
-            // 🔥 Lifecycle tracking
+            // Fix 3: Persist changes to database via Unit of Work
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            // Lifecycle tracking (Fix 2: Compare previous state with the newly mutated domain state)
             await _taskLifecycleService.RecordStatusChangeAsync(boardItem.Id);
 
-            if (previousAssignee != request.AssigneeId)
+            if (previousAssignee != boardItem.AssigneeId)
             {
                 await _taskLifecycleService.RecordAssigneeChangeAsync(boardItem.Id);
             }
 
-            // ⚠️ replace 3 with your actual Completed status id
             const int COMPLETED_STATUS_ID = 3;
+            var currentStatusId = boardItem.BoardItemStatus?.StatusId;
 
-            if (previousStatusId != request.StatusId)
+            if (previousStatusId != currentStatusId)
             {
-                if (request.StatusId == COMPLETED_STATUS_ID)
+                if (currentStatusId == COMPLETED_STATUS_ID)
                     await _taskLifecycleService.RecordCompletionAsync(boardItem.Id);
 
-                if (previousStatusId == COMPLETED_STATUS_ID && request.StatusId != COMPLETED_STATUS_ID)
+                if (previousStatusId == COMPLETED_STATUS_ID && currentStatusId != COMPLETED_STATUS_ID)
                     await _taskLifecycleService.RecordReopenAsync(boardItem.Id);
             }
 
+            // Commit lifecycle logs
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
             // Reload fresh state with navigation properties
             var updatedItem = await _boardItemRepository.GetBoardItemById(boardItem.Id);
-
             var dto = _mapper.Map<BoardItemByIdDto>(updatedItem);
 
-            // 🔥 Populate assignee manually
+            // Populate assignee manually
             if (!string.IsNullOrEmpty(updatedItem.AssigneeId))
             {
                 var assignee = await _userService.GetAssignee(updatedItem.AssigneeId);
@@ -165,6 +172,5 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
 
             return dto;
         }
-
     }
 }
