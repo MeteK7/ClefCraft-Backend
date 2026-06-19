@@ -8,8 +8,8 @@ namespace ClefCraft.Domain.Enums
 {
     public enum ImportanceLevel
     {
-        Low = 1,
-        Normal = 2,
-        High = 3
+        Low = 0,
+        Normal = 1,
+        High = 2
     }
 }
