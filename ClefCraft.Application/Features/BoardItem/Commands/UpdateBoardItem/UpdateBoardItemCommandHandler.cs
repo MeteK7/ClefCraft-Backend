@@ -49,17 +49,14 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
         {
             var boardItem = await _boardItemRepository.GetBoardItemById(request.Id);
 
-            // Fix 1: Validate existence BEFORE accessing properties
             if (boardItem == null)
             {
                 throw new ApplicationException($"Board item with ID {request.Id} not found.");
             }
 
-            // Capture initial states safely
             var previousStatusId = boardItem.BoardItemStatus?.StatusId;
             var previousAssignee = boardItem.AssigneeId;
 
-            // Update the non-nullable properties
             boardItem.Title = request.Title ?? boardItem.Title;
             boardItem.Description = request.Description ?? boardItem.Description;
 
