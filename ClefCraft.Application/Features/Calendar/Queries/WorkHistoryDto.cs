@@ -8,8 +8,9 @@ namespace ClefCraft.Application.Features.Calendar.Queries
 {
     public class WorkHistoryDto
     {
+        public int Id { get; set; }              // CalendarEvent.Id, needed for redirect
         public DateTime DateCreated { get; set; }
-        public string ActionByUserId { get; set; }  
-        public string ActionByFullName { get; set; } 
+        public string ActionByUserId { get; set; }
+        public string ActionByFullName { get; set; }
     }
 }

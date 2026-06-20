@@ -43,11 +43,12 @@ namespace ClefCraft.Application.Features.Calendar.Queries
 
                 return new WorkHistoryDto
                 {
+                    Id = h.Id,
                     DateCreated = h.StartDate.UtcDateTime,
                     ActionByUserId = h.CreatedBy,
                     ActionByFullName = user != null
-                        ? $"{user.Firstname} {user.Lastname}"
-                        : "Unknown"
+                    ? $"{user.Firstname} {user.Lastname}"
+                    : "Unknown"
                 };
             }).ToList();
 
