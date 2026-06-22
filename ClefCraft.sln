@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.7.34018.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6AC858F1-AD29-4037-BB30-56481505DE44}"
+	ProjectSection(SolutionItems) = preProject
+		ClefCraft.Api\Dockerfile = ClefCraft.Api\Dockerfile
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{26252BAE-D421-40AE-8B63-BB78B515E435}"
 EndProject
