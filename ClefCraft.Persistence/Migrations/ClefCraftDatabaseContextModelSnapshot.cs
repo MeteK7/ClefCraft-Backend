@@ -17,7 +17,7 @@ namespace ClefCraft.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.11")
+                .HasAnnotation("ProductVersion", "8.0.28")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -981,8 +981,8 @@ namespace ClefCraft.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2026, 6, 4, 21, 53, 58, 817, DateTimeKind.Local).AddTicks(2705),
-                            DateModified = new DateTime(2026, 6, 4, 21, 53, 58, 817, DateTimeKind.Local).AddTicks(2794),
+                            DateCreated = new DateTime(2026, 6, 23, 23, 5, 52, 596, DateTimeKind.Local).AddTicks(7359),
+                            DateModified = new DateTime(2026, 6, 23, 23, 5, 52, 596, DateTimeKind.Local).AddTicks(7375),
                             DefaultDays = 10,
                             Name = "Vacation"
                         });
