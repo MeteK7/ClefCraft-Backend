@@ -6,27 +6,42 @@ using ClefCraft.Persistence.DatabaseContext;
 using ClefCraft.Persistence.Repositories;
 using ClefCraft.Persistence.Services;
 using ClefCraft.Persistence.UnitOfWork;
+using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Hosting;
 
 namespace ClefCraft.Persistence
 {
     public static class PersistenceServiceRegistration
     {
-        public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddPersistenceServices(
+            this IServiceCollection services,
+            IConfiguration configuration,
+            IWebHostEnvironment environment)
         {
+            var connectionString =
+                configuration.GetConnectionString("ClefCraftDatabaseConnectionString");
+
             services.AddDbContext<ClefCraftDatabaseContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("ClefCraftDatabaseConnectionString"));
+                if (environment.IsDevelopment())
+                {
+                    options.UseSqlServer(connectionString);
+                }
+                else
+                {
+                    options.UseNpgsql(connectionString);
+                }
             });
 
+            // repositories stay unchanged
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
             services.AddScoped<ILeaveAllocationRepository, LeaveAllocationRepository>();
             services.AddScoped<ILeaveRequestRepository, LeaveRequestRepository>();
             services.AddScoped<IBoardRepository, BoardRepository>();
-            //services.AddScoped<IBoardColumnRepository, BoardColumnRepository>();
             services.AddScoped<IBoardItemRepository, BoardItemRepository>();
             services.AddScoped<IRecurrenceSeriesRepository, RecurrenceSeriesRepository>();
             services.AddScoped<ICalendarEventRepository, CalendarEventRepository>();
@@ -42,13 +57,10 @@ namespace ClefCraft.Persistence
             services.AddScoped<IUserInteractionService, UserInteractionService>();
             services.AddScoped<ITaskLifecycleService, TaskLifecycleService>();
             services.AddScoped<IUnitOfWork, EfUnitOfWork>();
-            services.AddScoped<
-                INotificationQueueRepository,
-                NotificationQueueRepository>();
 
-            services.AddScoped<
-                ICalendarReminderRepository,
-                CalendarReminderRepository>();
+            services.AddScoped<INotificationQueueRepository, NotificationQueueRepository>();
+            services.AddScoped<ICalendarReminderRepository, CalendarReminderRepository>();
+
             return services;
         }
     }

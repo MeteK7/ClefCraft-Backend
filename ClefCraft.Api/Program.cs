@@ -31,7 +31,9 @@ builder.Host.UseSerilog((context, loggerConfig) => loggerConfig.WriteTo.Console(
 
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
-builder.Services.AddPersistenceServices(builder.Configuration);
+builder.Services.AddPersistenceServices(
+    builder.Configuration,
+    builder.Environment);
 builder.Services.AddIdentityServices(builder.Configuration);
 
 builder.Services.AddControllers();
