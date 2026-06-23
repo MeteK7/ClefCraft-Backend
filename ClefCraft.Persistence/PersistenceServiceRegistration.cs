@@ -26,6 +26,11 @@ namespace ClefCraft.Persistence
 
             services.AddDbContext<ClefCraftDatabaseContext>(options =>
             {
+                if (string.IsNullOrWhiteSpace(connectionString))
+                {
+                    throw new Exception("Database connection string is missing");
+                }
+
                 if (environment.IsDevelopment())
                 {
                     options.UseSqlServer(connectionString);

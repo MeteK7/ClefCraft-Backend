@@ -42,7 +42,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularClient",
         builder => builder
-            .WithOrigins("http://localhost:4200") // Update this URL to your Angular app's URL
+        .WithOrigins(
+            "http://localhost:4200",
+            "https://clefcraft-frontend.onrender.com"
+            ) // Update this URL to your Angular app's URL
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials());
