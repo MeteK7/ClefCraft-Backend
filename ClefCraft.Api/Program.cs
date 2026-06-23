@@ -13,6 +13,8 @@ using ClefCraft.Infrastructure.FileAttachmentService;
 using ClefCraft.Infrastructure.Services.AI;
 using ClefCraft.Infrastructure.Services.Calendar;
 using ClefCraft.Persistence;
+using ClefCraft.Persistence.DatabaseContext;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -31,7 +33,9 @@ builder.Host.UseSerilog((context, loggerConfig) => loggerConfig.WriteTo.Console(
 
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
-builder.Services.AddPersistenceServices(builder.Configuration);
+builder.Services.AddPersistenceServices(
+    builder.Configuration,
+    builder.Environment);
 builder.Services.AddIdentityServices(builder.Configuration);
 
 builder.Services.AddControllers();
@@ -40,7 +44,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularClient",
         builder => builder
-            .WithOrigins("http://localhost:4200") // Update this URL to your Angular app's URL
+        .WithOrigins(
+            "http://localhost:4200",
+            "https://clefcraft-frontend.onrender.com"
+            ) // Update this URL to your Angular app's URL
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials());
@@ -98,6 +105,13 @@ builder.Services.AddSwaggerGen(options =>
             });
 });
 var app = builder.Build();
+
+// AUTO APPLY MIGRATIONS ON STARTUP (Render + Production safe)
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ClefCraftDatabaseContext>();
+    db.Database.Migrate();
+}
 
 app.UseMiddleware<ExceptionMiddleware>();
 
