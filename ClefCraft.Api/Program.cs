@@ -13,6 +13,8 @@ using ClefCraft.Infrastructure.FileAttachmentService;
 using ClefCraft.Infrastructure.Services.AI;
 using ClefCraft.Infrastructure.Services.Calendar;
 using ClefCraft.Persistence;
+using ClefCraft.Persistence.DatabaseContext;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -103,6 +105,13 @@ builder.Services.AddSwaggerGen(options =>
             });
 });
 var app = builder.Build();
+
+// AUTO APPLY MIGRATIONS ON STARTUP (Render + Production safe)
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ClefCraftDatabaseContext>();
+    db.Database.Migrate();
+}
 
 app.UseMiddleware<ExceptionMiddleware>();
 
