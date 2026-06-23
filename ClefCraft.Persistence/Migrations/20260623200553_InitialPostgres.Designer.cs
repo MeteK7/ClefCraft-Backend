@@ -12,18 +12,73 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClefCraft.Persistence.Migrations
 {
     [DbContext(typeof(ClefCraftDatabaseContext))]
-    [Migration("20260309213841_AddEventTypeToCalendarEvent")]
-    partial class AddEventTypeToCalendarEvent
+    [Migration("20260623200553_InitialPostgres")]
+    partial class InitialPostgres
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.11")
+                .HasAnnotation("ProductVersion", "8.0.28")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("ClefCraft.Domain.ActivityLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ActionType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EntityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EntityType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("MetadataJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Timestamp");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("EntityType", "EntityId");
+
+                    b.ToTable("ActivityLogs", (string)null);
+                });
 
             modelBuilder.Entity("ClefCraft.Domain.Board", b =>
                 {
@@ -423,9 +478,11 @@ namespace ClefCraft.Persistence.Migrations
                     b.Property<int?>("EventTypeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Importance")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Importance")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsRecurring")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("LinkedBoardItemId")
                         .HasColumnType("int");
@@ -435,6 +492,13 @@ namespace ClefCraft.Persistence.Migrations
 
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecurrenceRuleJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SeriesUid")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTimeOffset>("StartDate")
                         .HasColumnType("datetimeoffset");
@@ -452,6 +516,8 @@ namespace ClefCraft.Persistence.Migrations
                     b.HasIndex("EventTypeId");
 
                     b.HasIndex("LinkedBoardItemId");
+
+                    b.HasIndex("SeriesUid");
 
                     b.ToTable("CalendarEvents");
                 });
@@ -508,7 +574,63 @@ namespace ClefCraft.Persistence.Migrations
                     b.ToTable("CalendarEventAttachments");
                 });
 
-            modelBuilder.Entity("ClefCraft.Domain.CalendarEventHistory", b =>
+            modelBuilder.Entity("ClefCraft.Domain.CalendarEventException", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTimeOffset?>("EndDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("EventTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsCancelled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("OccurrenceDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("SeriesUid")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTimeOffset?>("StartDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SeriesUid", "OccurrenceDate")
+                        .IsUnique();
+
+                    b.ToTable("CalendarEventExceptions");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.CalendarEventExceptionHistory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -546,7 +668,155 @@ namespace ClefCraft.Persistence.Migrations
 
                     b.HasIndex("CalendarEventId");
 
-                    b.ToTable("CalendarEventHistory");
+                    b.ToTable("CalendarEventExceptionHistories");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.CalendarEventSegment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTimeOffset>("EffectiveFrom")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("EffectiveTo")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("EndDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("EventTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Importance")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsRecurring")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecurrenceRuleJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RecurrenceSeriesId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("StartDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecurrenceSeriesId");
+
+                    b.ToTable("CalendarEventSegments");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.CalendarReminder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CalendarEventId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSent")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MinutesBeforeStart")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("SentAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CalendarEventId");
+
+                    b.ToTable("CalendarReminders");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.EntitySnapshot", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EntityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EntityType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SnapshotJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EntityType", "EntityId");
+
+                    b.ToTable("EntitySnapshots", (string)null);
                 });
 
             modelBuilder.Entity("ClefCraft.Domain.EventType", b =>
@@ -714,11 +984,56 @@ namespace ClefCraft.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2026, 3, 10, 0, 38, 40, 171, DateTimeKind.Local).AddTicks(795),
-                            DateModified = new DateTime(2026, 3, 10, 0, 38, 40, 171, DateTimeKind.Local).AddTicks(848),
+                            DateCreated = new DateTime(2026, 6, 23, 23, 5, 52, 596, DateTimeKind.Local).AddTicks(7359),
+                            DateModified = new DateTime(2026, 6, 23, 23, 5, 52, 596, DateTimeKind.Local).AddTicks(7375),
                             DefaultDays = 10,
                             Name = "Vacation"
                         });
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.NotificationQueue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CalendarEventId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsProcessed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("ProcessedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("ScheduledFor")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NotificationQueues");
                 });
 
             modelBuilder.Entity("ClefCraft.Domain.Priority", b =>
@@ -748,6 +1063,42 @@ namespace ClefCraft.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Priorities");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.RecurrenceSeries", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SeriesUid")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RecurrenceSeries");
                 });
 
             modelBuilder.Entity("ClefCraft.Domain.Status", b =>
@@ -806,6 +1157,114 @@ namespace ClefCraft.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.TaskLifecycle", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AssigneeChangeCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("BoardItemId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FirstWorkedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ReopenCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("StatusChangeCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BoardItemId")
+                        .IsUnique();
+
+                    b.ToTable("TaskLifecycles", (string)null);
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.UserInteractionSignal", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EntityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EntityType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SignalType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<double>("Value")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("EntityType", "EntityId");
+
+                    b.ToTable("UserInteractionSignals", (string)null);
                 });
 
             modelBuilder.Entity("ClefCraft.Domain.BoardColumnMapping", b =>
@@ -988,10 +1447,32 @@ namespace ClefCraft.Persistence.Migrations
                     b.Navigation("CalendarEvent");
                 });
 
-            modelBuilder.Entity("ClefCraft.Domain.CalendarEventHistory", b =>
+            modelBuilder.Entity("ClefCraft.Domain.CalendarEventExceptionHistory", b =>
                 {
                     b.HasOne("ClefCraft.Domain.CalendarEvent", "CalendarEvent")
                         .WithMany("History")
+                        .HasForeignKey("CalendarEventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CalendarEvent");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.CalendarEventSegment", b =>
+                {
+                    b.HasOne("ClefCraft.Domain.RecurrenceSeries", "RecurrenceSeries")
+                        .WithMany("Segments")
+                        .HasForeignKey("RecurrenceSeriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RecurrenceSeries");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.CalendarReminder", b =>
+                {
+                    b.HasOne("ClefCraft.Domain.CalendarEvent", "CalendarEvent")
+                        .WithMany()
                         .HasForeignKey("CalendarEventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1059,6 +1540,11 @@ namespace ClefCraft.Persistence.Migrations
             modelBuilder.Entity("ClefCraft.Domain.Priority", b =>
                 {
                     b.Navigation("BoardItems");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.RecurrenceSeries", b =>
+                {
+                    b.Navigation("Segments");
                 });
 
             modelBuilder.Entity("ClefCraft.Domain.Status", b =>
