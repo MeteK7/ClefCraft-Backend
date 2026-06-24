@@ -110,15 +110,60 @@ var app = builder.Build();
 // AUTO APPLY MIGRATIONS ON STARTUP (Render + Production safe)
 using (var scope = app.Services.CreateScope())
 {
-    // Persistence DB
-    var db = scope.ServiceProvider.GetRequiredService<ClefCraftDatabaseContext>();
-    db.Database.Migrate();
+    var logger = scope.ServiceProvider
+        .GetRequiredService<ILoggerFactory>()
+        .CreateLogger("DatabaseMigration");
 
-    // Identity DB
-    var identityDb = scope.ServiceProvider.GetRequiredService<ClefCraftIdentityDbContext>();
-    identityDb.Database.Migrate();
+    try
+    {
+        // -------------------------
+        // Persistence DB
+        // -------------------------
+        var db = scope.ServiceProvider.GetRequiredService<ClefCraftDatabaseContext>();
+
+        var pendingPersistence = db.Database.GetPendingMigrations();
+
+        if (pendingPersistence.Any())
+        {
+            logger.LogInformation("Applying {Count} persistence migrations...",
+                pendingPersistence.Count());
+
+            db.Database.Migrate();
+
+            logger.LogInformation("Persistence migrations applied successfully.");
+        }
+        else
+        {
+            logger.LogInformation("No pending persistence migrations.");
+        }
+
+        // -------------------------
+        // Identity DB
+        // -------------------------
+        var identityDb = scope.ServiceProvider.GetRequiredService<ClefCraftIdentityDbContext>();
+
+        var pendingIdentity = identityDb.Database.GetPendingMigrations();
+
+        if (pendingIdentity.Any())
+        {
+            logger.LogInformation("Applying {Count} identity migrations...",
+                pendingIdentity.Count());
+
+            identityDb.Database.Migrate();
+
+            logger.LogInformation("Identity migrations applied successfully.");
+        }
+        else
+        {
+            logger.LogInformation("No pending identity migrations.");
+        }
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "An error occurred while applying database migrations.");
+        throw; // fail fast on startup (important for production consistency)
+    }
 }
-
 app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
