@@ -23,12 +23,21 @@ namespace ClefCraft.Identity
     {
         public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+    services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
-            services.AddDbContext<ClefCraftIdentityDbContext>(options =>
-            {
-                options.UseSqlServer(configuration.GetConnectionString("ClefCraftDatabaseConnectionString"));
-            });
+    services.AddDbContext<ClefCraftIdentityDbContext>(options =>
+    {
+        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+        if (env == "Production")
+        {
+            options.UseNpgsql(configuration.GetConnectionString("ClefCraftDatabaseConnectionString"));
+        }
+        else
+        {
+            options.UseSqlServer(configuration.GetConnectionString("ClefCraftDatabaseConnectionString"));
+        }
+    });
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ClefCraftIdentityDbContext>

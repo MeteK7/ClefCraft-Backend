@@ -7,6 +7,7 @@ using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.FileAttachment;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Identity;
+using ClefCraft.Identity.DbContext;
 using ClefCraft.Identity.Services;
 using ClefCraft.Infrastructure;
 using ClefCraft.Infrastructure.FileAttachmentService;
@@ -109,8 +110,13 @@ var app = builder.Build();
 // AUTO APPLY MIGRATIONS ON STARTUP (Render + Production safe)
 using (var scope = app.Services.CreateScope())
 {
+    // Persistence DB
     var db = scope.ServiceProvider.GetRequiredService<ClefCraftDatabaseContext>();
     db.Database.Migrate();
+
+    // Identity DB
+    var identityDb = scope.ServiceProvider.GetRequiredService<ClefCraftIdentityDbContext>();
+    identityDb.Database.Migrate();
 }
 
 app.UseMiddleware<ExceptionMiddleware>();

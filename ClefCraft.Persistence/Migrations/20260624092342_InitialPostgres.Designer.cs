@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClefCraft.Persistence.Migrations
 {
     [DbContext(typeof(ClefCraftDatabaseContext))]
-    [Migration("20260623200553_InitialPostgres")]
+    [Migration("20260624092342_InitialPostgres")]
     partial class InitialPostgres
     {
         /// <inheritdoc />
@@ -973,22 +973,11 @@ namespace ClefCraft.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("LeaveTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            DateCreated = new DateTime(2026, 6, 23, 23, 5, 52, 596, DateTimeKind.Local).AddTicks(7359),
-                            DateModified = new DateTime(2026, 6, 23, 23, 5, 52, 596, DateTimeKind.Local).AddTicks(7375),
-                            DefaultDays = 10,
-                            Name = "Vacation"
-                        });
                 });
 
             modelBuilder.Entity("ClefCraft.Domain.NotificationQueue", b =>
