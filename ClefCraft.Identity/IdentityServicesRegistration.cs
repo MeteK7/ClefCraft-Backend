@@ -25,19 +25,20 @@ namespace ClefCraft.Identity
         {
     services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
-    services.AddDbContext<ClefCraftIdentityDbContext>(options =>
-    {
-        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            services.AddDbContext<ClefCraftIdentityDbContext>(options =>
+            {
+                var connectionString = configuration.GetConnectionString("ClefCraftDatabaseConnectionString")
+                                       ?? Environment.GetEnvironmentVariable("DATABASE_URL");
 
-        if (env == "Production")
-        {
-            options.UseNpgsql(configuration.GetConnectionString("ClefCraftDatabaseConnectionString"));
-        }
-        else
-        {
-            options.UseSqlServer(configuration.GetConnectionString("ClefCraftDatabaseConnectionString"));
-        }
-    });
+                if (connectionString != null && connectionString.StartsWith("postgres"))
+                {
+                    options.UseNpgsql(connectionString);
+                }
+                else
+                {
+                    options.UseSqlServer(connectionString);
+                }
+            });
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ClefCraftIdentityDbContext>

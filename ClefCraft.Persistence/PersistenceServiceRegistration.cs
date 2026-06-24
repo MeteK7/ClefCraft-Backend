@@ -26,18 +26,16 @@ namespace ClefCraft.Persistence
 
             services.AddDbContext<ClefCraftDatabaseContext>(options =>
             {
-                if (string.IsNullOrWhiteSpace(connectionString))
-                {
-                    throw new Exception("Database connection string is missing");
-                }
+                var connectionString = configuration.GetConnectionString("ClefCraftDatabaseConnectionString")
+                                       ?? Environment.GetEnvironmentVariable("DATABASE_URL");
 
-                if (environment.IsDevelopment())
+                if (connectionString != null && connectionString.StartsWith("postgres"))
                 {
-                    options.UseSqlServer(connectionString);
+                    options.UseNpgsql(connectionString);
                 }
                 else
                 {
-                    options.UseNpgsql(connectionString);
+                    options.UseSqlServer(connectionString);
                 }
             });
 

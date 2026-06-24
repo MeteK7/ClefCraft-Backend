@@ -3,7 +3,6 @@ using ClefCraft.Application.Features.LeaveAllocation.Commands.UpdateLeaveAllocat
 using ClefCraft.Application.Features.LeaveAllocation.Queries.GetLeaveAllocationDetails;
 using ClefCraft.Application.Features.LeaveAllocation.Queries.GetLeaveAllocations;
 using ClefCraft.Application.Features.LeaveAllocation.Commands.DeleteLeaveAllocation;
-using ClefCraft.Application.Features.LeaveAllocation.Queries.GetLeaveAllocationDetails;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
