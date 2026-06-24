@@ -110,9 +110,7 @@ var app = builder.Build();
 // AUTO APPLY MIGRATIONS ON STARTUP (Render + Production safe)
 using (var scope = app.Services.CreateScope())
 {
-    var logger = scope.ServiceProvider
-        .GetRequiredService<ILoggerFactory>()
-        .CreateLogger("DatabaseMigration");
+    var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("DatabaseMigration");
 
     try
     {
@@ -125,8 +123,7 @@ using (var scope = app.Services.CreateScope())
 
         if (pendingPersistence.Any())
         {
-            logger.LogInformation("Applying {Count} persistence migrations...",
-                pendingPersistence.Count());
+            logger.LogInformation("Applying {Count} persistence migrations...", pendingPersistence.Count());
 
             db.Database.Migrate();
 
