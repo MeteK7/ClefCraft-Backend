@@ -21,9 +21,78 @@ namespace ClefCraft.Identity
 {
     public static class IdentityServicesRegistration
     {
+        //public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
+        //{
+        //    services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+
+        //    services.AddDbContext<ClefCraftIdentityDbContext>(options =>
+        //    {
+        //        var connectionString = configuration.GetConnectionString("ClefCraftDatabaseConnectionString");
+
+        //        if (connectionString != null &&
+        //            (connectionString.StartsWith("postgres") || connectionString.Contains("Host=")))
+        //        {
+        //            options.UseNpgsql(connectionString);
+        //        }
+        //        else
+        //        {
+        //            options.UseSqlServer(connectionString);
+        //        }
+        //    });
+
+        //    services.AddIdentity<ApplicationUser, IdentityRole>()
+        //        .AddEntityFrameworkStores<ClefCraftIdentityDbContext>
+        //        ().AddDefaultTokenProviders();
+
+        //    services.AddTransient<IAuthService, AuthService>();
+        //    services.AddTransient<IUserService, UserService>();
+
+        //    services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
+
+        //    services.AddAuthentication(options =>
+        //    {
+        //        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        //        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        //    }).AddJwtBearer(o =>
+        //    {
+        //        o.TokenValidationParameters = new TokenValidationParameters
+        //        {
+        //            ValidateIssuerSigningKey = true,
+        //            ValidateIssuer = true,
+        //            ValidateAudience = true,
+        //            ValidateLifetime = true,
+        //            ClockSkew = TimeSpan.Zero,
+        //            ValidIssuer = configuration["JwtSettings:Issuer"],
+        //            ValidAudience = configuration["JwtSettings:Audience"],
+        //            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"]))
+        //        };
+
+        //        o.Events = new JwtBearerEvents
+        //        {
+        //            OnMessageReceived = context =>
+        //            {
+        //                var accessToken = context.Request.Query["access_token"];
+        //                var path = context.HttpContext.Request.Path;
+        //                if (!string.IsNullOrEmpty(accessToken) &&
+        //                    path.StartsWithSegments("/hubs/notifications"))
+        //                {
+        //                    context.Token = accessToken;
+        //                }
+        //                return Task.CompletedTask;
+        //            }
+        //        };
+        //    });
+
+        //    return services;
+        //}
+
         public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
         {
-    services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+            var cs = configuration.GetConnectionString("ClefCraftDatabaseConnectionString");
+            Console.WriteLine($"[Identity DB] CONNECTION STRING EXISTS: {!string.IsNullOrEmpty(cs)}");
+            Console.WriteLine($"[Identity DB] VALUE: {cs}");
+
+            services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
             services.AddDbContext<ClefCraftIdentityDbContext>(options =>
             {
