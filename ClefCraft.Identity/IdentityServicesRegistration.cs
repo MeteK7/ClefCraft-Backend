@@ -27,10 +27,10 @@ namespace ClefCraft.Identity
 
             services.AddDbContext<ClefCraftIdentityDbContext>(options =>
             {
-                var connectionString = configuration.GetConnectionString("ClefCraftDatabaseConnectionString")
-                                       ?? Environment.GetEnvironmentVariable("DATABASE_URL");
+                var connectionString = configuration.GetConnectionString("ClefCraftDatabaseConnectionString");
 
-                if (connectionString != null && connectionString.StartsWith("postgres"))
+                if (connectionString != null &&
+                    (connectionString.StartsWith("postgres") || connectionString.Contains("Host=")))
                 {
                     options.UseNpgsql(connectionString);
                 }
