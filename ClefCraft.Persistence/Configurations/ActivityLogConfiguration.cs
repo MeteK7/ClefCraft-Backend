@@ -30,7 +30,7 @@ namespace ClefCraft.Persistence.Configurations
                 .HasMaxLength(50);
 
             builder.Property(x => x.MetadataJson)
-                .HasColumnType("nvarchar(max)");
+                .HasColumnType("text");
 
             builder.Property(x => x.Timestamp)
                 .IsRequired();

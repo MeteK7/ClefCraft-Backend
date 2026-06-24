@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ClefCraft.Identity.Migrations
 {
     [DbContext(typeof(ClefCraftIdentityDbContext))]
-    [Migration("20260624094327_InitialCreate")]
+    [Migration("20260624100220_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -56,7 +56,7 @@ namespace ClefCraft.Identity.Migrations
                         .HasColumnType("character varying(50)");
 
                     b.Property<string>("MetadataJson")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("text");
@@ -113,7 +113,7 @@ namespace ClefCraft.Identity.Migrations
 
                     b.Property<string>("SnapshotJson")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -306,7 +306,7 @@ namespace ClefCraft.Identity.Migrations
                         {
                             Id = "944d0156-cb3d-466f-a1ea-5f53e3a10f8e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d1f051f9-6aa9-4821-84a8-a1236a973b76",
+                            ConcurrencyStamp = "b6763ccb-77c6-4c7a-8dc9-e05529875c0c",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -314,9 +314,9 @@ namespace ClefCraft.Identity.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBx/PvOSvP8MPinvOZOuTBOBXQPo2QJINuTmTVwV62zqorj0dpkv7JRmcdARc9Oyug==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEF2jvYv4aSWARTdc3/qjr3pTFsQwTSxPGYzBrJDOHoga2I+RYUpFk7CXIX2IoUcncQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "fb2505c0-29d2-4216-a4b7-0c608183dd8e",
+                            SecurityStamp = "bfa4e059-01b3-469f-902a-9046e10a2665",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         },
@@ -324,7 +324,7 @@ namespace ClefCraft.Identity.Migrations
                         {
                             Id = "9e224968-33e4-4652-b7b7-8574d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8986afcf-8051-40aa-bba7-85d9639d25a4",
+                            ConcurrencyStamp = "68083157-d4c5-4ff9-836c-7cdb8c766363",
                             Email = "user@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -332,9 +332,9 @@ namespace ClefCraft.Identity.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@LOCALHOST.COM",
                             NormalizedUserName = "USER@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDRCAMvSsBhuDEXpnRLU2Vr2cy8E4PwM/z7yeZH33CDAqtKVj5ekVtUhxOyWa+qKCg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEA/6wDqfWj3I+Iqv+mrYbIDtODqM3RTXfXTHakUEZ7QKYpuFd72hPNdZaAtL6I6zPA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e7afc95a-fc23-4b37-a164-7645998ae277",
+                            SecurityStamp = "7676df4d-a2aa-4436-bb0c-25bc161c4354",
                             TwoFactorEnabled = false,
                             UserName = "user@localhost.com"
                         });

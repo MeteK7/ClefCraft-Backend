@@ -23,7 +23,7 @@ namespace ClefCraft.Identity.Configurations
 
             builder.Property(x => x.SnapshotJson)
                 .IsRequired()
-                .HasColumnType("nvarchar(max)");
+                .HasColumnType("text");
 
             builder.Property(x => x.CreatedAt)
                 .IsRequired();
