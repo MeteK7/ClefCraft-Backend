@@ -24,7 +24,7 @@ namespace ClefCraft.Identity.Migrations
                     EntityType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     EntityId = table.Column<int>(type: "integer", nullable: false),
                     ActionType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    MetadataJson = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MetadataJson = table.Column<string>(type: "text", nullable: true),
                     Timestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
@@ -85,7 +85,7 @@ namespace ClefCraft.Identity.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     EntityType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     EntityId = table.Column<int>(type: "integer", nullable: false),
-                    SnapshotJson = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SnapshotJson = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
@@ -262,8 +262,8 @@ namespace ClefCraft.Identity.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "944d0156-cb3d-466f-a1ea-5f53e3a10f8e", 0, "d1f051f9-6aa9-4821-84a8-a1236a973b76", "admin@localhost.com", true, "System", "Admin", false, null, "ADMIN@LOCALHOST.COM", "ADMIN@LOCALHOST.COM", "AQAAAAIAAYagAAAAEBx/PvOSvP8MPinvOZOuTBOBXQPo2QJINuTmTVwV62zqorj0dpkv7JRmcdARc9Oyug==", null, false, "fb2505c0-29d2-4216-a4b7-0c608183dd8e", false, "admin@localhost.com" },
-                    { "9e224968-33e4-4652-b7b7-8574d048cdb9", 0, "8986afcf-8051-40aa-bba7-85d9639d25a4", "user@localhost.com", true, "System", "User", false, null, "USER@LOCALHOST.COM", "USER@LOCALHOST.COM", "AQAAAAIAAYagAAAAEDRCAMvSsBhuDEXpnRLU2Vr2cy8E4PwM/z7yeZH33CDAqtKVj5ekVtUhxOyWa+qKCg==", null, false, "e7afc95a-fc23-4b37-a164-7645998ae277", false, "user@localhost.com" }
+                    { "944d0156-cb3d-466f-a1ea-5f53e3a10f8e", 0, "b6763ccb-77c6-4c7a-8dc9-e05529875c0c", "admin@localhost.com", true, "System", "Admin", false, null, "ADMIN@LOCALHOST.COM", "ADMIN@LOCALHOST.COM", "AQAAAAIAAYagAAAAEF2jvYv4aSWARTdc3/qjr3pTFsQwTSxPGYzBrJDOHoga2I+RYUpFk7CXIX2IoUcncQ==", null, false, "bfa4e059-01b3-469f-902a-9046e10a2665", false, "admin@localhost.com" },
+                    { "9e224968-33e4-4652-b7b7-8574d048cdb9", 0, "68083157-d4c5-4ff9-836c-7cdb8c766363", "user@localhost.com", true, "System", "User", false, null, "USER@LOCALHOST.COM", "USER@LOCALHOST.COM", "AQAAAAIAAYagAAAAEA/6wDqfWj3I+Iqv+mrYbIDtODqM3RTXfXTHakUEZ7QKYpuFd72hPNdZaAtL6I6zPA==", null, false, "7676df4d-a2aa-4436-bb0c-25bc161c4354", false, "user@localhost.com" }
                 });
 
             migrationBuilder.InsertData(
