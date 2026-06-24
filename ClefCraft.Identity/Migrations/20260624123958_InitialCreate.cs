@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -18,18 +17,18 @@ namespace ClefCraft.Identity.Migrations
                 name: "ActivityLogs",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    EntityType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    EntityId = table.Column<int>(type: "integer", nullable: false),
-                    ActionType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    EntityType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    EntityId = table.Column<int>(type: "int", nullable: false),
+                    ActionType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     MetadataJson = table.Column<string>(type: "text", nullable: true),
-                    Timestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    DateModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ModifiedBy = table.Column<string>(type: "text", nullable: true)
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -40,10 +39,10 @@ namespace ClefCraft.Identity.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -54,23 +53,23 @@ namespace ClefCraft.Identity.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    FirstName = table.Column<string>(type: "text", nullable: false),
-                    LastName = table.Column<string>(type: "text", nullable: false),
-                    UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
-                    PasswordHash = table.Column<string>(type: "text", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "text", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "text", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "boolean", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "boolean", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "boolean", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -81,16 +80,16 @@ namespace ClefCraft.Identity.Migrations
                 name: "EntitySnapshots",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    EntityType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    EntityId = table.Column<int>(type: "integer", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EntityType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    EntityId = table.Column<int>(type: "int", nullable: false),
                     SnapshotJson = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    DateModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ModifiedBy = table.Column<string>(type: "text", nullable: true)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -101,19 +100,19 @@ namespace ClefCraft.Identity.Migrations
                 name: "TaskLifecycles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    BoardItemId = table.Column<int>(type: "integer", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    FirstWorkedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CompletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ReopenCount = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
-                    StatusChangeCount = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
-                    AssigneeChangeCount = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
-                    DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    DateModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ModifiedBy = table.Column<string>(type: "text", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BoardItemId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FirstWorkedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CompletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ReopenCount = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    StatusChangeCount = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    AssigneeChangeCount = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -124,18 +123,18 @@ namespace ClefCraft.Identity.Migrations
                 name: "UserInteractionSignals",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    SignalType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    EntityType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    EntityId = table.Column<int>(type: "integer", nullable: false),
-                    Value = table.Column<double>(type: "double precision", nullable: false),
-                    Timestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    DateModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ModifiedBy = table.Column<string>(type: "text", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    SignalType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    EntityType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    EntityId = table.Column<int>(type: "int", nullable: false),
+                    Value = table.Column<double>(type: "float", nullable: false),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -146,11 +145,11 @@ namespace ClefCraft.Identity.Migrations
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    RoleId = table.Column<string>(type: "text", nullable: false),
-                    ClaimType = table.Column<string>(type: "text", nullable: true),
-                    ClaimValue = table.Column<string>(type: "text", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -167,11 +166,11 @@ namespace ClefCraft.Identity.Migrations
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    ClaimType = table.Column<string>(type: "text", nullable: true),
-                    ClaimValue = table.Column<string>(type: "text", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -188,10 +187,10 @@ namespace ClefCraft.Identity.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "text", nullable: false),
-                    ProviderKey = table.Column<string>(type: "text", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "text", nullable: true),
-                    UserId = table.Column<string>(type: "text", nullable: false)
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -208,8 +207,8 @@ namespace ClefCraft.Identity.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    RoleId = table.Column<string>(type: "text", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -232,10 +231,10 @@ namespace ClefCraft.Identity.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    LoginProvider = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Value = table.Column<string>(type: "text", nullable: true)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -262,8 +261,8 @@ namespace ClefCraft.Identity.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "944d0156-cb3d-466f-a1ea-5f53e3a10f8e", 0, "b6763ccb-77c6-4c7a-8dc9-e05529875c0c", "admin@localhost.com", true, "System", "Admin", false, null, "ADMIN@LOCALHOST.COM", "ADMIN@LOCALHOST.COM", "AQAAAAIAAYagAAAAEF2jvYv4aSWARTdc3/qjr3pTFsQwTSxPGYzBrJDOHoga2I+RYUpFk7CXIX2IoUcncQ==", null, false, "bfa4e059-01b3-469f-902a-9046e10a2665", false, "admin@localhost.com" },
-                    { "9e224968-33e4-4652-b7b7-8574d048cdb9", 0, "68083157-d4c5-4ff9-836c-7cdb8c766363", "user@localhost.com", true, "System", "User", false, null, "USER@LOCALHOST.COM", "USER@LOCALHOST.COM", "AQAAAAIAAYagAAAAEA/6wDqfWj3I+Iqv+mrYbIDtODqM3RTXfXTHakUEZ7QKYpuFd72hPNdZaAtL6I6zPA==", null, false, "7676df4d-a2aa-4436-bb0c-25bc161c4354", false, "user@localhost.com" }
+                    { "944d0156-cb3d-466f-a1ea-5f53e3a10f8e", 0, "7a9062ea-7919-4548-a804-4a9d1ea709a3", "admin@localhost.com", true, "System", "Admin", false, null, "ADMIN@LOCALHOST.COM", "ADMIN@LOCALHOST.COM", "AQAAAAIAAYagAAAAEDXVFSQ4QtCiYejBopasPQbXULAVJotfDmFzb6xHkLvAX9qoXQ40m+KWZ95H7jS/lw==", null, false, "7eec6044-33f9-46f1-98e7-6e2489c43e66", false, "admin@localhost.com" },
+                    { "9e224968-33e4-4652-b7b7-8574d048cdb9", 0, "bcd60a5f-b481-4b61-a67e-61bd6accb4ab", "user@localhost.com", true, "System", "User", false, null, "USER@LOCALHOST.COM", "USER@LOCALHOST.COM", "AQAAAAIAAYagAAAAEAu3FH4azaRBQdXnjy+Mz4i73GuQxVc8e2h/TKqhJ41YatDmNH5WLuiVyuzfFS4sUA==", null, false, "4a88e2de-3db2-4edd-99b7-65b9e0524c34", false, "user@localhost.com" }
                 });
 
             migrationBuilder.InsertData(
@@ -299,7 +298,8 @@ namespace ClefCraft.Identity.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -325,7 +325,8 @@ namespace ClefCraft.Identity.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EntitySnapshots_EntityType_EntityId",
