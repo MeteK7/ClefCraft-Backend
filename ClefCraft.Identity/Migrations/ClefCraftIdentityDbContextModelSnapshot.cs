@@ -303,7 +303,7 @@ namespace ClefCraft.Identity.Migrations
                         {
                             Id = "944d0156-cb3d-466f-a1ea-5f53e3a10f8e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "56121443-e03c-448c-bb0c-ebe05b280618",
+                            ConcurrencyStamp = "0d22daed-c28e-49d0-995a-8bf0ce0b0ec5",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -311,9 +311,9 @@ namespace ClefCraft.Identity.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAENC0sMuxpxGRGdGOAeKXMzd7TSUTkrwG37uQK5tcqzB03dEvhQp/oJumRdc4tXRqsg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELzrKcMRFj91qaNIMj4Ra/LWNseGPX/YeiDW+hptUQRqPPrHau7S4daOOa+2o+OYEA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3614ce01-c263-46fd-9045-f1d796422ac3",
+                            SecurityStamp = "19d2f7e5-6231-4e4e-a1df-0b7793a6bb76",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         },
@@ -321,7 +321,7 @@ namespace ClefCraft.Identity.Migrations
                         {
                             Id = "9e224968-33e4-4652-b7b7-8574d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "46f757a8-d86e-49a6-8476-43e648fe7a39",
+                            ConcurrencyStamp = "93f47498-3e0e-4ada-b4ac-5e0c1ecda3d9",
                             Email = "user@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -329,9 +329,9 @@ namespace ClefCraft.Identity.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@LOCALHOST.COM",
                             NormalizedUserName = "USER@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAECj7YfJRVU83MaztV2nqMI4s9M/udfxoV6ZK8lS+WfTb3tgVJsSWBtSCOWOdWPUBsw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGU27oNUaEiZk+lliErVrW+A5nWbij61D4touhEO1VgHvZnq8012mq3UTbnQoV+HEA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "148f2b5a-3564-486e-af89-e1b48b0fda7c",
+                            SecurityStamp = "882d211c-28c3-4c00-956f-d4b7190af85f",
                             TwoFactorEnabled = false,
                             UserName = "user@localhost.com"
                         });
