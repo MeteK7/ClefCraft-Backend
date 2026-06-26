@@ -17,11 +17,6 @@ namespace ClefCraft.Domain
 
         // Action type
         public string ActionType { get; set; }
-        // Examples:
-        // "CREATED", "UPDATED", "DELETED"
-        // "STATUS_CHANGED", "MOVED_COLUMN"
-        // "SNOOZED", "POSTPONED", "REASSIGNED"
-
         public string? MetadataJson { get; set; }
 
         public DateTime Timestamp { get; set; }
