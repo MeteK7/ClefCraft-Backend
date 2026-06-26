@@ -53,10 +53,14 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader()
             .AllowCredentials());
 });
+
+var aiBaseUrl = builder.Configuration["AIService:BaseUrl"];
+
 builder.Services.AddHttpClient<IAIService, AIService>(client =>
 {
-    client.BaseAddress = new Uri("http://localhost:8000");
+    client.BaseAddress = new Uri(aiBaseUrl!);
 });
+
 //builder.Services.AddCors(options =>
 //{
 //    options.AddPolicy("all", builder => builder.AllowAnyOrigin()
