@@ -80,15 +80,7 @@ namespace ClefCraft.Persistence
             {
                 var connectionString = configuration.GetConnectionString("ClefCraftDatabaseConnectionString");
 
-                if (connectionString != null &&
-                    (connectionString.StartsWith("postgres") || connectionString.Contains("Host=")))
-                {
-                    options.UseNpgsql(connectionString);
-                }
-                else
-                {
-                    options.UseSqlServer(connectionString);
-                }
+                options.UseNpgsql(connectionString);
             });
 
 
