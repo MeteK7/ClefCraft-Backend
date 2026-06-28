@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using ClefCraft.Application.Contracts.Persistence;
+﻿using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Domain;
 using ClefCraft.Persistence.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
