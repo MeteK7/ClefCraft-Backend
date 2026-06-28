@@ -23,11 +23,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenAnyIP(int.Parse(port));
-});
-
 // Add services to the container.
 
 builder.Host.UseSerilog((context, loggerConfig) => loggerConfig.WriteTo.Console().ReadFrom.Configuration(context.Configuration));
@@ -110,6 +105,9 @@ builder.Services.AddSwaggerGen(options =>
             });
 });
 var app = builder.Build();
+
+app.Logger.LogInformation("ENVIRONMENT: {Env}", app.Environment.EnvironmentName);
+app.Logger.LogInformation("IS DEVELOPMENT: {IsDev}", app.Environment.IsDevelopment());
 
 // AUTO APPLY MIGRATIONS ON STARTUP (Render + Production safe)
 using (var scope = app.Services.CreateScope())
