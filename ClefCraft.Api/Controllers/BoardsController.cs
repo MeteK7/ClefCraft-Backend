@@ -1,9 +1,11 @@
 ﻿using ClefCraft.Application.Features.Board.Queries.GetBoards;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClefCraft.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class BoardsController : Controller

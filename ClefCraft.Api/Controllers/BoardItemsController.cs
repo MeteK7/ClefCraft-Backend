@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ClefCraft.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class BoardItemsController : Controller
@@ -51,7 +52,6 @@ namespace ClefCraft.Api.Controllers
             return Ok(boardColumns);
         }
 
-        [Authorize]
         [HttpPost("Create")]
         public async Task<ActionResult<BoardItemDto>> Create(CreateBoardItemCommand command)
         {
@@ -59,7 +59,6 @@ namespace ClefCraft.Api.Controllers
             return Ok(item);
         }
 
-        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult<BoardItemByIdDto>> Update(int id, UpdateBoardItemCommand command)
         {
