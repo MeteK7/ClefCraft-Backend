@@ -6,7 +6,18 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Domain.Enums
 {
-    internal class BoardItemRelationType
+    public enum BoardItemRelationType
     {
+        Parent = 1,
+
+        Blocks = 2,
+
+        DependsOn = 3,
+
+        Related = 4,
+
+        Duplicate = 5,
+
+        SplitFrom = 6
     }
 }
