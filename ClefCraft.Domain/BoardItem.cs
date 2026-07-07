@@ -28,5 +28,11 @@ namespace ClefCraft.Domain
         public DateTime? DueDate { get; set; }
         public double? EstimatedTime { get; set; }
         public double? TimeSpent { get; set; }
+
+        public ICollection<BoardItemRelation> OutgoingRelations
+    = new List<BoardItemRelation>();
+
+        public ICollection<BoardItemRelation> IncomingRelations
+            = new List<BoardItemRelation>();
     }
 }
