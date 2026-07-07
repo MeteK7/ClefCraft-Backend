@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ClefCraft.Domain.Common;
+using ClefCraft.Domain.Enums;
 
 namespace ClefCraft.Domain
 {
-    internal class BoardItemRelation
+    public class BoardItemRelation : BaseEntity
     {
+        public int SourceBoardItemId { get; set; }
+
+        public BoardItem SourceBoardItem { get; set; } = null!;
+
+        public int TargetBoardItemId { get; set; }
+
+        public BoardItem TargetBoardItem { get; set; } = null!;
+
+        public BoardItemRelationType RelationType { get; set; }
     }
 }
