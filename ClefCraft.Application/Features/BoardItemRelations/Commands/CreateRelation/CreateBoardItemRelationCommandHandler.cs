@@ -1,33 +1,38 @@
-﻿using System;
+﻿using AutoMapper;
+using ClefCraft.Application.Contracts.Persistence;
+using ClefCraft.Application.Features.BoardItemRelations.DTOs;
+using ClefCraft.Domain;
+using ClefCraft.Domain.Enums;
+using MediatR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ClefCraft.Application.Contracts.Persistence;
-using ClefCraft.Domain;
-using ClefCraft.Domain.Enums;
-using MediatR;
 
 namespace ClefCraft.Application.Features.BoardItemRelations.Commands.CreateRelation
 {
     public class CreateBoardItemRelationCommandHandler
-        : IRequestHandler<CreateBoardItemRelationCommand, int>
+        : IRequestHandler<CreateBoardItemRelationCommand, RelationshipCardDto>
     {
         private readonly IBoardItemRelationRepository _relationRepository;
         private readonly IBoardItemRepository _boardItemRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
         public CreateBoardItemRelationCommandHandler(
             IBoardItemRelationRepository relationRepository,
             IBoardItemRepository boardItemRepository,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IMapper mapper)
         {
             _relationRepository = relationRepository;
             _boardItemRepository = boardItemRepository;
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        public async Task<int> Handle(
+        public async Task<RelationshipCardDto> Handle(
             CreateBoardItemRelationCommand request,
             CancellationToken cancellationToken)
         {
@@ -75,7 +80,10 @@ namespace ClefCraft.Application.Features.BoardItemRelations.Commands.CreateRelat
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return relation.Id;
+            var dto = _mapper.Map<RelationshipCardDto>(target);
+            dto.RelationId = relation.Id;
+
+            return dto;
         }
     }
 }

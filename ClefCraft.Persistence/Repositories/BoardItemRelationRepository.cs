@@ -89,5 +89,29 @@ namespace ClefCraft.Persistence.Repositories
                 .Take(20)
                 .ToListAsync();
         }
+
+        public async Task<List<BoardItem>> SearchBoardItemsAsync(
+    int boardId,
+    string searchTerm,
+    int excludeItemId)
+        {
+            searchTerm = searchTerm.ToLower();
+
+            return await _context.BoardItems
+                .Include(x => x.BoardItemStatus)
+                    .ThenInclude(x => x.Status)
+                .Include(x => x.BoardItemPriority)
+                    .ThenInclude(x => x.Priority)
+                .Where(x =>
+                    x.BoardId == boardId &&
+                    x.Id != excludeItemId &&
+                    (
+                        x.Title.ToLower().Contains(searchTerm)
+                        || x.Id.ToString().Contains(searchTerm)
+                    ))
+                .OrderBy(x => x.Id)
+                .Take(20)
+                .ToListAsync();
+        }
     }
 }

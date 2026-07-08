@@ -91,6 +91,7 @@ namespace ClefCraft.Persistence
             services.AddScoped<ILeaveRequestRepository, LeaveRequestRepository>();
             services.AddScoped<IBoardRepository, BoardRepository>();
             services.AddScoped<IBoardItemRepository, BoardItemRepository>();
+            services.AddScoped<IBoardItemRelationRepository, BoardItemRelationRepository>();
             services.AddScoped<IRecurrenceSeriesRepository, RecurrenceSeriesRepository>();
             services.AddScoped<ICalendarEventRepository, CalendarEventRepository>();
             services.AddScoped<ICalendarEventSegmentRepository, CalendarEventSegmentRepository>();
@@ -105,7 +106,6 @@ namespace ClefCraft.Persistence
             services.AddScoped<IUserInteractionService, UserInteractionService>();
             services.AddScoped<ITaskLifecycleService, TaskLifecycleService>();
             services.AddScoped<IUnitOfWork, EfUnitOfWork>();
-            services.AddScoped<IBoardItemRelationRepository, BoardItemRelationRepository>();
             services.AddScoped<INotificationQueueRepository, NotificationQueueRepository>();
             services.AddScoped<ICalendarReminderRepository, CalendarReminderRepository>();
 

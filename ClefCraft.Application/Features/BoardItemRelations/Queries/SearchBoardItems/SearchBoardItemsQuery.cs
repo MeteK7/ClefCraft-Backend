@@ -11,8 +11,20 @@ namespace ClefCraft.Application.Features.BoardItemRelations.Queries.SearchBoardI
     public class SearchBoardItemsQuery
         : IRequest<List<BoardItemSearchDto>>
     {
-        public int ItemId { get; set; }
+        public int BoardId { get; set; }
 
-        public string Search { get; set; } = "";
+        public int ExcludeItemId { get; set; }
+
+        public string SearchTerm { get; set; } = "";
+
+        public SearchBoardItemsQuery(
+            int boardId,
+            int excludeItemId,
+            string searchTerm)
+        {
+            BoardId = boardId;
+            ExcludeItemId = excludeItemId;
+            SearchTerm = searchTerm;
+        }
     }
 }

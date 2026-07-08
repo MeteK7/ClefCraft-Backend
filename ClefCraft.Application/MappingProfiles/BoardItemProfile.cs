@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItemById;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems;
+using ClefCraft.Application.Features.BoardItemRelations.DTOs;
 using ClefCraft.Application.Features.Priority.Queries.GetPriorities;
 using ClefCraft.Application.Features.Status.Queries.GetStatuses;
 using ClefCraft.Application.Features.Tag.Queries.GetTags;
@@ -43,6 +44,35 @@ namespace ClefCraft.Application.MappingProfiles
             CreateMap<Tag, TagDto>().ReverseMap();
             CreateMap<Status, StatusDto>().ReverseMap();
             CreateMap<Priority, PriorityDto>().ReverseMap();
+
+            CreateMap<BoardItem, BoardItemSearchDto>()
+                .ForMember(
+                    d => d.Status,
+                    o => o.MapFrom(s =>
+                        s.BoardItemStatus != null
+                            ? s.BoardItemStatus.Status.Name
+                            : null))
+
+                .ForMember(
+                    d => d.Priority,
+                    o => o.MapFrom(s =>
+                        s.BoardItemPriority != null
+                            ? s.BoardItemPriority.Priority.Name
+                            : null));
+
+            CreateMap<BoardItem, RelationshipCardDto>()
+                .ForMember(d => d.ItemId,
+                    o => o.MapFrom(s => s.Id))
+                .ForMember(d => d.Status,
+                    o => o.MapFrom(s =>
+                        s.BoardItemStatus != null
+                            ? s.BoardItemStatus.Status.Name
+                            : ""))
+                .ForMember(d => d.Priority,
+                    o => o.MapFrom(s =>
+                        s.BoardItemPriority != null
+                            ? s.BoardItemPriority.Priority.Name
+                            : ""));
         }
     }
 }

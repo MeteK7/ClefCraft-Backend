@@ -24,4 +24,9 @@ public interface IBoardItemRelationRepository
     Task<List<BoardItem>> SearchItemsAsync(
         string search,
         int excludeItemId);
+
+    Task<List<BoardItem>> SearchBoardItemsAsync(
+    int boardId,
+    string searchTerm,
+    int excludeItemId);
 }
