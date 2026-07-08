@@ -32,7 +32,7 @@ namespace ClefCraft.Persistence.DatabaseContext
         public DbSet<Board> Boards { get; set; }
         public DbSet<BoardColumn> BoardColumns { get; set; }
         public DbSet<BoardItem> BoardItems { get; set; }
-
+        public DbSet<BoardItemRelation> BoardItemRelations { get; set; }
         public DbSet<CalendarEvent> CalendarEvents { get; set; }
         public DbSet<CalendarReminder> CalendarReminders { get; set; }
         public DbSet<NotificationQueue> NotificationQueues { get; set; }
