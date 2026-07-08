@@ -1,4 +1,5 @@
 ﻿using ClefCraft.Domain;
+using ClefCraft.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ public interface IBoardItemRelationRepository
     Task<bool> ExistsAsync(
         int sourceId,
         int targetId,
-        int relationType);
+        BoardItemRelationType relationType);
 
     Task<List<BoardItem>> SearchItemsAsync(
         string search,

@@ -1,5 +1,6 @@
 ﻿using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Domain;
+using ClefCraft.Domain.Enums;
 using ClefCraft.Persistence.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -58,12 +59,12 @@ namespace ClefCraft.Persistence.Repositories
         public async Task<bool> ExistsAsync(
             int sourceId,
             int targetId,
-            int relationType)
+            BoardItemRelationType relationType)
         {
             return await _context.BoardItemRelations.AnyAsync(x =>
                 x.SourceBoardItemId == sourceId &&
                 x.TargetBoardItemId == targetId &&
-                (int)x.RelationType == relationType);
+                x.RelationType == relationType);
         }
 
         public async Task<List<BoardItem>> SearchItemsAsync(
