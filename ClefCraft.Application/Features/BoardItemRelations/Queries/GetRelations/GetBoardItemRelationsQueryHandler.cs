@@ -27,7 +27,10 @@ namespace ClefCraft.Application.Features.BoardItemRelations.Queries.GetRelations
         {
             var relations = await _repository.GetForItemAsync(request.ItemId);
 
-            var hub = new RelationshipHubDto();
+            var hub = new RelationshipHubDto
+            {
+                Groups = CreateDefaultGroups()
+            };
 
             foreach (var relation in relations)
             {
@@ -36,19 +39,8 @@ namespace ClefCraft.Application.Features.BoardItemRelations.Queries.GetRelations
                         ? relation.TargetBoardItem
                         : relation.SourceBoardItem;
 
-                var group = hub.Groups.FirstOrDefault(x =>
+                var group = hub.Groups.First(x =>
                     x.RelationType == (int)relation.RelationType);
-
-                if (group == null)
-                {
-                    group = new RelationshipGroupDto
-                    {
-                        RelationType = (int)relation.RelationType,
-                        Name = GetRelationName(relation.RelationType)
-                    };
-
-                    hub.Groups.Add(group);
-                }
 
                 group.Items.Add(new RelationshipCardDto
                 {
@@ -63,30 +55,37 @@ namespace ClefCraft.Application.Features.BoardItemRelations.Queries.GetRelations
             }
 
             hub.ParentCount =
-                hub.Groups.FirstOrDefault(x =>
+                hub.Groups.First(x =>
                     x.RelationType == (int)BoardItemRelationType.Parent)
-                ?.Items.Count ?? 0;
+                .Items.Count;
 
             hub.BlockCount =
-                hub.Groups.FirstOrDefault(x =>
+                hub.Groups.First(x =>
                     x.RelationType == (int)BoardItemRelationType.Blocks)
-                ?.Items.Count ?? 0;
+                .Items.Count;
 
             hub.RelatedCount =
-                hub.Groups.FirstOrDefault(x =>
+                hub.Groups.First(x =>
                     x.RelationType == (int)BoardItemRelationType.Related)
-                ?.Items.Count ?? 0;
+                .Items.Count;
 
             hub.DependencyCount =
-                hub.Groups.FirstOrDefault(x =>
+                hub.Groups.First(x =>
                     x.RelationType == (int)BoardItemRelationType.DependsOn)
-                ?.Items.Count ?? 0;
-
-            hub.Groups = hub.Groups
-                .OrderBy(g => g.RelationType)
-                .ToList();
+                .Items.Count;
 
             return hub;
+        }
+
+        private static List<RelationshipGroupDto> CreateDefaultGroups()
+        {
+            return Enum.GetValues<BoardItemRelationType>()
+                .Select(type => new RelationshipGroupDto
+                {
+                    RelationType = (int)type,
+                    Name = GetRelationName(type)
+                })
+                .ToList();
         }
 
         private static string GetRelationName(BoardItemRelationType type)
