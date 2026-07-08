@@ -1,0 +1,552 @@
+Folder PATH listing
+Volume serial number is ABBF-A830
+C:.
+|   .gitattributes
+|   .gitignore
+|   board_seed_postgresql.sql
+|   calendar_seed_postgresql.sql
+|   ClefCraft.sln
+|   DeleteAllData.sql
+|   Dockerfile
+|   DummyData.sql
+|   project-structure.txt
+|   ProjectStructure.txt
+|   README.docx
+|   structure.txt
+|   ~$README.docx
++---ClefCraft.Api
+|   |   appsettings.Development.json
+|   |   appsettings.json
+|   |   appsettings.Production.json
+|   |   ClefCraft.Api.csproj
+|   |   ClefCraft.Api.csproj.user
+|   |   Program.cs
+|   |   project-structure.txt
+
+|   +---Controllers
+|   |       AuthController.cs
+|   |       BoardColumnsController.cs
+|   |       BoardItemsController.cs
+|   |       BoardsController.cs
+|   |       CalendarController.cs
+|   |       LeaveAllocationsController.cs
+|   |       LeaveRequestsController.cs
+|   |       LeaveTypesController.cs
+|   |       UsersController.cs
+|   +---Middleware
+|   |       ExceptionMiddleware.cs
+|   |       
+|   +---Models
+|   |       CustomValidationProblemDetails.cs
+|   +---Properties
+|   |       launchSettings.json
+|   |       
+|   \---Services
+|           NotificationHubService.cs
++---ClefCraft.Application
+|   |   ApplicationServiceRegistration.cs
+|   |   ClefCraft.Application.csproj
+|   +---Common
+|   |   +---Helpers
+|   |   |       RecurrenceHelper.cs
+|   |   |       
+|   |   \---Models
+|   |           Optional.cs
+|   |           
+|   +---Contracts
+|   |   +---AI
+|   |   |       AIEventDto.cs
+|   |   |       IAIService.cs
+|   |   |       IAITrainingService.cs
+|   |   |       
+|   |   +---Analytics
+|   |   |       ITaskLifecycleService.cs
+|   |   |       IUserInteractionService.cs
+|   |   |       
+|   |   +---Calendar
+|   |   |       IAttendancePredictionService.cs
+|   |   |       ICalendarEventAttachmentRepository.cs
+|   |   |       ICalendarEventExceptionRepository.cs
+|   |   |       ICalendarEventRepository.cs
+|   |   |       ICalendarEventSegmentRepository.cs
+|   |   |       ICalendarReminderRepository.cs
+|   |   |       IEventAnalyticsService.cs
+|   |   |       IEventEnrichmentService.cs
+|   |   |       IEventExpansionService.cs
+|   |   |       INotificationHubService.cs
+|   |   |       INotificationQueueRepository.cs
+|   |   |       IRecurrenceSeriesRepository.cs
+|   |   |       IRecurringEventProjectionService.cs
+|   |   |       IReminderSchedulerService.cs
+|   |   |       
+|   |   +---Email
+|   |   |       IEmailSender.cs
+|   |   |       
+|   |   +---FileAttachment
+|   |   |       IFileAttachmentService.cs
+|   |   |       
+|   |   +---Identity
+|   |   |       IAuthService.cs
+|   |   |       IUserService.cs
+|   |   |       
+|   |   +---Logging
+|   |   |       IActivityLogger.cs
+|   |   |       IAppLogger.cs
+|   |   |       
+|   |   \---Persistence
+|   |           IAIDataRepository.cs
+|   |           IBoardItemRepository.cs
+|   |           IBoardRepository.cs
+|   |           IEventTypeRepository.cs
+|   |           IGenericRepository.cs
+|   |           ILeaveAllocationRepository.cs
+|   |           ILeaveRequestRepository.cs
+|   |           ILeaveTypeRepository.cs
+|   |           IPriorityRepository.cs
+|   |           IStatusRepository.cs
+|   |           ITagRepository.cs
+|   |           IUnitOfWork.cs
+|   |           
+|   +---Exceptions
+|   |       BadRequestException.cs
+|   |       NotFoundException.cs
+|   |       
+|   +---Features
+|   |   +---Board
+|   |   |   \---Queries
+|   |   |       \---GetBoards
+|   |   |               BoardDto.cs
+|   |   |               GetBoardsHandler.cs
+|   |   |               GetBoardsQuery.cs
+|   |   |               
+|   |   +---BoardColumn
+|   |   |   \---Queries
+|   |   |       \---GetBoardColumns
+|   |   |               BoardColumnDto.cs
+|   |   |               
+|   |   +---BoardColumnMapping
+|   |   |   \---Queries
+|   |   |       \---GetBoardColumnMappings
+|   |   |               BoardColumnMappingDto.cs
+|   |   |               
+|   |   +---BoardItem
+|   |   |   +---Commands
+|   |   |   |   +---CreateBoardItem
+|   |   |   |   |       CreateBoardItemCommand.cs
+|   |   |   |   |       CreateBoardItemCommandHandler.cs
+|   |   |   |   |       
+|   |   |   |   \---UpdateBoardItem
+|   |   |   |           UpdateBoardItemCommand.cs
+|   |   |   |           UpdateBoardItemCommandHandler.cs
+|   |   |   |           UpdateBoardItemCommandValidator.cs
+|   |   |   |           
+|   |   |   \---Queries
+|   |   |       +---GetBoardItemById
+|   |   |       |       BoardItemByIdDto.cs
+|   |   |       |       GetBoardItemByIdHandler.cs
+|   |   |       |       GetBoardItemByIdQuery.cs
+|   |   |       |       
+|   |   |       \---GetBoardItems
+|   |   |               BoardItemDto.cs
+|   |   |               GetBoardItemsHandler.cs
+|   |   |               GetBoardItemsQuery.cs
+|   |   |               
+|   |   +---Calendar
+|   |   |   +---Commands
+|   |   |   |   +---CreateCalendarEvent
+|   |   |   |   |       CreateCalendarEventCommand.cs
+|   |   |   |   |       CreateCalendarEventCommandHandler.cs
+|   |   |   |   |       
+|   |   |   |   +---DeleteCalendarAttachment
+|   |   |   |   |       DeleteAttachmentCommand.cs
+|   |   |   |   |       DeleteAttachmentCommandHandler.cs
+|   |   |   |   |       
+|   |   |   |   +---UpdateCalendarEvent
+|   |   |   |   |       UpdateCalendarEventCommand.cs
+|   |   |   |   |       UpdateCalendarEventCommandHandler.cs
+|   |   |   |   |       
+|   |   |   |   +---UpdateFromOccurrence
+|   |   |   |   |       UpdateFromOccurrenceCommand.cs
+|   |   |   |   |       UpdateFromOccurrenceCommandHandler.cs
+|   |   |   |   |       
+|   |   |   |   +---UpdateSeries
+|   |   |   |   |       UpdateSeriesOverrideAllCommand.cs
+|   |   |   |   |       UpdateSeriesOverrideAllCommandHandler.cs
+|   |   |   |   |       UpdateSeriesPreserveExceptionsCommand.cs
+|   |   |   |   |       UpdateSeriesPreserveExceptionsCommandHandler.cs
+|   |   |   |   |       
+|   |   |   |   +---UpdateSingleOccurrence
+|   |   |   |   |       UpdateSingleOccurrenceCommand.cs
+|   |   |   |   |       UpdateSingleOccurrenceCommandHandler.cs
+|   |   |   |   |       
+|   |   |   |   \---UploadCalendarAttachment
+|   |   |   |           UploadCalendarAttachmentCommand.cs
+|   |   |   |           UploadCalendarAttachmentCommandHandler.cs
+|   |   |   |           
+|   |   |   \---Queries
+|   |   |       |   CalendarEventAttachmentDto.cs
+|   |   |       |   CalendarEventDto.cs
+|   |   |       |   CalendarEventInstanceDto.cs
+|   |   |       |   EventTypeDto.cs
+|   |   |       |   GetCalendarEventsQuery.cs
+|   |   |       |   GetCalendarEventsQueryHandler.cs
+|   |   |       |   GetEventTypesQuery.cs
+|   |   |       |   GetEventTypesQueryHandler.cs
+|   |   |       |   GetWorkHistoryQuery.cs
+|   |   |       |   GetWorkHistoryQueryHandler.cs
+|   |   |       |   WorkHistoryDto.cs
+|   |   |       |   
+|   |   |       \---GetCalendarAttachments
+|   |   |               GetAttachmentByIdQuery.cs
+|   |   |               GetAttachmentByIdQueryHandler.cs
+|   |   |               GetAttachmentsQuery.cs
+|   |   |               GetAttachmentsQueryHandler.cs
+|   |   |               
+|   |   +---LeaveAllocation
+|   |   |   +---Commands
+|   |   |   |   +---CreateLeaveAllocation
+|   |   |   |   |       CreateLeaveAllocationCommand.cs
+|   |   |   |   |       CreateLeaveAllocationCommandHandler.cs
+|   |   |   |   |       CreateLeaveAllocationCommandValidator.cs
+|   |   |   |   |       
+|   |   |   |   +---DeleteLeaveAllocation
+|   |   |   |   |       DeleteLeaveAllocationCommand.cs
+|   |   |   |   |       DeleteLeaveAllocationCommandHandler.cs
+|   |   |   |   |       
+|   |   |   |   \---UpdateLeaveAllocation
+|   |   |   |           UpdateLeaveAllocationCommand.cs
+|   |   |   |           UpdateLeaveAllocationCommandHandler.cs
+|   |   |   |           UpdateLeaveAllocationCommandValidator.cs
+|   |   |   |           
+|   |   |   \---Queries
+|   |   |       +---GetLeaveAllocationDetails
+|   |   |       |       GetLeaveAllocationDetailQuery.cs
+|   |   |       |       GetLeaveAllocationDetailRequestHandler.cs
+|   |   |       |       LeaveAllocationDetailsDto.cs
+|   |   |       |       
+|   |   |       \---GetLeaveAllocations
+|   |   |               GetLeaveAllocationListHandler.cs
+|   |   |               GetLeaveAllocationListQuery.cs
+|   |   |               LeaveAllocationDto.cs
+|   |   |               
+|   |   +---LeaveRequest
+|   |   |   +---Commands
+|   |   |   |   +---CancelLeaveRequest
+|   |   |   |   |       CancelLeaveRequestCommand.cs
+|   |   |   |   |       CancelLeaveRequestCommandHandler.cs
+|   |   |   |   |       
+|   |   |   |   +---ChangeLeaveRequestApproval
+|   |   |   |   |       ChangeLeaveRequestApprovalCommand.cs
+|   |   |   |   |       ChangeLeaveRequestApprovalCommandHandler.cs
+|   |   |   |   |       ChangeLeaveRequestApprovalCommandValidator.cs
+|   |   |   |   |       
+|   |   |   |   +---CreateLeaveRequest
+|   |   |   |   |       CreateLeaveRequestCommand.cs
+|   |   |   |   |       CreateLeaveRequestCommandHandler.cs
+|   |   |   |   |       CreateLeaveRequestCommandValiator.cs
+|   |   |   |   |       
+|   |   |   |   +---DeleteLeaveRequest
+|   |   |   |   |       DeleteLeaveRequestCommand.cs
+|   |   |   |   |       DeleteLeaveRequestCommandHandler.cs
+|   |   |   |   |       
+|   |   |   |   \---UpdateLeaveRequest
+|   |   |   |           UpdateLeaveRequestCommand.cs
+|   |   |   |           UpdateLeaveRequestCommandHandler.cs
+|   |   |   |           UpdateLeaveRequestCommandValidator.cs
+|   |   |   |           
+|   |   |   +---Queries
+|   |   |   |   +---GetLeaveRequestDetail
+|   |   |   |   |       GetLeaveRequestDetailQuery.cs
+|   |   |   |   |       GetLeaveRequestDetailQueryHandler.cs
+|   |   |   |   |       LeaveRequestDetailsDto.cs
+|   |   |   |   |       
+|   |   |   |   \---GetLeaveRequestList
+|   |   |   |           GetLeaveRequestListQuery.cs
+|   |   |   |           GetLeaveRequestListQueryHandler.cs
+|   |   |   |           LeaveRequestListDto.cs
+|   |   |   |           
+|   |   |   \---Shared
+|   |   |           BaseLeaveRequest.cs
+|   |   |           BaseLeaveRequestValidator.cs
+|   |   |           
+|   |   +---LeaveType
+|   |   |   +---Commands
+|   |   |   |   +---CreateLeaveType
+|   |   |   |   |       CreateLeaveTypeCommand.cs
+|   |   |   |   |       CreateLeaveTypeCommandHandler.cs
+|   |   |   |   |       CreateLeaveTypeCommandValidator.cs
+|   |   |   |   |       
+|   |   |   |   +---DeleteLeaveType
+|   |   |   |   |       DeleteLeaveTypeCommand.cs
+|   |   |   |   |       DeleteLeaveTypeCommandHandler.cs
+|   |   |   |   |       
+|   |   |   |   \---UpdateLeaveType
+|   |   |   |           UpdateLeaveTypeCommand.cs
+|   |   |   |           UpdateLeaveTypeCommandHandler.cs
+|   |   |   |           UpdateLeaveTypeCommandValidator.cs
+|   |   |   |           
+|   |   |   \---Queries
+|   |   |       +---GetAllLeaveTypes
+|   |   |       |       GetLeaveTypesQuery.cs
+|   |   |       |       GetLeaveTypesQueryHandler.cs
+|   |   |       |       LeaveTypeDto.cs
+|   |   |       |       
+|   |   |       \---GetLeaveTypeDetails
+|   |   |               GetLeaveTypeDetailsQuery.cs
+|   |   |               GetLeaveTypeDetailsQueryHandler.cs
+|   |   |               LeaveTypeDetailsDto.cs
+|   |   |               
+|   |   +---Priority
+|   |   |   \---Queries
+|   |   |       \---GetPriorities
+|   |   |               GetPrioritiesHandler.cs
+|   |   |               GetPrioritiesQuery.cs
+|   |   |               PriorityDto.cs
+|   |   |               
+|   |   +---Status
+|   |   |   \---Queries
+|   |   |       \---GetStatuses
+|   |   |               GetStatusesHandler.cs
+|   |   |               GetStatusesQuery.cs
+|   |   |               StatusDto.cs
+|   |   |               
+|   |   \---Tag
+|   |       \---Queries
+|   |           \---GetTags
+|   |                   GetTagsHandler.cs
+|   |                   GetTagsQuery.cs
+|   |                   TagDto.cs
+|   |                   
+|   +---MappingProfiles
+|   |       BoardColumnProfile.cs
+|   |       BoardItemProfile.cs
+|   |       BoardProfile.cs
+|   |       CalendarEventProfile.cs
+|   |       LeaveAllocationProfile.cs
+|   |       LeaveRequestProfile.cs
+|   |       LeaveTypeProfile.cs
+|   |       
+|   +---Models
+|   |   +---Analytics
+|   |   |       Interaction.cs
+|   |   |       
+|   |   +---Email
+|   |   |       EmailMessage.cs
+|   |   |       EmailSettings.cs
+|   |   |       
+|   |   \---Identity
+|   |           Assignee.cs
+|   |           AuthRequest.cs
+|   |           AuthResponse.cs
+|   |           JwtSettings.cs
+|   |           RegistrationRequest.cs
+|   |           RegistrationResponse.cs
+|   |           User.cs
+|   |           UserDto.cs|   +---Features
+|   |   \---LeaveTypes
+|   |       \---Queries
+|   |               GetLeaveTypeListQueryHandlerTests.cs
+|   |               
+|   +---Mocks
+|   |       MockLeaveTypeRepository.cs
+|   +---Contracts
+|   |       IAuthenticationService.cs
+|   |       ILeaveAllocationService.cs
+|   |       ILeaveRequestService.cs
+|   |       ILeaveTypeService.cs
+|   |       
+|   +---Handlers
+|   |       JwtAuthorizationMessageHandler.cs
+|   |       
+|   +---MappingProfiles
+|   |       MappingConfig.cs
+|   |       
+|   +---Models
+|   |   |   EmployeeVM.cs
+|   |   |   LoginVM.cs
+|   |   |   RegisterVM.cs
+|   |   |   
+|   |   +---Authentication
+|   |   |       LoginVM.cs
+|   |   |       RegisterVM.cs
+|   |   |       
+|   |   +---LeaveAllocations
+|   |   |       CreateLeaveAllocationVM.cs
+|   |   |       LeaveAllocationVM.cs
+|   |   |       UpdateLeaveAllocationVM.cs
+|   |   |       ViewLeaveAllocationsVM.cs
+|   |   |       
+|   |   +---LeaveRequests
+|   |   |       AdminLeaveRequestViewVM.cs
+|   |   |       EmployeeLeaveRequestViewVM.cs
+|   |   |       LeaveRequestVM.cs
+|   |   |       
+|   |   \---LeaveTypes
+|   |           LeaveTypeVM.cs          
+|   +---Properties
+|   |       launchSettings.json
+|   |       
+|   +---Providers
+|   |       ApiAuthenticationStateProvider.cs
+|   |       
+|   +---Services
+|   |   |   AuthenticationService.cs
+|   |   |   LeaveAllocationService.cs
+|   |   |   LeaveRequestService.cs
+|   |   |   LeaveTypeService.cs
+|   |   |   
+|   |   \---Base
+|   |           BaseHttpService.cs
+|   |           Client.cs
+|   |           clientsettings.nswag
+|   |           IClient.cs
+|   |           Response.cs
+|   |           ServiceClient.cs
+|   |           ServiceClient.cs.OLD
+|   |           
+|   +---Shared
+|   |       MainLayout.razor
+|   |       MainLayout.razor.css
+|   |       NavMenu.razor
+|   |       NavMenu.razor.css
+|   |       RedirectToLogin.razor
+|   |       SurveyPrompt.razor
++---ClefCraft.Domain
+|   |   ActivityLog.cs
+|   |   Board.cs
+|   |   BoardColumn.cs
+|   |   BoardColumnMapping.cs
+|   |   BoardItem.cs
+|   |   BoardItemPriority.cs
+|   |   BoardItemRelation.cs
+|   |   BoardItemStatus.cs
+|   |   BoardItemTag.cs
+|   |   BoardPriority.cs
+|   |   BoardStatus.cs
+|   |   BoardTag.cs
+|   |   CalendarEvent.cs
+|   |   CalendarEventAttachment.cs
+|   |   CalendarEventException.cs
+|   |   CalendarEventExceptionHistory.cs
+|   |   CalendarEventSegment.cs
+|   |   CalendarReminder.cs
+|   |   ClefCraft.Domain.csproj
+|   |   EntitySnapshot.cs
+|   |   EventType.cs
+|   |   LeaveAllocation.cs
+|   |   LeaveRequest.cs
+|   |   LeaveType.cs
+|   |   NotificationQueue.cs
+|   |   Priority.cs
+|   |   RecurrenceRule.cs
+|   |   RecurrenceSeries.cs
+|   |   Status.cs
+|   |   Tag.cs
+|   |   TaskLifecycle.cs
+|   |   UserInteractionSignal.cs
+|   +---Common
+|   |       BaseEntity.cs
+|   |       
+|   +---Enums
+|   |       BoardItemRelationType.cs
+|   |       ImportanceLevel.cs
++---ClefCraft.Identity
+|   |   ClefCraft.Identity.csproj
+|   |   IdentityServicesRegistration.cs
+|   +---Configurations
+|   |       RoleConfiguration.cs
+|   |       UserConfiguration.cs
+|   |       UserRoleConfiguration.cs
+|   |       
+|   +---DbContext
+|   |       ClefCraftIdentityDbContext.cs
+|   |       
+|   +---Migrations
+|   |       20260624172101_InitialIdentityCreate.cs
+|   |       20260624172101_InitialIdentityCreate.Designer.cs
+|   |       20260628202744_InitialIdentityPostgres.cs
+|   |       20260628202744_InitialIdentityPostgres.Designer.cs
+|   |       ClefCraftIdentityDbContextModelSnapshot.cs
+|   |       
+|   +---Models
+|   |       ApplicationUser.cs
+|   +---Providers
+|   |       CustomUserIdProvider.cs
+|   |       
+|   \---Services
+|           AuthService.cs
+|           UserService.cs
+|           
++---ClefCraft.Infrastructure
+|   |   ClefCraft.Infrastructure.csproj
+|   |   InfrastructureServicesRegistration.cs
+|   +---EmailService
+|   |       EmailSender.cs
+|   |       
+|   +---FileAttachmentService
+|   |       FileAttachmentService.cs
+|   |       
+|   +---Logging
+|   |       LoggerAdapter.cs
+|   \---Services
+|       +---AI
+|       |       AIService.cs
+|       |       AITrainingService.cs
+|       |       
+|       \---Calendar
+|               AttendancePredictionService.cs
+|               EventAnalyticsService.cs
+|               EventEnrichmentService.cs
+|               EventExpansionService.cs
+|               NotificationBackgroundService.cs
+|               RecurringEventProjectionService.cs
+|               ReminderSchedulerService.cs
+|               
++---ClefCraft.Persistence
+|   |   ClefCraft.Persistence.csproj
+|   |   PersistenceServiceRegistration.cs
+|   +---Configurations
+|   |       ActivityLogConfiguration.cs
+|   |       BoardItemRelationConfiguration.cs
+|   |       EntitySnapshotConfiguration.cs
+|   |       TaskLifecycleConfiguration.cs
+|   |       UserInteractionSignalConfiguration.cs
+|   |       
+|   +---DatabaseContext
+|   |       ClefCraftDatabaseContext.cs
+|   |       
+|   +---Migrations
+|   |       20260624172129_InitialPostgresPersistence.cs
+|   |       20260624172129_InitialPostgresPersistence.Designer.cs
+|   |       20260628203032_InitialMigration.cs
+|   |       20260628203032_InitialMigration.Designer.cs
+|   |       20260707211251_AddBoardItemRelations.cs
+|   |       20260707211251_AddBoardItemRelations.Designer.cs
+|   |       ClefCraftDatabaseContextModelSnapshot.cs
+|   +---Repositories
+|   |       AIDataRepository.cs
+|   |       BoardItemRepository.cs
+|   |       BoardRepository.cs
+|   |       CalendarEventAttachmentRepository.cs
+|   |       CalendarEventExceptionRepository.cs
+|   |       CalendarEventRepository.cs
+|   |       CalendarEventSegmentRepository.cs
+|   |       CalendarReminderRepository.cs
+|   |       EventTypeRepository.cs
+|   |       GenericRepository.cs
+|   |       LeaveAllocationRepository.cs
+|   |       LeaveRequestRepository.cs
+|   |       LeaveTypeRepository.cs
+|   |       NotificationQueueRepository.cs
+|   |       PriorityRepository.cs
+|   |       RecurrenceSeriesRepository.cs
+|   |       StatusRepository.cs
+|   |       TagRepository.cs
+|   |       
+|   +---Services
+|   |       ActivityLogger.cs
+|   |       TaskLifecycleService.cs
+|   |       UserInteractionService.cs
+|   |       
+|   \---UnitOfWork
+|           EfUnitOfWork.cs
