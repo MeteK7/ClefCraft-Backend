@@ -8,16 +8,16 @@ namespace ClefCraft.Domain.Enums
 {
     public enum BoardItemRelationType
     {
-        Parent = 1,
+        Parent = 0,
 
-        Blocks = 2,
+        Blocks = 1,
 
-        DependsOn = 3,
+        DependsOn = 2,
 
-        Related = 4,
+        Related = 3,
 
-        Duplicate = 5,
+        Duplicate = 4,
 
-        SplitFrom = 6
+        SplitFrom = 5
     }
 }

@@ -43,14 +43,14 @@ namespace ClefCraft.Api.Controllers
         public async Task<ActionResult<List<BoardItemSearchDto>>> Search(
             [FromQuery] int boardId,
             [FromQuery] int excludeItemId,
-            [FromQuery] string q)
+            [FromQuery] string searchTerm)
         {
             var result =
                 await _mediator.Send(
                     new SearchBoardItemsQuery(
                         boardId,
                         excludeItemId,
-                        q));
+                        searchTerm));
 
             return Ok(result);
         }
