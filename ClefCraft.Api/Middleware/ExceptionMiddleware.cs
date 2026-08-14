@@ -1,5 +1,6 @@
 ﻿using ClefCraft.Api.Models;
 using ClefCraft.Application.Exceptions;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using System.Net;
 
@@ -16,7 +17,7 @@ namespace ClefCraft.Api.Middleware
             _logger = logger;
         }
 
-        public async Task InvokeAsync(HttpContext httpContext)
+        public async Task InvokeAsync(HttpContext httpContext, IHostEnvironment env)
         {
             try
             {
@@ -24,11 +25,11 @@ namespace ClefCraft.Api.Middleware
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(httpContext, ex);
+                await HandleExceptionAsync(httpContext, ex, env);
             }
         }
 
-        private async Task HandleExceptionAsync(HttpContext httpContext, Exception ex)
+        private async Task HandleExceptionAsync(HttpContext httpContext, Exception ex, IHostEnvironment env)
         {
             HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
             CustomProblemDetails problem = new();
@@ -56,23 +57,13 @@ namespace ClefCraft.Api.Middleware
                         Detail = NotFound.InnerException?.Message,
                     };
                     break;
-                //FOR DETAILED ERROR INFORMATION, UNCOMMENT THE BELOW CASE AND COMMENT THE DEFAULT CASE
-                //default:
-                //    problem = new CustomProblemDetails
-                //    {
-                //        Title = ex.Message,
-                //        Status = (int)statusCode,
-                //        Type = nameof(HttpStatusCode.InternalServerError),
-                //        Detail = ex.ToString()
-                //    };
-                //    break;
                 default:
                     problem = new CustomProblemDetails
                     {
                         Title = ex.Message,
                         Status = (int)statusCode,
                         Type = nameof(HttpStatusCode.InternalServerError),
-                        Detail = ex.StackTrace,
+                        Detail = env.IsDevelopment() ? ex.StackTrace : null,
                     };
                     break;
             }
