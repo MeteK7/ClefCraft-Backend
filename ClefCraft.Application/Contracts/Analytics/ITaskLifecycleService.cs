@@ -14,5 +14,6 @@ namespace ClefCraft.Application.Contracts.Analytics
         Task RecordReopenAsync(int boardItemId);
         Task RecordStatusChangeAsync(int boardItemId);
         Task RecordAssigneeChangeAsync(int boardItemId);
+        Task DeleteAsync(int boardItemId);
     }
 }

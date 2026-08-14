@@ -75,6 +75,14 @@ namespace ClefCraft.Persistence.Services
             lc.AssigneeChangeCount++;
         }
 
+        public async Task DeleteAsync(int boardItemId)
+        {
+            var lc = await Get(boardItemId);
+            if (lc == null) return;
+
+            _context.TaskLifecycles.Remove(lc);
+        }
+
         private async Task<TaskLifecycle?> Get(int boardItemId) =>
             await _context.TaskLifecycles
                 .FirstOrDefaultAsync(t => t.BoardItemId == boardItemId);
