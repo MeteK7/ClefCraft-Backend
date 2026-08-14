@@ -1,6 +1,7 @@
 ﻿using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Features.BoardColumn.Queries.GetBoardColumns;
 using ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem;
+using ClefCraft.Application.Features.BoardItem.Commands.DeleteBoardItem;
 using ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItemById;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems;
@@ -77,6 +78,13 @@ namespace ClefCraft.Api.Controllers
             return Ok(updatedItem);
         }
 
+
+        [HttpDelete("Delete/{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            await _mediator.Send(new DeleteBoardItemCommand { Id = id });
+            return NoContent();
+        }
 
         [HttpPost("SwitchColumn")]
         public async Task<ActionResult<BoardItemDto>> SwitchColumn(UpdateBoardItemCommand command)
