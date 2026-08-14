@@ -16,10 +16,10 @@ namespace ClefCraft.Infrastructure.Services.Calendar
             _logger = logger;
         }
 
-        public async Task<Dictionary<int, double>> PredictAsync(List<AIEventDto> inputs)
+        public async Task<Dictionary<int, double?>> PredictAsync(List<AIEventDto> inputs)
         {
             if (!inputs.Any())
-                return new Dictionary<int, double>();
+                return new Dictionary<int, double?>();
 
             try
             {
@@ -34,7 +34,7 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                     .GroupBy(x => x.EventId)
                     .ToDictionary(
                         g => g.Key,
-                        g => g.Last().Score
+                        g => (double?)g.Last().Score
                     );
             }
             catch (AIPredictionException ex)
@@ -42,7 +42,7 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                 // Graceful degradation: return neutral scores rather than crashing the calendar.
                 _logger.LogWarning(ex, "Attendance prediction failed; falling back to neutral scores.");
 
-                return inputs.ToDictionary(i => i.EventId, _ => -1.0); // -1 signals "unavailable" to the UI
+                return inputs.ToDictionary(i => i.EventId, _ => (double?)null); // null signals "unavailable" to the UI
             }
         }
     }
