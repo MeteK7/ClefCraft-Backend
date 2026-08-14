@@ -73,8 +73,6 @@ namespace ClefCraft.Persistence
     IWebHostEnvironment environment)
         {
             var cs = configuration.GetConnectionString("ClefCraftDatabaseConnectionString");
-            Console.WriteLine($"[Persistence DB] CONNECTION STRING EXISTS: {!string.IsNullOrEmpty(cs)}");
-            Console.WriteLine($"[Persistence DB] VALUE: {cs}");
 
             services.AddDbContext<ClefCraftDatabaseContext>(options =>
             {
