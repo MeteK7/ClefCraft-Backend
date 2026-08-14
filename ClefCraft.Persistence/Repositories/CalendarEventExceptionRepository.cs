@@ -30,7 +30,7 @@ namespace ClefCraft.Persistence.Repositories
             return await _context.CalendarEventExceptions
                 .FirstOrDefaultAsync(x =>
                     x.SeriesUid == seriesUid &&
-                    x.OccurrenceDate >= date);
+                    x.OccurrenceDate.UtcDateTime.Date == date);
         }
 
         public async Task<List<CalendarEventException>> GetBySeriesUid(

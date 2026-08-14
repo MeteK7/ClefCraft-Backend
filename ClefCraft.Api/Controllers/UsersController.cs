@@ -1,9 +1,11 @@
 ﻿using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Models.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClefCraft.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : Controller

@@ -9,7 +9,7 @@ namespace ClefCraft.Application.Contracts.Calendar
 {
     public interface IAttendancePredictionService
     {
-        Task<Dictionary<int, double>> PredictAsync(
+        Task<Dictionary<int, double?>> PredictAsync(
             List<AIEventDto> inputs);
     }
 }
