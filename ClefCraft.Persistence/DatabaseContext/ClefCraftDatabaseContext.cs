@@ -2,6 +2,7 @@
 using ClefCraft.Domain;
 using ClefCraft.Domain.Common;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -100,7 +101,11 @@ namespace ClefCraft.Persistence.DatabaseContext
                     e.State == EntityState.Deleted)
                 .ToList();
 
-            var pendingLogs = new List<ActivityLog>();
+            // Each pending log is paired with the exact EntityEntry it was built from, so the
+            // post-save ID backfill below can correlate by reference instead of by type name —
+            // matching by type name alone mis-assigns EntityId whenever a single SaveChangesAsync
+            // call creates 2+ entities of the same type (e.g. multiple CalendarReminders for one event).
+            var pendingLogs = new List<(EntityEntry<BaseEntity> Entry, ActivityLog Log)>();
 
             foreach (var entry in entries)
             {
@@ -159,7 +164,7 @@ namespace ClefCraft.Persistence.DatabaseContext
                         continue;
                 }
 
-                pendingLogs.Add(new ActivityLog
+                pendingLogs.Add((entry, new ActivityLog
                 {
                     UserId = userId,
                     EntityType = entityType,
@@ -169,30 +174,28 @@ namespace ClefCraft.Persistence.DatabaseContext
                         ? System.Text.Json.JsonSerializer.Serialize(changes)
                         : null,
                     Timestamp = utcNow
-                });
+                }));
             }
 
             // STEP 1: Save main entities
             var result = await base.SaveChangesAsync(cancellationToken);
 
-            // STEP 2: Fix IDs for added entities
-            foreach (var log in pendingLogs)
+            // STEP 2: Fix IDs for added entities — correlate by the exact EntityEntry reference
+            // captured above, not by re-matching on EntityType name, so each CREATED log gets the
+            // ID of the specific entity it was built from even when multiple same-type entities
+            // are added in one SaveChangesAsync call.
+            foreach (var (entry, log) in pendingLogs)
             {
                 if (log.EntityId == 0 && log.ActionType == "CREATED")
                 {
-                    var tracked = entries.FirstOrDefault(e =>
-                        e.State == EntityState.Added &&
-                        e.Entity.GetType().Name == log.EntityType);
-
-                    if (tracked != null)
-                        log.EntityId = tracked.Entity.Id;
+                    log.EntityId = entry.Entity.Id;
                 }
             }
 
             // STEP 3: Save logs
             if (pendingLogs.Any())
             {
-                await ActivityLogs.AddRangeAsync(pendingLogs, cancellationToken);
+                await ActivityLogs.AddRangeAsync(pendingLogs.Select(p => p.Log), cancellationToken);
                 await base.SaveChangesAsync(cancellationToken);
             }
 
