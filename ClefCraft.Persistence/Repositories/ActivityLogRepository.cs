@@ -37,5 +37,16 @@ namespace ClefCraft.Persistence.Repositories
                 .Where(l => l.EntityType == entityType && l.EntityId == entityId)
                 .CountAsync();
         }
+
+        public async Task<List<ActivityLog>> GetByEntityTypeAndIdsAsync(string entityType, IEnumerable<int> entityIds)
+        {
+            var ids = entityIds as ICollection<int> ?? entityIds.ToList();
+            if (ids.Count == 0) return new List<ActivityLog>();
+
+            return await _context.ActivityLogs
+                .Where(l => l.EntityType == entityType && ids.Contains(l.EntityId))
+                .AsNoTracking()
+                .ToListAsync();
+        }
     }
 }
