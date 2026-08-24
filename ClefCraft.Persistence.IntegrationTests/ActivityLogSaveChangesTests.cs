@@ -1,5 +1,6 @@
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Domain;
+using ClefCraft.Domain.Enums;
 using ClefCraft.Persistence.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -112,6 +113,43 @@ namespace ClefCraft.Persistence.IntegrationTests
             await context.SaveChangesAsync();
 
             context.ActivityLogs.Count().ShouldBe(countAfterCreate);
+        }
+
+        // Calendar History depends on a CalendarEvent edit producing exactly one UPDATED row, not
+        // several. UpdateCalendarEventCommandHandler used to also manually log EVENT_RESCHEDULED/
+        // IMPORTANCE_CHANGED via IActivityLogger on top of this generic diff for the same edit —
+        // that duplication was removed; this confirms the generic diff alone still captures every
+        // changed field (reschedule + importance together) in one row.
+        [Fact]
+        public async Task Save_CalendarEventRescheduledAndImportanceChanged_ProducesSingleUpdatedRowWithBothFields()
+        {
+            var context = CreateContext();
+
+            var start = DateTimeOffset.UtcNow;
+            var calendarEvent = new CalendarEvent
+            {
+                Subject = "Planning",
+                StartDate = start,
+                EndDate = start.AddHours(1),
+                Importance = ImportanceLevel.Normal,
+                UserId = "test-user"
+            };
+            await context.CalendarEvents.AddAsync(calendarEvent);
+            await context.SaveChangesAsync();
+
+            calendarEvent.StartDate = start.AddDays(1);
+            calendarEvent.EndDate = start.AddDays(1).AddHours(1);
+            calendarEvent.Importance = ImportanceLevel.High;
+            await context.SaveChangesAsync();
+
+            var updatedLogs = context.ActivityLogs
+                .Where(l => l.EntityType == "CalendarEvent" && l.EntityId == calendarEvent.Id && l.ActionType == "UPDATED")
+                .ToList();
+
+            updatedLogs.Count.ShouldBe(1);
+            updatedLogs[0].MetadataJson.ShouldContain("StartDate");
+            updatedLogs[0].MetadataJson.ShouldContain("EndDate");
+            updatedLogs[0].MetadataJson.ShouldContain("Importance");
         }
     }
 }
