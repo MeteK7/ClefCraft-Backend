@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ClefCraft.Application.Common.Helpers;
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Logging;
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
@@ -56,6 +58,15 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
             {
                 throw new ValidationException(
                     "End time must be after start time.");
+            }
+
+            if (request.IsRecurring)
+            {
+                var parsedRule = string.IsNullOrWhiteSpace(request.RecurrenceRuleJson)
+                    ? null
+                    : JsonSerializer.Deserialize<RecurrenceRule>(request.RecurrenceRuleJson);
+
+                RecurrenceHelper.ValidateRule(parsedRule!, request.StartDate);
             }
 
             var seriesUid = Guid.NewGuid().ToString();
