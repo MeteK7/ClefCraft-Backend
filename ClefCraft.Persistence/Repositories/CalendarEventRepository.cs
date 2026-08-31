@@ -22,7 +22,7 @@ namespace ClefCraft.Persistence.Repositories
         }
 
         /// <summary>
-        /// Returns events that START within [windowStart, windowEnd] OR are recurring
+        /// Returns events that OVERLAP [windowStart, windowEnd] OR are recurring
         /// (recurring events need the window applied after expansion).
         /// Filters by the dedicated UserId column, not the audit CreatedBy column.
         /// </summary>
@@ -35,8 +35,8 @@ namespace ClefCraft.Persistence.Repositories
                 .Include(e => e.EventType)
                 .Where(e => e.UserId == userId &&
                             (e.IsRecurring ||
-                             (e.StartDate >= windowStart &&
-                              e.StartDate <= windowEnd)))
+                             (e.StartDate < windowEnd &&
+                              e.EndDate > windowStart)))
                 .AsNoTracking()
                 .ToListAsync();
         }
