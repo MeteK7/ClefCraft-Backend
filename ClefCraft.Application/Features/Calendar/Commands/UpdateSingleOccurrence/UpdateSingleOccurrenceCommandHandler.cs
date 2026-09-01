@@ -1,4 +1,6 @@
-﻿using ClefCraft.Application.Contracts.Calendar;
+﻿using ClefCraft.Application.Contracts.Authorization;
+using ClefCraft.Application.Contracts.Calendar;
+using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Domain;
 using MediatR;
@@ -13,18 +15,26 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSingleOccurrenc
     public class UpdateSingleOccurrenceCommandHandler : IRequestHandler<UpdateSingleOccurrenceCommand>
     {
         private readonly ICalendarEventExceptionRepository _repo;
+        private readonly ICalendarAccessService _calendarAccessService;
+        private readonly IUserService _userService;
         private readonly IUnitOfWork _unitOfWork;
 
         public UpdateSingleOccurrenceCommandHandler(
             ICalendarEventExceptionRepository repo,
+            ICalendarAccessService calendarAccessService,
+            IUserService userService,
             IUnitOfWork unitOfWork)
         {
             _repo = repo;
+            _calendarAccessService = calendarAccessService;
+            _userService = userService;
             _unitOfWork = unitOfWork;
         }
 
         public async Task<Unit> Handle(UpdateSingleOccurrenceCommand request, CancellationToken cancellationToken)
         {
+            await _calendarAccessService.EnsureSeriesOwnedByUserAsync(request.SeriesUid, _userService.UserId);
+
             // IMPORTANT: now lookup is SeriesUid + OccurrenceDate
             var exception = await _repo.GetBySeriesAndDate(
                 request.SeriesUid,

@@ -12,6 +12,8 @@ public interface IBoardItemRelationRepository
 {
     Task<List<BoardItemRelation>> GetForItemAsync(int itemId);
 
+    Task<BoardItemRelation?> GetByIdAsync(int id);
+
     Task AddAsync(BoardItemRelation relation);
 
     Task DeleteAsync(int id);

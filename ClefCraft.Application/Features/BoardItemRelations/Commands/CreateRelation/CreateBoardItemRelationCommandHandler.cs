@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using ClefCraft.Application.Contracts.Authorization;
+using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Features.BoardItemRelations.DTOs;
 using ClefCraft.Domain;
@@ -17,17 +19,23 @@ namespace ClefCraft.Application.Features.BoardItemRelations.Commands.CreateRelat
     {
         private readonly IBoardItemRelationRepository _relationRepository;
         private readonly IBoardItemRepository _boardItemRepository;
+        private readonly IBoardAccessService _boardAccessService;
+        private readonly IUserService _userService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public CreateBoardItemRelationCommandHandler(
             IBoardItemRelationRepository relationRepository,
             IBoardItemRepository boardItemRepository,
+            IBoardAccessService boardAccessService,
+            IUserService userService,
             IUnitOfWork unitOfWork,
             IMapper mapper)
         {
             _relationRepository = relationRepository;
             _boardItemRepository = boardItemRepository;
+            _boardAccessService = boardAccessService;
+            _userService = userService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -55,6 +63,10 @@ namespace ClefCraft.Application.Features.BoardItemRelations.Commands.CreateRelat
             if (target == null)
                 throw new ApplicationException(
                     $"Board item {request.TargetBoardItemId} was not found.");
+
+            var userId = _userService.UserId;
+            await _boardAccessService.EnsureBoardOwnedByUserAsync(source.BoardId, userId);
+            await _boardAccessService.EnsureBoardOwnedByUserAsync(target.BoardId, userId);
 
             var relationType =
                 (BoardItemRelationType)request.RelationType;

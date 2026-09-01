@@ -3,6 +3,7 @@ using System;
 using ClefCraft.Persistence.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ClefCraft.Persistence.Migrations
 {
     [DbContext(typeof(ClefCraftDatabaseContext))]
-    partial class ClefCraftDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20260901201909_AddBoardOwnerUserId")]
+    partial class AddBoardOwnerUserId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -60,6 +60,9 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
             if (entity == null)
                 throw new NotFoundException(nameof(CalendarEvent), request.Id);
 
+            if (entity.UserId != _userService.UserId)
+                throw new ForbiddenAccessException();
+
             if (string.IsNullOrWhiteSpace(request.Subject))
                 throw new ValidationException("Subject is required.");
 

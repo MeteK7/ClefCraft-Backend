@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Features.BoardColumn.Queries.GetBoardColumns;
+using ClefCraft.Domain;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -14,21 +16,35 @@ namespace ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems
     public class GetBoardItemsHandler : IRequestHandler<GetBoardItemsQuery, List<BoardColumnDto>>
     {
         private readonly IBoardItemRepository _boardItemRepository;
+        private readonly IBoardAccessService _boardAccessService;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
 
-        public GetBoardItemsHandler(IBoardItemRepository boardItemRepository, IMapper mapper, IUserService userService)
+        public GetBoardItemsHandler(
+            IBoardItemRepository boardItemRepository,
+            IBoardAccessService boardAccessService,
+            IMapper mapper,
+            IUserService userService)
         {
             _boardItemRepository = boardItemRepository;
+            _boardAccessService = boardAccessService;
             _mapper = mapper;
             _userService = userService;
         }
 
         public async Task<List<BoardColumnDto>> Handle(GetBoardItemsQuery request, CancellationToken cancellationToken)
         {
-            var columns = request.BoardId.HasValue
-                ? await _boardItemRepository.GetBoardColumnsWithBoardItems(request.BoardId.Value)
-                : await _boardItemRepository.GetAllBoardColumnsWithItems();
+            List<ClefCraft.Domain.BoardColumn> columns;
+
+            if (request.BoardId.HasValue)
+            {
+                await _boardAccessService.EnsureBoardOwnedByUserAsync(request.BoardId.Value, _userService.UserId);
+                columns = await _boardItemRepository.GetBoardColumnsWithBoardItems(request.BoardId.Value);
+            }
+            else
+            {
+                columns = await _boardItemRepository.GetAllBoardColumnsWithItems(_userService.UserId);
+            }
 
             var mappedColumns = _mapper.Map<List<BoardColumnDto>>(columns);
 

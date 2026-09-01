@@ -1,5 +1,6 @@
 using ClefCraft.Application.Common.Models;
 using ClefCraft.Application.Contracts.ActivityLogs;
+using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Exceptions;
 using MediatR;
@@ -12,11 +13,16 @@ namespace ClefCraft.Application.Features.ActivityLogs.Queries.GetActivityLogForE
     public class GetActivityLogForEntityHandler : IRequestHandler<GetActivityLogForEntityQuery, PagedResult<ActivityLogEntryDto>>
     {
         private readonly IActivityLogRepository _activityLogRepository;
+        private readonly IBoardAccessService _boardAccessService;
         private readonly IUserService _userService;
 
-        public GetActivityLogForEntityHandler(IActivityLogRepository activityLogRepository, IUserService userService)
+        public GetActivityLogForEntityHandler(
+            IActivityLogRepository activityLogRepository,
+            IBoardAccessService boardAccessService,
+            IUserService userService)
         {
             _activityLogRepository = activityLogRepository;
+            _boardAccessService = boardAccessService;
             _userService = userService;
         }
 
@@ -26,6 +32,18 @@ namespace ClefCraft.Application.Features.ActivityLogs.Queries.GetActivityLogForE
             var validationResult = await validator.ValidateAsync(request, cancellationToken);
             if (!validationResult.IsValid)
                 throw new BadRequestException("Invalid activity log request", validationResult);
+
+            // AllowedEntityTypes only contains "BoardItem" today (enforced by the validator
+            // above). Dispatch by type so a future addition to AllowedEntityTypes fails closed
+            // here instead of silently skipping the ownership check.
+            switch (request.EntityType)
+            {
+                case "BoardItem":
+                    await _boardAccessService.EnsureBoardItemOwnedByUserAsync(request.EntityId, _userService.UserId);
+                    break;
+                default:
+                    throw new ForbiddenAccessException();
+            }
 
             var skip = (request.PageNumber - 1) * request.PageSize;
 

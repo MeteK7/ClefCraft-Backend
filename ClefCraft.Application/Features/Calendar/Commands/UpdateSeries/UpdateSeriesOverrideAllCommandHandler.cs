@@ -1,4 +1,6 @@
-﻿using ClefCraft.Application.Contracts.Calendar;
+﻿using ClefCraft.Application.Contracts.Authorization;
+using ClefCraft.Application.Contracts.Calendar;
+using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Domain;
 using MediatR;
@@ -27,15 +29,21 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSeries
     {
         private readonly ICalendarEventSegmentRepository _segmentRepo;
         private readonly ICalendarEventExceptionRepository _exceptionRepo;
+        private readonly ICalendarAccessService _calendarAccessService;
+        private readonly IUserService _userService;
         private readonly IUnitOfWork _uow;
 
         public UpdateSeriesOverrideAllCommandHandler(
             ICalendarEventSegmentRepository segmentRepo,
             ICalendarEventExceptionRepository exceptionRepo,
+            ICalendarAccessService calendarAccessService,
+            IUserService userService,
             IUnitOfWork uow)
         {
             _segmentRepo = segmentRepo;
             _exceptionRepo = exceptionRepo;
+            _calendarAccessService = calendarAccessService;
+            _userService = userService;
             _uow = uow;
         }
 
@@ -43,6 +51,8 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSeries
             UpdateSeriesOverrideAllCommand request,
             CancellationToken cancellationToken)
         {
+            await _calendarAccessService.EnsureSeriesOwnedByUserAsync(request.SeriesUid, _userService.UserId);
+
             // ------------------------------------------------------------------
             // 1. Update every segment in the series.
             //    Null fields mean "do not change that specific property",

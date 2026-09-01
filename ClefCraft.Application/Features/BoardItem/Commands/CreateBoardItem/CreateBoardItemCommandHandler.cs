@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ClefCraft.Application.Contracts.Analytics;
+using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems;
@@ -16,14 +17,22 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem
     public class CreateBoardItemCommandHandler : IRequestHandler<CreateBoardItemCommand, BoardItemDto>
     {
         private readonly IBoardItemRepository _boardItemRepository;
+        private readonly IBoardAccessService _boardAccessService;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly ITaskLifecycleService _taskLifecycleService;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CreateBoardItemCommandHandler(IBoardItemRepository boardItemRepository, IMapper mapper, IUserService userService, ITaskLifecycleService taskLifecycleService, IUnitOfWork unitOfWork)
+        public CreateBoardItemCommandHandler(
+            IBoardItemRepository boardItemRepository,
+            IBoardAccessService boardAccessService,
+            IMapper mapper,
+            IUserService userService,
+            ITaskLifecycleService taskLifecycleService,
+            IUnitOfWork unitOfWork)
         {
             _boardItemRepository = boardItemRepository;
+            _boardAccessService = boardAccessService;
             _mapper = mapper;
             _userService = userService;
             _taskLifecycleService = taskLifecycleService;
@@ -33,6 +42,9 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem
         public async Task<BoardItemDto> Handle(CreateBoardItemCommand request, CancellationToken cancellationToken)
         {
             var userId = _userService.UserId;
+
+            await _boardAccessService.EnsureBoardOwnedByUserAsync(request.BoardId, userId);
+
             var boardItem = new Domain.BoardItem
             {
                 Title = request.Title,

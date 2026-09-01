@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
 using MediatR;
@@ -13,12 +14,18 @@ namespace ClefCraft.Application.Features.Calendar.Queries
     public class GetWorkHistoryQueryHandler : IRequestHandler<GetWorkHistoryQuery, List<WorkHistoryDto>>
     {
         private readonly ICalendarEventRepository _calendarEventRepository;
+        private readonly IBoardAccessService _boardAccessService;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
 
-        public GetWorkHistoryQueryHandler(ICalendarEventRepository calendarEventRepository, IMapper mapper, IUserService userService)
+        public GetWorkHistoryQueryHandler(
+            ICalendarEventRepository calendarEventRepository,
+            IBoardAccessService boardAccessService,
+            IMapper mapper,
+            IUserService userService)
         {
             _calendarEventRepository = calendarEventRepository;
+            _boardAccessService = boardAccessService;
             _mapper = mapper;
             _userService = userService;
         }
@@ -26,6 +33,9 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             GetWorkHistoryQuery request,
             CancellationToken cancellationToken)
         {
+            // itemId is a BoardItem id: ownership resolves through the board it belongs to.
+            await _boardAccessService.EnsureBoardItemOwnedByUserAsync(request.ItemId, _userService.UserId);
+
             var history = await _calendarEventRepository
                 .GetWorkHistoryByItemIdAsync(request.ItemId);
 

@@ -1,4 +1,6 @@
-﻿using ClefCraft.Application.Contracts.Persistence;
+﻿using ClefCraft.Application.Contracts.Authorization;
+using ClefCraft.Application.Contracts.Identity;
+using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Features.BoardItemRelations.DTOs;
 using ClefCraft.Domain.Enums;
 using MediatR;
@@ -14,17 +16,25 @@ namespace ClefCraft.Application.Features.BoardItemRelations.Queries.GetRelations
         : IRequestHandler<GetBoardItemRelationsQuery, RelationshipHubDto>
     {
         private readonly IBoardItemRelationRepository _repository;
+        private readonly IBoardAccessService _boardAccessService;
+        private readonly IUserService _userService;
 
         public GetBoardItemRelationsQueryHandler(
-            IBoardItemRelationRepository repository)
+            IBoardItemRelationRepository repository,
+            IBoardAccessService boardAccessService,
+            IUserService userService)
         {
             _repository = repository;
+            _boardAccessService = boardAccessService;
+            _userService = userService;
         }
 
         public async Task<RelationshipHubDto> Handle(
             GetBoardItemRelationsQuery request,
             CancellationToken cancellationToken)
         {
+            await _boardAccessService.EnsureBoardItemOwnedByUserAsync(request.ItemId, _userService.UserId);
+
             var relations = await _repository.GetForItemAsync(request.ItemId);
 
             var hub = new RelationshipHubDto

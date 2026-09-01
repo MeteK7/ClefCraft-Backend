@@ -2,6 +2,7 @@ using AutoMapper;
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
+using ClefCraft.Application.Exceptions;
 using ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent;
 using ClefCraft.Application.Features.Calendar.Queries;
 using ClefCraft.Domain;
@@ -212,6 +213,21 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
 
             eventRepo.Verify(r => r.UpdateAsync(It.IsAny<CalendarEvent>()), Times.Never);
             seriesRepo.Verify(r => r.CreateAsync(It.IsAny<RecurrenceSeries>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task Handle_EventOwnedBySomeoneElse_ThrowsForbiddenAccessException_BeforeAnyWrite()
+        {
+            var entity = MakeEntity(isRecurring: false);
+            entity.UserId = "someone-else"; // MakeHandler's caller is always "user-1"
+
+            var (handler, eventRepo, seriesRepo, _, _) = MakeHandler(entity, existingSeries: null);
+
+            await Should.ThrowAsync<ForbiddenAccessException>(() =>
+                handler.Handle(MakeRequest(isRecurring: false), CancellationToken.None));
+
+            eventRepo.Verify(r => r.UpdateAsync(It.IsAny<CalendarEvent>()), Times.Never);
+            seriesRepo.Verify(r => r.GetBySeriesUidAsync(It.IsAny<string>()), Times.Never);
         }
     }
 }

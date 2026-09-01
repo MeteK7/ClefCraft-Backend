@@ -1,3 +1,4 @@
+using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Exceptions;
 using ClefCraft.Application.Features.ActivityLogs.Queries.GetActivityLogForEntity;
@@ -22,6 +23,19 @@ namespace ClefCraft.Application.UnitTests.Features.ActivityLogs
             return mock;
         }
 
+        private static Mock<IBoardAccessService> MockBoardAccessService(bool authorized = true)
+        {
+            var mock = new Mock<IBoardAccessService>();
+            var setup = mock.Setup(s => s.EnsureBoardItemOwnedByUserAsync(It.IsAny<int>(), It.IsAny<string>()));
+
+            if (authorized)
+                setup.Returns(Task.CompletedTask);
+            else
+                setup.ThrowsAsync(new ForbiddenAccessException());
+
+            return mock;
+        }
+
         [Fact]
         public async Task Handle_ReturnsMappedEntries_WithResolvedActorNameAndParsedChanges()
         {
@@ -42,7 +56,7 @@ namespace ClefCraft.Application.UnitTests.Features.ActivityLogs
             var repo = MockActivityLogRepository.GetMockActivityLogRepository(logs);
             var userService = MockUserService(new User { Id = "user-1", Firstname = "Jane", Lastname = "Doe" });
 
-            var handler = new GetActivityLogForEntityHandler(repo.Object, userService.Object);
+            var handler = new GetActivityLogForEntityHandler(repo.Object, MockBoardAccessService().Object, userService.Object);
 
             var result = await handler.Handle(
                 new GetActivityLogForEntityQuery { EntityType = "BoardItem", EntityId = 88 },
@@ -62,7 +76,7 @@ namespace ClefCraft.Application.UnitTests.Features.ActivityLogs
             var repo = MockActivityLogRepository.GetMockActivityLogRepository(new List<ActivityLog>());
             var userService = MockUserService();
 
-            var handler = new GetActivityLogForEntityHandler(repo.Object, userService.Object);
+            var handler = new GetActivityLogForEntityHandler(repo.Object, MockBoardAccessService().Object, userService.Object);
 
             var result = await handler.Handle(
                 new GetActivityLogForEntityQuery { EntityType = "BoardItem", EntityId = 999 },
@@ -92,7 +106,7 @@ namespace ClefCraft.Application.UnitTests.Features.ActivityLogs
             var repo = MockActivityLogRepository.GetMockActivityLogRepository(logs);
             var userService = MockUserService(); // no matching user returned
 
-            var handler = new GetActivityLogForEntityHandler(repo.Object, userService.Object);
+            var handler = new GetActivityLogForEntityHandler(repo.Object, MockBoardAccessService().Object, userService.Object);
 
             var result = await handler.Handle(
                 new GetActivityLogForEntityQuery { EntityType = "BoardItem", EntityId = 88 },
@@ -108,11 +122,26 @@ namespace ClefCraft.Application.UnitTests.Features.ActivityLogs
             var repo = MockActivityLogRepository.GetMockActivityLogRepository(new List<ActivityLog>());
             var userService = MockUserService();
 
-            var handler = new GetActivityLogForEntityHandler(repo.Object, userService.Object);
+            var handler = new GetActivityLogForEntityHandler(repo.Object, MockBoardAccessService().Object, userService.Object);
 
             await Should.ThrowAsync<BadRequestException>(() =>
                 handler.Handle(
                     new GetActivityLogForEntityQuery { EntityType = "NotAllowed", EntityId = 1 },
+                    CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task Handle_BoardItemNotOwnedByCaller_ThrowsForbiddenAccessException()
+        {
+            var repo = MockActivityLogRepository.GetMockActivityLogRepository(new List<ActivityLog>());
+            var userService = MockUserService();
+            var boardAccessService = MockBoardAccessService(authorized: false);
+
+            var handler = new GetActivityLogForEntityHandler(repo.Object, boardAccessService.Object, userService.Object);
+
+            await Should.ThrowAsync<ForbiddenAccessException>(() =>
+                handler.Handle(
+                    new GetActivityLogForEntityQuery { EntityType = "BoardItem", EntityId = 88 },
                     CancellationToken.None));
         }
     }

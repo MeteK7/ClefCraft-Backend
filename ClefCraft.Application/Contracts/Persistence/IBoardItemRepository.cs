@@ -9,7 +9,7 @@ namespace ClefCraft.Application.Contracts.Persistence
 {
     public interface IBoardItemRepository : IGenericRepository<BoardItem>
     {
-        Task<List<BoardColumn>> GetAllBoardColumnsWithItems();
+        Task<List<BoardColumn>> GetAllBoardColumnsWithItems(string userId);
         Task<List<BoardColumn>> GetBoardColumnsWithBoardItems(int boardId);
         Task<BoardItem> GetBoardItemById(int id);
         Task<BoardItemStatus?> GetBoardItemStatusByBoardItemId(int boardItemId);

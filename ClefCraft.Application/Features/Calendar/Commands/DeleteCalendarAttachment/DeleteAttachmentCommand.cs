@@ -10,5 +10,6 @@ namespace ClefCraft.Application.Features.Calendar.Commands.DeleteCalendarAttachm
     public class DeleteAttachmentCommand : IRequest
     {
         public int Id { get; set; }
+        public string UserId { get; set; }
     }
 }
