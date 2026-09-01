@@ -35,7 +35,7 @@ namespace ClefCraft.Persistence.IntegrationTests
         {
             var context = CreateContext();
 
-            var board = new Board { Title = "Board A" };
+            var board = new Board { Title = "Board A", OwnerUserId = "test-user" };
             await context.Boards.AddAsync(board);
             await context.SaveChangesAsync();
 
@@ -83,7 +83,7 @@ namespace ClefCraft.Persistence.IntegrationTests
         {
             var context = CreateContext();
 
-            var board = new Board { Title = "Original Title" };
+            var board = new Board { Title = "Original Title", OwnerUserId = "test-user" };
             await context.Boards.AddAsync(board);
             await context.SaveChangesAsync();
 
@@ -102,7 +102,7 @@ namespace ClefCraft.Persistence.IntegrationTests
         {
             var context = CreateContext();
 
-            var board = new Board { Title = "Same Title" };
+            var board = new Board { Title = "Same Title", OwnerUserId = "test-user" };
             await context.Boards.AddAsync(board);
             await context.SaveChangesAsync();
 
