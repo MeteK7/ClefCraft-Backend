@@ -1,4 +1,5 @@
 using ClefCraft.Application.Contracts.ActivityLogs;
+using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Exceptions;
@@ -52,6 +53,26 @@ namespace ClefCraft.Application.UnitTests.Features.ActivityLogs
             return mock;
         }
 
+        private static Mock<ICalendarAccessService> MockCalendarAccessService(bool authorized = true)
+        {
+            var mock = new Mock<ICalendarAccessService>();
+            var eventSetup = mock.Setup(s => s.EnsureEventOwnedByUserAsync(It.IsAny<int>(), It.IsAny<string>()));
+            var seriesSetup = mock.Setup(s => s.EnsureSeriesOwnedByUserAsync(It.IsAny<string>(), It.IsAny<string>()));
+
+            if (authorized)
+            {
+                eventSetup.Returns(Task.CompletedTask);
+                seriesSetup.Returns(Task.CompletedTask);
+            }
+            else
+            {
+                eventSetup.ThrowsAsync(new ForbiddenAccessException());
+                seriesSetup.ThrowsAsync(new ForbiddenAccessException());
+            }
+
+            return mock;
+        }
+
         [Fact]
         public async Task Handle_NonRecurring_ReturnsOnlyEventScopedEntries_AndNeverQueriesSegmentsOrExceptions()
         {
@@ -65,7 +86,7 @@ namespace ClefCraft.Application.UnitTests.Features.ActivityLogs
             var exceptionRepo = MockExceptionRepository(new List<CalendarEventException>());
             var userService = MockUserService(new User { Id = "u1", Firstname = "Jane", Lastname = "Doe" });
 
-            var handler = new GetCalendarEventActivityHandler(activityRepo.Object, segmentRepo.Object, exceptionRepo.Object, userService.Object);
+            var handler = new GetCalendarEventActivityHandler(activityRepo.Object, segmentRepo.Object, exceptionRepo.Object, MockCalendarAccessService().Object, userService.Object);
 
             var result = await handler.Handle(new GetCalendarEventActivityQuery { EventId = 42 }, CancellationToken.None);
 
@@ -121,7 +142,7 @@ namespace ClefCraft.Application.UnitTests.Features.ActivityLogs
             var exceptionRepo = MockExceptionRepository(new List<CalendarEventException> { exception });
             var userService = MockUserService(new User { Id = "u1", Firstname = "Jane", Lastname = "Doe" });
 
-            var handler = new GetCalendarEventActivityHandler(activityRepo.Object, segmentRepo.Object, exceptionRepo.Object, userService.Object);
+            var handler = new GetCalendarEventActivityHandler(activityRepo.Object, segmentRepo.Object, exceptionRepo.Object, MockCalendarAccessService().Object, userService.Object);
 
             var result = await handler.Handle(
                 new GetCalendarEventActivityQuery { EventId = 42, SeriesUid = "series-1" },
@@ -153,7 +174,7 @@ namespace ClefCraft.Application.UnitTests.Features.ActivityLogs
             var exceptionRepo = MockExceptionRepository(new List<CalendarEventException>());
             var userService = MockUserService(new User { Id = "u1", Firstname = "Jane", Lastname = "Doe" });
 
-            var handler = new GetCalendarEventActivityHandler(activityRepo.Object, segmentRepo.Object, exceptionRepo.Object, userService.Object);
+            var handler = new GetCalendarEventActivityHandler(activityRepo.Object, segmentRepo.Object, exceptionRepo.Object, MockCalendarAccessService().Object, userService.Object);
 
             var result = await handler.Handle(
                 new GetCalendarEventActivityQuery { EventId = 42, SeriesUid = "series-1" },
@@ -176,7 +197,7 @@ namespace ClefCraft.Application.UnitTests.Features.ActivityLogs
             var exceptionRepo = MockExceptionRepository(new List<CalendarEventException>());
             var userService = MockUserService(new User { Id = "u1", Firstname = "Jane", Lastname = "Doe" });
 
-            var handler = new GetCalendarEventActivityHandler(activityRepo.Object, segmentRepo.Object, exceptionRepo.Object, userService.Object);
+            var handler = new GetCalendarEventActivityHandler(activityRepo.Object, segmentRepo.Object, exceptionRepo.Object, MockCalendarAccessService().Object, userService.Object);
 
             var result = await handler.Handle(
                 new GetCalendarEventActivityQuery { EventId = 42, PageNumber = 2, PageSize = 2 },
@@ -195,10 +216,47 @@ namespace ClefCraft.Application.UnitTests.Features.ActivityLogs
             var exceptionRepo = MockExceptionRepository(new List<CalendarEventException>());
             var userService = MockUserService();
 
-            var handler = new GetCalendarEventActivityHandler(activityRepo.Object, segmentRepo.Object, exceptionRepo.Object, userService.Object);
+            var handler = new GetCalendarEventActivityHandler(activityRepo.Object, segmentRepo.Object, exceptionRepo.Object, MockCalendarAccessService().Object, userService.Object);
 
             await Should.ThrowAsync<BadRequestException>(() =>
                 handler.Handle(new GetCalendarEventActivityQuery { EventId = 0 }, CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task Handle_EventNotOwnedByCaller_ThrowsForbiddenAccessException()
+        {
+            var activityRepo = MockActivityLogRepository(new());
+            var segmentRepo = MockSegmentRepository(new List<CalendarEventSegment>());
+            var exceptionRepo = MockExceptionRepository(new List<CalendarEventException>());
+            var userService = MockUserService();
+            var calendarAccessService = MockCalendarAccessService(authorized: false);
+
+            var handler = new GetCalendarEventActivityHandler(activityRepo.Object, segmentRepo.Object, exceptionRepo.Object, calendarAccessService.Object, userService.Object);
+
+            await Should.ThrowAsync<ForbiddenAccessException>(() =>
+                handler.Handle(new GetCalendarEventActivityQuery { EventId = 42 }, CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task Handle_SeriesUidNotOwnedByCaller_ThrowsForbiddenAccessException_EvenWhenEventIdIsOwned()
+        {
+            var activityRepo = MockActivityLogRepository(new());
+            var segmentRepo = MockSegmentRepository(new List<CalendarEventSegment>());
+            var exceptionRepo = MockExceptionRepository(new List<CalendarEventException>());
+            var userService = MockUserService();
+
+            var calendarAccessService = new Mock<ICalendarAccessService>();
+            calendarAccessService
+                .Setup(s => s.EnsureEventOwnedByUserAsync(It.IsAny<int>(), It.IsAny<string>()))
+                .Returns(Task.CompletedTask);
+            calendarAccessService
+                .Setup(s => s.EnsureSeriesOwnedByUserAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .ThrowsAsync(new ForbiddenAccessException());
+
+            var handler = new GetCalendarEventActivityHandler(activityRepo.Object, segmentRepo.Object, exceptionRepo.Object, calendarAccessService.Object, userService.Object);
+
+            await Should.ThrowAsync<ForbiddenAccessException>(() =>
+                handler.Handle(new GetCalendarEventActivityQuery { EventId = 42, SeriesUid = "someone-elses-series" }, CancellationToken.None));
         }
     }
 }
