@@ -21,7 +21,7 @@ namespace ClefCraft.Application.Features.Board.Queries.GetBoards
         }
         public async Task<List<BoardDto>> Handle(GetBoardsQuery request, CancellationToken cancellationToken)
         {
-            var boards = await _boardRepository.GetBoards();
+            var boards = await _boardRepository.GetBoards(request.UserId);
             return _mapper.Map<List<BoardDto>>(boards);
         }
     }

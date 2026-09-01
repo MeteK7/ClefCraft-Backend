@@ -10,5 +10,6 @@ namespace ClefCraft.Application.Features.Calendar.Queries.GetCalendarAttachments
     public class GetAttachmentsQuery : IRequest<List<CalendarEventAttachmentDto>>
     {
         public int EventId { get; set; }
+        public string UserId { get; set; }
     }
 }
