@@ -49,5 +49,12 @@ namespace ClefCraft.Persistence.Repositories
                 .AsNoTracking()
                 .ToListAsync();
         }
+
+        public async Task<CalendarEvent?> GetBySeriesUidAsync(string seriesUid)
+        {
+            return await _context.CalendarEvents
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.SeriesUid == seriesUid);
+        }
     }
 }
