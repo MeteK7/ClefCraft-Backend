@@ -57,6 +57,16 @@ namespace ClefCraft.Api.Middleware
                         Detail = NotFound.InnerException?.Message,
                     };
                     break;
+                case ForbiddenAccessException forbidden:
+                    statusCode = HttpStatusCode.Forbidden;
+                    problem = new CustomProblemDetails
+                    {
+                        Title = forbidden.Message,
+                        Status = (int)statusCode,
+                        Type = nameof(ForbiddenAccessException),
+                        Detail = forbidden.InnerException?.Message,
+                    };
+                    break;
                 default:
                     problem = new CustomProblemDetails
                     {
