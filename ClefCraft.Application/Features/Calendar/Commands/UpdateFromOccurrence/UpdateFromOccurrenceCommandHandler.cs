@@ -1,4 +1,6 @@
-﻿using ClefCraft.Application.Contracts.Calendar;
+﻿using ClefCraft.Application.Contracts.Authorization;
+using ClefCraft.Application.Contracts.Calendar;
+using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Exceptions;
 using ClefCraft.Domain;
@@ -17,17 +19,23 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateFromOccurrence
         private readonly IRecurrenceSeriesRepository _seriesRepo;
         private readonly ICalendarEventSegmentRepository _segmentRepo;
         private readonly ICalendarEventExceptionRepository _exceptionRepo;
+        private readonly ICalendarAccessService _calendarAccessService;
+        private readonly IUserService _userService;
         private readonly IUnitOfWork _uow;
 
         public UpdateFromOccurrenceCommandHandler(
             IRecurrenceSeriesRepository seriesRepo,
             ICalendarEventSegmentRepository segmentRepo,
             ICalendarEventExceptionRepository exceptionRepo,
+            ICalendarAccessService calendarAccessService,
+            IUserService userService,
             IUnitOfWork uow)
         {
             _seriesRepo = seriesRepo;
             _segmentRepo = segmentRepo;
             _exceptionRepo = exceptionRepo;
+            _calendarAccessService = calendarAccessService;
+            _userService = userService;
             _uow = uow;
         }
 
@@ -35,6 +43,8 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateFromOccurrence
             UpdateFromOccurrenceCommand request,
             CancellationToken cancellationToken)
         {
+            await _calendarAccessService.EnsureSeriesOwnedByUserAsync(request.SeriesUid, _userService.UserId);
+
             var series = await _seriesRepo.GetBySeriesUidAsync(request.SeriesUid);
 
             if (series == null)

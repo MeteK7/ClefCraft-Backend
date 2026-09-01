@@ -1,5 +1,6 @@
 using ClefCraft.Application.Common.Models;
 using ClefCraft.Application.Contracts.ActivityLogs;
+using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Exceptions;
@@ -18,6 +19,7 @@ namespace ClefCraft.Application.Features.ActivityLogs.Queries.GetCalendarEventAc
         private readonly IActivityLogRepository _activityLogRepository;
         private readonly ICalendarEventSegmentRepository _segmentRepository;
         private readonly ICalendarEventExceptionRepository _exceptionRepository;
+        private readonly ICalendarAccessService _calendarAccessService;
         private readonly IUserService _userService;
 
         private record MergedEntry(
@@ -31,11 +33,13 @@ namespace ClefCraft.Application.Features.ActivityLogs.Queries.GetCalendarEventAc
             IActivityLogRepository activityLogRepository,
             ICalendarEventSegmentRepository segmentRepository,
             ICalendarEventExceptionRepository exceptionRepository,
+            ICalendarAccessService calendarAccessService,
             IUserService userService)
         {
             _activityLogRepository = activityLogRepository;
             _segmentRepository = segmentRepository;
             _exceptionRepository = exceptionRepository;
+            _calendarAccessService = calendarAccessService;
             _userService = userService;
         }
 
@@ -45,6 +49,16 @@ namespace ClefCraft.Application.Features.ActivityLogs.Queries.GetCalendarEventAc
             var validationResult = await validator.ValidateAsync(request, cancellationToken);
             if (!validationResult.IsValid)
                 throw new BadRequestException("Invalid calendar activity request", validationResult);
+
+            await _calendarAccessService.EnsureEventOwnedByUserAsync(request.EventId, _userService.UserId);
+
+            if (!string.IsNullOrWhiteSpace(request.SeriesUid))
+            {
+                // The caller could own EventId but pass an arbitrary SeriesUid belonging to
+                // someone else's series — check it independently rather than assuming the two
+                // always agree.
+                await _calendarAccessService.EnsureSeriesOwnedByUserAsync(request.SeriesUid, _userService.UserId);
+            }
 
             var merged = new List<MergedEntry>();
 

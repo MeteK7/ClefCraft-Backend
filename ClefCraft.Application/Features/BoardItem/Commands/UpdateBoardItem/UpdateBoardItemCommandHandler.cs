@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ClefCraft.Application.Contracts.Analytics;
+using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItemById;
@@ -17,6 +18,7 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
     public class UpdateBoardItemCommandHandler : IRequestHandler<UpdateBoardItemCommand, BoardItemByIdDto>
     {
         private readonly IBoardItemRepository _boardItemRepository;
+        private readonly IBoardAccessService _boardAccessService;
         private readonly IStatusRepository _statusRepository;
         private readonly IPriorityRepository _priorityRepository;
         private readonly ITagRepository _tagRepository;
@@ -27,6 +29,7 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
 
         public UpdateBoardItemCommandHandler(
             IBoardItemRepository boardItemRepository,
+            IBoardAccessService boardAccessService,
             IStatusRepository statusRepository,
             IPriorityRepository priorityRepository,
             ITagRepository tagRepository,
@@ -36,6 +39,7 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
             IUnitOfWork unitOfWork)
         {
             _boardItemRepository = boardItemRepository;
+            _boardAccessService = boardAccessService;
             _statusRepository = statusRepository;
             _priorityRepository = priorityRepository;
             _tagRepository = tagRepository;
@@ -53,6 +57,8 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
             {
                 throw new ApplicationException($"Board item with ID {request.Id} not found.");
             }
+
+            await _boardAccessService.EnsureBoardOwnedByUserAsync(boardItem.BoardId, _userService.UserId);
 
             var previousStatusId = boardItem.BoardItemStatus?.StatusId;
             var previousAssignee = boardItem.AssigneeId;

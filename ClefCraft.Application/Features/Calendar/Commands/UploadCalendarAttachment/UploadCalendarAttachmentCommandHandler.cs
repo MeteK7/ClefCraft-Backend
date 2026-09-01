@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Features.Calendar.Queries;
 using ClefCraft.Domain;
@@ -18,15 +19,18 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UploadCalendarAttachm
     {
         private readonly IFileAttachmentService _fileService;
         private readonly ICalendarEventAttachmentRepository _attachmentRepo;
+        private readonly ICalendarAccessService _calendarAccessService;
         private readonly IUnitOfWork _unitOfWork;
 
         public UploadCalendarAttachmentCommandHandler(
             IFileAttachmentService fileService,
             ICalendarEventAttachmentRepository attachmentRepo,
+            ICalendarAccessService calendarAccessService,
             IUnitOfWork unitOfWork)
         {
             _fileService = fileService;
             _attachmentRepo = attachmentRepo;
+            _calendarAccessService = calendarAccessService;
             _unitOfWork = unitOfWork;
         }
 
@@ -34,6 +38,8 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UploadCalendarAttachm
             UploadCalendarAttachmentCommand request,
             CancellationToken cancellationToken)
         {
+            await _calendarAccessService.EnsureEventOwnedByUserAsync(request.EventId, request.UserId);
+
             var entities = new List<(CalendarEventAttachmentDto Dto, CalendarEventAttachment Entity)>();
 
             foreach (var file in request.Files)

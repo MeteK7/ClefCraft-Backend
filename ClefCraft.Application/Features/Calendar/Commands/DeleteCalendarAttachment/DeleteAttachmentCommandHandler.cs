@@ -1,4 +1,5 @@
-﻿using ClefCraft.Application.Contracts.Calendar;
+﻿using ClefCraft.Application.Contracts.Authorization;
+using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.FileAttachment;
 using ClefCraft.Application.Contracts.Persistence;
 using MediatR;
@@ -13,15 +14,18 @@ namespace ClefCraft.Application.Features.Calendar.Commands.DeleteCalendarAttachm
     public class DeleteAttachmentCommandHandler : IRequestHandler<DeleteAttachmentCommand>
     {
         private readonly ICalendarEventAttachmentRepository _repo;
+        private readonly ICalendarAccessService _calendarAccessService;
         private readonly IFileAttachmentService _fileService;
         private readonly IUnitOfWork _unitOfWork;
 
         public DeleteAttachmentCommandHandler(
             ICalendarEventAttachmentRepository repo,
+            ICalendarAccessService calendarAccessService,
             IFileAttachmentService fileService,
             IUnitOfWork unitOfWork)
         {
             _repo = repo;
+            _calendarAccessService = calendarAccessService;
             _fileService = fileService;
             _unitOfWork = unitOfWork;
         }
@@ -30,6 +34,8 @@ namespace ClefCraft.Application.Features.Calendar.Commands.DeleteCalendarAttachm
         {
             var entity = await _repo.GetByIdAsync(request.Id);
             if (entity == null) return Unit.Value;
+
+            await _calendarAccessService.EnsureEventOwnedByUserAsync(entity.CalendarEventId, request.UserId);
 
             await _fileService.DeleteAttachmentFileAsync(entity.StoredFilePath);
             await _repo.DeleteAsync(entity);

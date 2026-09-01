@@ -1,5 +1,7 @@
 using ClefCraft.Application.Contracts.Analytics;
+using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Calendar;
+using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Exceptions;
 using MediatR;
@@ -9,17 +11,23 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.DeleteBoardItem
     public class DeleteBoardItemCommandHandler : IRequestHandler<DeleteBoardItemCommand>
     {
         private readonly IBoardItemRepository _boardItemRepository;
+        private readonly IBoardAccessService _boardAccessService;
+        private readonly IUserService _userService;
         private readonly ICalendarEventRepository _calendarEventRepository;
         private readonly ITaskLifecycleService _taskLifecycleService;
         private readonly IUnitOfWork _unitOfWork;
 
         public DeleteBoardItemCommandHandler(
             IBoardItemRepository boardItemRepository,
+            IBoardAccessService boardAccessService,
+            IUserService userService,
             ICalendarEventRepository calendarEventRepository,
             ITaskLifecycleService taskLifecycleService,
             IUnitOfWork unitOfWork)
         {
             _boardItemRepository = boardItemRepository;
+            _boardAccessService = boardAccessService;
+            _userService = userService;
             _calendarEventRepository = calendarEventRepository;
             _taskLifecycleService = taskLifecycleService;
             _unitOfWork = unitOfWork;
@@ -31,6 +39,8 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.DeleteBoardItem
 
             if (boardItem == null)
                 throw new NotFoundException(nameof(Domain.BoardItem), request.Id);
+
+            await _boardAccessService.EnsureBoardOwnedByUserAsync(boardItem.BoardId, _userService.UserId);
 
             var linkedEvents = await _calendarEventRepository.GetWorkHistoryByItemIdAsync(request.Id);
 
