@@ -177,7 +177,7 @@ namespace ClefCraft.API.Controllers
         public async Task<IActionResult> GetAttachments(int eventId)
         {
             var result = await _mediator.Send(
-                new GetAttachmentsQuery { EventId = eventId });
+                new GetAttachmentsQuery { EventId = eventId, UserId = _userService.UserId });
             return Ok(result);
         }
 
@@ -185,7 +185,7 @@ namespace ClefCraft.API.Controllers
         public async Task<IActionResult> DownloadAttachment(int id)
         {
             var attachment = await _mediator.Send(
-                new GetAttachmentByIdQuery { Id = id });
+                new GetAttachmentByIdQuery { Id = id, UserId = _userService.UserId });
 
             if (attachment == null)
                 return NotFound();
@@ -217,7 +217,7 @@ namespace ClefCraft.API.Controllers
         [HttpDelete("attachments/{id}")]
         public async Task<IActionResult> DeleteAttachment(int id)
         {
-            await _mediator.Send(new DeleteAttachmentCommand { Id = id });
+            await _mediator.Send(new DeleteAttachmentCommand { Id = id, UserId = _userService.UserId });
             return NoContent();
         }
     }
