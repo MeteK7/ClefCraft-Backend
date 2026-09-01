@@ -43,6 +43,12 @@ namespace ClefCraft.Persistence.Repositories
                 .ToListAsync();
         }
 
+        public async Task<BoardItemRelation?> GetByIdAsync(int id)
+        {
+            return await _context.BoardItemRelations
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
         public async Task AddAsync(BoardItemRelation relation)
         {
             await _context.BoardItemRelations.AddAsync(relation);

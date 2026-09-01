@@ -16,9 +16,11 @@ namespace ClefCraft.Persistence.Repositories
         {
         }
 
-        public async Task<List<Board>> GetBoards()
+        public async Task<List<Board>> GetBoards(string userId)
         {
-            return await _context.Boards.Select(b => new Board
+            return await _context.Boards
+                .Where(b => b.OwnerUserId == userId)
+                .Select(b => new Board
             {
                 Id = b.Id,
                 Title = b.Title
