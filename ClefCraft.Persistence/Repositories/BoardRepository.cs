@@ -18,12 +18,17 @@ namespace ClefCraft.Persistence.Repositories
 
         public async Task<List<Board>> GetBoards(string userId)
         {
+            var memberBoardIds = _context.BoardMembers
+                .Where(m => m.UserId == userId)
+                .Select(m => m.BoardId);
+
             return await _context.Boards
-                .Where(b => b.OwnerUserId == userId)
+                .Where(b => memberBoardIds.Contains(b.Id))
                 .Select(b => new Board
             {
                 Id = b.Id,
-                Title = b.Title
+                Title = b.Title,
+                OwnerUserId = b.OwnerUserId
             })
         .ToListAsync();
         }
