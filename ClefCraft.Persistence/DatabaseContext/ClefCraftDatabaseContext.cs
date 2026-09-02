@@ -34,6 +34,7 @@ namespace ClefCraft.Persistence.DatabaseContext
         public DbSet<BoardColumn> BoardColumns { get; set; }
         public DbSet<BoardItem> BoardItems { get; set; }
         public DbSet<BoardItemRelation> BoardItemRelations { get; set; }
+        public DbSet<BoardMember> BoardMembers { get; set; }
         public DbSet<CalendarEvent> CalendarEvents { get; set; }
         public DbSet<CalendarReminder> CalendarReminders { get; set; }
         public DbSet<NotificationQueue> NotificationQueues { get; set; }
@@ -80,6 +81,10 @@ namespace ClefCraft.Persistence.DatabaseContext
 
             modelBuilder.Entity<CalendarEvent>()
                 .HasIndex(x => x.SeriesUid);
+
+            modelBuilder.Entity<BoardMember>()
+                .HasIndex(x => new { x.BoardId, x.UserId })
+                .IsUnique();
 
             base.OnModelCreating(modelBuilder);
         }

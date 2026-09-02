@@ -25,7 +25,10 @@ namespace ClefCraft.Application.MappingProfiles
                     opt => opt.MapFrom(src =>
                         src.EventType != null
                             ? src.EventType.Color
-                            : null));
+                            : null))
+                .ForMember(
+                    dest => dest.OwnerUserId,
+                    opt => opt.MapFrom(src => src.UserId));
 
             CreateMap<CalendarEventInstanceDto, CalendarEventDto>();
 

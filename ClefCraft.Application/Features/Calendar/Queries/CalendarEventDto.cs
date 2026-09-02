@@ -23,6 +23,12 @@ namespace ClefCraft.Application.Features.Calendar.Queries
         
         // Original occurrence date
         public DateTimeOffset? OccurrenceDate { get; set; }
+        /// <summary>
+        /// The event's actual creator/owner (mutation rights). Callers may see events
+        /// they don't own here (a teammate's "Mark as Worked" entry linked to a shared
+        /// board item) — compare against the current user to decide read-only rendering.
+        /// </summary>
+        public string OwnerUserId { get; set; }
         public string Subject { get; set; }
         public string? Location { get; set; }
         public DateTimeOffset StartDate { get; set; }
