@@ -89,7 +89,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             }
 
             // 4. Enrich with board-item titles
-            await _enrichmentService.EnrichAsync(dtos);
+            await _enrichmentService.EnrichAsync(dtos, request.UserId);
 
             // 5. Build AI feature vectors using BaseEventId so analytics queries
             //    hit real DB records even for expanded recurring occurrences.
