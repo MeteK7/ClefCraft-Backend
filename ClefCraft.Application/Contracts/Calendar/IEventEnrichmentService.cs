@@ -9,6 +9,6 @@ namespace ClefCraft.Application.Contracts.Calendar
 {
     public interface IEventEnrichmentService
     {
-        Task EnrichAsync(List<CalendarEventDto> events);
+        Task EnrichAsync(List<CalendarEventDto> events, string userId);
     }
 }

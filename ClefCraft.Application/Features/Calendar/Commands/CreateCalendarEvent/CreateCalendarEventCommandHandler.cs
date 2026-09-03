@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ClefCraft.Application.Common.Helpers;
+using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Logging;
@@ -25,6 +26,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
         private readonly ICalendarEventSegmentRepository _segmentRepo;
         private readonly ICalendarReminderRepository _reminderRepo;
         private readonly IReminderSchedulerService _reminderSchedulerService;
+        private readonly IBoardAccessService _boardAccessService;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly IUnitOfWork _unitOfWork;
@@ -35,6 +37,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
             ICalendarEventSegmentRepository segmentRepo,
             ICalendarReminderRepository reminderRepo,
             IReminderSchedulerService reminderSchedulerService,
+            IBoardAccessService boardAccessService,
             IMapper mapper,
             IUserService userService,
             IUnitOfWork unitOfWork)
@@ -44,6 +47,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
             _segmentRepo = segmentRepo;
             _reminderRepo = reminderRepo;
             _reminderSchedulerService = reminderSchedulerService;
+            _boardAccessService = boardAccessService;
             _mapper = mapper;
             _userService = userService;
             _unitOfWork = unitOfWork;
@@ -67,6 +71,13 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
                     : JsonSerializer.Deserialize<RecurrenceRule>(request.RecurrenceRuleJson);
 
                 RecurrenceHelper.ValidateRule(parsedRule!, request.StartDate);
+            }
+
+            var userId = _userService.UserId;
+
+            if (request.LinkedBoardItemId.HasValue)
+            {
+                await _boardAccessService.EnsureBoardItemOwnedByUserAsync(request.LinkedBoardItemId.Value, userId);
             }
 
             var seriesUid = Guid.NewGuid().ToString();
