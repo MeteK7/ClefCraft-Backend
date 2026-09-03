@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ClefCraft.Application\ClefCraft.Application.csproj" />
+    <ProjectReference Include="..\ClefCraft.Infrastructure\ClefCraft.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,9 +1,12 @@
 using AutoMapper;
+using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
+using ClefCraft.Application.Exceptions;
 using ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent;
 using ClefCraft.Application.Features.Calendar.Queries;
+using ClefCraft.Application.UnitTests.Mocks;
 using ClefCraft.Domain;
 using ClefCraft.Domain.Enums;
 using Moq;
@@ -21,8 +24,9 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
             CreateCalendarEventCommandHandler handler,
             Mock<ICalendarEventRepository> eventRepo,
             Mock<IRecurrenceSeriesRepository> seriesRepo,
-            Mock<ICalendarEventSegmentRepository> segmentRepo
-        ) MakeHandler()
+            Mock<ICalendarEventSegmentRepository> segmentRepo,
+            Mock<IBoardAccessService> boardAccessService
+        ) MakeHandler(bool linkedBoardItemAuthorized = true)
         {
             var eventRepo = new Mock<ICalendarEventRepository>();
             eventRepo.Setup(r => r.CreateAsync(It.IsAny<CalendarEvent>()))
@@ -37,6 +41,8 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
             var segmentRepo = new Mock<ICalendarEventSegmentRepository>();
             var reminderRepo = new Mock<ICalendarReminderRepository>();
             var reminderScheduler = new Mock<IReminderSchedulerService>();
+
+            var boardAccessService = MockAccessServices.GetMockBoardAccessService(authorized: linkedBoardItemAuthorized);
 
             var userService = new Mock<IUserService>();
             userService.Setup(u => u.UserId).Returns("user-1");
@@ -53,18 +59,19 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
                 segmentRepo.Object,
                 reminderRepo.Object,
                 reminderScheduler.Object,
+                boardAccessService.Object,
                 mapper.Object,
                 userService.Object,
                 unitOfWork.Object);
 
-            return (handler, eventRepo, seriesRepo, segmentRepo);
+            return (handler, eventRepo, seriesRepo, segmentRepo, boardAccessService);
         }
 
         [Fact]
         public async Task Handle_NewRecurringEvent_CreatesSeriesAndSegmentWithTheConfiguredRule()
         {
             // Matrix row B
-            var (handler, _, seriesRepo, segmentRepo) = MakeHandler();
+            var (handler, _, seriesRepo, segmentRepo, _) = MakeHandler();
             var start = new DateTimeOffset(2026, 1, 5, 9, 0, 0, TimeSpan.Zero);
             var ruleJson = "{\"Frequency\":\"WEEKLY\",\"Interval\":1,\"DaysOfWeek\":[1,3,5],\"Count\":10}";
 
@@ -92,7 +99,7 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
         public async Task Handle_NewNonRecurringEvent_NeverCreatesSeriesOrSegment()
         {
             // Matrix row A
-            var (handler, _, seriesRepo, segmentRepo) = MakeHandler();
+            var (handler, _, seriesRepo, segmentRepo, _) = MakeHandler();
             var start = new DateTimeOffset(2026, 1, 5, 9, 0, 0, TimeSpan.Zero);
 
             var request = new CreateCalendarEventCommand
@@ -117,7 +124,7 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
         [InlineData("{\"Frequency\":\"UNSUPPORTED\",\"Interval\":1}")]
         public async Task Handle_InvalidRecurrenceRule_ThrowsBeforeAnyRepositoryWrite(string invalidRuleJson)
         {
-            var (handler, eventRepo, seriesRepo, _) = MakeHandler();
+            var (handler, eventRepo, seriesRepo, _, _) = MakeHandler();
             var start = new DateTimeOffset(2026, 1, 5, 9, 0, 0, TimeSpan.Zero);
 
             var request = new CreateCalendarEventCommand
@@ -135,6 +142,51 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
 
             eventRepo.Verify(r => r.CreateAsync(It.IsAny<CalendarEvent>()), Times.Never);
             seriesRepo.Verify(r => r.CreateAsync(It.IsAny<RecurrenceSeries>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task Handle_LinkedBoardItemNotOwnedByCaller_ThrowsForbiddenAccessException_BeforeAnyWrite()
+        {
+            var (handler, eventRepo, _, _, boardAccessService) = MakeHandler(linkedBoardItemAuthorized: false);
+            var start = new DateTimeOffset(2026, 1, 5, 9, 0, 0, TimeSpan.Zero);
+
+            var request = new CreateCalendarEventCommand
+            {
+                Subject = "Practice session",
+                StartDate = start,
+                EndDate = start.AddHours(1),
+                AllDayEvent = false,
+                Importance = ImportanceLevel.Normal,
+                IsRecurring = false,
+                LinkedBoardItemId = 999
+            };
+
+            await Should.ThrowAsync<ForbiddenAccessException>(() => handler.Handle(request, CancellationToken.None));
+
+            boardAccessService.Verify(s => s.EnsureBoardItemOwnedByUserAsync(999, "user-1"), Times.Once);
+            eventRepo.Verify(r => r.CreateAsync(It.IsAny<CalendarEvent>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task Handle_NoLinkedBoardItem_NeverChecksBoardAccess()
+        {
+            var (handler, _, _, _, boardAccessService) = MakeHandler();
+            var start = new DateTimeOffset(2026, 1, 5, 9, 0, 0, TimeSpan.Zero);
+
+            var request = new CreateCalendarEventCommand
+            {
+                Subject = "Unlinked event",
+                StartDate = start,
+                EndDate = start.AddHours(1),
+                AllDayEvent = false,
+                Importance = ImportanceLevel.Normal,
+                IsRecurring = false
+            };
+
+            await handler.Handle(request, CancellationToken.None);
+
+            boardAccessService.Verify(
+                s => s.EnsureBoardItemOwnedByUserAsync(It.IsAny<int>(), It.IsAny<string>()), Times.Never);
         }
     }
 }
