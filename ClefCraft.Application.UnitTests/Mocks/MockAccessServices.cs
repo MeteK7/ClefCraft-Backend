@@ -14,16 +14,20 @@ namespace ClefCraft.Application.UnitTests.Mocks
                 s.EnsureBoardOwnedByUserAsync(It.IsAny<int>(), It.IsAny<string>()));
             var itemSetup = mock.Setup(s =>
                 s.EnsureBoardItemOwnedByUserAsync(It.IsAny<int>(), It.IsAny<string>()));
+            var ownerSetup = mock.Setup(s =>
+                s.EnsureUserIsBoardOwnerAsync(It.IsAny<int>(), It.IsAny<string>()));
 
             if (authorized)
             {
                 boardSetup.Returns(Task.CompletedTask);
                 itemSetup.Returns(Task.CompletedTask);
+                ownerSetup.Returns(Task.CompletedTask);
             }
             else
             {
                 boardSetup.ThrowsAsync(new ForbiddenAccessException());
                 itemSetup.ThrowsAsync(new ForbiddenAccessException());
+                ownerSetup.ThrowsAsync(new ForbiddenAccessException());
             }
 
             return mock;

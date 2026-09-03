@@ -10,8 +10,10 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Persistence.IntegrationTests
 {
-    // Regression coverage for the P0 authorization fix: GetBoards used to return
-    // every board in the system to every authenticated user with no filter at all.
+    // Regression coverage for the P0 authorization fix (GetBoards used to return every
+    // board in the system to every user with no filter) and the follow-up team-membership
+    // fix (Boards are team-based via BoardMember, not single-owner — OwnerUserId is
+    // creator metadata only and no longer gates visibility).
     public class BoardRepositoryTests
     {
         private static ClefCraftDatabaseContext CreateContext(string userId = "test-user")
@@ -27,7 +29,7 @@ namespace ClefCraft.Persistence.IntegrationTests
         }
 
         [Fact]
-        public async Task GetBoards_ReturnsOnlyBoardsOwnedByRequestingUser()
+        public async Task GetBoards_ReturnsOnlyBoardsTheUserIsAMemberOf()
         {
             var context = CreateContext();
             var repository = new BoardRepository(context);
@@ -37,6 +39,11 @@ namespace ClefCraft.Persistence.IntegrationTests
             await context.Boards.AddRangeAsync(ownBoard, otherBoard);
             await context.SaveChangesAsync();
 
+            await context.BoardMembers.AddRangeAsync(
+                new BoardMember { BoardId = ownBoard.Id, UserId = "user-a" },
+                new BoardMember { BoardId = otherBoard.Id, UserId = "user-b" });
+            await context.SaveChangesAsync();
+
             var result = await repository.GetBoards("user-a");
 
             result.ShouldContain(b => b.Id == ownBoard.Id);
@@ -44,12 +51,38 @@ namespace ClefCraft.Persistence.IntegrationTests
         }
 
         [Fact]
-        public async Task GetBoards_UserWithNoBoards_ReturnsEmptyList()
+        public async Task GetBoards_NonOwnerTeamMember_CanSeeTheBoard()
+        {
+            // The actual regression this fix targets: a teammate who isn't the
+            // OwnerUserId must still see a board they've been added to.
+            var context = CreateContext();
+            var repository = new BoardRepository(context);
+
+            var teamBoard = new Board { Title = "AI Platform Sprint", OwnerUserId = "user-owner" };
+            await context.Boards.AddAsync(teamBoard);
+            await context.SaveChangesAsync();
+
+            await context.BoardMembers.AddRangeAsync(
+                new BoardMember { BoardId = teamBoard.Id, UserId = "user-owner" },
+                new BoardMember { BoardId = teamBoard.Id, UserId = "user-teammate" });
+            await context.SaveChangesAsync();
+
+            var result = await repository.GetBoards("user-teammate");
+
+            result.ShouldContain(b => b.Id == teamBoard.Id);
+        }
+
+        [Fact]
+        public async Task GetBoards_UserWithNoMemberships_ReturnsEmptyList()
         {
             var context = CreateContext();
             var repository = new BoardRepository(context);
 
-            await context.Boards.AddAsync(new Board { Title = "Someone Else's Board", OwnerUserId = "user-b" });
+            var otherBoard = new Board { Title = "Someone Else's Board", OwnerUserId = "user-b" };
+            await context.Boards.AddAsync(otherBoard);
+            await context.SaveChangesAsync();
+
+            await context.BoardMembers.AddAsync(new BoardMember { BoardId = otherBoard.Id, UserId = "user-b" });
             await context.SaveChangesAsync();
 
             var result = await repository.GetBoards("user-a");

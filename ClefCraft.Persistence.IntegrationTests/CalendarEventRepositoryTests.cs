@@ -92,5 +92,46 @@ namespace ClefCraft.Persistence.IntegrationTests
             result.ShouldNotContain(e => e.Id == pastEvent.Id);
             result.ShouldNotContain(e => e.Id == futureEvent.Id);
         }
+
+        [Fact]
+        public async Task GetByUserIdAsync_LinkedEventFromTeammate_IsVisibleToOtherBoardMembers()
+        {
+            var context = CreateContext();
+            var repository = new CalendarEventRepository(context);
+
+            var board = new Board { Title = "AI Platform Sprint", OwnerUserId = "user-owner" };
+            await context.Boards.AddAsync(board);
+            await context.SaveChangesAsync();
+
+            await context.BoardMembers.AddRangeAsync(
+                new BoardMember { BoardId = board.Id, UserId = "user-owner" },
+                new BoardMember { BoardId = board.Id, UserId = "user-teammate" });
+            await context.SaveChangesAsync();
+
+            var boardItem = new BoardItem { BoardId = board.Id, BoardColumnId = 1, Title = "Ship the model" };
+            await context.BoardItems.AddAsync(boardItem);
+            await context.SaveChangesAsync();
+
+            var windowStart = new DateTimeOffset(2026, 8, 31, 0, 0, 0, TimeSpan.Zero);
+            var windowEnd = new DateTimeOffset(2026, 9, 7, 0, 0, 0, TimeSpan.Zero);
+
+            // "Mark as Worked" entry logged by the owner, linked to the shared item.
+            var workedEntry = new CalendarEvent
+            {
+                Subject = "Logged work",
+                StartDate = windowStart.AddDays(1),
+                EndDate = windowStart.AddDays(1).AddHours(1),
+                UserId = "user-owner",
+                LinkedBoardItemId = boardItem.Id
+            };
+            await context.CalendarEvents.AddAsync(workedEntry);
+            await context.SaveChangesAsync();
+
+            var teammateView = await repository.GetByUserIdAsync("user-teammate", windowStart, windowEnd);
+            teammateView.ShouldContain(e => e.Id == workedEntry.Id);
+
+            var strangerView = await repository.GetByUserIdAsync("user-unrelated", windowStart, windowEnd);
+            strangerView.ShouldNotContain(e => e.Id == workedEntry.Id);
+        }
     }
 }

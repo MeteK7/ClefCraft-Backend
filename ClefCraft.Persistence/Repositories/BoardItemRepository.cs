@@ -19,24 +19,24 @@ namespace ClefCraft.Persistence.Repositories
 
         public async Task<List<BoardColumn>> GetAllBoardColumnsWithItems(string userId)
         {
-            var ownedBoardIds = _context.Boards
-                .Where(b => b.OwnerUserId == userId)
-                .Select(b => b.Id);
+            var memberBoardIds = _context.BoardMembers
+                .Where(m => m.UserId == userId)
+                .Select(m => m.BoardId);
 
             return await _context.BoardColumns
                 .Where(bc =>
                     _context.BoardColumnMappings
-                        .Any(m => ownedBoardIds.Contains(m.BoardId) && m.BoardColumnId == bc.Id))
+                        .Any(m => memberBoardIds.Contains(m.BoardId) && m.BoardColumnId == bc.Id))
                 .Include(bc => bc.BoardItems
-                    .Where(bi => ownedBoardIds.Contains(bi.BoardId)))
+                    .Where(bi => memberBoardIds.Contains(bi.BoardId)))
                     .ThenInclude(bi => bi.BoardItemStatus)
                         .ThenInclude(s => s.Status)
                 .Include(bc => bc.BoardItems
-                    .Where(bi => ownedBoardIds.Contains(bi.BoardId)))
+                    .Where(bi => memberBoardIds.Contains(bi.BoardId)))
                     .ThenInclude(bi => bi.BoardItemPriority)
                         .ThenInclude(p => p.Priority)
                 .Include(bc => bc.BoardItems
-                    .Where(bi => ownedBoardIds.Contains(bi.BoardId)))
+                    .Where(bi => memberBoardIds.Contains(bi.BoardId)))
                     .ThenInclude(bi => bi.BoardItemTags)
                         .ThenInclude(t => t.Tag)
                 .ToListAsync();

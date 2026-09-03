@@ -9,13 +9,16 @@ namespace ClefCraft.Infrastructure.Services.Authorization
     {
         private readonly IBoardRepository _boardRepository;
         private readonly IBoardItemRepository _boardItemRepository;
+        private readonly IBoardMemberRepository _boardMemberRepository;
 
         public BoardAccessService(
             IBoardRepository boardRepository,
-            IBoardItemRepository boardItemRepository)
+            IBoardItemRepository boardItemRepository,
+            IBoardMemberRepository boardMemberRepository)
         {
             _boardRepository = boardRepository;
             _boardItemRepository = boardItemRepository;
+            _boardMemberRepository = boardMemberRepository;
         }
 
         public async Task EnsureBoardOwnedByUserAsync(int boardId, string userId)
@@ -25,7 +28,7 @@ namespace ClefCraft.Infrastructure.Services.Authorization
             if (board == null)
                 throw new NotFoundException(nameof(Board), boardId);
 
-            if (board.OwnerUserId != userId)
+            if (!await _boardMemberRepository.IsMemberAsync(boardId, userId))
                 throw new ForbiddenAccessException();
         }
 
@@ -37,6 +40,17 @@ namespace ClefCraft.Infrastructure.Services.Authorization
                 throw new NotFoundException(nameof(BoardItem), boardItemId);
 
             await EnsureBoardOwnedByUserAsync(item.BoardId, userId);
+        }
+
+        public async Task EnsureUserIsBoardOwnerAsync(int boardId, string userId)
+        {
+            var board = await _boardRepository.GetByIdReadOnlyAsync(boardId);
+
+            if (board == null)
+                throw new NotFoundException(nameof(Board), boardId);
+
+            if (board.OwnerUserId != userId)
+                throw new ForbiddenAccessException();
         }
     }
 }
