@@ -29,5 +29,23 @@ namespace ClefCraft.Persistence.Repositories
             return await _context.BoardMembers
                 .FirstOrDefaultAsync(m => m.BoardId == boardId && m.UserId == userId);
         }
+
+        public async Task<List<int>> GetMemberBoardIdsAsync(string userId)
+        {
+            return await _context.BoardMembers
+                .Where(m => m.UserId == userId)
+                .Select(m => m.BoardId)
+                .ToListAsync();
+        }
+
+        public async Task<bool> ShareAnyBoardAsync(string userId1, string userId2)
+        {
+            var boardIdsForUser1 = _context.BoardMembers
+                .Where(m => m.UserId == userId1)
+                .Select(m => m.BoardId);
+
+            return await _context.BoardMembers
+                .AnyAsync(m => m.UserId == userId2 && boardIdsForUser1.Contains(m.BoardId));
+        }
     }
 }

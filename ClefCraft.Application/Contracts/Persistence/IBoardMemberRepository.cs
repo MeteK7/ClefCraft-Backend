@@ -9,5 +9,9 @@ namespace ClefCraft.Application.Contracts.Persistence
         Task<List<BoardMember>> GetByBoardIdAsync(int boardId);
 
         Task<BoardMember?> GetByBoardAndUserAsync(int boardId, string userId);
+
+        Task<List<int>> GetMemberBoardIdsAsync(string userId);
+
+        Task<bool> ShareAnyBoardAsync(string userId1, string userId2);
     }
 }

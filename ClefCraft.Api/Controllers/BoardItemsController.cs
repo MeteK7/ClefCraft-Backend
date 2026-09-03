@@ -1,10 +1,10 @@
-﻿using ClefCraft.Application.Contracts.Identity;
-using ClefCraft.Application.Features.BoardColumn.Queries.GetBoardColumns;
+﻿using ClefCraft.Application.Features.BoardColumn.Queries.GetBoardColumns;
 using ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem;
 using ClefCraft.Application.Features.BoardItem.Commands.DeleteBoardItem;
 using ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItemById;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems;
+using ClefCraft.Application.Features.BoardItem.Queries.GetUserFullName;
 using ClefCraft.Application.Features.Priority.Queries.GetPriorities;
 using ClefCraft.Application.Features.Status.Queries.GetStatuses;
 using ClefCraft.Application.Features.Tag.Queries.GetTags;
@@ -20,12 +20,10 @@ namespace ClefCraft.Api.Controllers
     public class BoardItemsController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly IUserService _userService;
 
-        public BoardItemsController(IMediator mediator, IUserService userService)
+        public BoardItemsController(IMediator mediator)
         {
             _mediator = mediator;
-            _userService = userService;
         }
         //GET: api/<ItemsController> 
         [HttpGet]
@@ -96,11 +94,8 @@ namespace ClefCraft.Api.Controllers
         [HttpGet("GetUserFullName/{userId}")]
         public async Task<ActionResult<string>> GetUserFullName(string userId)
         {
-            var user = await _userService.GetUser(userId);
-            if (user == null)
-                return NotFound($"User with ID {userId} not found.");
-
-            return Ok($"{user.Firstname} {user.Lastname}");
+            var fullName = await _mediator.Send(new GetUserFullNameQuery(userId));
+            return Ok(fullName);
         }
 
 
