@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using ClefCraft.Application.Contracts.Authorization;
+using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
 using MediatR;
 using System;
@@ -13,11 +15,19 @@ namespace ClefCraft.Application.Features.Priority.Queries.GetPriorities
         : IRequestHandler<GetPrioritiesQuery, List<PriorityDto>>
     {
         private readonly IPriorityRepository _repo;
+        private readonly IBoardAccessService _boardAccessService;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public GetPrioritiesHandler(IPriorityRepository repo, IMapper mapper)
+        public GetPrioritiesHandler(
+            IPriorityRepository repo,
+            IBoardAccessService boardAccessService,
+            IUserService userService,
+            IMapper mapper)
         {
             _repo = repo;
+            _boardAccessService = boardAccessService;
+            _userService = userService;
             _mapper = mapper;
         }
 
@@ -25,6 +35,8 @@ namespace ClefCraft.Application.Features.Priority.Queries.GetPriorities
             GetPrioritiesQuery request,
             CancellationToken cancellationToken)
         {
+            await _boardAccessService.EnsureBoardOwnedByUserAsync(request.BoardId, _userService.UserId);
+
             var priorities = await _repo.GetPrioritiesByBoardIdAsync(request.BoardId);
             return _mapper.Map<List<PriorityDto>>(priorities);
         }
