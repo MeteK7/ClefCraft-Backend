@@ -1,5 +1,6 @@
 ﻿using ClefCraft.Application.Contracts.ActivityLogs;
 using ClefCraft.Application.Contracts.Analytics;
+using ClefCraft.Application.Contracts.Comments;
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Logging;
 using ClefCraft.Application.Contracts.Persistence;
@@ -109,6 +110,7 @@ namespace ClefCraft.Persistence
             services.AddScoped<INotificationQueueRepository, NotificationQueueRepository>();
             services.AddScoped<ICalendarReminderRepository, CalendarReminderRepository>();
             services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
+            services.AddScoped<ICommentRepository, CommentRepository>();
 
             return services;
         }

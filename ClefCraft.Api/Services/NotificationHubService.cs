@@ -19,5 +19,20 @@ namespace ClefCraft.Api.Services
                 .User(userId)
                 .SendAsync("ReceiveReminder", new { eventId, message }, cancellationToken);
         }
+
+        public async Task SendCommentMentionAsync(
+            string mentionedUserId,
+            string entityType,
+            int entityId,
+            int commentId,
+            string authorFullName,
+            string excerpt,
+            int? boardId,
+            CancellationToken cancellationToken)
+        {
+            await _hubContext.Clients
+                .User(mentionedUserId)
+                .SendAsync("ReceiveMention", new { entityType, entityId, commentId, authorFullName, excerpt, boardId }, cancellationToken);
+        }
     }
 }

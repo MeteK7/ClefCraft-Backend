@@ -59,6 +59,8 @@ namespace ClefCraft.Persistence.DatabaseContext
         public DbSet<BoardColumnMapping> BoardColumnMappings { get; set; }
 
         public DbSet<ActivityLog> ActivityLogs { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<CommentMention> CommentMentions { get; set; }
         public DbSet<EntitySnapshot> EntitySnapshots { get; set; }
         public DbSet<UserInteractionSignal> UserInteractionSignals { get; set; }
         public DbSet<TaskLifecycle> TaskLifecycles { get; set; }
