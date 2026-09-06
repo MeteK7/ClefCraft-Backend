@@ -14,5 +14,14 @@ namespace ClefCraft.Application.Contracts.Authorization
         Task EnsureSeriesOwnedByUserAsync(string seriesUid, string userId);
 
         Task EnsureAttachmentOwnedByUserAsync(int attachmentId, string userId);
+
+        /// <summary>
+        /// Comment-access check only — deliberately independent of ownership and of
+        /// LinkedBoardItemId. Grants access to the event's owner, or to anyone who
+        /// shares at least one Board with the owner (the same "teammate" relationship
+        /// GetUserFullNameHandler already uses). Does not affect the event's own
+        /// visibility/edit rules.
+        /// </summary>
+        Task EnsureCanCommentOnEventAsync(int eventId, string userId);
     }
 }
