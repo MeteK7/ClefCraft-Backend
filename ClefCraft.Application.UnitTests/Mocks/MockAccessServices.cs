@@ -43,18 +43,22 @@ namespace ClefCraft.Application.UnitTests.Mocks
                 s.EnsureSeriesOwnedByUserAsync(It.IsAny<string>(), It.IsAny<string>()));
             var attachmentSetup = mock.Setup(s =>
                 s.EnsureAttachmentOwnedByUserAsync(It.IsAny<int>(), It.IsAny<string>()));
+            var commentSetup = mock.Setup(s =>
+                s.EnsureCanCommentOnEventAsync(It.IsAny<int>(), It.IsAny<string>()));
 
             if (authorized)
             {
                 eventSetup.Returns(Task.CompletedTask);
                 seriesSetup.Returns(Task.CompletedTask);
                 attachmentSetup.Returns(Task.CompletedTask);
+                commentSetup.Returns(Task.CompletedTask);
             }
             else
             {
                 eventSetup.ThrowsAsync(new ForbiddenAccessException());
                 seriesSetup.ThrowsAsync(new ForbiddenAccessException());
                 attachmentSetup.ThrowsAsync(new ForbiddenAccessException());
+                commentSetup.ThrowsAsync(new ForbiddenAccessException());
             }
 
             return mock;
