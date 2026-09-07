@@ -111,6 +111,7 @@ namespace ClefCraft.Persistence
             services.AddScoped<ICalendarReminderRepository, CalendarReminderRepository>();
             services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
+            services.AddScoped<ICalendarEventCollaboratorRepository, CalendarEventCollaboratorRepository>();
 
             return services;
         }
