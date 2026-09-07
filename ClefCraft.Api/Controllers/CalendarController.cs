@@ -1,4 +1,7 @@
 ﻿using ClefCraft.Application.Contracts.Identity;
+using ClefCraft.Application.Features.CalendarEventCollaborators;
+using ClefCraft.Application.Features.CalendarEventCollaborators.Commands.RemoveCalendarEventCollaborator;
+using ClefCraft.Application.Features.CalendarEventCollaborators.Queries.GetCalendarEventCollaborators;
 using ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent;
 using ClefCraft.Application.Features.Calendar.Commands.DeleteCalendarAttachment;
 using ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent;
@@ -218,6 +221,28 @@ namespace ClefCraft.API.Controllers
         public async Task<IActionResult> DeleteAttachment(int id)
         {
             await _mediator.Send(new DeleteAttachmentCommand { Id = id, UserId = _userService.UserId });
+            return NoContent();
+        }
+
+        // ======================================================================
+        // COLLABORATORS
+        // ======================================================================
+
+        [HttpGet("{eventId}/collaborators")]
+        public async Task<ActionResult<List<CalendarEventCollaboratorDto>>> GetCollaborators(int eventId)
+        {
+            var result = await _mediator.Send(new GetCalendarEventCollaboratorsQuery { EventId = eventId });
+            return Ok(result);
+        }
+
+        [HttpDelete("{eventId}/collaborators/{collaboratorUserId}")]
+        public async Task<IActionResult> RemoveCollaborator(int eventId, string collaboratorUserId)
+        {
+            await _mediator.Send(new RemoveCalendarEventCollaboratorCommand
+            {
+                EventId = eventId,
+                CollaboratorUserId = collaboratorUserId
+            });
             return NoContent();
         }
     }
