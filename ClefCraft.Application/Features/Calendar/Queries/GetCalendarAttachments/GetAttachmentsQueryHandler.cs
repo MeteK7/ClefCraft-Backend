@@ -28,7 +28,8 @@ namespace ClefCraft.Application.Features.Calendar.Queries.GetCalendarAttachments
 
         public async Task<List<CalendarEventAttachmentDto>> Handle(GetAttachmentsQuery request, CancellationToken cancellationToken)
         {
-            await _calendarAccessService.EnsureEventOwnedByUserAsync(request.EventId, request.UserId);
+            // Read-only listing: owner or a granted collaborator.
+            await _calendarAccessService.EnsureCanAccessEventAsync(request.EventId, request.UserId);
 
             var items = await _attachmentRepo.GetByEventIdAsync(request.EventId);
             return _mapper.Map<List<CalendarEventAttachmentDto>>(items);

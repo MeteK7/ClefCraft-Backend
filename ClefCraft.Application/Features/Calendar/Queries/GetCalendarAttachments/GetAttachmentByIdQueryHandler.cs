@@ -28,7 +28,9 @@ namespace ClefCraft.Application.Features.Calendar.Queries.GetCalendarAttachments
 
         public async Task<CalendarEventAttachmentDto> Handle(GetAttachmentByIdQuery request, CancellationToken cancellationToken)
         {
-            await _calendarAccessService.EnsureAttachmentOwnedByUserAsync(request.Id, request.UserId);
+            // Read-only: owner or a granted collaborator can download. Upload/delete stay
+            // owner-only via EnsureAttachmentOwnedByUserAsync elsewhere.
+            await _calendarAccessService.EnsureCanAccessAttachmentAsync(request.Id, request.UserId);
 
             var attachment = await _attachmentRepo.GetByIdReadOnlyAsync(request.Id);
             if (attachment == null) return null;
