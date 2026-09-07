@@ -16,12 +16,32 @@ namespace ClefCraft.Application.Contracts.Authorization
         Task EnsureAttachmentOwnedByUserAsync(int attachmentId, string userId);
 
         /// <summary>
-        /// Comment-access check only — deliberately independent of ownership and of
-        /// LinkedBoardItemId. Grants access to the event's owner, or to anyone who
-        /// shares at least one Board with the owner (the same "teammate" relationship
-        /// GetUserFullNameHandler already uses). Does not affect the event's own
-        /// visibility/edit rules.
+        /// Read-only access check — governs both viewing the event's own details and
+        /// viewing/posting comments on it. Deliberately independent of LinkedBoardItemId:
+        /// grants access to the event's owner, or to anyone explicitly granted
+        /// CalendarEventCollaborator access on this specific event. There is no implicit
+        /// "shares a board" carve-out — a private event stays private until the owner
+        /// explicitly shares it (see GrantCollaboratorAccessAsync). Never grants mutation
+        /// rights — editing/deleting still requires EnsureEventOwnedByUserAsync.
         /// </summary>
-        Task EnsureCanCommentOnEventAsync(int eventId, string userId);
+        Task EnsureCanAccessEventAsync(int eventId, string userId);
+
+        /// <summary>
+        /// Read-only variant of EnsureAttachmentOwnedByUserAsync — owner or collaborator can
+        /// download an attachment; upload/delete stay owner-only via EnsureAttachmentOwnedByUserAsync.
+        /// </summary>
+        Task EnsureCanAccessAttachmentAsync(int attachmentId, string userId);
+
+        /// <summary>
+        /// The only way a CalendarEvent gains collaborators: called from CreateComment/
+        /// UpdateComment when the requester mentions someone new. Only the event's owner can
+        /// grant — a no-op (returns an empty list, no exception) if the requester isn't the
+        /// owner, since by the time this runs the caller has already filtered non-owner
+        /// mentions down to existing participants; this is the defensive second layer.
+        /// Already-granted users are skipped (idempotent). Returns the userIds that were
+        /// actually newly granted, so the caller knows who to notify with "shared with you"
+        /// framing versus a plain mention ping.
+        /// </summary>
+        Task<List<string>> GrantCollaboratorAccessAsync(int eventId, string granterId, IEnumerable<string> targetUserIds);
     }
 }

@@ -242,6 +242,7 @@ namespace ClefCraft.Infrastructure.Services.Calendar
             {
                 Id = ev.Id,
                 BaseEventId = ev.BaseEventId,
+                OwnerUserId = ev.UserId,
                 SeriesUid = ev.SeriesUid,
                 OccurrenceKey = occurrenceKey,
                 OccurrenceDate = occurrenceDate,

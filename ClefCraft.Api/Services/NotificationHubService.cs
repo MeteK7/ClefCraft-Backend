@@ -28,11 +28,12 @@ namespace ClefCraft.Api.Services
             string authorFullName,
             string excerpt,
             int? boardId,
+            bool grantedAccess,
             CancellationToken cancellationToken)
         {
             await _hubContext.Clients
                 .User(mentionedUserId)
-                .SendAsync("ReceiveMention", new { entityType, entityId, commentId, authorFullName, excerpt, boardId }, cancellationToken);
+                .SendAsync("ReceiveMention", new { entityType, entityId, commentId, authorFullName, excerpt, boardId, grantedAccess }, cancellationToken);
         }
     }
 }

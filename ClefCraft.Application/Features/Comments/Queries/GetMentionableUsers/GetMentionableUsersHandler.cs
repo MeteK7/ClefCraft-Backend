@@ -14,6 +14,7 @@ namespace ClefCraft.Application.Features.Comments.Queries.GetMentionableUsers
         private readonly IBoardItemRepository _boardItemRepository;
         private readonly ICalendarEventRepository _calendarEventRepository;
         private readonly IBoardMemberRepository _boardMemberRepository;
+        private readonly ICalendarEventCollaboratorRepository _collaboratorRepository;
         private readonly IUserService _userService;
 
         public GetMentionableUsersHandler(
@@ -22,6 +23,7 @@ namespace ClefCraft.Application.Features.Comments.Queries.GetMentionableUsers
             IBoardItemRepository boardItemRepository,
             ICalendarEventRepository calendarEventRepository,
             IBoardMemberRepository boardMemberRepository,
+            ICalendarEventCollaboratorRepository collaboratorRepository,
             IUserService userService)
         {
             _boardAccessService = boardAccessService;
@@ -29,6 +31,7 @@ namespace ClefCraft.Application.Features.Comments.Queries.GetMentionableUsers
             _boardItemRepository = boardItemRepository;
             _calendarEventRepository = calendarEventRepository;
             _boardMemberRepository = boardMemberRepository;
+            _collaboratorRepository = collaboratorRepository;
             _userService = userService;
         }
 
@@ -60,11 +63,30 @@ namespace ClefCraft.Application.Features.Comments.Queries.GetMentionableUsers
 
                 candidateIds.Add(calendarEvent.UserId);
 
-                var ownerBoardIds = await _boardMemberRepository.GetMemberBoardIdsAsync(calendarEvent.UserId);
-                foreach (var boardId in ownerBoardIds)
+                if (callerId == calendarEvent.UserId)
                 {
-                    var members = await _boardMemberRepository.GetByBoardIdAsync(boardId);
-                    foreach (var m in members) candidateIds.Add(m.UserId);
+                    // Only the owner can grant new access, so only the owner sees a broad
+                    // "people I could invite" discovery pool — this list is suggestions, not
+                    // access; mentioning someone from it is what actually grants them
+                    // CalendarEventCollaborator access (see CalendarMentionAccess). Deliberately
+                    // org-wide via GetAssignees (all users, no role coupling) — not board-scoped:
+                    // calendar sharing is independent of board membership by design, so a user on
+                    // no boards at all must still be able to discover and share with anyone, not
+                    // be locked out of the feature. GetEmployees() was considered but rejected:
+                    // it's scoped to the "Employee" identity role, so it silently excludes any
+                    // account outside that role.
+                    var assignees = await _userService.GetAssignees();
+                    foreach (var a in assignees) candidateIds.Add(a.Id);
+                }
+                else
+                {
+                    // A non-owner (an already-granted collaborator) can only mention people
+                    // already in the conversation — the same set CalendarMentionAccess would
+                    // treat as valid — never the owner's wider board network. Otherwise the
+                    // dropdown itself would invite the privilege escalation the mention policy
+                    // is guarding against.
+                    var collaborators = await _collaboratorRepository.GetByEventIdAsync(request.EntityId);
+                    foreach (var c in collaborators) candidateIds.Add(c.UserId);
                 }
             }
 

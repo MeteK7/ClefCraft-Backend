@@ -14,10 +14,10 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Application.UnitTests.Features.Comments
 {
-    // Comments reuse IBoardAccessService for "BoardItem" (existing BoardMember check) and the
-    // new ICalendarAccessService.EnsureCanCommentOnEventAsync for "CalendarEvent" — both
-    // dispatched through CommentAccess.EnsureCanAccessAsync. These tests confirm the dispatch
-    // fails closed in both directions and for an unsupported entity type.
+    // Comments reuse IBoardAccessService for "BoardItem" (existing BoardMember check) and
+    // ICalendarAccessService.EnsureCanAccessEventAsync for "CalendarEvent" (owner or granted
+    // CalendarEventCollaborator) — both dispatched through CommentAccess.EnsureCanAccessAsync.
+    // These tests confirm the dispatch fails closed in both directions.
     public class CommentsAuthorizationTests
     {
         private const string CallerUserId = "user-1";
@@ -70,7 +70,9 @@ namespace ClefCraft.Application.UnitTests.Features.Comments
 
             var handler = new CreateCommentCommandHandler(
                 commentRepo.Object, boardAccessService.Object, calendarAccessService.Object,
-                new Mock<IBoardItemRepository>().Object, userService.Object, notificationHub.Object, new Mock<IUnitOfWork>().Object);
+                new Mock<IBoardItemRepository>().Object, new Mock<ICalendarEventRepository>().Object,
+                new Mock<ICalendarEventCollaboratorRepository>().Object, userService.Object,
+                notificationHub.Object, new Mock<IUnitOfWork>().Object);
 
             await Should.ThrowAsync<ForbiddenAccessException>(() =>
                 handler.Handle(

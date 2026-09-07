@@ -18,6 +18,7 @@ namespace ClefCraft.Application.Contracts.Calendar
             string authorFullName,
             string excerpt,
             int? boardId,
+            bool grantedAccess,
             CancellationToken cancellationToken);
     }
 }

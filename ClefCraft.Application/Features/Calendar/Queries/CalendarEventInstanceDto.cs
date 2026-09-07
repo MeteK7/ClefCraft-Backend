@@ -11,6 +11,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
     {
         public int Id { get; set; }
         public int BaseEventId { get; set; }
+        public string OwnerUserId { get; set; }
         public string? SeriesUid { get; set; }
         public string OccurrenceKey { get; set; }
         public DateTimeOffset OccurrenceDate { get; set; }
