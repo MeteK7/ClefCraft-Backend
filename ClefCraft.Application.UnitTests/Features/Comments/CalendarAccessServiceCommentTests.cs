@@ -5,72 +5,118 @@ using ClefCraft.Domain;
 using ClefCraft.Infrastructure.Services.Authorization;
 using Moq;
 using Shouldly;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ClefCraft.Application.UnitTests.Features.Comments
 {
-    // EnsureCanCommentOnEventAsync is new, real branching logic (unlike the mocked-through
-    // interface used everywhere else), so it's tested directly against the concrete service
-    // rather than only through a handler-level mock.
+    // EnsureCanAccessEventAsync and GrantCollaboratorAccessAsync are new, real branching logic
+    // (unlike the mocked-through interface used everywhere else), so they're tested directly
+    // against the concrete service rather than only through a handler-level mock.
     public class CalendarAccessServiceCommentTests
     {
         private const string OwnerUserId = "owner-1";
 
-        private static CalendarAccessService BuildService(
-            CalendarEvent calendarEvent, bool sharesABoardWithOwner)
+        private static (CalendarAccessService Service, Mock<ICalendarEventCollaboratorRepository> CollaboratorRepo) BuildService(
+            CalendarEvent calendarEvent, bool isCollaborator = false)
         {
             var eventRepo = new Mock<ICalendarEventRepository>();
             eventRepo.Setup(r => r.GetByIdReadOnlyAsync(calendarEvent.Id)).ReturnsAsync(calendarEvent);
 
             var attachmentRepo = new Mock<ICalendarEventAttachmentRepository>();
 
-            var boardMemberRepo = new Mock<IBoardMemberRepository>();
-            boardMemberRepo.Setup(r => r.ShareAnyBoardAsync(It.IsAny<string>(), OwnerUserId))
-                .ReturnsAsync(sharesABoardWithOwner);
+            var collaboratorRepo = new Mock<ICalendarEventCollaboratorRepository>();
+            collaboratorRepo.Setup(r => r.IsCollaboratorAsync(It.IsAny<int>(), It.IsAny<string>()))
+                .ReturnsAsync(isCollaborator);
 
-            return new CalendarAccessService(eventRepo.Object, attachmentRepo.Object, boardMemberRepo.Object);
+            var service = new CalendarAccessService(eventRepo.Object, attachmentRepo.Object, collaboratorRepo.Object);
+
+            return (service, collaboratorRepo);
         }
 
         [Fact]
-        public async Task EnsureCanCommentOnEventAsync_Owner_Allowed()
+        public async Task EnsureCanAccessEventAsync_Owner_Allowed()
         {
             var calendarEvent = new CalendarEvent { Id = 1, UserId = OwnerUserId };
-            var service = BuildService(calendarEvent, sharesABoardWithOwner: false);
+            var (service, _) = BuildService(calendarEvent, isCollaborator: false);
 
-            await Should.NotThrowAsync(() => service.EnsureCanCommentOnEventAsync(1, OwnerUserId));
+            await Should.NotThrowAsync(() => service.EnsureCanAccessEventAsync(1, OwnerUserId));
         }
 
         [Fact]
-        public async Task EnsureCanCommentOnEventAsync_TeammateSharingABoard_Allowed_RegardlessOfLinkedBoardItemId()
+        public async Task EnsureCanAccessEventAsync_GrantedCollaborator_Allowed_RegardlessOfLinkedBoardItemId()
         {
-            // Standalone event — no LinkedBoardItemId at all — proving the check never
-            // depends on it: only board co-membership with the owner matters.
+            // Standalone event — no LinkedBoardItemId at all — proving the check never depends
+            // on it or on board co-membership: only an explicit CalendarEventCollaborator grant
+            // (or ownership) matters.
             var calendarEvent = new CalendarEvent { Id = 1, UserId = OwnerUserId, LinkedBoardItemId = null };
-            var service = BuildService(calendarEvent, sharesABoardWithOwner: true);
+            var (service, _) = BuildService(calendarEvent, isCollaborator: true);
 
-            await Should.NotThrowAsync(() => service.EnsureCanCommentOnEventAsync(1, "teammate-1"));
+            await Should.NotThrowAsync(() => service.EnsureCanAccessEventAsync(1, "collaborator-1"));
         }
 
         [Fact]
-        public async Task EnsureCanCommentOnEventAsync_UnrelatedUser_ThrowsForbiddenAccessException()
+        public async Task EnsureCanAccessEventAsync_NotGrantedUser_ThrowsForbiddenAccessException()
         {
+            // Board co-membership with the owner is no longer sufficient by itself — only an
+            // explicit grant is.
             var calendarEvent = new CalendarEvent { Id = 1, UserId = OwnerUserId };
-            var service = BuildService(calendarEvent, sharesABoardWithOwner: false);
+            var (service, _) = BuildService(calendarEvent, isCollaborator: false);
 
             await Should.ThrowAsync<ForbiddenAccessException>(() =>
-                service.EnsureCanCommentOnEventAsync(1, "stranger"));
+                service.EnsureCanAccessEventAsync(1, "stranger"));
         }
 
         [Fact]
-        public async Task EnsureCanCommentOnEventAsync_EventNotFound_ThrowsNotFoundException()
+        public async Task EnsureCanAccessEventAsync_EventNotFound_ThrowsNotFoundException()
         {
             var eventRepo = new Mock<ICalendarEventRepository>();
             eventRepo.Setup(r => r.GetByIdReadOnlyAsync(It.IsAny<int>())).ReturnsAsync((CalendarEvent?)null);
 
             var service = new CalendarAccessService(
-                eventRepo.Object, new Mock<ICalendarEventAttachmentRepository>().Object, new Mock<IBoardMemberRepository>().Object);
+                eventRepo.Object, new Mock<ICalendarEventAttachmentRepository>().Object,
+                new Mock<ICalendarEventCollaboratorRepository>().Object);
 
-            await Should.ThrowAsync<NotFoundException>(() => service.EnsureCanCommentOnEventAsync(999, "anyone"));
+            await Should.ThrowAsync<NotFoundException>(() => service.EnsureCanAccessEventAsync(999, "anyone"));
+        }
+
+        [Fact]
+        public async Task GrantCollaboratorAccessAsync_Owner_GrantsNewCollaborator_AndReturnsIt()
+        {
+            var calendarEvent = new CalendarEvent { Id = 1, UserId = OwnerUserId };
+            var (service, collaboratorRepo) = BuildService(calendarEvent, isCollaborator: false);
+
+            var granted = await service.GrantCollaboratorAccessAsync(1, OwnerUserId, new[] { "bob" });
+
+            granted.ShouldBe(new List<string> { "bob" });
+            collaboratorRepo.Verify(r => r.CreateAsync(It.Is<CalendarEventCollaborator>(
+                c => c.CalendarEventId == 1 && c.UserId == "bob" && c.CreatedBy == OwnerUserId)), Times.Once);
+        }
+
+        [Fact]
+        public async Task GrantCollaboratorAccessAsync_NonOwnerGranter_NoOps_DoesNotGrantAnything()
+        {
+            // The defensive second layer: even though a handler should already have filtered
+            // this down, a direct call from a non-owner must never create a grant.
+            var calendarEvent = new CalendarEvent { Id = 1, UserId = OwnerUserId };
+            var (service, collaboratorRepo) = BuildService(calendarEvent, isCollaborator: false);
+
+            var granted = await service.GrantCollaboratorAccessAsync(1, "not-the-owner", new[] { "bob" });
+
+            granted.ShouldBeEmpty();
+            collaboratorRepo.Verify(r => r.CreateAsync(It.IsAny<CalendarEventCollaborator>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task GrantCollaboratorAccessAsync_AlreadyCollaborator_IsIdempotent_NotReGranted()
+        {
+            var calendarEvent = new CalendarEvent { Id = 1, UserId = OwnerUserId };
+            var (service, collaboratorRepo) = BuildService(calendarEvent, isCollaborator: true);
+
+            var granted = await service.GrantCollaboratorAccessAsync(1, OwnerUserId, new[] { "bob" });
+
+            granted.ShouldBeEmpty();
+            collaboratorRepo.Verify(r => r.CreateAsync(It.IsAny<CalendarEventCollaborator>()), Times.Never);
         }
     }
 }

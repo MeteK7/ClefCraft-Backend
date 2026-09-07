@@ -1,3 +1,4 @@
+using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Comments;
 using ClefCraft.Application.Contracts.Identity;
@@ -29,8 +30,10 @@ namespace ClefCraft.Application.UnitTests.Features.Comments
             userService.Setup(u => u.UserId).Returns(CallerUserId);
 
             var handler = new UpdateCommentCommandHandler(
-                commentRepo.Object, new Mock<IBoardItemRepository>().Object, userService.Object,
-                new Mock<INotificationHubService>().Object, new Mock<IUnitOfWork>().Object);
+                commentRepo.Object, new Mock<IBoardItemRepository>().Object,
+                new Mock<ICalendarAccessService>().Object,
+                new Mock<ICalendarEventRepository>().Object, new Mock<ICalendarEventCollaboratorRepository>().Object,
+                userService.Object, new Mock<INotificationHubService>().Object, new Mock<IUnitOfWork>().Object);
 
             await Should.ThrowAsync<ForbiddenAccessException>(() =>
                 handler.Handle(new UpdateCommentCommand { Id = 1, BodyHtml = "<p>edited</p>" }, CancellationToken.None));
@@ -54,8 +57,10 @@ namespace ClefCraft.Application.UnitTests.Features.Comments
                 .ReturnsAsync(new User { Id = CallerUserId, Firstname = "Ada", Lastname = "Lovelace" });
 
             var handler = new UpdateCommentCommandHandler(
-                commentRepo.Object, new Mock<IBoardItemRepository>().Object, userService.Object,
-                new Mock<INotificationHubService>().Object, new Mock<IUnitOfWork>().Object);
+                commentRepo.Object, new Mock<IBoardItemRepository>().Object,
+                new Mock<ICalendarAccessService>().Object,
+                new Mock<ICalendarEventRepository>().Object, new Mock<ICalendarEventCollaboratorRepository>().Object,
+                userService.Object, new Mock<INotificationHubService>().Object, new Mock<IUnitOfWork>().Object);
 
             var result = await handler.Handle(new UpdateCommentCommand { Id = 1, BodyHtml = "<p>edited</p>" }, CancellationToken.None);
 
@@ -75,8 +80,10 @@ namespace ClefCraft.Application.UnitTests.Features.Comments
             userService.Setup(u => u.UserId).Returns(CallerUserId);
 
             var handler = new UpdateCommentCommandHandler(
-                commentRepo.Object, new Mock<IBoardItemRepository>().Object, userService.Object,
-                new Mock<INotificationHubService>().Object, new Mock<IUnitOfWork>().Object);
+                commentRepo.Object, new Mock<IBoardItemRepository>().Object,
+                new Mock<ICalendarAccessService>().Object,
+                new Mock<ICalendarEventRepository>().Object, new Mock<ICalendarEventCollaboratorRepository>().Object,
+                userService.Object, new Mock<INotificationHubService>().Object, new Mock<IUnitOfWork>().Object);
 
             await Should.ThrowAsync<NotFoundException>(() =>
                 handler.Handle(new UpdateCommentCommand { Id = 1, BodyHtml = "<p>edited</p>" }, CancellationToken.None));

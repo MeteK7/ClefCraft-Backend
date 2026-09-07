@@ -43,23 +43,33 @@ namespace ClefCraft.Application.UnitTests.Mocks
                 s.EnsureSeriesOwnedByUserAsync(It.IsAny<string>(), It.IsAny<string>()));
             var attachmentSetup = mock.Setup(s =>
                 s.EnsureAttachmentOwnedByUserAsync(It.IsAny<int>(), It.IsAny<string>()));
-            var commentSetup = mock.Setup(s =>
-                s.EnsureCanCommentOnEventAsync(It.IsAny<int>(), It.IsAny<string>()));
+            var canAccessEventSetup = mock.Setup(s =>
+                s.EnsureCanAccessEventAsync(It.IsAny<int>(), It.IsAny<string>()));
+            var canAccessAttachmentSetup = mock.Setup(s =>
+                s.EnsureCanAccessAttachmentAsync(It.IsAny<int>(), It.IsAny<string>()));
 
             if (authorized)
             {
                 eventSetup.Returns(Task.CompletedTask);
                 seriesSetup.Returns(Task.CompletedTask);
                 attachmentSetup.Returns(Task.CompletedTask);
-                commentSetup.Returns(Task.CompletedTask);
+                canAccessEventSetup.Returns(Task.CompletedTask);
+                canAccessAttachmentSetup.Returns(Task.CompletedTask);
             }
             else
             {
                 eventSetup.ThrowsAsync(new ForbiddenAccessException());
                 seriesSetup.ThrowsAsync(new ForbiddenAccessException());
                 attachmentSetup.ThrowsAsync(new ForbiddenAccessException());
-                commentSetup.ThrowsAsync(new ForbiddenAccessException());
+                canAccessEventSetup.ThrowsAsync(new ForbiddenAccessException());
+                canAccessAttachmentSetup.ThrowsAsync(new ForbiddenAccessException());
             }
+
+            // GrantCollaboratorAccessAsync never throws by design (it's a silent no-op for a
+            // non-owner granter) — default it to "nothing granted" so tests that don't care
+            // about the grant side-effect aren't forced to set this up themselves.
+            mock.Setup(s => s.GrantCollaboratorAccessAsync(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<IEnumerable<string>>()))
+                .ReturnsAsync(new List<string>());
 
             return mock;
         }
