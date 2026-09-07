@@ -14,6 +14,8 @@ namespace ClefCraft.Application.Features.Comments.Commands.CreateComment
         private readonly IBoardAccessService _boardAccessService;
         private readonly ICalendarAccessService _calendarAccessService;
         private readonly IBoardItemRepository _boardItemRepository;
+        private readonly ICalendarEventRepository _calendarEventRepository;
+        private readonly ICalendarEventCollaboratorRepository _collaboratorRepository;
         private readonly IUserService _userService;
         private readonly INotificationHubService _notificationHubService;
         private readonly IUnitOfWork _unitOfWork;
@@ -23,6 +25,8 @@ namespace ClefCraft.Application.Features.Comments.Commands.CreateComment
             IBoardAccessService boardAccessService,
             ICalendarAccessService calendarAccessService,
             IBoardItemRepository boardItemRepository,
+            ICalendarEventRepository calendarEventRepository,
+            ICalendarEventCollaboratorRepository collaboratorRepository,
             IUserService userService,
             INotificationHubService notificationHubService,
             IUnitOfWork unitOfWork)
@@ -31,6 +35,8 @@ namespace ClefCraft.Application.Features.Comments.Commands.CreateComment
             _boardAccessService = boardAccessService;
             _calendarAccessService = calendarAccessService;
             _boardItemRepository = boardItemRepository;
+            _calendarEventRepository = calendarEventRepository;
+            _collaboratorRepository = collaboratorRepository;
             _userService = userService;
             _notificationHubService = notificationHubService;
             _unitOfWork = unitOfWork;
@@ -73,10 +79,18 @@ namespace ClefCraft.Application.Features.Comments.Commands.CreateComment
             await _commentRepository.CreateAsync(comment);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            var mentionedUserIds = request.MentionedUserIds
+            var requestedMentionIds = request.MentionedUserIds
                 .Where(id => !string.IsNullOrWhiteSpace(id) && id != userId)
                 .Distinct()
                 .ToList();
+
+            // For CalendarEvent: resolves which mentions are valid (owner mentioning someone
+            // new grants them CalendarEventCollaborator access; a non-owner's mention of an
+            // outsider is dropped here, before any CommentMention row exists). No-op passthrough
+            // for BoardItem.
+            var (mentionedUserIds, newlyGrantedUserIds) = await CalendarMentionAccess.ResolveAsync(
+                request.EntityType, request.EntityId, userId, requestedMentionIds,
+                _calendarEventRepository, _calendarAccessService, _collaboratorRepository);
 
             if (mentionedUserIds.Any())
             {
@@ -106,7 +120,8 @@ namespace ClefCraft.Application.Features.Comments.Commands.CreateComment
                 foreach (var mentionedUserId in mentionedUserIds)
                 {
                     await _notificationHubService.SendCommentMentionAsync(
-                        mentionedUserId, comment.EntityType, comment.EntityId, comment.Id, authorFullName, excerpt, boardId, cancellationToken);
+                        mentionedUserId, comment.EntityType, comment.EntityId, comment.Id, authorFullName, excerpt,
+                        boardId, newlyGrantedUserIds.Contains(mentionedUserId), cancellationToken);
                 }
             }
 

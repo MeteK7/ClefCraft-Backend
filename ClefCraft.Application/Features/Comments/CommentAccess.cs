@@ -23,7 +23,7 @@ namespace ClefCraft.Application.Features.Comments
                     await boardAccessService.EnsureBoardItemOwnedByUserAsync(entityId, userId);
                     break;
                 case "CalendarEvent":
-                    await calendarAccessService.EnsureCanCommentOnEventAsync(entityId, userId);
+                    await calendarAccessService.EnsureCanAccessEventAsync(entityId, userId);
                     break;
                 default:
                     throw new ForbiddenAccessException();

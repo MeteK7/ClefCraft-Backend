@@ -1,3 +1,4 @@
+using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Comments;
 using ClefCraft.Application.Contracts.Identity;
@@ -11,6 +12,9 @@ namespace ClefCraft.Application.Features.Comments.Commands.UpdateComment
     {
         private readonly ICommentRepository _commentRepository;
         private readonly IBoardItemRepository _boardItemRepository;
+        private readonly ICalendarAccessService _calendarAccessService;
+        private readonly ICalendarEventRepository _calendarEventRepository;
+        private readonly ICalendarEventCollaboratorRepository _collaboratorRepository;
         private readonly IUserService _userService;
         private readonly INotificationHubService _notificationHubService;
         private readonly IUnitOfWork _unitOfWork;
@@ -18,12 +22,18 @@ namespace ClefCraft.Application.Features.Comments.Commands.UpdateComment
         public UpdateCommentCommandHandler(
             ICommentRepository commentRepository,
             IBoardItemRepository boardItemRepository,
+            ICalendarAccessService calendarAccessService,
+            ICalendarEventRepository calendarEventRepository,
+            ICalendarEventCollaboratorRepository collaboratorRepository,
             IUserService userService,
             INotificationHubService notificationHubService,
             IUnitOfWork unitOfWork)
         {
             _commentRepository = commentRepository;
             _boardItemRepository = boardItemRepository;
+            _calendarAccessService = calendarAccessService;
+            _calendarEventRepository = calendarEventRepository;
+            _collaboratorRepository = collaboratorRepository;
             _userService = userService;
             _notificationHubService = notificationHubService;
             _unitOfWork = unitOfWork;
@@ -52,10 +62,18 @@ namespace ClefCraft.Application.Features.Comments.Commands.UpdateComment
             var existingMentions = await _commentRepository.GetMentionsByCommentIdsAsync(new[] { comment.Id });
             var existingMentionIds = existingMentions.Select(m => m.MentionedUserId).ToHashSet();
 
-            var newMentionIds = request.MentionedUserIds
+            var requestedMentionIds = request.MentionedUserIds
                 .Where(id => !string.IsNullOrWhiteSpace(id) && id != userId)
                 .Distinct()
                 .ToList();
+
+            // Same CalendarEvent mention policy as CreateComment: the comment's own author is
+            // the requester here (editing your own comment), so an edit can still grant new
+            // collaborators when the author is the event owner, and still can't smuggle in an
+            // outsider when they're not.
+            var (newMentionIds, newlyGrantedUserIds) = await CalendarMentionAccess.ResolveAsync(
+                comment.EntityType, comment.EntityId, userId, requestedMentionIds,
+                _calendarEventRepository, _calendarAccessService, _collaboratorRepository);
 
             await _commentRepository.RemoveMentionsAsync(comment.Id);
             if (newMentionIds.Any())
@@ -87,7 +105,8 @@ namespace ClefCraft.Application.Features.Comments.Commands.UpdateComment
                 foreach (var mentionedUserId in addedMentionIds)
                 {
                     await _notificationHubService.SendCommentMentionAsync(
-                        mentionedUserId, comment.EntityType, comment.EntityId, comment.Id, authorFullName, excerpt, boardId, cancellationToken);
+                        mentionedUserId, comment.EntityType, comment.EntityId, comment.Id, authorFullName, excerpt,
+                        boardId, newlyGrantedUserIds.Contains(mentionedUserId), cancellationToken);
                 }
             }
 
