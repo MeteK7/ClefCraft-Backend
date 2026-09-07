@@ -25,27 +25,27 @@ namespace ClefCraft.Persistence.Repositories
         /// Returns events that OVERLAP [windowStart, windowEnd] OR are recurring
         /// (recurring events need the window applied after expansion).
         /// Filters by the dedicated UserId column, not the audit CreatedBy column.
-        /// Also includes events the caller doesn't own but that are linked to a
-        /// BoardItem on a board they're a member of (e.g. a teammate's "Mark as
-        /// Worked" entry) — visible here, but editing/deleting one still requires
-        /// actual ownership via ICalendarAccessService.
+        /// Also includes events the caller doesn't own but has been explicitly granted
+        /// read access to via CalendarEventCollaborator (see ICalendarAccessService.
+        /// GrantCollaboratorAccessAsync) — editing/deleting still requires actual
+        /// ownership. Deliberately does NOT fall back to LinkedBoardItemId/board
+        /// co-membership: a calendar event's visibility is independent of the
+        /// "Mark as Worked" work-record link to a BoardItem, even for events created
+        /// through that flow — see the CalendarEventCollaborator authorization model.
         /// </summary>
         public async Task<List<CalendarEvent>> GetByUserIdAsync(
             string userId,
             DateTimeOffset windowStart,
             DateTimeOffset windowEnd)
         {
-            var memberBoardIds = _context.BoardMembers
-                .Where(m => m.UserId == userId)
-                .Select(m => m.BoardId);
+            var collaboratorEventIds = _context.CalendarEventCollaborators
+                .Where(c => c.UserId == userId)
+                .Select(c => c.CalendarEventId);
 
             return await _context.CalendarEvents
                 .Include(e => e.EventType)
                 .Where(e =>
-                    (e.UserId == userId ||
-                     (e.LinkedBoardItemId != null &&
-                      _context.BoardItems.Any(bi =>
-                          bi.Id == e.LinkedBoardItemId && memberBoardIds.Contains(bi.BoardId)))) &&
+                    (e.UserId == userId || collaboratorEventIds.Contains(e.Id)) &&
                     (e.IsRecurring ||
                      (e.StartDate < windowEnd &&
                       e.EndDate > windowStart)))
