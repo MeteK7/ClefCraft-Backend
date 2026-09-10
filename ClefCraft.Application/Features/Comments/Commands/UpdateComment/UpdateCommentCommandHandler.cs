@@ -11,6 +11,7 @@ namespace ClefCraft.Application.Features.Comments.Commands.UpdateComment
     public class UpdateCommentCommandHandler : IRequestHandler<UpdateCommentCommand, CommentDto>
     {
         private readonly ICommentRepository _commentRepository;
+        private readonly IBoardAccessService _boardAccessService;
         private readonly IBoardItemRepository _boardItemRepository;
         private readonly ICalendarAccessService _calendarAccessService;
         private readonly ICalendarEventRepository _calendarEventRepository;
@@ -21,6 +22,7 @@ namespace ClefCraft.Application.Features.Comments.Commands.UpdateComment
 
         public UpdateCommentCommandHandler(
             ICommentRepository commentRepository,
+            IBoardAccessService boardAccessService,
             IBoardItemRepository boardItemRepository,
             ICalendarAccessService calendarAccessService,
             ICalendarEventRepository calendarEventRepository,
@@ -30,6 +32,7 @@ namespace ClefCraft.Application.Features.Comments.Commands.UpdateComment
             IUnitOfWork unitOfWork)
         {
             _commentRepository = commentRepository;
+            _boardAccessService = boardAccessService;
             _boardItemRepository = boardItemRepository;
             _calendarAccessService = calendarAccessService;
             _calendarEventRepository = calendarEventRepository;
@@ -55,6 +58,12 @@ namespace ClefCraft.Application.Features.Comments.Commands.UpdateComment
             // Edit/delete is author-only — there is no board-owner/moderator override in v1.
             if (comment.CreatedBy != userId)
                 throw new ForbiddenAccessException();
+
+            // The author must still have access to the underlying board/event — if they were
+            // since removed (e.g. taken off the board), old comments there are frozen for them.
+            await CommentAccess.EnsureCanAccessAsync(
+                comment.EntityType, comment.EntityId, userId,
+                _boardAccessService, _calendarAccessService);
 
             comment.BodyHtml = request.BodyHtml;
             await _commentRepository.UpdateAsync(comment);
