@@ -5,12 +5,12 @@ using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Logging;
 using ClefCraft.Application.Contracts.Persistence;
+using ClefCraft.Application.Exceptions;
 using ClefCraft.Application.Features.Calendar.Queries;
 using ClefCraft.Domain;
 using MediatR;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -60,7 +60,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
             if (!request.AllDayEvent &&
                 request.StartDate >= request.EndDate)
             {
-                throw new ValidationException(
+                throw new BadRequestException(
                     "End time must be after start time.");
             }
 
