@@ -12,7 +12,6 @@ using ClefCraft.Domain.Enums;
 using Moq;
 using Shouldly;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -138,7 +137,7 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
                 RecurrenceRuleJson = invalidRuleJson
             };
 
-            await Should.ThrowAsync<ValidationException>(() => handler.Handle(request, CancellationToken.None));
+            await Should.ThrowAsync<BadRequestException>(() => handler.Handle(request, CancellationToken.None));
 
             eventRepo.Verify(r => r.CreateAsync(It.IsAny<CalendarEvent>()), Times.Never);
             seriesRepo.Verify(r => r.CreateAsync(It.IsAny<RecurrenceSeries>()), Times.Never);

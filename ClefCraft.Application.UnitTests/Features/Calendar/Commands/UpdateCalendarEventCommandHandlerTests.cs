@@ -11,7 +11,6 @@ using Moq;
 using Shouldly;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -208,7 +207,7 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
 
             var invalidRuleJson = "{\"Frequency\":\"DAILY\",\"Interval\":0}";
 
-            await Should.ThrowAsync<ValidationException>(() =>
+            await Should.ThrowAsync<BadRequestException>(() =>
                 handler.Handle(MakeRequest(isRecurring: true, invalidRuleJson), CancellationToken.None));
 
             eventRepo.Verify(r => r.UpdateAsync(It.IsAny<CalendarEvent>()), Times.Never);
