@@ -1,8 +1,8 @@
+using ClefCraft.Application.Exceptions;
 using ClefCraft.Application.Features.Calendar.Queries;
 using ClefCraft.Domain;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace ClefCraft.Application.Common.Helpers
@@ -20,22 +20,22 @@ namespace ClefCraft.Application.Common.Helpers
         public static void ValidateRule(RecurrenceRule rule, DateTimeOffset eventStartDate)
         {
             if (rule == null)
-                throw new ValidationException("Recurrence rule is required when IsRecurring is true.");
+                throw new BadRequestException("Recurrence rule is required when IsRecurring is true.");
 
             if (string.IsNullOrWhiteSpace(rule.Frequency) || !ValidFrequencies.Contains(rule.Frequency))
-                throw new ValidationException($"Unsupported recurrence frequency: {rule.Frequency}");
+                throw new BadRequestException($"Unsupported recurrence frequency: {rule.Frequency}");
 
             if (rule.Interval < 1)
-                throw new ValidationException("Recurrence interval must be at least 1.");
+                throw new BadRequestException("Recurrence interval must be at least 1.");
 
             if (rule.Count.HasValue && rule.Count.Value < 1)
-                throw new ValidationException("Recurrence count must be at least 1.");
+                throw new BadRequestException("Recurrence count must be at least 1.");
 
             if (rule.EndDate.HasValue && rule.EndDate.Value < eventStartDate)
-                throw new ValidationException("Recurrence end date must not be before the event's start date.");
+                throw new BadRequestException("Recurrence end date must not be before the event's start date.");
 
             if (rule.DaysOfWeek != null && rule.DaysOfWeek.Any(d => d < 0 || d > 6))
-                throw new ValidationException("Recurrence daysOfWeek values must be between 0 (Sunday) and 6 (Saturday).");
+                throw new BadRequestException("Recurrence daysOfWeek values must be between 0 (Sunday) and 6 (Saturday).");
         }
 
         private static CalendarEvent? ApplyException(

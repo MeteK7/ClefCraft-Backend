@@ -67,6 +67,16 @@ namespace ClefCraft.Api.Middleware
                         Detail = forbidden.InnerException?.Message,
                     };
                     break;
+                case System.ComponentModel.DataAnnotations.ValidationException validation:
+                    statusCode = HttpStatusCode.BadRequest;
+                    problem = new CustomProblemDetails
+                    {
+                        Title = validation.Message,
+                        Status = (int)statusCode,
+                        Type = nameof(System.ComponentModel.DataAnnotations.ValidationException),
+                        Detail = validation.InnerException?.Message,
+                    };
+                    break;
                 default:
                     problem = new CustomProblemDetails
                     {

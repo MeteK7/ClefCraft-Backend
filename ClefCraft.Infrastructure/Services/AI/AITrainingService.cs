@@ -3,6 +3,7 @@ using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Features.Calendar.Queries;
 using ClefCraft.Domain;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -18,17 +19,20 @@ namespace ClefCraft.Infrastructure.Services.AI
         private readonly IEventAnalyticsService _analyticsService;
         private readonly IAIDataRepository _repo;
         private readonly HttpClient _httpClient;
+        private readonly IConfiguration _configuration;
         private readonly ILogger<AITrainingService> _logger;
 
         public AITrainingService(
             IEventAnalyticsService analyticsService,
             IAIDataRepository repo,
             HttpClient httpClient,
+            IConfiguration configuration,
             ILogger<AITrainingService> logger)
         {
             _analyticsService = analyticsService;
             _repo = repo;
             _httpClient = httpClient;
+            _configuration = configuration;
             _logger = logger;
         }
 
@@ -74,7 +78,16 @@ namespace ClefCraft.Infrastructure.Services.AI
 
             try
             {
-                var response = await _httpClient.PostAsJsonAsync("/train", payload);
+                using var httpRequest = new HttpRequestMessage(HttpMethod.Post, "/train")
+                {
+                    Content = JsonContent.Create(payload)
+                };
+
+                var apiKey = _configuration["AIService:TrainApiKey"];
+                if (!string.IsNullOrEmpty(apiKey))
+                    httpRequest.Headers.Add("X-API-Key", apiKey);
+
+                var response = await _httpClient.SendAsync(httpRequest);
 
                 if (!response.IsSuccessStatusCode)
                 {

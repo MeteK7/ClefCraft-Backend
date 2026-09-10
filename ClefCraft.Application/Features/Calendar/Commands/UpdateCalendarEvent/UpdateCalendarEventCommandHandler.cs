@@ -9,7 +9,6 @@ using ClefCraft.Domain;
 using MediatR;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -64,10 +63,10 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
                 throw new ForbiddenAccessException();
 
             if (string.IsNullOrWhiteSpace(request.Subject))
-                throw new ValidationException("Subject is required.");
+                throw new BadRequestException("Subject is required.");
 
             if (!request.AllDayEvent && request.StartDate >= request.EndDate)
-                throw new ValidationException("End time must be after start time.");
+                throw new BadRequestException("End time must be after start time.");
 
             if (request.IsRecurring)
             {
