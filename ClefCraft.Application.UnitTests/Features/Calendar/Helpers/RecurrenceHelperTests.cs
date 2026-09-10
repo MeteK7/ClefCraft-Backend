@@ -1,9 +1,9 @@
 using ClefCraft.Application.Common.Helpers;
+using ClefCraft.Application.Exceptions;
 using ClefCraft.Domain;
 using Shouldly;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace ClefCraft.Application.UnitTests.Features.Calendar.Helpers
@@ -253,7 +253,7 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Helpers
         public void ValidateRule_UnsupportedFrequency_Throws(string frequency)
         {
             var rule = new RecurrenceRule { Frequency = frequency, Interval = 1 };
-            Should.Throw<ValidationException>(() => RecurrenceHelper.ValidateRule(rule, DateTimeOffset.UtcNow));
+            Should.Throw<BadRequestException>(() => RecurrenceHelper.ValidateRule(rule, DateTimeOffset.UtcNow));
         }
 
         [Theory]
@@ -262,14 +262,14 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Helpers
         public void ValidateRule_NonPositiveInterval_Throws(int interval)
         {
             var rule = new RecurrenceRule { Frequency = "DAILY", Interval = interval };
-            Should.Throw<ValidationException>(() => RecurrenceHelper.ValidateRule(rule, DateTimeOffset.UtcNow));
+            Should.Throw<BadRequestException>(() => RecurrenceHelper.ValidateRule(rule, DateTimeOffset.UtcNow));
         }
 
         [Fact]
         public void ValidateRule_NonPositiveCount_Throws()
         {
             var rule = new RecurrenceRule { Frequency = "DAILY", Interval = 1, Count = 0 };
-            Should.Throw<ValidationException>(() => RecurrenceHelper.ValidateRule(rule, DateTimeOffset.UtcNow));
+            Should.Throw<BadRequestException>(() => RecurrenceHelper.ValidateRule(rule, DateTimeOffset.UtcNow));
         }
 
         [Fact]
@@ -277,14 +277,14 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Helpers
         {
             var start = new DateTimeOffset(2026, 1, 10, 0, 0, 0, TimeSpan.Zero);
             var rule = new RecurrenceRule { Frequency = "DAILY", Interval = 1, EndDate = start.AddDays(-1) };
-            Should.Throw<ValidationException>(() => RecurrenceHelper.ValidateRule(rule, start));
+            Should.Throw<BadRequestException>(() => RecurrenceHelper.ValidateRule(rule, start));
         }
 
         [Fact]
         public void ValidateRule_DaysOfWeekOutOfRange_Throws()
         {
             var rule = new RecurrenceRule { Frequency = "WEEKLY", Interval = 1, DaysOfWeek = new List<int> { 0, 7 } };
-            Should.Throw<ValidationException>(() => RecurrenceHelper.ValidateRule(rule, DateTimeOffset.UtcNow));
+            Should.Throw<BadRequestException>(() => RecurrenceHelper.ValidateRule(rule, DateTimeOffset.UtcNow));
         }
     }
 }
