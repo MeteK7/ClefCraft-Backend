@@ -3,6 +3,7 @@ using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Exceptions;
 using ClefCraft.Application.Features.Comments.Commands.DeleteComment;
+using ClefCraft.Application.UnitTests.Mocks;
 using ClefCraft.Domain;
 using Moq;
 using Shouldly;
@@ -25,7 +26,11 @@ namespace ClefCraft.Application.UnitTests.Features.Comments
             var userService = new Mock<IUserService>();
             userService.Setup(u => u.UserId).Returns(CallerUserId);
 
-            var handler = new DeleteCommentCommandHandler(commentRepo.Object, userService.Object, new Mock<IUnitOfWork>().Object);
+            var handler = new DeleteCommentCommandHandler(
+                commentRepo.Object,
+                MockAccessServices.GetMockBoardAccessService(authorized: true).Object,
+                MockAccessServices.GetMockCalendarAccessService(authorized: true).Object,
+                userService.Object, new Mock<IUnitOfWork>().Object);
 
             await Should.ThrowAsync<ForbiddenAccessException>(() =>
                 handler.Handle(new DeleteCommentCommand { Id = 1 }, CancellationToken.None));
@@ -36,7 +41,7 @@ namespace ClefCraft.Application.UnitTests.Features.Comments
         [Fact]
         public async Task Handle_Author_TombstonesComment_ClearsBodyAndMentions_KeepsRowAndIsDeletedTrue()
         {
-            var comment = new Comment { Id = 1, CreatedBy = CallerUserId, BodyHtml = "<p>original</p>", IsDeleted = false };
+            var comment = new Comment { Id = 1, EntityType = "BoardItem", EntityId = 42, CreatedBy = CallerUserId, BodyHtml = "<p>original</p>", IsDeleted = false };
 
             var commentRepo = new Mock<ICommentRepository>();
             commentRepo.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(comment);
@@ -44,7 +49,11 @@ namespace ClefCraft.Application.UnitTests.Features.Comments
             var userService = new Mock<IUserService>();
             userService.Setup(u => u.UserId).Returns(CallerUserId);
 
-            var handler = new DeleteCommentCommandHandler(commentRepo.Object, userService.Object, new Mock<IUnitOfWork>().Object);
+            var handler = new DeleteCommentCommandHandler(
+                commentRepo.Object,
+                MockAccessServices.GetMockBoardAccessService(authorized: true).Object,
+                MockAccessServices.GetMockCalendarAccessService(authorized: true).Object,
+                userService.Object, new Mock<IUnitOfWork>().Object);
 
             await handler.Handle(new DeleteCommentCommand { Id = 1 }, CancellationToken.None);
 
@@ -65,9 +74,38 @@ namespace ClefCraft.Application.UnitTests.Features.Comments
             var userService = new Mock<IUserService>();
             userService.Setup(u => u.UserId).Returns(CallerUserId);
 
-            var handler = new DeleteCommentCommandHandler(commentRepo.Object, userService.Object, new Mock<IUnitOfWork>().Object);
+            var handler = new DeleteCommentCommandHandler(
+                commentRepo.Object,
+                MockAccessServices.GetMockBoardAccessService(authorized: true).Object,
+                MockAccessServices.GetMockCalendarAccessService(authorized: true).Object,
+                userService.Object, new Mock<IUnitOfWork>().Object);
 
             await handler.Handle(new DeleteCommentCommand { Id = 1 }, CancellationToken.None);
+
+            commentRepo.Verify(r => r.UpdateAsync(It.IsAny<Comment>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task Handle_AuthorNoLongerHasEntityAccess_ThrowsForbiddenAccessException_BeforeAnyWrite()
+        {
+            // Author still owns the comment, but has since lost access to the board it lives on
+            // (e.g. removed from the board) — deleting their old comment there must now be blocked.
+            var comment = new Comment { Id = 1, EntityType = "BoardItem", EntityId = 42, CreatedBy = CallerUserId, BodyHtml = "<p>original</p>", IsDeleted = false };
+
+            var commentRepo = new Mock<ICommentRepository>();
+            commentRepo.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(comment);
+
+            var userService = new Mock<IUserService>();
+            userService.Setup(u => u.UserId).Returns(CallerUserId);
+
+            var handler = new DeleteCommentCommandHandler(
+                commentRepo.Object,
+                MockAccessServices.GetMockBoardAccessService(authorized: false).Object,
+                MockAccessServices.GetMockCalendarAccessService(authorized: true).Object,
+                userService.Object, new Mock<IUnitOfWork>().Object);
+
+            await Should.ThrowAsync<ForbiddenAccessException>(() =>
+                handler.Handle(new DeleteCommentCommand { Id = 1 }, CancellationToken.None));
 
             commentRepo.Verify(r => r.UpdateAsync(It.IsAny<Comment>()), Times.Never);
         }

@@ -6,6 +6,7 @@ using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Exceptions;
 using ClefCraft.Application.Features.Comments.Commands.UpdateComment;
 using ClefCraft.Application.Models.Identity;
+using ClefCraft.Application.UnitTests.Mocks;
 using ClefCraft.Domain;
 using Moq;
 using Shouldly;
@@ -30,8 +31,9 @@ namespace ClefCraft.Application.UnitTests.Features.Comments
             userService.Setup(u => u.UserId).Returns(CallerUserId);
 
             var handler = new UpdateCommentCommandHandler(
-                commentRepo.Object, new Mock<IBoardItemRepository>().Object,
-                new Mock<ICalendarAccessService>().Object,
+                commentRepo.Object, MockAccessServices.GetMockBoardAccessService(authorized: true).Object,
+                new Mock<IBoardItemRepository>().Object,
+                MockAccessServices.GetMockCalendarAccessService(authorized: true).Object,
                 new Mock<ICalendarEventRepository>().Object, new Mock<ICalendarEventCollaboratorRepository>().Object,
                 userService.Object, new Mock<INotificationHubService>().Object, new Mock<IUnitOfWork>().Object);
 
@@ -57,8 +59,9 @@ namespace ClefCraft.Application.UnitTests.Features.Comments
                 .ReturnsAsync(new User { Id = CallerUserId, Firstname = "Ada", Lastname = "Lovelace" });
 
             var handler = new UpdateCommentCommandHandler(
-                commentRepo.Object, new Mock<IBoardItemRepository>().Object,
-                new Mock<ICalendarAccessService>().Object,
+                commentRepo.Object, MockAccessServices.GetMockBoardAccessService(authorized: true).Object,
+                new Mock<IBoardItemRepository>().Object,
+                MockAccessServices.GetMockCalendarAccessService(authorized: true).Object,
                 new Mock<ICalendarEventRepository>().Object, new Mock<ICalendarEventCollaboratorRepository>().Object,
                 userService.Object, new Mock<INotificationHubService>().Object, new Mock<IUnitOfWork>().Object);
 
@@ -80,13 +83,39 @@ namespace ClefCraft.Application.UnitTests.Features.Comments
             userService.Setup(u => u.UserId).Returns(CallerUserId);
 
             var handler = new UpdateCommentCommandHandler(
-                commentRepo.Object, new Mock<IBoardItemRepository>().Object,
-                new Mock<ICalendarAccessService>().Object,
+                commentRepo.Object, MockAccessServices.GetMockBoardAccessService(authorized: true).Object,
+                new Mock<IBoardItemRepository>().Object,
+                MockAccessServices.GetMockCalendarAccessService(authorized: true).Object,
                 new Mock<ICalendarEventRepository>().Object, new Mock<ICalendarEventCollaboratorRepository>().Object,
                 userService.Object, new Mock<INotificationHubService>().Object, new Mock<IUnitOfWork>().Object);
 
             await Should.ThrowAsync<NotFoundException>(() =>
                 handler.Handle(new UpdateCommentCommand { Id = 1, BodyHtml = "<p>edited</p>" }, CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task Handle_AuthorNoLongerHasEntityAccess_ThrowsForbiddenAccessException_BeforeAnyWrite()
+        {
+            // Author still owns the comment, but has since lost access to the board it lives on
+            // (e.g. removed from the board) — editing their old comment there must now be blocked.
+            var commentRepo = new Mock<ICommentRepository>();
+            commentRepo.Setup(r => r.GetByIdAsync(1))
+                .ReturnsAsync(new Comment { Id = 1, EntityType = "BoardItem", EntityId = 42, CreatedBy = CallerUserId, BodyHtml = "<p>original</p>" });
+
+            var userService = new Mock<IUserService>();
+            userService.Setup(u => u.UserId).Returns(CallerUserId);
+
+            var handler = new UpdateCommentCommandHandler(
+                commentRepo.Object, MockAccessServices.GetMockBoardAccessService(authorized: false).Object,
+                new Mock<IBoardItemRepository>().Object,
+                MockAccessServices.GetMockCalendarAccessService(authorized: true).Object,
+                new Mock<ICalendarEventRepository>().Object, new Mock<ICalendarEventCollaboratorRepository>().Object,
+                userService.Object, new Mock<INotificationHubService>().Object, new Mock<IUnitOfWork>().Object);
+
+            await Should.ThrowAsync<ForbiddenAccessException>(() =>
+                handler.Handle(new UpdateCommentCommand { Id = 1, BodyHtml = "<p>edited</p>" }, CancellationToken.None));
+
+            commentRepo.Verify(r => r.UpdateAsync(It.IsAny<Comment>()), Times.Never);
         }
     }
 }
