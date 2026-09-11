@@ -114,16 +114,12 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
             segmentRepo.Verify(r => r.CreateAsync(It.IsAny<CalendarEventSegment>()), Times.Never);
             existingNewSegment.Subject.ShouldBe("Segment 2 (re-edited)");
 
-            // KNOWN DEFECT (found while writing this test, not previously tracked): the
-            // unconditional capping step at the top of Handle() runs before the idempotency
-            // check and mutates whatever GetActiveSegmentAsync returned — which, on a re-split
-            // at an already-existing boundary, is this same segment. That leaves EffectiveTo
-            // capped to its own EffectiveFrom (a zero-width window), which silently makes
-            // RecurringEventProjectionService project zero future occurrences for it — the
-            // "future" tail of the series effectively disappears after a second edit to the
-            // same split point. This assertion documents current (buggy) behavior rather than
-            // intended behavior; flagged for a fix decision, not fixed here.
-            existingNewSegment.EffectiveTo.ShouldBe(splitDate);
+            // Regression guard: the capping step must not run against this same segment on a
+            // re-split at an already-existing boundary — doing so previously corrupted it into
+            // a zero-width segment (EffectiveTo == its own EffectiveFrom), which silently made
+            // RecurringEventProjectionService project zero future occurrences for it. It must
+            // stay open-ended.
+            existingNewSegment.EffectiveTo.ShouldBeNull();
         }
 
         [Fact]
