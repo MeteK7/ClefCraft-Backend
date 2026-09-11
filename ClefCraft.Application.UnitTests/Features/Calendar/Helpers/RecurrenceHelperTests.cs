@@ -236,6 +236,82 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Helpers
             occurrences.Single(o => o.StartDate.Date == start.Date).Subject.ShouldBe("Test event");
         }
 
+        [Fact]
+        public void ExpandEvent_CancelledOccurrenceInNonWeeklyRecurrence_SkipsItAndContinuesGeneratingSubsequentOccurrences()
+        {
+            // Historical regression guard for commit 9f9be0d, where a cancelled occurrence in a
+            // non-weekly (iterative-advancement) recurrence caused an infinite loop because the
+            // loop's advance step was skipped before the cancellation was applied. The current
+            // anchor-based candidate generation (each candidate computed independently from the
+            // original start) makes this structurally impossible, but this test protects that
+            // invariant against a future regression back toward iterative advancement.
+            var start = new DateTimeOffset(2026, 1, 1, 9, 0, 0, TimeSpan.Zero);
+            var sourceEvent = MakeSourceEvent(start, start.AddHours(1));
+            var rule = new RecurrenceRule { Frequency = "DAILY", Interval = 1 };
+
+            var exceptions = new List<CalendarEventException>
+            {
+                new CalendarEventException { SeriesUid = sourceEvent.SeriesUid, OccurrenceDate = start.AddDays(1), IsCancelled = true }
+            };
+
+            var occurrences = RecurrenceHelper.ExpandEvent(sourceEvent, rule, exceptions, start, start.AddDays(5));
+
+            occurrences.Count.ShouldBe(4); // days 0,2,3,4 — day 1 cancelled
+            occurrences.ShouldNotContain(o => o.StartDate.Date == start.AddDays(1).Date);
+            occurrences.Select(o => o.StartDate.Date).ShouldBe(new[]
+            {
+                start.Date, start.AddDays(2).Date, start.AddDays(3).Date, start.AddDays(4).Date
+            });
+        }
+
+        [Fact]
+        public void ExpandEvent_MultipleExceptionsAtDifferentDatesInSameSeries_OnlyAppliesTheMatchingDateException()
+        {
+            // Regression class for a bug that recurred three times in history (6131f0a, 5c922c0,
+            // 89c9dcc): exception lookup/matching drifted between exact-date and range/type-
+            // mismatched comparisons, causing an exception meant for one occurrence to silently
+            // apply to (or miss) a different occurrence in the same series.
+            var start = new DateTimeOffset(2026, 1, 1, 9, 0, 0, TimeSpan.Zero);
+            var sourceEvent = MakeSourceEvent(start, start.AddHours(1));
+            var rule = new RecurrenceRule { Frequency = "DAILY", Interval = 1 };
+
+            var exceptions = new List<CalendarEventException>
+            {
+                new CalendarEventException { SeriesUid = sourceEvent.SeriesUid, OccurrenceDate = start.AddDays(1), IsCancelled = true },
+                new CalendarEventException { SeriesUid = sourceEvent.SeriesUid, OccurrenceDate = start.AddDays(3), Subject = "Rescheduled" }
+            };
+
+            var occurrences = RecurrenceHelper.ExpandEvent(sourceEvent, rule, exceptions, start, start.AddDays(5));
+
+            occurrences.Count.ShouldBe(4); // day1 cancelled; days 0,2,3,4 remain
+            occurrences.ShouldNotContain(o => o.StartDate.Date == start.AddDays(1).Date);
+            occurrences.Single(o => o.StartDate.Date == start.Date).Subject.ShouldBe("Test event");
+            occurrences.Single(o => o.StartDate.Date == start.AddDays(2).Date).Subject.ShouldBe("Test event");
+            occurrences.Single(o => o.StartDate.Date == start.AddDays(3).Date).Subject.ShouldBe("Rescheduled");
+            occurrences.Single(o => o.StartDate.Date == start.AddDays(4).Date).Subject.ShouldBe("Test event");
+        }
+
+        [Fact]
+        public void ExpandEvent_CountLimitIsAnchoredToRuleStart_NotToTheQueryRangeStart()
+        {
+            // Characterizes current (intended) semantics: Count is the total number of
+            // occurrences the series will ever produce, counted from the rule's original
+            // anchor date — not reset per query window. Querying a window that starts after
+            // some occurrences have already "used up" the Count budget must not yield extra
+            // occurrences beyond the original limit.
+            var start = new DateTimeOffset(2026, 1, 1, 9, 0, 0, TimeSpan.Zero);
+            var sourceEvent = MakeSourceEvent(start, start.AddHours(1));
+            var rule = new RecurrenceRule { Frequency = "DAILY", Interval = 1, Count = 3 };
+
+            // Query a window starting right at what would be the 3rd (final) occurrence —
+            // occurrences 1 and 2 (days 0 and 1) are before this window.
+            var occurrences = RecurrenceHelper.ExpandEvent(
+                sourceEvent, rule, new List<CalendarEventException>(), start.AddDays(2), start.AddDays(100));
+
+            occurrences.Count.ShouldBe(1);
+            occurrences[0].StartDate.ShouldBe(start.AddDays(2));
+        }
+
         // ------------------------------------------------------------------
         // ValidateRule
         // ------------------------------------------------------------------

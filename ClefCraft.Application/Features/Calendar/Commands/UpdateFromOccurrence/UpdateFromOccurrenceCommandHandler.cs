@@ -59,18 +59,26 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateFromOccurrence
             if (activeSegment == null)
                 throw new NotFoundException(nameof(CalendarEventSegment), request.OccurrenceDate.ToString());
 
-            // 1. Cap the old segment strictly BEFORE the targeted split occurrence date
-            activeSegment.EffectiveTo = request.OccurrenceDate;
-            await _segmentRepo.UpdateAsync(activeSegment);
+            // FIX: If a segment already exists with EXACTLY the same EffectiveFrom date,
+            // we are re-updating a split boundary rather than making a new slice.
+            // To prevent infinite stack accumulation, check your current series segments.
+            var existingSegmentAtDate = series.Segments.FirstOrDefault(s => s.EffectiveFrom == request.OccurrenceDate);
+
+            // 1. Cap the old segment strictly BEFORE the targeted split occurrence date —
+            // but only when it's actually the segment being split. On a re-split at an
+            // already-existing boundary, GetActiveSegmentAsync returns the very segment we're
+            // about to update in place below; capping it here first would corrupt it into a
+            // zero-width segment (EffectiveTo == its own EffectiveFrom), silently truncating
+            // all of its future occurrences.
+            if (existingSegmentAtDate == null || existingSegmentAtDate.Id != activeSegment.Id)
+            {
+                activeSegment.EffectiveTo = request.OccurrenceDate;
+                await _segmentRepo.UpdateAsync(activeSegment);
+            }
 
             var originalDuration = activeSegment.EndDate - activeSegment.StartDate;
             var occurrenceStart = request.StartDate ?? request.OccurrenceDate;
             var occurrenceEnd = request.EndDate ?? (occurrenceStart + originalDuration);
-
-            // FIX: If a segment already exists with EXACTLY the same EffectiveFrom date, 
-            // we are re-updating a split boundary rather than making a new slice.
-            // To prevent infinite stack accumulation, check your current series segments.
-            var existingSegmentAtDate = series.Segments.FirstOrDefault(s => s.EffectiveFrom == request.OccurrenceDate);
 
             if (existingSegmentAtDate != null)
             {
