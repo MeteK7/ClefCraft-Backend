@@ -1,6 +1,7 @@
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
+using ClefCraft.Application.Exceptions;
 using ClefCraft.Application.Features.Calendar.Commands.UpdateSeries;
 using ClefCraft.Application.UnitTests.Mocks;
 using ClefCraft.Domain;
@@ -116,6 +117,40 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
             exceptionRepo.Verify(r => r.DeleteAllForSeriesAsync(SeriesUid), Times.Once);
         }
 
+        [Theory]
+        [InlineData("{\"Frequency\":\"DAILY\",\"Interval\":0}")]
+        [InlineData("{\"Frequency\":\"DAILY\",\"Interval\":-1}")]
+        public async Task OverrideAll_Handle_InvalidRecurrenceRule_ThrowsBadRequestException_BeforeAnyWrite(string invalidRuleJson)
+        {
+            // Regression for the validation gap: RecurrenceRuleJson is required and always
+            // replaces the existing rule on this command, so an invalid rule (e.g.
+            // Interval <= 0) must be rejected before it reaches the live projection service,
+            // where it would infinite-loop expansion.
+            var segment = MakeSegment("Subject", "{\"Frequency\":\"DAILY\",\"Interval\":1}");
+
+            var segmentRepo = new Mock<ICalendarEventSegmentRepository>();
+            segmentRepo.Setup(r => r.GetBySeriesUidAsync(SeriesUid))
+                .ReturnsAsync(new List<CalendarEventSegment> { segment });
+
+            var exceptionRepo = new Mock<ICalendarEventExceptionRepository>();
+            var accessService = MockAccessServices.GetMockCalendarAccessService(authorized: true);
+            var userService = new Mock<IUserService>();
+            userService.Setup(u => u.UserId).Returns(CallerUserId);
+
+            var handler = new UpdateSeriesOverrideAllCommandHandler(
+                segmentRepo.Object, exceptionRepo.Object, accessService.Object, userService.Object, new Mock<IUnitOfWork>().Object);
+
+            await Should.ThrowAsync<BadRequestException>(() =>
+                handler.Handle(new UpdateSeriesOverrideAllCommand
+                {
+                    SeriesUid = SeriesUid,
+                    RecurrenceRuleJson = invalidRuleJson
+                }, CancellationToken.None));
+
+            segment.RecurrenceRuleJson.ShouldBe("{\"Frequency\":\"DAILY\",\"Interval\":1}"); // untouched
+            exceptionRepo.Verify(r => r.DeleteAllForSeriesAsync(It.IsAny<string>()), Times.Never);
+        }
+
         [Fact]
         public async Task PreserveExceptions_Handle_OnlyReplacesRecurrenceRuleJsonWhenProvided_LeavesUntouchedWhenNull()
         {
@@ -175,6 +210,64 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
             segment2.Subject.ShouldBe("New subject");
             segment1.RecurrenceRuleJson.ShouldBe(newRuleJson);
             segment2.RecurrenceRuleJson.ShouldBe(newRuleJson);
+        }
+
+        [Theory]
+        [InlineData("{\"Frequency\":\"DAILY\",\"Interval\":0}")]
+        [InlineData("{\"Frequency\":\"DAILY\",\"Interval\":-1}")]
+        public async Task PreserveExceptions_Handle_InvalidRecurrenceRule_ThrowsBadRequestException_BeforeAnyWrite(string invalidRuleJson)
+        {
+            var segment = MakeSegment("Subject", "{\"Frequency\":\"DAILY\",\"Interval\":1}");
+
+            var segmentRepo = new Mock<ICalendarEventSegmentRepository>();
+            segmentRepo.Setup(r => r.GetBySeriesUidAsync(SeriesUid))
+                .ReturnsAsync(new List<CalendarEventSegment> { segment });
+
+            var accessService = MockAccessServices.GetMockCalendarAccessService(authorized: true);
+            var userService = new Mock<IUserService>();
+            userService.Setup(u => u.UserId).Returns(CallerUserId);
+
+            var handler = new UpdateSeriesPreserveExceptionsCommandHandler(
+                segmentRepo.Object, accessService.Object, userService.Object, new Mock<IUnitOfWork>().Object);
+
+            await Should.ThrowAsync<BadRequestException>(() =>
+                handler.Handle(new UpdateSeriesPreserveExceptionsCommand
+                {
+                    SeriesUid = SeriesUid,
+                    RecurrenceRuleJson = invalidRuleJson
+                }, CancellationToken.None));
+
+            segment.RecurrenceRuleJson.ShouldBe("{\"Frequency\":\"DAILY\",\"Interval\":1}"); // untouched
+        }
+
+        [Fact]
+        public async Task PreserveExceptions_Handle_NullRecurrenceRuleJson_NeverValidates_LeavesExistingRuleUntouched()
+        {
+            // A null RecurrenceRuleJson means "don't touch this field" — it must not be
+            // parsed/validated at all, even if the segment's existing rule would itself be
+            // invalid (e.g. left over from before validation existed).
+            var segment = MakeSegment("Subject", "{\"Frequency\":\"DAILY\",\"Interval\":0}");
+
+            var segmentRepo = new Mock<ICalendarEventSegmentRepository>();
+            segmentRepo.Setup(r => r.GetBySeriesUidAsync(SeriesUid))
+                .ReturnsAsync(new List<CalendarEventSegment> { segment });
+
+            var accessService = MockAccessServices.GetMockCalendarAccessService(authorized: true);
+            var userService = new Mock<IUserService>();
+            userService.Setup(u => u.UserId).Returns(CallerUserId);
+
+            var handler = new UpdateSeriesPreserveExceptionsCommandHandler(
+                segmentRepo.Object, accessService.Object, userService.Object, new Mock<IUnitOfWork>().Object);
+
+            await handler.Handle(new UpdateSeriesPreserveExceptionsCommand
+            {
+                SeriesUid = SeriesUid,
+                Subject = "New subject",
+                RecurrenceRuleJson = null
+            }, CancellationToken.None);
+
+            segment.Subject.ShouldBe("New subject");
+            segment.RecurrenceRuleJson.ShouldBe("{\"Frequency\":\"DAILY\",\"Interval\":0}");
         }
     }
 }
