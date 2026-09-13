@@ -1,4 +1,5 @@
-﻿using ClefCraft.Application.Contracts.Authorization;
+﻿using ClefCraft.Application.Common.Helpers;
+using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
@@ -9,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ClefCraft.Application.Features.Calendar.Commands.UpdateFromOccurrence
@@ -59,6 +61,17 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateFromOccurrence
             if (activeSegment == null)
                 throw new NotFoundException(nameof(CalendarEventSegment), request.OccurrenceDate.ToString());
 
+            var occurrenceStart = request.StartDate ?? request.OccurrenceDate;
+
+            // A null RecurrenceRuleJson means "inherit the active segment's rule" — nothing new
+            // to validate. Only a rule the caller is actually supplying needs checking, before
+            // any segment/exception is touched.
+            if (request.RecurrenceRuleJson != null)
+            {
+                var parsedRule = JsonSerializer.Deserialize<RecurrenceRule>(request.RecurrenceRuleJson);
+                RecurrenceHelper.ValidateRule(parsedRule!, occurrenceStart);
+            }
+
             // FIX: If a segment already exists with EXACTLY the same EffectiveFrom date,
             // we are re-updating a split boundary rather than making a new slice.
             // To prevent infinite stack accumulation, check your current series segments.
@@ -77,7 +90,6 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateFromOccurrence
             }
 
             var originalDuration = activeSegment.EndDate - activeSegment.StartDate;
-            var occurrenceStart = request.StartDate ?? request.OccurrenceDate;
             var occurrenceEnd = request.EndDate ?? (occurrenceStart + originalDuration);
 
             if (existingSegmentAtDate != null)

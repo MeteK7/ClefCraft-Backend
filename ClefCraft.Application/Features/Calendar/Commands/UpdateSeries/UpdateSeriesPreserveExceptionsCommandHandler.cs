@@ -1,12 +1,15 @@
-﻿using ClefCraft.Application.Contracts.Authorization;
+﻿using ClefCraft.Application.Common.Helpers;
+using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
+using ClefCraft.Domain;
 using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSeries
@@ -40,6 +43,19 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSeries
             var segments =
                 await _segmentRepo.GetBySeriesUidAsync(
                     request.SeriesUid);
+
+            // RecurrenceRuleJson is optional here — null means "leave it untouched", so
+            // only validate (and only against segments that will actually be updated) when
+            // the caller is actually supplying a new rule. An invalid rule (e.g. Interval <= 0)
+            // must never reach the live projection service, where it would infinite-loop.
+            if (request.RecurrenceRuleJson != null)
+            {
+                var parsedRule = JsonSerializer.Deserialize<RecurrenceRule>(request.RecurrenceRuleJson);
+                foreach (var segment in segments)
+                {
+                    RecurrenceHelper.ValidateRule(parsedRule!, segment.StartDate);
+                }
+            }
 
             foreach (var segment in segments)
             {

@@ -147,6 +147,41 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
             exceptionRepo.Verify(r => r.DeleteFromDateAsync(SeriesUid, splitDate), Times.Once);
         }
 
+        [Theory]
+        [InlineData("{\"Frequency\":\"DAILY\",\"Interval\":0}")]
+        [InlineData("{\"Frequency\":\"DAILY\",\"Interval\":-1}")]
+        public async Task Handle_InvalidRecurrenceRule_ThrowsBadRequestException_BeforeAnyWrite(string invalidRuleJson)
+        {
+            // Regression for the gap where none of the "edit scope" commands validated the
+            // rule they persist — an Interval <= 0 rule reaching the live projection service
+            // (RecurringEventProjectionService -> RecurrenceHelper.ExpandEvent) would
+            // infinite-loop the request thread.
+            var seriesStart = new DateTimeOffset(2026, 1, 1, 9, 0, 0, TimeSpan.Zero);
+            var splitDate = new DateTimeOffset(2026, 1, 10, 9, 0, 0, TimeSpan.Zero);
+
+            var activeSegment = new CalendarEventSegment
+            {
+                Id = 1, RecurrenceSeriesId = 5, EffectiveFrom = seriesStart, EffectiveTo = null,
+                Subject = "Subject", StartDate = seriesStart, EndDate = seriesStart.AddHours(1),
+                IsRecurring = true, RecurrenceRuleJson = "{\"Frequency\":\"DAILY\",\"Interval\":1}"
+            };
+            var series = new RecurrenceSeries { Id = 5, SeriesUid = SeriesUid, Segments = new List<CalendarEventSegment> { activeSegment } };
+
+            var (handler, _, segmentRepo, exceptionRepo) = MakeHandler(series, activeSegment);
+
+            await Should.ThrowAsync<BadRequestException>(() =>
+                handler.Handle(new UpdateFromOccurrenceCommand
+                {
+                    SeriesUid = SeriesUid,
+                    OccurrenceDate = splitDate,
+                    RecurrenceRuleJson = invalidRuleJson
+                }, CancellationToken.None));
+
+            segmentRepo.Verify(r => r.UpdateAsync(It.IsAny<CalendarEventSegment>()), Times.Never);
+            segmentRepo.Verify(r => r.CreateAsync(It.IsAny<CalendarEventSegment>()), Times.Never);
+            exceptionRepo.Verify(r => r.DeleteFromDateAsync(It.IsAny<string>(), It.IsAny<DateTimeOffset>()), Times.Never);
+        }
+
         [Fact]
         public async Task Handle_NoActiveSegmentForOccurrenceDate_ThrowsNotFoundException_BeforeAnyWrite()
         {
