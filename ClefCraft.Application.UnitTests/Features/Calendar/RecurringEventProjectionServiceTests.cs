@@ -12,11 +12,13 @@ using System.Threading.Tasks;
 namespace ClefCraft.Application.UnitTests.Features.Calendar
 {
     // RecurringEventProjectionService is the live recurrence-expansion path behind
-    // GetCalendarEventsQueryHandler (EventExpansionService is dead code — unregistered,
-    // uncalled). It had zero test coverage prior to this file despite being the most
-    // historically bug-prone area of the backend (duplicate/dropped "this and following"
-    // boundary occurrences, segment vs. legacy fallback selection, etc.). These tests
-    // characterize its current, intended behavior.
+    // GetCalendarEventsQueryHandler. (A parallel EventExpansionService once existed but was
+    // confirmed dead — unregistered, uncalled — and has since been deleted; its one useful
+    // idea, batching exception lookups via GetBySeriesUids, was ported in here.) This class
+    // had zero test coverage prior to this file despite being the most historically
+    // bug-prone area of the backend (duplicate/dropped "this and following" boundary
+    // occurrences, segment vs. legacy fallback selection, etc.). These tests characterize
+    // its current, intended behavior.
     public class RecurringEventProjectionServiceTests
     {
         private const string SeriesUid = "series-1";

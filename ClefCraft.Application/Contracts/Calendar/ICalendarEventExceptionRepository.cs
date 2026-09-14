@@ -33,7 +33,8 @@ namespace ClefCraft.Application.Contracts.Calendar
 
         /// <summary>
         /// Batch version — returns exceptions for multiple series in one query.
-        /// Used by the legacy EventExpansionService.
+        /// Used by RecurringEventProjectionService.ProjectAsync to fetch every recurring
+        /// series' exceptions in one round trip instead of one per root event.
         /// </summary>
         Task<List<CalendarEventException>> GetBySeriesUids(
             IEnumerable<string> seriesUids);
