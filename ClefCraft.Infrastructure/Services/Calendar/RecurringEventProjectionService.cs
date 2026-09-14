@@ -51,6 +51,20 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                     ev.StartDate));
             }
 
+            // Batch-load exceptions for every recurring series up front — one round trip
+            // for the whole request instead of one per recurring root event. Safe to share
+            // the same list across events/series: RecurrenceHelper.ApplyException matches
+            // exceptions by SeriesUid internally, so an exception belonging to a different
+            // series in this batch is simply never selected for a given event's expansion
+            // (the same approach EventExpansionService already uses).
+            var seriesUids = recurringEvents
+                .Where(e => !string.IsNullOrWhiteSpace(e.SeriesUid))
+                .Select(e => e.SeriesUid)
+                .Distinct()
+                .ToList();
+
+            var exceptions = await _exceptionRepo.GetBySeriesUids(seriesUids);
+
             // RECURRING EVENTS
             foreach (var rootEvent in recurringEvents)
             {
@@ -65,8 +79,9 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                 if (series == null || !series.Segments.Any())
                 {
                     var legacy =
-                        await ExpandLegacyAsync(
+                        ExpandLegacy(
                             rootEvent,
+                            exceptions,
                             rangeStart,
                             rangeEnd);
 
@@ -76,9 +91,10 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                 }
 
                 var projected =
-                    await ExpandSegmentSeriesAsync(
+                    ExpandSegmentSeries(
                         rootEvent,
                         series,
+                        exceptions,
                         rangeStart,
                         rangeEnd);
 
@@ -93,9 +109,10 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                 .ToList();
         }
 
-        private async Task<List<CalendarEventInstanceDto>>
-            ExpandLegacyAsync(
+        private List<CalendarEventInstanceDto>
+            ExpandLegacy(
                 CalendarEvent rootEvent,
+                List<CalendarEventException> exceptions,
                 DateTimeOffset rangeStart,
                 DateTimeOffset rangeEnd)
         {
@@ -104,10 +121,6 @@ namespace ClefCraft.Infrastructure.Services.Calendar
             {
                 return new();
             }
-
-            var exceptions =
-                await _exceptionRepo.GetBySeriesUid(
-                    rootEvent.SeriesUid);
 
             var rule =
                 JsonSerializer.Deserialize<RecurrenceRule>(
@@ -129,17 +142,14 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                 .ToList();
         }
 
-        private async Task<List<CalendarEventInstanceDto>>
-            ExpandSegmentSeriesAsync(
+        private List<CalendarEventInstanceDto>
+            ExpandSegmentSeries(
                 CalendarEvent rootEvent,
                 RecurrenceSeries series,
+                List<CalendarEventException> exceptions,
                 DateTimeOffset rangeStart,
                 DateTimeOffset rangeEnd)
         {
-            var exceptions =
-                await _exceptionRepo.GetBySeriesUid(
-                    rootEvent.SeriesUid);
-
             var occurrences =
                 new List<CalendarEvent>();
 
