@@ -12,11 +12,13 @@ using System.Threading.Tasks;
 namespace ClefCraft.Application.UnitTests.Features.Calendar
 {
     // RecurringEventProjectionService is the live recurrence-expansion path behind
-    // GetCalendarEventsQueryHandler (EventExpansionService is dead code — unregistered,
-    // uncalled). It had zero test coverage prior to this file despite being the most
-    // historically bug-prone area of the backend (duplicate/dropped "this and following"
-    // boundary occurrences, segment vs. legacy fallback selection, etc.). These tests
-    // characterize its current, intended behavior.
+    // GetCalendarEventsQueryHandler. (A parallel EventExpansionService once existed but was
+    // confirmed dead — unregistered, uncalled — and has since been deleted; its one useful
+    // idea, batching exception lookups via GetBySeriesUids, was ported in here.) This class
+    // had zero test coverage prior to this file despite being the most historically
+    // bug-prone area of the backend (duplicate/dropped "this and following" boundary
+    // occurrences, segment vs. legacy fallback selection, etc.). These tests characterize
+    // its current, intended behavior.
     public class RecurringEventProjectionServiceTests
     {
         private const string SeriesUid = "series-1";
@@ -74,7 +76,7 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar
             var start = new DateTimeOffset(2026, 1, 5, 9, 0, 0, TimeSpan.Zero);
 
             seriesRepo.Setup(r => r.GetBySeriesUidAsync(SeriesUid)).ReturnsAsync((RecurrenceSeries?)null);
-            exceptionRepo.Setup(r => r.GetBySeriesUid(SeriesUid)).ReturnsAsync(new List<CalendarEventException>());
+            exceptionRepo.Setup(r => r.GetBySeriesUids(It.IsAny<IEnumerable<string>>())).ReturnsAsync(new List<CalendarEventException>());
 
             var rootEvent = new CalendarEvent
             {
@@ -97,7 +99,7 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar
 
             var series = new RecurrenceSeries { Id = 5, SeriesUid = SeriesUid, Segments = new List<CalendarEventSegment>() };
             seriesRepo.Setup(r => r.GetBySeriesUidAsync(SeriesUid)).ReturnsAsync(series);
-            exceptionRepo.Setup(r => r.GetBySeriesUid(SeriesUid)).ReturnsAsync(new List<CalendarEventException>());
+            exceptionRepo.Setup(r => r.GetBySeriesUids(It.IsAny<IEnumerable<string>>())).ReturnsAsync(new List<CalendarEventException>());
 
             var rootEvent = new CalendarEvent
             {
@@ -136,7 +138,7 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar
 
             var series = new RecurrenceSeries { Id = 5, SeriesUid = SeriesUid, Segments = new List<CalendarEventSegment> { segment } };
             seriesRepo.Setup(r => r.GetBySeriesUidAsync(SeriesUid)).ReturnsAsync(series);
-            exceptionRepo.Setup(r => r.GetBySeriesUid(SeriesUid)).ReturnsAsync(new List<CalendarEventException>());
+            exceptionRepo.Setup(r => r.GetBySeriesUids(It.IsAny<IEnumerable<string>>())).ReturnsAsync(new List<CalendarEventException>());
 
             var result = await service.ProjectAsync(new List<CalendarEvent> { rootEvent }, start, start.AddDays(3));
 
@@ -174,7 +176,7 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar
 
             var series = new RecurrenceSeries { Id = 5, SeriesUid = SeriesUid, Segments = new List<CalendarEventSegment> { segmentA, segmentB } };
             seriesRepo.Setup(r => r.GetBySeriesUidAsync(SeriesUid)).ReturnsAsync(series);
-            exceptionRepo.Setup(r => r.GetBySeriesUid(SeriesUid)).ReturnsAsync(new List<CalendarEventException>());
+            exceptionRepo.Setup(r => r.GetBySeriesUids(It.IsAny<IEnumerable<string>>())).ReturnsAsync(new List<CalendarEventException>());
 
             var result = await service.ProjectAsync(new List<CalendarEvent> { rootEvent }, seriesStart, rangeEnd);
 
@@ -206,7 +208,7 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar
 
             var series = new RecurrenceSeries { Id = 5, SeriesUid = SeriesUid, Segments = new List<CalendarEventSegment> { segment } };
             seriesRepo.Setup(r => r.GetBySeriesUidAsync(SeriesUid)).ReturnsAsync(series);
-            exceptionRepo.Setup(r => r.GetBySeriesUid(SeriesUid)).ReturnsAsync(new List<CalendarEventException>());
+            exceptionRepo.Setup(r => r.GetBySeriesUids(It.IsAny<IEnumerable<string>>())).ReturnsAsync(new List<CalendarEventException>());
 
             var result = await service.ProjectAsync(new List<CalendarEvent> { rootEvent }, queryStart, queryEnd);
 
@@ -251,7 +253,7 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar
 
             var series = new RecurrenceSeries { Id = 5, SeriesUid = SeriesUid, Segments = new List<CalendarEventSegment> { segmentA, segmentB } };
             seriesRepo.Setup(r => r.GetBySeriesUidAsync(SeriesUid)).ReturnsAsync(series);
-            exceptionRepo.Setup(r => r.GetBySeriesUid(SeriesUid)).ReturnsAsync(new List<CalendarEventException>());
+            exceptionRepo.Setup(r => r.GetBySeriesUids(It.IsAny<IEnumerable<string>>())).ReturnsAsync(new List<CalendarEventException>());
 
             var result = await service.ProjectAsync(new List<CalendarEvent> { rootEvent }, rangeStart, rangeEnd);
 
@@ -278,7 +280,7 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar
 
             var series = new RecurrenceSeries { Id = 5, SeriesUid = SeriesUid, Segments = new List<CalendarEventSegment> { segmentA, segmentB } };
             seriesRepo.Setup(r => r.GetBySeriesUidAsync(SeriesUid)).ReturnsAsync(series);
-            exceptionRepo.Setup(r => r.GetBySeriesUid(SeriesUid)).ReturnsAsync(new List<CalendarEventException>());
+            exceptionRepo.Setup(r => r.GetBySeriesUids(It.IsAny<IEnumerable<string>>())).ReturnsAsync(new List<CalendarEventException>());
 
             var result = await service.ProjectAsync(new List<CalendarEvent> { rootEvent }, seriesStart, rangeEnd);
 
@@ -301,7 +303,7 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar
             var segment = MakeSegment(start, null, start, start.AddHours(1), "{\"Frequency\":\"DAILY\",\"Interval\":1,\"Count\":1}");
             var series = new RecurrenceSeries { Id = 5, SeriesUid = SeriesUid, Segments = new List<CalendarEventSegment> { segment } };
             seriesRepo.Setup(r => r.GetBySeriesUidAsync(SeriesUid)).ReturnsAsync(series);
-            exceptionRepo.Setup(r => r.GetBySeriesUid(SeriesUid)).ReturnsAsync(new List<CalendarEventException>());
+            exceptionRepo.Setup(r => r.GetBySeriesUids(It.IsAny<IEnumerable<string>>())).ReturnsAsync(new List<CalendarEventException>());
 
             var result = await service.ProjectAsync(new List<CalendarEvent> { rootEvent }, start, start.AddDays(1));
 
@@ -326,7 +328,7 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar
             var segment = MakeSegment(start, null, start, start.AddHours(1), "{\"Frequency\":\"DAILY\",\"Interval\":1}");
             var series = new RecurrenceSeries { Id = 5, SeriesUid = SeriesUid, Segments = new List<CalendarEventSegment> { segment } };
             seriesRepo.Setup(r => r.GetBySeriesUidAsync(SeriesUid)).ReturnsAsync(series);
-            exceptionRepo.Setup(r => r.GetBySeriesUid(SeriesUid)).ReturnsAsync(new List<CalendarEventException>
+            exceptionRepo.Setup(r => r.GetBySeriesUids(It.IsAny<IEnumerable<string>>())).ReturnsAsync(new List<CalendarEventException>
             {
                 new CalendarEventException { SeriesUid = SeriesUid, OccurrenceDate = cancelledDate, IsCancelled = true }
             });
@@ -335,6 +337,55 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar
 
             result.Count.ShouldBe(4); // 5 daily occurrences minus the cancelled one
             result.ShouldNotContain(x => x.StartDate == cancelledDate);
+        }
+
+        [Fact]
+        public async Task ProjectAsync_MultipleRecurringSeries_BatchesExceptionLookupIntoOneCall()
+        {
+            // Regression test for the exception-lookup batching optimization: previously
+            // each recurring root event triggered its own GetBySeriesUid round trip; now
+            // the whole request's exceptions are fetched once via GetBySeriesUids.
+            var (service, exceptionRepo, seriesRepo) = MakeService();
+            var start = new DateTimeOffset(2026, 1, 1, 9, 0, 0, TimeSpan.Zero);
+
+            const string SeriesUidA = "series-1";
+            const string SeriesUidB = "series-2";
+
+            seriesRepo.Setup(r => r.GetBySeriesUidAsync(It.IsAny<string>())).ReturnsAsync((RecurrenceSeries?)null);
+
+            var eventA = new CalendarEvent
+            {
+                Id = 1, SeriesUid = SeriesUidA, IsRecurring = true,
+                Subject = "Series A", StartDate = start, EndDate = start.AddHours(1),
+                RecurrenceRuleJson = "{\"Frequency\":\"DAILY\",\"Interval\":1}"
+            };
+            var eventB = new CalendarEvent
+            {
+                Id = 2, SeriesUid = SeriesUidB, IsRecurring = true,
+                Subject = "Series B", StartDate = start, EndDate = start.AddHours(1),
+                RecurrenceRuleJson = "{\"Frequency\":\"DAILY\",\"Interval\":1}"
+            };
+
+            // Exceptions for BOTH series come back from the single batched call.
+            var cancelledDateA = start.AddDays(1);
+            exceptionRepo.Setup(r => r.GetBySeriesUids(It.Is<IEnumerable<string>>(uids =>
+                    uids.Contains(SeriesUidA) && uids.Contains(SeriesUidB))))
+                .ReturnsAsync(new List<CalendarEventException>
+                {
+                    new CalendarEventException { SeriesUid = SeriesUidA, OccurrenceDate = cancelledDateA, IsCancelled = true }
+                });
+
+            var result = await service.ProjectAsync(new List<CalendarEvent> { eventA, eventB }, start, start.AddDays(3));
+
+            // Batched exactly once for the whole request, not once per event.
+            exceptionRepo.Verify(r => r.GetBySeriesUids(It.IsAny<IEnumerable<string>>()), Times.Once);
+            exceptionRepo.Verify(r => r.GetBySeriesUid(It.IsAny<string>()), Times.Never);
+
+            // Behavior unchanged: series A's cancellation only affects series A, not series B
+            // — proves the shared batched list doesn't leak exceptions across series.
+            result.Count(x => x.SeriesUid == SeriesUidA).ShouldBe(2); // 3 daily occurrences minus the cancelled one
+            result.Where(x => x.SeriesUid == SeriesUidA).ShouldNotContain(x => x.StartDate == cancelledDateA);
+            result.Count(x => x.SeriesUid == SeriesUidB).ShouldBe(3); // untouched
         }
     }
 }
