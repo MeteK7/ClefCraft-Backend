@@ -68,6 +68,8 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSeries
             // RecurrenceRuleJson is required on this command and always replaces the
             // existing rule, so an invalid rule (e.g. Interval <= 0) must never reach the
             // live projection service, where it would infinite-loop expansion.
+            RecurrenceHelper.ValidateTimeZoneId(request.TimeZoneId);
+
             var parsedRule = JsonSerializer.Deserialize<RecurrenceRule>(request.RecurrenceRuleJson);
             foreach (var segment in segments)
             {
@@ -85,8 +87,9 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSeries
                 if (request.Comment != null)
                     segment.Comment = request.Comment;
 
-                // RecurrenceRuleJson is required on this command — replace always.
+                // RecurrenceRuleJson/TimeZoneId are required on this command — replace always.
                 segment.RecurrenceRuleJson = request.RecurrenceRuleJson;
+                segment.TimeZoneId = request.TimeZoneId;
             }
 
             // ------------------------------------------------------------------

@@ -41,6 +41,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
         public string? Comment { get; set; }
         public bool IsRecurring { get; set; }
         public string? RecurrenceRuleJson { get; set; }
+        public string TimeZoneId { get; set; } = "UTC";
         public int? LinkedBoardItemId { get; set; }
         public string? LinkedBoardItemTitle { get; set; }
         public double? AttendanceScore { get; set; }

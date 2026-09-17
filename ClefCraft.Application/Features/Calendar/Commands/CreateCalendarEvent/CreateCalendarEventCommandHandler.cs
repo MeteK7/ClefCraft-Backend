@@ -64,6 +64,8 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
                     "End time must be after start time.");
             }
 
+            RecurrenceHelper.ValidateTimeZoneId(request.TimeZoneId);
+
             if (request.IsRecurring)
             {
                 var parsedRule = string.IsNullOrWhiteSpace(request.RecurrenceRuleJson)
@@ -96,6 +98,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
                 UserId = _userService.UserId,
                 IsRecurring = request.IsRecurring,
                 RecurrenceRuleJson = request.RecurrenceRuleJson,
+                TimeZoneId = request.TimeZoneId,
                 SeriesUid = seriesUid,
                 DateCreated = DateTime.UtcNow,
                 DateModified = DateTime.UtcNow
@@ -167,6 +170,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
 
                     IsRecurring = request.IsRecurring,
                     RecurrenceRuleJson = request.RecurrenceRuleJson,
+                    TimeZoneId = request.TimeZoneId,
 
                     Importance = request.Importance,
                     EventTypeId = request.EventTypeId

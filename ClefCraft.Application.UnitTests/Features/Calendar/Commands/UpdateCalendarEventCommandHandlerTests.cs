@@ -43,7 +43,8 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
 
         private static UpdateCalendarEventCommand MakeRequest(
             bool isRecurring,
-            string? recurrenceRuleJson = null)
+            string? recurrenceRuleJson = null,
+            string timeZoneId = "UTC")
         {
             var start = new DateTimeOffset(2026, 1, 5, 9, 0, 0, TimeSpan.Zero);
 
@@ -56,7 +57,8 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
                 AllDayEvent = false,
                 Importance = ImportanceLevel.Normal,
                 IsRecurring = isRecurring,
-                RecurrenceRuleJson = recurrenceRuleJson
+                RecurrenceRuleJson = recurrenceRuleJson,
+                TimeZoneId = timeZoneId
             };
         }
 
@@ -140,6 +142,62 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
 
             entity.IsRecurring.ShouldBeTrue();
             entity.RecurrenceRuleJson.ShouldBe(ruleJson);
+        }
+
+        [Fact]
+        public async Task Handle_NonRecurringToRecurringWithTimeZoneId_SetsItOnEntityAndTheNewSegment()
+        {
+            var entity = MakeEntity(isRecurring: false);
+            var (handler, eventRepo, _, segmentRepo, _) = MakeHandler(entity, existingSeries: null);
+
+            var ruleJson = "{\"Frequency\":\"WEEKLY\",\"Interval\":1}";
+            await handler.Handle(
+                MakeRequest(isRecurring: true, ruleJson, timeZoneId: "America/New_York"), CancellationToken.None);
+
+            entity.TimeZoneId.ShouldBe("America/New_York");
+            segmentRepo.Verify(r => r.CreateAsync(It.Is<CalendarEventSegment>(s =>
+                s.TimeZoneId == "America/New_York")), Times.Once);
+        }
+
+        [Fact]
+        public async Task Handle_RecurringToRecurring_ExistingSeriesFound_SyncsTimeZoneIdOntoEverySegment()
+        {
+            var entity = MakeEntity(isRecurring: true);
+            var segment = new CalendarEventSegment
+            {
+                Id = 1,
+                RecurrenceSeriesId = 7,
+                RecurrenceRuleJson = "{\"Frequency\":\"WEEKLY\",\"Interval\":1}",
+                TimeZoneId = "UTC"
+            };
+            var existingSeries = new RecurrenceSeries
+            {
+                Id = 7,
+                UserId = "user-1",
+                SeriesUid = entity.SeriesUid,
+                Segments = new List<CalendarEventSegment> { segment }
+            };
+
+            var (handler, _, _, _, _) = MakeHandler(entity, existingSeries);
+
+            var newRuleJson = "{\"Frequency\":\"MONTHLY\",\"Interval\":2}";
+            await handler.Handle(
+                MakeRequest(isRecurring: true, newRuleJson, timeZoneId: "Europe/London"), CancellationToken.None);
+
+            segment.TimeZoneId.ShouldBe("Europe/London");
+        }
+
+        [Fact]
+        public async Task Handle_InvalidTimeZoneId_ThrowsBeforeAnyRepositoryWrite()
+        {
+            var entity = MakeEntity(isRecurring: false);
+            var (handler, eventRepo, seriesRepo, _, _) = MakeHandler(entity, existingSeries: null);
+
+            await Should.ThrowAsync<BadRequestException>(() =>
+                handler.Handle(MakeRequest(isRecurring: false, timeZoneId: "Not/A_Real_Zone"), CancellationToken.None));
+
+            eventRepo.Verify(r => r.UpdateAsync(It.IsAny<CalendarEvent>()), Times.Never);
+            seriesRepo.Verify(r => r.GetBySeriesUidAsync(It.IsAny<string>()), Times.Never);
         }
 
         [Fact]

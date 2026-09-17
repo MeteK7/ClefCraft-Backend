@@ -21,6 +21,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
         public string? Comment { get; set; }
         public bool IsRecurring { get; set; }
         public string? RecurrenceRuleJson { get; set; }
+        public string TimeZoneId { get; set; } = "UTC";
         public int? LinkedBoardItemId { get; set; }
         public List<int> ReminderMinutes { get; set; } = new();
     }
