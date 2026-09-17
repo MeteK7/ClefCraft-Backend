@@ -56,6 +56,10 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateFromOccurrence
 
         public string? RecurrenceRuleJson { get; set; }
 
+        /// <summary>IANA timezone id for the new/updated segment. Null inherits the
+        /// active segment's zone, matching Subject/Location's null convention.</summary>
+        public string? TimeZoneId { get; set; }
+
         public ImportanceLevel? Importance { get; set; }
         public int? EventTypeId { get; set; }
     }

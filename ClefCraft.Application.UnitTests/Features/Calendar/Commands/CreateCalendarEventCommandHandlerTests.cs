@@ -95,6 +95,53 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
         }
 
         [Fact]
+        public async Task Handle_RecurringEventWithTimeZoneId_FlowsOntoBothEventAndSegment()
+        {
+            var (handler, eventRepo, _, segmentRepo, _) = MakeHandler();
+            var start = new DateTimeOffset(2026, 1, 5, 9, 0, 0, TimeSpan.Zero);
+
+            var request = new CreateCalendarEventCommand
+            {
+                Subject = "Standup",
+                StartDate = start,
+                EndDate = start.AddHours(1),
+                AllDayEvent = false,
+                Importance = ImportanceLevel.Normal,
+                IsRecurring = true,
+                RecurrenceRuleJson = "{\"Frequency\":\"DAILY\",\"Interval\":1}",
+                TimeZoneId = "America/New_York"
+            };
+
+            await handler.Handle(request, CancellationToken.None);
+
+            eventRepo.Verify(r => r.CreateAsync(It.Is<CalendarEvent>(e => e.TimeZoneId == "America/New_York")), Times.Once);
+            segmentRepo.Verify(r => r.CreateAsync(It.Is<CalendarEventSegment>(s => s.TimeZoneId == "America/New_York")), Times.Once);
+        }
+
+        [Fact]
+        public async Task Handle_InvalidTimeZoneId_ThrowsBeforeAnyRepositoryWrite()
+        {
+            var (handler, eventRepo, seriesRepo, _, _) = MakeHandler();
+            var start = new DateTimeOffset(2026, 1, 5, 9, 0, 0, TimeSpan.Zero);
+
+            var request = new CreateCalendarEventCommand
+            {
+                Subject = "Bad zone",
+                StartDate = start,
+                EndDate = start.AddHours(1),
+                AllDayEvent = false,
+                Importance = ImportanceLevel.Normal,
+                IsRecurring = false,
+                TimeZoneId = "Not/A_Real_Zone"
+            };
+
+            await Should.ThrowAsync<BadRequestException>(() => handler.Handle(request, CancellationToken.None));
+
+            eventRepo.Verify(r => r.CreateAsync(It.IsAny<CalendarEvent>()), Times.Never);
+            seriesRepo.Verify(r => r.CreateAsync(It.IsAny<RecurrenceSeries>()), Times.Never);
+        }
+
+        [Fact]
         public async Task Handle_NewNonRecurringEvent_NeverCreatesSeriesOrSegment()
         {
             // Matrix row A

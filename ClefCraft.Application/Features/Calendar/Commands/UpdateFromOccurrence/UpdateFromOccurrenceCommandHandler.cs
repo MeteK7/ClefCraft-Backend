@@ -72,6 +72,9 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateFromOccurrence
                 RecurrenceHelper.ValidateRule(parsedRule!, occurrenceStart);
             }
 
+            if (request.TimeZoneId != null)
+                RecurrenceHelper.ValidateTimeZoneId(request.TimeZoneId);
+
             // FIX: If a segment already exists with EXACTLY the same EffectiveFrom date,
             // we are re-updating a split boundary rather than making a new slice.
             // To prevent infinite stack accumulation, check your current series segments.
@@ -101,6 +104,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateFromOccurrence
                 existingSegmentAtDate.StartDate = occurrenceStart;
                 existingSegmentAtDate.EndDate = occurrenceEnd;
                 existingSegmentAtDate.RecurrenceRuleJson = request.RecurrenceRuleJson ?? existingSegmentAtDate.RecurrenceRuleJson;
+                existingSegmentAtDate.TimeZoneId = request.TimeZoneId ?? existingSegmentAtDate.TimeZoneId;
                 existingSegmentAtDate.Importance = request.Importance ?? existingSegmentAtDate.Importance;
                 existingSegmentAtDate.EventTypeId = request.EventTypeId ?? existingSegmentAtDate.EventTypeId;
 
@@ -124,6 +128,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateFromOccurrence
 
                     IsRecurring = activeSegment.IsRecurring,
                     RecurrenceRuleJson = request.RecurrenceRuleJson ?? activeSegment.RecurrenceRuleJson,
+                    TimeZoneId = request.TimeZoneId ?? activeSegment.TimeZoneId,
 
                     Importance = request.Importance ?? activeSegment.Importance,
                     EventTypeId = request.EventTypeId ?? activeSegment.EventTypeId

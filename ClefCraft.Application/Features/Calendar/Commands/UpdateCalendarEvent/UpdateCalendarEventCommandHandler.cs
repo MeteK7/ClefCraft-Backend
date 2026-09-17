@@ -68,6 +68,8 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
             if (!request.AllDayEvent && request.StartDate >= request.EndDate)
                 throw new BadRequestException("End time must be after start time.");
 
+            RecurrenceHelper.ValidateTimeZoneId(request.TimeZoneId);
+
             if (request.IsRecurring)
             {
                 var parsedRule = string.IsNullOrWhiteSpace(request.RecurrenceRuleJson)
@@ -90,6 +92,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
             entity.Comment = request.Comment;
             entity.IsRecurring = request.IsRecurring;
             entity.RecurrenceRuleJson = request.RecurrenceRuleJson;
+            entity.TimeZoneId = request.TimeZoneId;
             entity.DateModified = DateTime.UtcNow;
 
             await _calendarEventRepository.UpdateAsync(entity);
@@ -141,6 +144,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
                             EndDate = entity.EndDate,
                             IsRecurring = true,
                             RecurrenceRuleJson = entity.RecurrenceRuleJson,
+                            TimeZoneId = entity.TimeZoneId,
                             Importance = entity.Importance,
                             EventTypeId = entity.EventTypeId
                         };
@@ -162,6 +166,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
                             segment.Location = entity.Location;
                             segment.Comment = entity.Comment;
                             segment.RecurrenceRuleJson = entity.RecurrenceRuleJson;
+                            segment.TimeZoneId = entity.TimeZoneId;
                         }
 
                         await _unitOfWork.SaveChangesAsync(cancellationToken);

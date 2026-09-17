@@ -16,5 +16,6 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSeries
         public string? Comment { get; set; }
 
         public string RecurrenceRuleJson { get; set; }
+        public string TimeZoneId { get; set; }
     }
 }

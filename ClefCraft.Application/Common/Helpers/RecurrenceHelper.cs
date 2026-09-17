@@ -38,6 +38,76 @@ namespace ClefCraft.Application.Common.Helpers
                 throw new BadRequestException("Recurrence daysOfWeek values must be between 0 (Sunday) and 6 (Saturday).");
         }
 
+        /// <summary>
+        /// Validates an IANA timezone id before it is persisted, so a bad id is rejected
+        /// at the API boundary rather than surfacing deep inside live recurrence expansion.
+        /// </summary>
+        public static void ValidateTimeZoneId(string timeZoneId)
+        {
+            if (string.IsNullOrWhiteSpace(timeZoneId))
+                throw new BadRequestException("TimeZoneId is required.");
+
+            try
+            {
+                TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+            }
+            catch (Exception ex) when (ex is TimeZoneNotFoundException or InvalidTimeZoneException)
+            {
+                throw new BadRequestException($"Unrecognized timezone id: {timeZoneId}");
+            }
+        }
+
+        /// <summary>
+        /// Resolves a stored IANA timezone id to a TimeZoneInfo, falling back to UTC for
+        /// any legacy/corrupt id that slipped past ValidateTimeZoneId at write time — live
+        /// expansion must never crash a calendar view over a bad stored id.
+        /// </summary>
+        private static TimeZoneInfo ResolveTimeZone(string? timeZoneId)
+        {
+            if (string.IsNullOrWhiteSpace(timeZoneId))
+                return TimeZoneInfo.Utc;
+
+            try
+            {
+                return TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+            }
+            catch (Exception ex) when (ex is TimeZoneNotFoundException or InvalidTimeZoneException)
+            {
+                return TimeZoneInfo.Utc;
+            }
+        }
+
+        /// <summary>
+        /// Resolves a wall-clock reading in the given zone to the correct UTC instant,
+        /// deciding explicitly for the two cases a plain TimeZoneInfo.ConvertTimeToUtc
+        /// call leaves ambiguous or throws on:
+        ///   - Spring-forward gap (e.g. 1:59am -> 3:00am skips 2:xxam entirely): push
+        ///     forward to the first valid instant rather than skip the occurrence.
+        ///   - Fall-back ambiguity (e.g. 1:30am occurs twice): always resolve to the
+        ///     earlier/still-daylight instant, chosen explicitly rather than relying on
+        ///     the runtime's implicit default.
+        /// </summary>
+        private static DateTimeOffset ResolveWallClockToUtc(DateTime wallClock, TimeZoneInfo tz)
+        {
+            var unspecified = DateTime.SpecifyKind(wallClock, DateTimeKind.Unspecified);
+
+            if (tz.IsInvalidTime(unspecified))
+            {
+                while (tz.IsInvalidTime(unspecified))
+                    unspecified = unspecified.AddMinutes(1);
+
+                return TimeZoneInfo.ConvertTimeToUtc(unspecified, tz);
+            }
+
+            if (tz.IsAmbiguousTime(unspecified))
+            {
+                var offset = tz.GetAmbiguousTimeOffsets(unspecified).Max();
+                return new DateTimeOffset(unspecified, offset);
+            }
+
+            return TimeZoneInfo.ConvertTimeToUtc(unspecified, tz);
+        }
+
         private static CalendarEvent? ApplyException(
             CalendarEvent occurrence,
             CalendarEvent sourceEvent,
@@ -88,41 +158,50 @@ namespace ClefCraft.Application.Common.Helpers
         private static IEnumerable<DateTimeOffset> GenerateCandidateDates(
             DateTimeOffset start,
             RecurrenceRule rule,
-            DateTimeOffset rangeEnd)
+            DateTimeOffset rangeEnd,
+            TimeZoneInfo tz)
         {
             if (rule.Frequency == "WEEKLY" && rule.DaysOfWeek is { Count: > 0 })
-                return GenerateWeeklyByDayCandidates(start, rule, rangeEnd);
+                return GenerateWeeklyByDayCandidates(start, rule, rangeEnd, tz);
 
-            return GenerateSimpleCandidates(start, rule, rangeEnd);
+            return GenerateSimpleCandidates(start, rule, rangeEnd, tz);
         }
 
         /// <summary>
         /// DAILY / WEEKLY(no DaysOfWeek) / MONTHLY / YEARLY candidates.
-        /// Each candidate is computed directly from the original start date
-        /// (start.AddMonths(Interval * occurrenceIndex) etc.) rather than by
-        /// repeatedly advancing the previous candidate — AddMonths/AddYears
-        /// clamps to the last valid day of a short month, and re-anchoring
-        /// to that clamped value on the next iteration would permanently
-        /// lose the original day-of-month (e.g. Jan 31 -> Feb 28 -> Mar 28
-        /// instead of Mar 31).
+        /// Each candidate is computed directly from the original start date's
+        /// WALL-CLOCK reading in `tz` (startWallClock.AddMonths(Interval *
+        /// occurrenceIndex) etc.) rather than by repeatedly advancing the
+        /// previous candidate — AddMonths/AddYears clamps to the last valid
+        /// day of a short month, and re-anchoring to that clamped value on
+        /// the next iteration would permanently lose the original
+        /// day-of-month (e.g. Jan 31 -> Feb 28 -> Mar 28 instead of Mar 31).
+        /// Doing this arithmetic on the wall-clock reading (not the absolute
+        /// UTC instant) is what makes recurrence DST-correct: "every day at
+        /// 9am" means 9am local time on each calendar date, not a fixed UTC
+        /// instant that silently drifts an hour across a DST transition.
         /// </summary>
         private static IEnumerable<DateTimeOffset> GenerateSimpleCandidates(
             DateTimeOffset start,
             RecurrenceRule rule,
-            DateTimeOffset rangeEnd)
+            DateTimeOffset rangeEnd,
+            TimeZoneInfo tz)
         {
+            var startWallClock = TimeZoneInfo.ConvertTime(start, tz).DateTime;
             var occurrenceIndex = 0;
 
             while (true)
             {
-                var current = rule.Frequency switch
+                var currentWallClock = rule.Frequency switch
                 {
-                    "DAILY" => start.AddDays(rule.Interval * occurrenceIndex),
-                    "WEEKLY" => start.AddDays(7 * rule.Interval * occurrenceIndex),
-                    "MONTHLY" => start.AddMonths(rule.Interval * occurrenceIndex),
-                    "YEARLY" => start.AddYears(rule.Interval * occurrenceIndex),
+                    "DAILY" => startWallClock.AddDays(rule.Interval * occurrenceIndex),
+                    "WEEKLY" => startWallClock.AddDays(7 * rule.Interval * occurrenceIndex),
+                    "MONTHLY" => startWallClock.AddMonths(rule.Interval * occurrenceIndex),
+                    "YEARLY" => startWallClock.AddYears(rule.Interval * occurrenceIndex),
                     _ => throw new NotSupportedException($"Unsupported frequency: {rule.Frequency}")
                 };
+
+                var current = ResolveWallClockToUtc(currentWallClock, tz);
 
                 if (current >= rangeEnd)
                     yield break;
@@ -136,29 +215,34 @@ namespace ClefCraft.Application.Common.Helpers
         /// WEEKLY candidates honoring DaysOfWeek (0 = Sunday .. 6 = Saturday,
         /// matching DateTimeOffset.DayOfWeek and the frontend's day-picker
         /// index convention). Groups of selected weekdays repeat every
-        /// Interval weeks, anchored to the week containing the event's
-        /// original start date. Candidates before the start date (earlier
-        /// weekdays within the very first active week) are skipped.
+        /// Interval weeks, anchored to the week (in wall-clock terms, see
+        /// GenerateSimpleCandidates) containing the event's original start
+        /// date. Candidates before the start date (earlier weekdays within
+        /// the very first active week) are skipped.
         /// </summary>
         private static IEnumerable<DateTimeOffset> GenerateWeeklyByDayCandidates(
             DateTimeOffset start,
             RecurrenceRule rule,
-            DateTimeOffset rangeEnd)
+            DateTimeOffset rangeEnd,
+            TimeZoneInfo tz)
         {
+            var startWallClock = TimeZoneInfo.ConvertTime(start, tz).DateTime;
             var sortedDays = rule.DaysOfWeek!.Distinct().OrderBy(d => d).ToList();
-            var weekStart = start.AddDays(-(int)start.DayOfWeek);
+            var weekStartWallClock = startWallClock.AddDays(-(int)startWallClock.DayOfWeek);
             var weekGroup = 0;
 
             while (true)
             {
-                var currentWeekStart = weekStart.AddDays(7L * rule.Interval * weekGroup);
+                var currentWeekStartWallClock = weekStartWallClock.AddDays(7L * rule.Interval * weekGroup);
+                var currentWeekStart = ResolveWallClockToUtc(currentWeekStartWallClock, tz);
 
                 if (currentWeekStart >= rangeEnd)
                     yield break;
 
                 foreach (var day in sortedDays)
                 {
-                    var candidate = currentWeekStart.AddDays(day);
+                    var candidateWallClock = currentWeekStartWallClock.AddDays(day);
+                    var candidate = ResolveWallClockToUtc(candidateWallClock, tz);
 
                     if (candidate < start || candidate >= rangeEnd)
                         continue;
@@ -180,7 +264,20 @@ namespace ClefCraft.Application.Common.Helpers
             var result = new List<CalendarEvent>();
             var generated = 0;
 
-            foreach (var current in GenerateCandidateDates(sourceEvent.StartDate, rule, rangeEnd))
+            // All-day events have no meaningful wall-clock hour — a calendar date never
+            // has a DST gap/ambiguity, so they always expand in UTC regardless of the
+            // stored TimeZoneId.
+            var tz = sourceEvent.AllDayEvent ? TimeZoneInfo.Utc : ResolveTimeZone(sourceEvent.TimeZoneId);
+
+            // Wall-clock duration, preserved across DST transitions: a 9-10am meeting
+            // stays 9-10am local even on the transition day itself (so real elapsed time
+            // is briefly 59 or 61 minutes that one day), rather than always being exactly
+            // 60 real minutes and drifting the displayed end time by an hour.
+            var startWallClock = TimeZoneInfo.ConvertTime(sourceEvent.StartDate, tz).DateTime;
+            var endWallClock = TimeZoneInfo.ConvertTime(sourceEvent.EndDate, tz).DateTime;
+            var wallClockDuration = endWallClock - startWallClock;
+
+            foreach (var current in GenerateCandidateDates(sourceEvent.StartDate, rule, rangeEnd, tz))
             {
                 if (rule.Count.HasValue && generated >= rule.Count.Value)
                     break;
@@ -190,7 +287,8 @@ namespace ClefCraft.Application.Common.Helpers
 
                 if (current >= rangeStart)
                 {
-                    var duration = sourceEvent.EndDate - sourceEvent.StartDate;
+                    var currentWallClock = TimeZoneInfo.ConvertTime(current, tz).DateTime;
+                    var occurrenceEnd = ResolveWallClockToUtc(currentWallClock + wallClockDuration, tz);
 
                     var occurrence = new CalendarEvent
                     {
@@ -201,13 +299,14 @@ namespace ClefCraft.Application.Common.Helpers
                         Location = sourceEvent.Location,
                         Comment = sourceEvent.Comment,
                         StartDate = current,
-                        EndDate = current + duration,
+                        EndDate = occurrenceEnd,
                         AllDayEvent = sourceEvent.AllDayEvent,
                         EventTypeId = sourceEvent.EventTypeId,
                         Importance = sourceEvent.Importance,
                         IsRecurring = true,
                         RecurrenceRuleJson = sourceEvent.RecurrenceRuleJson,
-                        LinkedBoardItemId = sourceEvent.LinkedBoardItemId
+                        LinkedBoardItemId = sourceEvent.LinkedBoardItemId,
+                        TimeZoneId = sourceEvent.TimeZoneId
                     };
 
                     occurrence = ApplyException(occurrence, sourceEvent, exceptions);

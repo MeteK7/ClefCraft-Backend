@@ -57,6 +57,9 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSeries
                 }
             }
 
+            if (request.TimeZoneId != null)
+                RecurrenceHelper.ValidateTimeZoneId(request.TimeZoneId);
+
             foreach (var segment in segments)
             {
                 if (request.Subject != null)
@@ -71,6 +74,9 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSeries
                 if (request.RecurrenceRuleJson != null)
                     segment.RecurrenceRuleJson =
                         request.RecurrenceRuleJson;
+
+                if (request.TimeZoneId != null)
+                    segment.TimeZoneId = request.TimeZoneId;
             }
 
             await _uow.SaveChangesAsync(cancellationToken);

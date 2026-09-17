@@ -53,7 +53,8 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
             await handler.Handle(new UpdateSeriesOverrideAllCommand
             {
                 SeriesUid = SeriesUid,
-                RecurrenceRuleJson = newRuleJson
+                RecurrenceRuleJson = newRuleJson,
+                TimeZoneId = "UTC"
             }, CancellationToken.None);
 
             segment1.RecurrenceRuleJson.ShouldBe(newRuleJson);
@@ -85,7 +86,8 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
                 Subject = "New subject",
                 Location = null, // not provided — should be left as-is
                 Comment = null,  // not provided — should be left as-is
-                RecurrenceRuleJson = "{\"Frequency\":\"DAILY\",\"Interval\":1}"
+                RecurrenceRuleJson = "{\"Frequency\":\"DAILY\",\"Interval\":1}",
+                TimeZoneId = "UTC"
             }, CancellationToken.None);
 
             segment.Subject.ShouldBe("New subject");
@@ -111,7 +113,8 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
             await handler.Handle(new UpdateSeriesOverrideAllCommand
             {
                 SeriesUid = SeriesUid,
-                RecurrenceRuleJson = "{\"Frequency\":\"DAILY\",\"Interval\":1}"
+                RecurrenceRuleJson = "{\"Frequency\":\"DAILY\",\"Interval\":1}",
+                TimeZoneId = "UTC"
             }, CancellationToken.None);
 
             exceptionRepo.Verify(r => r.DeleteAllForSeriesAsync(SeriesUid), Times.Once);
@@ -144,7 +147,66 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
                 handler.Handle(new UpdateSeriesOverrideAllCommand
                 {
                     SeriesUid = SeriesUid,
-                    RecurrenceRuleJson = invalidRuleJson
+                    RecurrenceRuleJson = invalidRuleJson,
+                    TimeZoneId = "UTC"
+                }, CancellationToken.None));
+
+            segment.RecurrenceRuleJson.ShouldBe("{\"Frequency\":\"DAILY\",\"Interval\":1}"); // untouched
+            exceptionRepo.Verify(r => r.DeleteAllForSeriesAsync(It.IsAny<string>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task OverrideAll_Handle_SetsTimeZoneIdUnconditionallyOnEverySegment()
+        {
+            var segment1 = MakeSegment("Subject A", "{\"Frequency\":\"DAILY\",\"Interval\":1}");
+            var segment2 = MakeSegment("Subject B", "{\"Frequency\":\"WEEKLY\",\"Interval\":1}");
+
+            var segmentRepo = new Mock<ICalendarEventSegmentRepository>();
+            segmentRepo.Setup(r => r.GetBySeriesUidAsync(SeriesUid))
+                .ReturnsAsync(new List<CalendarEventSegment> { segment1, segment2 });
+
+            var exceptionRepo = new Mock<ICalendarEventExceptionRepository>();
+            var accessService = MockAccessServices.GetMockCalendarAccessService(authorized: true);
+            var userService = new Mock<IUserService>();
+            userService.Setup(u => u.UserId).Returns(CallerUserId);
+
+            var handler = new UpdateSeriesOverrideAllCommandHandler(
+                segmentRepo.Object, exceptionRepo.Object, accessService.Object, userService.Object, new Mock<IUnitOfWork>().Object);
+
+            await handler.Handle(new UpdateSeriesOverrideAllCommand
+            {
+                SeriesUid = SeriesUid,
+                RecurrenceRuleJson = "{\"Frequency\":\"DAILY\",\"Interval\":1}",
+                TimeZoneId = "America/New_York"
+            }, CancellationToken.None);
+
+            segment1.TimeZoneId.ShouldBe("America/New_York");
+            segment2.TimeZoneId.ShouldBe("America/New_York");
+        }
+
+        [Fact]
+        public async Task OverrideAll_Handle_InvalidTimeZoneId_ThrowsBadRequestException_BeforeAnyWrite()
+        {
+            var segment = MakeSegment("Subject", "{\"Frequency\":\"DAILY\",\"Interval\":1}");
+
+            var segmentRepo = new Mock<ICalendarEventSegmentRepository>();
+            segmentRepo.Setup(r => r.GetBySeriesUidAsync(SeriesUid))
+                .ReturnsAsync(new List<CalendarEventSegment> { segment });
+
+            var exceptionRepo = new Mock<ICalendarEventExceptionRepository>();
+            var accessService = MockAccessServices.GetMockCalendarAccessService(authorized: true);
+            var userService = new Mock<IUserService>();
+            userService.Setup(u => u.UserId).Returns(CallerUserId);
+
+            var handler = new UpdateSeriesOverrideAllCommandHandler(
+                segmentRepo.Object, exceptionRepo.Object, accessService.Object, userService.Object, new Mock<IUnitOfWork>().Object);
+
+            await Should.ThrowAsync<BadRequestException>(() =>
+                handler.Handle(new UpdateSeriesOverrideAllCommand
+                {
+                    SeriesUid = SeriesUid,
+                    RecurrenceRuleJson = "{\"Frequency\":\"DAILY\",\"Interval\":1}",
+                    TimeZoneId = "Not/A_Real_Zone"
                 }, CancellationToken.None));
 
             segment.RecurrenceRuleJson.ShouldBe("{\"Frequency\":\"DAILY\",\"Interval\":1}"); // untouched
@@ -268,6 +330,90 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
 
             segment.Subject.ShouldBe("New subject");
             segment.RecurrenceRuleJson.ShouldBe("{\"Frequency\":\"DAILY\",\"Interval\":0}");
+        }
+
+        [Fact]
+        public async Task PreserveExceptions_Handle_NullTimeZoneId_LeavesEverySegmentsZoneUntouched()
+        {
+            var segment1 = MakeSegment("Subject A", "{\"Frequency\":\"DAILY\",\"Interval\":1}");
+            segment1.TimeZoneId = "America/New_York";
+            var segment2 = MakeSegment("Subject B", "{\"Frequency\":\"WEEKLY\",\"Interval\":1}");
+            segment2.TimeZoneId = "Europe/London";
+
+            var segmentRepo = new Mock<ICalendarEventSegmentRepository>();
+            segmentRepo.Setup(r => r.GetBySeriesUidAsync(SeriesUid))
+                .ReturnsAsync(new List<CalendarEventSegment> { segment1, segment2 });
+
+            var accessService = MockAccessServices.GetMockCalendarAccessService(authorized: true);
+            var userService = new Mock<IUserService>();
+            userService.Setup(u => u.UserId).Returns(CallerUserId);
+
+            var handler = new UpdateSeriesPreserveExceptionsCommandHandler(
+                segmentRepo.Object, accessService.Object, userService.Object, new Mock<IUnitOfWork>().Object);
+
+            await handler.Handle(new UpdateSeriesPreserveExceptionsCommand
+            {
+                SeriesUid = SeriesUid,
+                Subject = "New subject",
+                TimeZoneId = null
+            }, CancellationToken.None);
+
+            segment1.TimeZoneId.ShouldBe("America/New_York");
+            segment2.TimeZoneId.ShouldBe("Europe/London");
+        }
+
+        [Fact]
+        public async Task PreserveExceptions_Handle_NonNullTimeZoneId_SetsItOnEverySegment()
+        {
+            var segment1 = MakeSegment("Subject A", "{\"Frequency\":\"DAILY\",\"Interval\":1}");
+            var segment2 = MakeSegment("Subject B", "{\"Frequency\":\"WEEKLY\",\"Interval\":1}");
+
+            var segmentRepo = new Mock<ICalendarEventSegmentRepository>();
+            segmentRepo.Setup(r => r.GetBySeriesUidAsync(SeriesUid))
+                .ReturnsAsync(new List<CalendarEventSegment> { segment1, segment2 });
+
+            var accessService = MockAccessServices.GetMockCalendarAccessService(authorized: true);
+            var userService = new Mock<IUserService>();
+            userService.Setup(u => u.UserId).Returns(CallerUserId);
+
+            var handler = new UpdateSeriesPreserveExceptionsCommandHandler(
+                segmentRepo.Object, accessService.Object, userService.Object, new Mock<IUnitOfWork>().Object);
+
+            await handler.Handle(new UpdateSeriesPreserveExceptionsCommand
+            {
+                SeriesUid = SeriesUid,
+                TimeZoneId = "Asia/Tokyo"
+            }, CancellationToken.None);
+
+            segment1.TimeZoneId.ShouldBe("Asia/Tokyo");
+            segment2.TimeZoneId.ShouldBe("Asia/Tokyo");
+        }
+
+        [Fact]
+        public async Task PreserveExceptions_Handle_InvalidTimeZoneId_ThrowsBadRequestException_BeforeAnyWrite()
+        {
+            var segment = MakeSegment("Subject", "{\"Frequency\":\"DAILY\",\"Interval\":1}");
+            segment.TimeZoneId = "America/New_York";
+
+            var segmentRepo = new Mock<ICalendarEventSegmentRepository>();
+            segmentRepo.Setup(r => r.GetBySeriesUidAsync(SeriesUid))
+                .ReturnsAsync(new List<CalendarEventSegment> { segment });
+
+            var accessService = MockAccessServices.GetMockCalendarAccessService(authorized: true);
+            var userService = new Mock<IUserService>();
+            userService.Setup(u => u.UserId).Returns(CallerUserId);
+
+            var handler = new UpdateSeriesPreserveExceptionsCommandHandler(
+                segmentRepo.Object, accessService.Object, userService.Object, new Mock<IUnitOfWork>().Object);
+
+            await Should.ThrowAsync<BadRequestException>(() =>
+                handler.Handle(new UpdateSeriesPreserveExceptionsCommand
+                {
+                    SeriesUid = SeriesUid,
+                    TimeZoneId = "Not/A_Real_Zone"
+                }, CancellationToken.None));
+
+            segment.TimeZoneId.ShouldBe("America/New_York"); // untouched
         }
     }
 }
