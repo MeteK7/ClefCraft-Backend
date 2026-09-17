@@ -85,6 +85,18 @@ namespace ClefCraft.Persistence.DatabaseContext
             modelBuilder.Entity<CalendarEvent>()
                 .HasIndex(x => x.SeriesUid);
 
+            // Real database-level defaults (not just a C# property initializer) so a
+            // mid-rollout INSERT from an old app instance that doesn't yet set TimeZoneId
+            // still gets a valid value, and so existing rows are backfilled to "UTC" by
+            // the migration itself rather than needing a separate data migration step.
+            modelBuilder.Entity<CalendarEvent>()
+                .Property(x => x.TimeZoneId)
+                .HasDefaultValue("UTC");
+
+            modelBuilder.Entity<CalendarEventSegment>()
+                .Property(x => x.TimeZoneId)
+                .HasDefaultValue("UTC");
+
             modelBuilder.Entity<BoardMember>()
                 .HasIndex(x => new { x.BoardId, x.UserId })
                 .IsUnique();

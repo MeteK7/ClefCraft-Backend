@@ -25,6 +25,12 @@ namespace ClefCraft.Domain
         public string SeriesUid { get; set; } = Guid.NewGuid().ToString();
         public bool IsRecurring { get; set; }
         public string? RecurrenceRuleJson { get; set; }
+        /// <summary>
+        /// IANA timezone id (e.g. "America/New_York") the event's wall-clock time is
+        /// anchored to — used to resolve DST-correct occurrence times for recurring
+        /// events. Defaults to "UTC" for all-day events and pre-migration rows.
+        /// </summary>
+        public string TimeZoneId { get; set; } = "UTC";
         public virtual BoardItem? LinkedBoardItem { get; set; }  // nullable to match nullable FK
         public List<CalendarEventExceptionHistory> History { get; set; } = new();  // initialized to avoid null refs
 
