@@ -10,7 +10,8 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Helpers
 {
     public class RecurrenceHelperTests
     {
-        private static CalendarEvent MakeSourceEvent(DateTimeOffset start, DateTimeOffset end, string seriesUid = "series-1")
+        private static CalendarEvent MakeSourceEvent(
+            DateTimeOffset start, DateTimeOffset end, string seriesUid = "series-1", string timeZoneId = "UTC")
         {
             return new CalendarEvent
             {
@@ -20,7 +21,11 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Helpers
                 SeriesUid = seriesUid,
                 StartDate = start,
                 EndDate = end,
-                IsRecurring = true
+                IsRecurring = true,
+                // Explicit even though "UTC" is also the domain model's default — existing
+                // fixtures above are UTC-anchored so the DST edge cases below never trigger
+                // for them (UTC has no invalid/ambiguous wall-clock times).
+                TimeZoneId = timeZoneId
             };
         }
 
@@ -310,6 +315,105 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Helpers
 
             occurrences.Count.ShouldBe(1);
             occurrences[0].StartDate.ShouldBe(start.AddDays(2));
+        }
+
+        // ------------------------------------------------------------------
+        // DST-aware expansion (America/New_York, real 2026 transitions)
+        // ------------------------------------------------------------------
+
+        [Fact]
+        public void ExpandEvent_WeeklyOccurrenceLandsOnSpringForwardGap_PushesForwardToFirstValidWallClockTime()
+        {
+            // 2026-01-04 is a Sunday; America/New_York springs forward at 2:00am on
+            // 2026-03-08 (also a Sunday, 9 weeks later), so a weekly Sunday 2:30am
+            // series lands an occurrence directly inside the nonexistent 2:00-3:00am
+            // wall-clock gap on that date.
+            var start = new DateTimeOffset(2026, 1, 4, 2, 30, 0, TimeSpan.FromHours(-5)); // EST
+            var sourceEvent = MakeSourceEvent(start, start.AddHours(1), timeZoneId: "America/New_York");
+
+            var rule = new RecurrenceRule { Frequency = "WEEKLY", Interval = 1 };
+            var rangeEnd = start.AddDays(70); // exclusive — covers through late March
+
+            var occurrences = RecurrenceHelper.ExpandEvent(
+                sourceEvent, rule, new List<CalendarEventException>(), start, rangeEnd);
+
+            var transitionOccurrence = occurrences.Single(o => o.StartDate.UtcDateTime.Date == new DateTime(2026, 3, 8));
+
+            // Pushed forward to 3:00am EDT (the first valid instant), not left at the
+            // nonexistent 2:30am — 3:00am EDT is 07:00 UTC.
+            transitionOccurrence.StartDate.ShouldBe(new DateTimeOffset(2026, 3, 8, 7, 0, 0, TimeSpan.Zero));
+
+            // Every other week is unaffected — e.g. the following Sunday is a normal 2:30am EDT.
+            var nextWeek = occurrences.Single(o => o.StartDate.UtcDateTime.Date == new DateTime(2026, 3, 15));
+            nextWeek.StartDate.ShouldBe(new DateTimeOffset(2026, 3, 15, 6, 30, 0, TimeSpan.Zero)); // 2:30am EDT
+        }
+
+        [Fact]
+        public void ExpandEvent_WeeklyOccurrenceLandsOnFallBackAmbiguity_ResolvesToTheEarlierDaylightInstant()
+        {
+            // 2026-10-04 is a Sunday; America/New_York falls back at 2:00am on
+            // 2026-11-01 (also a Sunday, 4 weeks later), so a weekly Sunday 1:30am
+            // series lands an occurrence on a wall-clock time that occurs twice.
+            var start = new DateTimeOffset(2026, 10, 4, 1, 30, 0, TimeSpan.FromHours(-4)); // EDT
+            var sourceEvent = MakeSourceEvent(start, start.AddHours(1), timeZoneId: "America/New_York");
+
+            var rule = new RecurrenceRule { Frequency = "WEEKLY", Interval = 1 };
+            var rangeEnd = start.AddDays(35); // exclusive — covers through early November
+
+            var occurrences = RecurrenceHelper.ExpandEvent(
+                sourceEvent, rule, new List<CalendarEventException>(), start, rangeEnd);
+
+            var transitionOccurrence = occurrences.Single(o => o.StartDate.UtcDateTime.Date == new DateTime(2026, 11, 1));
+
+            // Resolves to the earlier/daylight instant (EDT, -4), not the later/standard
+            // one (EST, -5) — 1:30am EDT is 05:30 UTC.
+            transitionOccurrence.StartDate.ShouldBe(new DateTimeOffset(2026, 11, 1, 5, 30, 0, TimeSpan.Zero));
+        }
+
+        [Fact]
+        public void ExpandEvent_DurationSpanningSpringForwardGap_PreservesWallClockLengthNotFixedElapsedTime()
+        {
+            // Same transition-week anchor as the spring-forward test above, but this
+            // event's wall-clock span (1:30am-3:30am) straddles the 2:00-3:00am gap
+            // entirely rather than starting inside it. A fixed 2-hour TimeSpan added to
+            // the resolved UTC start would land the end at the wrong wall-clock time;
+            // recomputing the end from wall clock keeps it at 3:30am local, even though
+            // only 1 real hour elapses that day.
+            var start = new DateTimeOffset(2026, 1, 4, 1, 30, 0, TimeSpan.FromHours(-5)); // EST
+            var sourceEvent = MakeSourceEvent(start, start.AddHours(2), timeZoneId: "America/New_York");
+
+            var rule = new RecurrenceRule { Frequency = "WEEKLY", Interval = 1 };
+            var rangeEnd = start.AddDays(70); // exclusive
+
+            var occurrences = RecurrenceHelper.ExpandEvent(
+                sourceEvent, rule, new List<CalendarEventException>(), start, rangeEnd);
+
+            var transitionOccurrence = occurrences.Single(o => o.StartDate.UtcDateTime.Date == new DateTime(2026, 3, 8));
+
+            transitionOccurrence.StartDate.ShouldBe(new DateTimeOffset(2026, 3, 8, 6, 30, 0, TimeSpan.Zero)); // 1:30am EST
+            transitionOccurrence.EndDate.ShouldBe(new DateTimeOffset(2026, 3, 8, 7, 30, 0, TimeSpan.Zero)); // 3:30am EDT
+
+            // Wall clock shows a 2-hour meeting, but only 1 real hour elapsed.
+            (transitionOccurrence.EndDate - transitionOccurrence.StartDate).ShouldBe(TimeSpan.FromHours(1));
+        }
+
+        // ------------------------------------------------------------------
+        // ValidateTimeZoneId
+        // ------------------------------------------------------------------
+
+        [Fact]
+        public void ValidateTimeZoneId_ValidIanaId_DoesNotThrow()
+        {
+            Should.NotThrow(() => RecurrenceHelper.ValidateTimeZoneId("America/New_York"));
+        }
+
+        [Theory]
+        [InlineData("Not/A_Real_Zone")]
+        [InlineData("")]
+        [InlineData(null)]
+        public void ValidateTimeZoneId_InvalidOrMissingId_Throws(string? timeZoneId)
+        {
+            Should.Throw<BadRequestException>(() => RecurrenceHelper.ValidateTimeZoneId(timeZoneId!));
         }
 
         // ------------------------------------------------------------------
