@@ -34,7 +34,7 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar
         private static CalendarEventSegment MakeSegment(
             DateTimeOffset effectiveFrom, DateTimeOffset? effectiveTo,
             DateTimeOffset startDate, DateTimeOffset endDate,
-            string ruleJson, string subject = "Segment subject") =>
+            string ruleJson, string subject = "Segment subject", string timeZoneId = "UTC") =>
             new CalendarEventSegment
             {
                 RecurrenceSeriesId = 5,
@@ -45,7 +45,8 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar
                 EndDate = endDate,
                 IsRecurring = true,
                 RecurrenceRuleJson = ruleJson,
-                Importance = ImportanceLevel.Normal
+                Importance = ImportanceLevel.Normal,
+                TimeZoneId = timeZoneId
             };
 
         [Fact]
@@ -337,6 +338,49 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar
 
             result.Count.ShouldBe(4); // 5 daily occurrences minus the cancelled one
             result.ShouldNotContain(x => x.StartDate == cancelledDate);
+        }
+
+        [Fact]
+        public async Task ProjectAsync_SegmentWithRealTimeZone_ProjectedOccurrenceIsDstCorrect()
+        {
+            // Regression guard for BuildVirtualEvent: it must copy segment.TimeZoneId onto
+            // the virtual event it builds for expansion. Without that one line, this segment
+            // path (the one that actually matters for live projection) silently expands
+            // every series as if it were UTC-anchored, even though the DB column and the
+            // RecurrenceHelper algorithm are both otherwise DST-correct — the feature would
+            // be a complete no-op with no build error and no obviously failing test elsewhere.
+            var (service, exceptionRepo, seriesRepo) = MakeService();
+
+            // 2026-01-04 is a Sunday; America/New_York springs forward at 2:00am on
+            // 2026-03-08 (also a Sunday, 9 weeks later) — a weekly Sunday 2:30am segment
+            // lands an occurrence directly inside the nonexistent 2:00-3:00am wall-clock gap.
+            var start = new DateTimeOffset(2026, 1, 4, 2, 30, 0, TimeSpan.FromHours(-5)); // EST
+            var rangeEnd = start.AddDays(70);
+
+            var rootEvent = new CalendarEvent
+            {
+                Id = 1, SeriesUid = SeriesUid, IsRecurring = true,
+                StartDate = start, EndDate = start.AddHours(1)
+            };
+
+            var segment = MakeSegment(
+                effectiveFrom: start, effectiveTo: null,
+                startDate: start, endDate: start.AddHours(1),
+                ruleJson: "{\"Frequency\":\"WEEKLY\",\"Interval\":1}",
+                timeZoneId: "America/New_York");
+
+            var series = new RecurrenceSeries { Id = 5, SeriesUid = SeriesUid, Segments = new List<CalendarEventSegment> { segment } };
+            seriesRepo.Setup(r => r.GetBySeriesUidAsync(SeriesUid)).ReturnsAsync(series);
+            exceptionRepo.Setup(r => r.GetBySeriesUids(It.IsAny<IEnumerable<string>>())).ReturnsAsync(new List<CalendarEventException>());
+
+            var result = await service.ProjectAsync(new List<CalendarEvent> { rootEvent }, start, rangeEnd);
+
+            var transitionOccurrence = result.Single(x => x.StartDate.UtcDateTime.Date == new DateTime(2026, 3, 8));
+
+            // If TimeZoneId were dropped (defaulting to UTC), this would instead be
+            // 2026-03-08T02:30:00Z — the un-shifted, DST-unaware UTC wall-clock reading.
+            transitionOccurrence.StartDate.ShouldBe(new DateTimeOffset(2026, 3, 8, 7, 0, 0, TimeSpan.Zero));
+            transitionOccurrence.TimeZoneId.ShouldBe("America/New_York");
         }
 
         [Fact]

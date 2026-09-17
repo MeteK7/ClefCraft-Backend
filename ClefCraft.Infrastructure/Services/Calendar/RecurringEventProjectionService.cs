@@ -237,7 +237,8 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                 RecurrenceRuleJson =
                     segment.RecurrenceRuleJson,
                 LinkedBoardItemId =
-                    rootEvent.LinkedBoardItemId
+                    rootEvent.LinkedBoardItemId,
+                TimeZoneId = segment.TimeZoneId
             };
         }
 
@@ -270,7 +271,8 @@ namespace ClefCraft.Infrastructure.Services.Calendar
                 RecurrenceRuleJson =
                     ev.RecurrenceRuleJson,
                 LinkedBoardItemId =
-                    ev.LinkedBoardItemId
+                    ev.LinkedBoardItemId,
+                TimeZoneId = ev.TimeZoneId
             };
         }
     }
