@@ -4,6 +4,9 @@ using ClefCraft.Application.Features.CalendarEventCollaborators.Commands.RemoveC
 using ClefCraft.Application.Features.CalendarEventCollaborators.Queries.GetCalendarEventCollaborators;
 using ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent;
 using ClefCraft.Application.Features.Calendar.Commands.DeleteCalendarAttachment;
+using ClefCraft.Application.Features.Calendar.Commands.DeleteCalendarEvent;
+using ClefCraft.Application.Features.Calendar.Commands.DeleteFromOccurrence;
+using ClefCraft.Application.Features.Calendar.Commands.DeleteSeries;
 using ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent;
 using ClefCraft.Application.Features.Calendar.Commands.UpdateFromOccurrence;
 using ClefCraft.Application.Features.Calendar.Commands.UpdateSeries;
@@ -59,6 +62,13 @@ namespace ClefCraft.API.Controllers
 
             var result = await _mediator.Send(command);
             return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteEvent(int id)
+        {
+            await _mediator.Send(new DeleteCalendarEventCommand { Id = id });
+            return NoContent();
         }
 
         // ======================================================================
@@ -127,6 +137,37 @@ namespace ClefCraft.API.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Deletes (cancels) a single occurrence without affecting any other
+        /// occurrence in the series. Reuses UpdateSingleOccurrenceCommand's
+        /// existing IsCancelled path — the exception-upsert-based
+        /// cancellation this forces already fully implements a single-
+        /// occurrence delete (RecurrenceHelper.ApplyException already
+        /// filters cancelled occurrences out of projection).
+        /// Angular: deleteSingleOccurrence()
+        /// </summary>
+        [HttpDelete("occurrence")]
+        public async Task<IActionResult> DeleteSingleOccurrence(
+            [FromBody] UpdateSingleOccurrenceCommand command)
+        {
+            command.IsCancelled = true;
+            await _mediator.Send(command);
+            return NoContent();
+        }
+
+        /// <summary>
+        /// "This and following" delete — removes this occurrence and every
+        /// occurrence from it onward, leaving earlier occurrences untouched.
+        /// Angular: deleteFromOccurrence()
+        /// </summary>
+        [HttpDelete("occurrence/from")]
+        public async Task<IActionResult> DeleteFromOccurrence(
+            [FromBody] DeleteFromOccurrenceCommand command)
+        {
+            await _mediator.Send(command);
+            return NoContent();
+        }
+
         // ======================================================================
         // SERIES-LEVEL RECURRENCE EDITS
         // ======================================================================
@@ -152,6 +193,20 @@ namespace ClefCraft.API.Controllers
         [HttpPut("series/preserve-exceptions")]
         public async Task<IActionResult> UpdateSeriesPreserveExceptions(
             [FromBody] UpdateSeriesPreserveExceptionsCommand command)
+        {
+            await _mediator.Send(command);
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Deletes an entire recurring event: every segment, every
+        /// per-occurrence exception, the RecurrenceSeries itself, and the
+        /// root CalendarEvent row.
+        /// Angular: deleteSeries()
+        /// </summary>
+        [HttpDelete("series")]
+        public async Task<IActionResult> DeleteSeries(
+            [FromBody] DeleteSeriesCommand command)
         {
             await _mediator.Send(command);
             return NoContent();

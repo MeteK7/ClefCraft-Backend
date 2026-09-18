@@ -33,5 +33,15 @@ namespace ClefCraft.Persistence.Repositories
             if (existing != null)
                 _context.CalendarEventCollaborators.Remove(existing);
         }
+
+        public async Task RemoveAllForEventAsync(int calendarEventId)
+        {
+            var existing = await _context.CalendarEventCollaborators
+                .Where(c => c.CalendarEventId == calendarEventId)
+                .ToListAsync();
+
+            if (existing.Any())
+                _context.CalendarEventCollaborators.RemoveRange(existing);
+        }
     }
 }
