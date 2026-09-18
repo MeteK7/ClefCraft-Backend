@@ -7,5 +7,6 @@ namespace ClefCraft.Application.Contracts.Persistence
         Task<bool> IsCollaboratorAsync(int calendarEventId, string userId);
         Task<List<CalendarEventCollaborator>> GetByEventIdAsync(int calendarEventId);
         Task RemoveAsync(int calendarEventId, string userId);
+        Task RemoveAllForEventAsync(int calendarEventId);
     }
 }
