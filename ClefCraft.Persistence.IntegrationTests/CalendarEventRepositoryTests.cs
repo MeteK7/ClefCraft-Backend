@@ -94,44 +94,38 @@ namespace ClefCraft.Persistence.IntegrationTests
         }
 
         [Fact]
-        public async Task GetByUserIdAsync_LinkedEventFromTeammate_IsVisibleToOtherBoardMembers()
+        public async Task GetByUserIdAsync_EventWithExplicitCollaboratorGrant_IsVisibleToTheCollaborator_NotToOthers()
         {
+            // Calendar visibility is granted purely via an explicit CalendarEventCollaborator
+            // row (see CalendarAccessService.EnsureCanAccessEventAsync/IsCollaboratorAsync) —
+            // board co-membership and LinkedBoardItemId do NOT grant visibility on their own,
+            // per GetByUserIdAsync's own doc comment. A "Mark as Worked" entry linked to a
+            // shared board item stays private to its owner unless explicitly shared.
             var context = CreateContext();
             var repository = new CalendarEventRepository(context);
-
-            var board = new Board { Title = "AI Platform Sprint", OwnerUserId = "user-owner" };
-            await context.Boards.AddAsync(board);
-            await context.SaveChangesAsync();
-
-            await context.BoardMembers.AddRangeAsync(
-                new BoardMember { BoardId = board.Id, UserId = "user-owner" },
-                new BoardMember { BoardId = board.Id, UserId = "user-teammate" });
-            await context.SaveChangesAsync();
-
-            var boardItem = new BoardItem { BoardId = board.Id, BoardColumnId = 1, Title = "Ship the model" };
-            await context.BoardItems.AddAsync(boardItem);
-            await context.SaveChangesAsync();
 
             var windowStart = new DateTimeOffset(2026, 8, 31, 0, 0, 0, TimeSpan.Zero);
             var windowEnd = new DateTimeOffset(2026, 9, 7, 0, 0, 0, TimeSpan.Zero);
 
-            // "Mark as Worked" entry logged by the owner, linked to the shared item.
-            var workedEntry = new CalendarEvent
+            var ownerEvent = new CalendarEvent
             {
                 Subject = "Logged work",
                 StartDate = windowStart.AddDays(1),
                 EndDate = windowStart.AddDays(1).AddHours(1),
-                UserId = "user-owner",
-                LinkedBoardItemId = boardItem.Id
+                UserId = "user-owner"
             };
-            await context.CalendarEvents.AddAsync(workedEntry);
+            await context.CalendarEvents.AddAsync(ownerEvent);
             await context.SaveChangesAsync();
 
-            var teammateView = await repository.GetByUserIdAsync("user-teammate", windowStart, windowEnd);
-            teammateView.ShouldContain(e => e.Id == workedEntry.Id);
+            await context.CalendarEventCollaborators.AddAsync(
+                new CalendarEventCollaborator { CalendarEventId = ownerEvent.Id, UserId = "user-collaborator" });
+            await context.SaveChangesAsync();
+
+            var collaboratorView = await repository.GetByUserIdAsync("user-collaborator", windowStart, windowEnd);
+            collaboratorView.ShouldContain(e => e.Id == ownerEvent.Id);
 
             var strangerView = await repository.GetByUserIdAsync("user-unrelated", windowStart, windowEnd);
-            strangerView.ShouldNotContain(e => e.Id == workedEntry.Id);
+            strangerView.ShouldNotContain(e => e.Id == ownerEvent.Id);
         }
     }
 }
