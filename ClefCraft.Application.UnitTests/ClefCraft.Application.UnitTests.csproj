@@ -29,11 +29,5 @@
     <ProjectReference Include="..\ClefCraft.Infrastructure\ClefCraft.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\LeaveAllocations\Commands\" />
-    <Folder Include="Features\LeaveAllocations\Queries\" />
-    <Folder Include="Features\LeaveRequests\" />
-    <Folder Include="Features\LeaveTypes\Commands\" />
-  </ItemGroup>
 
 </Project>
