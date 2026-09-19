@@ -38,18 +38,6 @@ namespace ClefCraft.Identity.Services
             };
         }
 
-        public async Task<List<User>> GetEmployees()
-        {
-            var employees = await _userManager.GetUsersInRoleAsync("Employee");
-            return employees.Select(q => new User
-            {
-                Id = q.Id,
-                Email = q.Email,
-                Firstname = q.FirstName,
-                Lastname = q.LastName
-            }).ToList();
-        }
-
         public async Task<List<Assignee>> GetAssignees()
         {
             // Pull ALL users — no role coupling
