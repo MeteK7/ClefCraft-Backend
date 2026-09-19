@@ -12,7 +12,6 @@ namespace ClefCraft.Application.Contracts.Identity
 
         Task<List<Assignee>> GetAssignees();
         Task<Assignee> GetAssignee(string userId);
-        Task<List<User>> GetEmployees();
         Task<User> GetUser(string userId);
         Task<List<User>> GetUsersByIds(List<string> userIds);
         public string UserId { get; }

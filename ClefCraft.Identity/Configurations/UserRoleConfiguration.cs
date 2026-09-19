@@ -18,11 +18,6 @@ namespace ClefCraft.Identity.Configurations
                 {
                     RoleId = "cbc43a8e-f7bb-4445-baaf-1add431ffbbf",
                     UserId = "944d0156-cb3d-466f-a1ea-5f53e3a10f8e"
-                },
-                new IdentityUserRole<string>
-                {
-                    RoleId = "cac43a6e-f7bb-4448-baaf-1add431ccbbf",
-                    UserId = "9e224968-33e4-4652-b7b7-8574d048cdb9"
                 }
                 );
         }

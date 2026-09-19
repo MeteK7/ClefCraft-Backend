@@ -26,10 +26,6 @@ namespace ClefCraft.Persistence.DatabaseContext
         // DbSets
         // =========================
 
-        public DbSet<LeaveType> LeaveTypes { get; set; }
-        public DbSet<LeaveAllocation> LeaveAllocations { get; set; }
-        public DbSet<LeaveRequest> LeaveRequests { get; set; }
-
         public DbSet<Board> Boards { get; set; }
         public DbSet<BoardColumn> BoardColumns { get; set; }
         public DbSet<BoardItem> BoardItems { get; set; }
