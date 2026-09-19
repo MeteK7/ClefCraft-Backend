@@ -64,7 +64,7 @@ namespace ClefCraft.Identity.UnitTests.Services
             var userManager = IdentityMocks.MockUserManager();
             userManager.Setup(m => m.FindByEmailAsync(user.Email!)).ReturnsAsync(user);
             userManager.Setup(m => m.GetClaimsAsync(user)).ReturnsAsync(new List<Claim>());
-            userManager.Setup(m => m.GetRolesAsync(user)).ReturnsAsync(new List<string> { "Employee" });
+            userManager.Setup(m => m.GetRolesAsync(user)).ReturnsAsync(new List<string> { "Administrator" });
             var signInManager = IdentityMocks.MockSignInManager(userManager.Object);
             signInManager.Setup(s => s.CheckPasswordSignInAsync(user, "correct", false)).ReturnsAsync(SignInResult.Success);
 
@@ -77,16 +77,18 @@ namespace ClefCraft.Identity.UnitTests.Services
 
             var jwt = new JwtSecurityTokenHandler().ReadJwtToken(response.Token);
             jwt.Claims.ShouldContain(c => c.Type == "uid" && c.Value == user.Id);
-            jwt.Claims.ShouldContain(c => c.Type == ClaimTypes.Role && c.Value == "Employee");
+            jwt.Claims.ShouldContain(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
             jwt.Claims.ShouldContain(c => c.Type == JwtRegisteredClaimNames.Email && c.Value == user.Email);
         }
 
         [Fact]
-        public async Task Register_Success_AssignsEmployeeRoleAndReturnsUserId()
+        public async Task Register_Success_ReturnsUserId_DoesNotAssignAnyRole()
         {
+            // Registration no longer auto-assigns a role (the "Employee" HR-tutorial default was
+            // removed along with the rest of the Leave subsystem — Administrator is now a
+            // reserved, manually-provisioned role, not something self-registration grants).
             var userManager = IdentityMocks.MockUserManager();
             userManager.Setup(m => m.CreateAsync(It.IsAny<ApplicationUser>(), "Str0ng!Pass")).ReturnsAsync(IdentityResult.Success);
-            userManager.Setup(m => m.AddToRoleAsync(It.IsAny<ApplicationUser>(), "Employee")).ReturnsAsync(IdentityResult.Success);
             var signInManager = IdentityMocks.MockSignInManager(userManager.Object);
 
             var service = MakeService(userManager, signInManager);
@@ -101,8 +103,7 @@ namespace ClefCraft.Identity.UnitTests.Services
             });
 
             response.UserId.ShouldNotBeNullOrEmpty();
-            userManager.Verify(m => m.AddToRoleAsync(
-                It.Is<ApplicationUser>(u => u.Email == "new@test.com"), "Employee"), Times.Once);
+            userManager.Verify(m => m.AddToRoleAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
