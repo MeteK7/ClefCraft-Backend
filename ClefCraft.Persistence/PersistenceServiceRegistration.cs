@@ -43,9 +43,6 @@ namespace ClefCraft.Persistence
 
         //    // repositories stay unchanged
         //    services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-        //    services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
-        //    services.AddScoped<ILeaveAllocationRepository, LeaveAllocationRepository>();
-        //    services.AddScoped<ILeaveRequestRepository, LeaveRequestRepository>();
         //    services.AddScoped<IBoardRepository, BoardRepository>();
         //    services.AddScoped<IBoardItemRepository, BoardItemRepository>();
         //    services.AddScoped<IRecurrenceSeriesRepository, RecurrenceSeriesRepository>();
@@ -86,9 +83,6 @@ namespace ClefCraft.Persistence
 
             // repositories stay unchanged
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
-            services.AddScoped<ILeaveAllocationRepository, LeaveAllocationRepository>();
-            services.AddScoped<ILeaveRequestRepository, LeaveRequestRepository>();
             services.AddScoped<IBoardRepository, BoardRepository>();
             services.AddScoped<IBoardItemRepository, BoardItemRepository>();
             services.AddScoped<IBoardItemRelationRepository, BoardItemRelationRepository>();
