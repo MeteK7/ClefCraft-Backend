@@ -86,7 +86,7 @@ namespace ClefCraft.Application.UnitTests.Features.BoardMembers
         {
             var memberRepo = new Mock<IBoardMemberRepository>();
             var boardRepo = new Mock<IBoardRepository>();
-            boardRepo.Setup(r => r.GetByIdReadOnlyAsync(BoardId)).ReturnsAsync(new Board { Id = BoardId, OwnerUserId = OwnerId });
+            boardRepo.Setup(r => r.GetByIdReadOnlyAsync(BoardId)).ReturnsAsync(new ClefCraft.Domain.Board { Id = BoardId, OwnerUserId = OwnerId });
 
             var accessService = MockAccessServices.GetMockBoardAccessService(authorized: true);
 
@@ -109,7 +109,7 @@ namespace ClefCraft.Application.UnitTests.Features.BoardMembers
             memberRepo.Setup(r => r.GetByBoardAndUserAsync(BoardId, OtherMemberId)).ReturnsAsync(membership);
 
             var boardRepo = new Mock<IBoardRepository>();
-            boardRepo.Setup(r => r.GetByIdReadOnlyAsync(BoardId)).ReturnsAsync(new Board { Id = BoardId, OwnerUserId = OwnerId });
+            boardRepo.Setup(r => r.GetByIdReadOnlyAsync(BoardId)).ReturnsAsync(new ClefCraft.Domain.Board { Id = BoardId, OwnerUserId = OwnerId });
 
             var accessService = MockAccessServices.GetMockBoardAccessService(authorized: true);
 
