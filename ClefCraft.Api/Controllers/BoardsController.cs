@@ -1,4 +1,5 @@
 ﻿using ClefCraft.Application.Contracts.Identity;
+using ClefCraft.Application.Features.Board.Commands.CreateBoard;
 using ClefCraft.Application.Features.Board.Queries.GetBoards;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -26,6 +27,13 @@ namespace ClefCraft.Api.Controllers
         {
             var boards = await _mediator.Send(new GetBoardsQuery { UserId = _userService.UserId });
             return Ok(boards);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<BoardDto>> Post([FromBody] CreateBoardCommand command)
+        {
+            var board = await _mediator.Send(command);
+            return Ok(board);
         }
     }
 }
