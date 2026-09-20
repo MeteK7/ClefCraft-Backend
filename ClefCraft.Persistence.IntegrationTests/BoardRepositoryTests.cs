@@ -73,6 +73,28 @@ namespace ClefCraft.Persistence.IntegrationTests
         }
 
         [Fact]
+        public async Task GetBoards_NewlyCreatedBoardWithOwnerMembership_SurfacesToItsOwner()
+        {
+            // Board creation must insert a BoardMember row for the creator, not just set
+            // OwnerUserId — GetBoards (and every other board-scoped access check) filters by
+            // membership, not ownership. This mirrors exactly what CreateBoardCommandHandler
+            // does, verified here against a real DbContext rather than mocks.
+            var context = CreateContext();
+            var repository = new BoardRepository(context);
+
+            var newBoard = new Board { Title = "Freshly Created Board", OwnerUserId = "user-creator" };
+            await context.Boards.AddAsync(newBoard);
+            await context.SaveChangesAsync();
+
+            await context.BoardMembers.AddAsync(new BoardMember { BoardId = newBoard.Id, UserId = "user-creator" });
+            await context.SaveChangesAsync();
+
+            var result = await repository.GetBoards("user-creator");
+
+            result.ShouldContain(b => b.Id == newBoard.Id && b.Title == "Freshly Created Board");
+        }
+
+        [Fact]
         public async Task GetBoards_UserWithNoMemberships_ReturnsEmptyList()
         {
             var context = CreateContext();
