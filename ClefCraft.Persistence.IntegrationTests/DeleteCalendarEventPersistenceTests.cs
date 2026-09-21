@@ -1,6 +1,5 @@
 using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.FileAttachment;
-using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Features.Calendar.Commands.DeleteCalendarEvent;
 using ClefCraft.Application.Features.Calendar.Commands.DeleteSeries;
 using ClefCraft.Application.Features.Calendar.Queries;
@@ -9,7 +8,6 @@ using ClefCraft.Persistence.DatabaseContext;
 using ClefCraft.Persistence.Repositories;
 using ClefCraft.Persistence.UnitOfWork;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using Shouldly;
 using System;
@@ -19,12 +17,11 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Persistence.IntegrationTests
 {
-    // Bypasses the broken shared fixture in ClefCraftDatabaseContextTests, same as
-    // ActivityLogSaveChangesTests — builds its own real ClefCraftDatabaseContext (EF Core
-    // InMemory provider) with a mocked IUserService, plus the real repository/access-service
-    // implementations, so the delete handlers run for real against real cascade-delete
-    // configuration rather than mocked repositories. Verifies actual resulting row state for
-    // every entity involved in a calendar-event delete: CalendarEvent, RecurrenceSeries,
+    // Builds a real ClefCraftDatabaseContext (EF Core InMemory provider) with a mocked
+    // IUserService, plus the real repository/access-service implementations, so the
+    // delete handlers run for real against real cascade-delete configuration rather
+    // than mocked repositories. Verifies actual resulting row state for every entity
+    // involved in a calendar-event delete: CalendarEvent, RecurrenceSeries,
     // CalendarEventSegment, CalendarEventException, CalendarEventCollaborator,
     // NotificationQueue and CalendarEventAttachment.
     public class DeleteCalendarEventPersistenceTests
@@ -45,18 +42,6 @@ namespace ClefCraft.Persistence.IntegrationTests
                 DeletedPaths.Add(relativePath);
                 return Task.CompletedTask;
             }
-        }
-
-        private static ClefCraftDatabaseContext CreateContext()
-        {
-            var options = new DbContextOptionsBuilder<ClefCraftDatabaseContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .Options;
-
-            var userServiceMock = new Mock<IUserService>();
-            userServiceMock.Setup(u => u.UserId).Returns(OwnerUserId);
-
-            return new ClefCraftDatabaseContext(options, userServiceMock.Object);
         }
 
         private static async Task<(
@@ -156,7 +141,7 @@ namespace ClefCraft.Persistence.IntegrationTests
         [Fact]
         public async Task DeleteSeries_RemovesEverySeededDependency_AndDeletesAttachmentFiles()
         {
-            var context = CreateContext();
+            var context = DatabaseContextFactory.CreateContext(OwnerUserId);
             var (_, rootEvent, series, fileService) = await SeedFullRecurringEventGraphAsync(context);
             var seriesUid = rootEvent.SeriesUid;
             var eventId = rootEvent.Id;
@@ -176,8 +161,7 @@ namespace ClefCraft.Persistence.IntegrationTests
             var accessService = new Mock<ICalendarAccessService>();
             accessService.Setup(s => s.EnsureSeriesOwnedByUserAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.CompletedTask);
-            var userService = new Mock<IUserService>();
-            userService.Setup(u => u.UserId).Returns(OwnerUserId);
+            var userService = DatabaseContextFactory.CreateUserServiceMock(OwnerUserId);
 
             var handler = new DeleteSeriesCommandHandler(
                 seriesRepo, eventRepo, exceptionRepo, attachmentRepo, collaboratorRepo,
@@ -199,7 +183,7 @@ namespace ClefCraft.Persistence.IntegrationTests
         [Fact]
         public async Task DeleteCalendarEvent_NonRecurring_RemovesEventAndUnCascadedDependencies()
         {
-            var context = CreateContext();
+            var context = DatabaseContextFactory.CreateContext(OwnerUserId);
             var start = DateTimeOffset.UtcNow;
 
             var rootEvent = new CalendarEvent
@@ -252,8 +236,7 @@ namespace ClefCraft.Persistence.IntegrationTests
             var unitOfWork = new EfUnitOfWork(context);
             var notificationRepo = new NotificationQueueRepository(context, unitOfWork);
             var fileService = new RecordingFileAttachmentService();
-            var userService = new Mock<IUserService>();
-            userService.Setup(u => u.UserId).Returns(OwnerUserId);
+            var userService = DatabaseContextFactory.CreateUserServiceMock(OwnerUserId);
 
             var handler = new DeleteCalendarEventCommandHandler(
                 eventRepo, attachmentRepo, collaboratorRepo, notificationRepo,

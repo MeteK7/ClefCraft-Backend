@@ -1,9 +1,5 @@
-using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Domain;
-using ClefCraft.Persistence.DatabaseContext;
 using ClefCraft.Persistence.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Moq;
 using Shouldly;
 using System;
 using System.Threading.Tasks;
@@ -16,22 +12,10 @@ namespace ClefCraft.Persistence.IntegrationTests
     // creator metadata only and no longer gates visibility).
     public class BoardRepositoryTests
     {
-        private static ClefCraftDatabaseContext CreateContext(string userId = "test-user")
-        {
-            var options = new DbContextOptionsBuilder<ClefCraftDatabaseContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .Options;
-
-            var userServiceMock = new Mock<IUserService>();
-            userServiceMock.Setup(u => u.UserId).Returns(userId);
-
-            return new ClefCraftDatabaseContext(options, userServiceMock.Object);
-        }
-
         [Fact]
         public async Task GetBoards_ReturnsOnlyBoardsTheUserIsAMemberOf()
         {
-            var context = CreateContext();
+            var context = DatabaseContextFactory.CreateContext();
             var repository = new BoardRepository(context);
 
             var ownBoard = new Board { Title = "My Practice Log", OwnerUserId = "user-a" };
@@ -55,7 +39,7 @@ namespace ClefCraft.Persistence.IntegrationTests
         {
             // The actual regression this fix targets: a teammate who isn't the
             // OwnerUserId must still see a board they've been added to.
-            var context = CreateContext();
+            var context = DatabaseContextFactory.CreateContext();
             var repository = new BoardRepository(context);
 
             var teamBoard = new Board { Title = "AI Platform Sprint", OwnerUserId = "user-owner" };
@@ -79,7 +63,7 @@ namespace ClefCraft.Persistence.IntegrationTests
             // OwnerUserId — GetBoards (and every other board-scoped access check) filters by
             // membership, not ownership. This mirrors exactly what CreateBoardCommandHandler
             // does, verified here against a real DbContext rather than mocks.
-            var context = CreateContext();
+            var context = DatabaseContextFactory.CreateContext();
             var repository = new BoardRepository(context);
 
             var newBoard = new Board { Title = "Freshly Created Board", OwnerUserId = "user-creator" };
@@ -97,7 +81,7 @@ namespace ClefCraft.Persistence.IntegrationTests
         [Fact]
         public async Task GetBoards_UserWithNoMemberships_ReturnsEmptyList()
         {
-            var context = CreateContext();
+            var context = DatabaseContextFactory.CreateContext();
             var repository = new BoardRepository(context);
 
             var otherBoard = new Board { Title = "Someone Else's Board", OwnerUserId = "user-b" };

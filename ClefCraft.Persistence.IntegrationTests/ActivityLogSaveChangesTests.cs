@@ -1,9 +1,6 @@
-using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Domain;
 using ClefCraft.Domain.Enums;
-using ClefCraft.Persistence.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
-using Moq;
 using Shouldly;
 using System;
 using System.Linq;
@@ -11,29 +8,16 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Persistence.IntegrationTests
 {
-    // Bypasses the broken shared fixture in ClefCraftDatabaseContextTests (its constructor never
-    // supplies ClefCraftDatabaseContext's required IUserService, so its tests cannot run). This
-    // class builds its own context per test with a mocked IUserService instead, specifically to
-    // cover the automatic ActivityLog audit trail SaveChangesAsync produces, since History reads
-    // directly from that table and depends on it being correct.
+    // Builds its own context per test (via DatabaseContextFactory) with a mocked
+    // IUserService, specifically to cover the automatic ActivityLog audit trail
+    // SaveChangesAsync produces, since History reads directly from that table and
+    // depends on it being correct.
     public class ActivityLogSaveChangesTests
     {
-        private static ClefCraftDatabaseContext CreateContext(string userId = "test-user")
-        {
-            var options = new DbContextOptionsBuilder<ClefCraftDatabaseContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .Options;
-
-            var userServiceMock = new Mock<IUserService>();
-            userServiceMock.Setup(u => u.UserId).Returns(userId);
-
-            return new ClefCraftDatabaseContext(options, userServiceMock.Object);
-        }
-
         [Fact]
         public async Task Save_SingleCreatedEntity_GetsCorrectEntityId()
         {
-            var context = CreateContext();
+            var context = DatabaseContextFactory.CreateContext();
 
             var board = new Board { Title = "Board A", OwnerUserId = "test-user" };
             await context.Boards.AddAsync(board);
@@ -51,7 +35,7 @@ namespace ClefCraft.Persistence.IntegrationTests
         [Fact]
         public async Task Save_MultipleSameTypeEntitiesCreatedInOneBatch_EachGetsOwnCorrectEntityId()
         {
-            var context = CreateContext();
+            var context = DatabaseContextFactory.CreateContext();
 
             var calendarEvent = new CalendarEvent
             {
@@ -81,7 +65,7 @@ namespace ClefCraft.Persistence.IntegrationTests
         [Fact]
         public async Task Save_UpdatedEntity_DiffExcludesAuditFieldsAndCapturesRealChanges()
         {
-            var context = CreateContext();
+            var context = DatabaseContextFactory.CreateContext();
 
             var board = new Board { Title = "Original Title", OwnerUserId = "test-user" };
             await context.Boards.AddAsync(board);
@@ -100,7 +84,7 @@ namespace ClefCraft.Persistence.IntegrationTests
         [Fact]
         public async Task Save_ModifiedEntityWithNoRealChanges_ProducesNoLogRow()
         {
-            var context = CreateContext();
+            var context = DatabaseContextFactory.CreateContext();
 
             var board = new Board { Title = "Same Title", OwnerUserId = "test-user" };
             await context.Boards.AddAsync(board);
@@ -123,7 +107,7 @@ namespace ClefCraft.Persistence.IntegrationTests
         [Fact]
         public async Task Save_CalendarEventRescheduledAndImportanceChanged_ProducesSingleUpdatedRowWithBothFields()
         {
-            var context = CreateContext();
+            var context = DatabaseContextFactory.CreateContext();
 
             var start = DateTimeOffset.UtcNow;
             var calendarEvent = new CalendarEvent
