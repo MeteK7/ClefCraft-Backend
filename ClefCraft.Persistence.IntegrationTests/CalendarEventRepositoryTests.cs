@@ -1,9 +1,5 @@
-using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Domain;
-using ClefCraft.Persistence.DatabaseContext;
 using ClefCraft.Persistence.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Moq;
 using Shouldly;
 using System;
 using System.Linq;
@@ -11,30 +7,17 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Persistence.IntegrationTests
 {
-    // Bypasses the broken shared fixture in ClefCraftDatabaseContextTests (see
-    // ActivityLogSaveChangesTests for why). Regression coverage for the Week-view
-    // multi-day-event bug: GetByUserIdAsync used to filter non-recurring events by
-    // StartDate alone, so an event that started in a previous window but was still
-    // running (EndDate inside/after the requested window) was silently dropped
-    // before it ever reached the overlap filter in GetCalendarEventsQueryHandler.
+    // Regression coverage for the Week-view multi-day-event bug: GetByUserIdAsync used
+    // to filter non-recurring events by StartDate alone, so an event that started in a
+    // previous window but was still running (EndDate inside/after the requested window)
+    // was silently dropped before it ever reached the overlap filter in
+    // GetCalendarEventsQueryHandler.
     public class CalendarEventRepositoryTests
     {
-        private static ClefCraftDatabaseContext CreateContext(string userId = "test-user")
-        {
-            var options = new DbContextOptionsBuilder<ClefCraftDatabaseContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .Options;
-
-            var userServiceMock = new Mock<IUserService>();
-            userServiceMock.Setup(u => u.UserId).Returns(userId);
-
-            return new ClefCraftDatabaseContext(options, userServiceMock.Object);
-        }
-
         [Fact]
         public async Task GetByUserIdAsync_NonRecurringEventStartingBeforeWindowButStillOngoing_IsReturned()
         {
-            var context = CreateContext();
+            var context = DatabaseContextFactory.CreateContext();
             var repository = new CalendarEventRepository(context);
 
             // Starts in "week 1", ends in "week 2" — the query below only asks for week 2.
@@ -60,7 +43,7 @@ namespace ClefCraft.Persistence.IntegrationTests
         [Fact]
         public async Task GetByUserIdAsync_NonRecurringEventEntirelyOutsideWindow_IsExcluded()
         {
-            var context = CreateContext();
+            var context = DatabaseContextFactory.CreateContext();
             var repository = new CalendarEventRepository(context);
 
             // Fully before the window — no overlap at all.
@@ -101,7 +84,7 @@ namespace ClefCraft.Persistence.IntegrationTests
             // board co-membership and LinkedBoardItemId do NOT grant visibility on their own,
             // per GetByUserIdAsync's own doc comment. A "Mark as Worked" entry linked to a
             // shared board item stays private to its owner unless explicitly shared.
-            var context = CreateContext();
+            var context = DatabaseContextFactory.CreateContext();
             var repository = new CalendarEventRepository(context);
 
             var windowStart = new DateTimeOffset(2026, 8, 31, 0, 0, 0, TimeSpan.Zero);
