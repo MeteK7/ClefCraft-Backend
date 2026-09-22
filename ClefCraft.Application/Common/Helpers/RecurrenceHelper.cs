@@ -36,6 +36,12 @@ namespace ClefCraft.Application.Common.Helpers
 
             if (rule.DaysOfWeek != null && rule.DaysOfWeek.Any(d => d < 0 || d > 6))
                 throw new BadRequestException("Recurrence daysOfWeek values must be between 0 (Sunday) and 6 (Saturday).");
+
+            // GenerateCandidateDates only reads DaysOfWeek for WEEKLY rules (see
+            // GenerateWeeklyByDayCandidates) - MONTHLY/YEARLY/DAILY would otherwise
+            // accept it here and then silently ignore it at expansion time.
+            if (rule.DaysOfWeek is { Count: > 0 } && rule.Frequency != "WEEKLY")
+                throw new BadRequestException("Recurrence daysOfWeek is only supported for WEEKLY frequency.");
         }
 
         /// <summary>

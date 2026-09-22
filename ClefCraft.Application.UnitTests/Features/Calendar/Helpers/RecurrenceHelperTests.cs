@@ -466,5 +466,25 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Helpers
             var rule = new RecurrenceRule { Frequency = "WEEKLY", Interval = 1, DaysOfWeek = new List<int> { 0, 7 } };
             Should.Throw<BadRequestException>(() => RecurrenceHelper.ValidateRule(rule, DateTimeOffset.UtcNow));
         }
+
+        [Theory]
+        [InlineData("MONTHLY")]
+        [InlineData("YEARLY")]
+        [InlineData("DAILY")]
+        public void ValidateRule_DaysOfWeekWithNonWeeklyFrequency_Throws(string frequency)
+        {
+            // GenerateCandidateDates only reads DaysOfWeek for WEEKLY - without this
+            // check, a MONTHLY/YEARLY/DAILY rule with DaysOfWeek set would pass
+            // validation and then have it silently ignored at expansion time.
+            var rule = new RecurrenceRule { Frequency = frequency, Interval = 1, DaysOfWeek = new List<int> { 1, 3 } };
+            Should.Throw<BadRequestException>(() => RecurrenceHelper.ValidateRule(rule, DateTimeOffset.UtcNow));
+        }
+
+        [Fact]
+        public void ValidateRule_WeeklyWithDaysOfWeek_DoesNotThrow()
+        {
+            var rule = new RecurrenceRule { Frequency = "WEEKLY", Interval = 1, DaysOfWeek = new List<int> { 1, 3 } };
+            Should.NotThrow(() => RecurrenceHelper.ValidateRule(rule, DateTimeOffset.UtcNow));
+        }
     }
 }
