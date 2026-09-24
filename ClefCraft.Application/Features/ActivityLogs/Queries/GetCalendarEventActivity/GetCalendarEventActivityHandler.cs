@@ -22,13 +22,6 @@ namespace ClefCraft.Application.Features.ActivityLogs.Queries.GetCalendarEventAc
         private readonly ICalendarAccessService _calendarAccessService;
         private readonly IUserService _userService;
 
-        private record MergedEntry(
-            ActivityLog Log,
-            string Scope,
-            DateTimeOffset? EffectiveFrom,
-            DateTimeOffset? EffectiveTo,
-            DateTimeOffset? OccurrenceDate);
-
         public GetCalendarEventActivityHandler(
             IActivityLogRepository activityLogRepository,
             ICalendarEventSegmentRepository segmentRepository,
@@ -60,72 +53,81 @@ namespace ClefCraft.Application.Features.ActivityLogs.Queries.GetCalendarEventAc
                 await _calendarAccessService.EnsureSeriesOwnedByUserAsync(request.SeriesUid, _userService.UserId);
             }
 
-            var merged = new List<MergedEntry>();
+            var criteria = new List<(string EntityType, IEnumerable<int> EntityIds)>
+            {
+                ("CalendarEvent", new[] { request.EventId })
+            };
 
-            var eventLogs = await _activityLogRepository.GetByEntityTypeAndIdsAsync("CalendarEvent", new[] { request.EventId });
-            merged.AddRange(eventLogs.Select(l => new MergedEntry(l, "Event", null, null, null)));
+            var segmentsById = new Dictionary<int, CalendarEventSegment>();
+            var exceptionsById = new Dictionary<int, CalendarEventException>();
 
             if (!string.IsNullOrWhiteSpace(request.SeriesUid))
             {
                 var segments = await _segmentRepository.GetBySeriesUidAsync(request.SeriesUid);
                 if (segments.Count > 0)
                 {
-                    var segmentsById = segments.ToDictionary(s => s.Id);
-                    var segmentLogs = await _activityLogRepository.GetByEntityTypeAndIdsAsync("CalendarEventSegment", segmentsById.Keys);
-
-                    merged.AddRange(segmentLogs.Select(l =>
-                    {
-                        var segment = segmentsById[l.EntityId];
-                        return new MergedEntry(l, "Segment", segment.EffectiveFrom, segment.EffectiveTo, null);
-                    }));
+                    segmentsById = segments.ToDictionary(s => s.Id);
+                    criteria.Add(("CalendarEventSegment", segmentsById.Keys));
                 }
 
                 var exceptions = await _exceptionRepository.GetBySeriesUid(request.SeriesUid);
                 if (exceptions.Count > 0)
                 {
-                    var exceptionsById = exceptions.ToDictionary(e => e.Id);
-                    var exceptionLogs = await _activityLogRepository.GetByEntityTypeAndIdsAsync("CalendarEventException", exceptionsById.Keys);
-
-                    merged.AddRange(exceptionLogs.Select(l =>
-                    {
-                        var exception = exceptionsById[l.EntityId];
-                        return new MergedEntry(l, "Exception", null, null, exception.OccurrenceDate);
-                    }));
+                    exceptionsById = exceptions.ToDictionary(e => e.Id);
+                    criteria.Add(("CalendarEventException", exceptionsById.Keys));
                 }
             }
 
-            var ordered = merged.OrderByDescending(m => m.Log.Timestamp).ToList();
-            var totalCount = ordered.Count;
-
-            var page = ordered
-                .Skip((request.PageNumber - 1) * request.PageSize)
-                .Take(request.PageSize)
-                .ToList();
+            // Pagination happens at the database level (see ActivityLogRepository.GetMergedPagedAsync)
+            // across all merged sources, rather than fetching every source unpaged and paging in memory.
+            var skip = (request.PageNumber - 1) * request.PageSize;
+            var (page, totalCount) = await _activityLogRepository.GetMergedPagedAsync(criteria, skip, request.PageSize);
 
             var userIds = page
-                .Select(m => m.Log.UserId)
+                .Select(l => l.UserId)
                 .Where(userId => !string.IsNullOrEmpty(userId))
                 .Distinct()
                 .ToList();
 
             var users = await _userService.GetUsersByIds(userIds);
 
-            var items = page.Select(m =>
+            var items = page.Select(l =>
             {
-                var user = users.FirstOrDefault(u => u.Id == m.Log.UserId);
+                var user = users.FirstOrDefault(u => u.Id == l.UserId);
+
+                var scope = l.EntityType switch
+                {
+                    "CalendarEventSegment" => "Segment",
+                    "CalendarEventException" => "Exception",
+                    _ => "Event"
+                };
+
+                DateTimeOffset? effectiveFrom = null;
+                DateTimeOffset? effectiveTo = null;
+                DateTimeOffset? occurrenceDate = null;
+
+                if (scope == "Segment" && segmentsById.TryGetValue(l.EntityId, out var segment))
+                {
+                    effectiveFrom = segment.EffectiveFrom;
+                    effectiveTo = segment.EffectiveTo;
+                }
+                else if (scope == "Exception" && exceptionsById.TryGetValue(l.EntityId, out var exception))
+                {
+                    occurrenceDate = exception.OccurrenceDate;
+                }
 
                 return new CalendarActivityLogEntryDto
                 {
-                    Id = m.Log.Id,
-                    Scope = m.Scope,
-                    ActionType = m.Log.ActionType,
-                    Timestamp = m.Log.Timestamp,
-                    ActorUserId = m.Log.UserId,
+                    Id = l.Id,
+                    Scope = scope,
+                    ActionType = l.ActionType,
+                    Timestamp = l.Timestamp,
+                    ActorUserId = l.UserId,
                     ActorFullName = user != null ? $"{user.Firstname} {user.Lastname}" : "Unknown",
-                    Changes = ActivityMetadataParser.Parse(m.Log.MetadataJson),
-                    EffectiveFrom = m.EffectiveFrom,
-                    EffectiveTo = m.EffectiveTo,
-                    OccurrenceDate = m.OccurrenceDate
+                    Changes = ActivityMetadataParser.Parse(l.MetadataJson),
+                    EffectiveFrom = effectiveFrom,
+                    EffectiveTo = effectiveTo,
+                    OccurrenceDate = occurrenceDate
                 };
             }).ToList();
 

@@ -21,12 +21,29 @@ namespace ClefCraft.Application.UnitTests.Features.ActivityLogs
         {
             var mock = new Mock<IActivityLogRepository>();
 
-            mock.Setup(r => r.GetByEntityTypeAndIdsAsync(It.IsAny<string>(), It.IsAny<IEnumerable<int>>()))
-                .ReturnsAsync((string entityType, IEnumerable<int> ids) =>
+            // Mirrors ActivityLogRepository.GetMergedPagedAsync's real semantics (merge matching
+            // criteria, sort desc by timestamp, then page) so these handler tests keep verifying
+            // the handler builds the right criteria and maps results correctly, now that the
+            // actual skip/take/order arithmetic lives in the repository instead of the handler.
+            mock.Setup(r => r.GetMergedPagedAsync(
+                    It.IsAny<IReadOnlyList<(string EntityType, IEnumerable<int> EntityIds)>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<int>()))
+                .ReturnsAsync((IReadOnlyList<(string EntityType, IEnumerable<int> EntityIds)> criteria, int skip, int take) =>
                 {
-                    if (!logsByEntityType.TryGetValue(entityType, out var logs)) return new List<ActivityLog>();
-                    var idSet = ids.ToHashSet();
-                    return logs.Where(l => idSet.Contains(l.EntityId)).ToList();
+                    var merged = new List<ActivityLog>();
+
+                    foreach (var (entityType, entityIds) in criteria)
+                    {
+                        if (!logsByEntityType.TryGetValue(entityType, out var logs)) continue;
+                        var idSet = entityIds.ToHashSet();
+                        merged.AddRange(logs.Where(l => idSet.Contains(l.EntityId)));
+                    }
+
+                    var ordered = merged.OrderByDescending(l => l.Timestamp).ToList();
+                    var page = ordered.Skip(skip).Take(take).ToList();
+
+                    return (page, ordered.Count);
                 });
 
             return mock;

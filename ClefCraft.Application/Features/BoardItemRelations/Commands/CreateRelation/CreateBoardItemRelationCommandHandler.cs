@@ -2,6 +2,7 @@
 using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
+using ClefCraft.Application.Exceptions;
 using ClefCraft.Application.Features.BoardItemRelations.DTOs;
 using ClefCraft.Domain;
 using ClefCraft.Domain.Enums;
@@ -45,24 +46,21 @@ namespace ClefCraft.Application.Features.BoardItemRelations.Commands.CreateRelat
             CancellationToken cancellationToken)
         {
             if (request.SourceBoardItemId == request.TargetBoardItemId)
-                throw new ApplicationException(
-                    "An item cannot be related to itself.");
+                throw new BadRequestException("An item cannot be related to itself.");
 
             var source =
                 await _boardItemRepository.GetBoardItemById(
                     request.SourceBoardItemId);
 
             if (source == null)
-                throw new ApplicationException(
-                    $"Board item {request.SourceBoardItemId} was not found.");
+                throw new NotFoundException(nameof(BoardItem), request.SourceBoardItemId);
 
             var target =
                 await _boardItemRepository.GetBoardItemById(
                     request.TargetBoardItemId);
 
             if (target == null)
-                throw new ApplicationException(
-                    $"Board item {request.TargetBoardItemId} was not found.");
+                throw new NotFoundException(nameof(BoardItem), request.TargetBoardItemId);
 
             var userId = _userService.UserId;
             await _boardAccessService.EnsureBoardOwnedByUserAsync(source.BoardId, userId);
@@ -78,8 +76,7 @@ namespace ClefCraft.Application.Features.BoardItemRelations.Commands.CreateRelat
                     relationType);
 
             if (exists)
-                throw new ApplicationException(
-                    "Relationship already exists.");
+                throw new BadRequestException("Relationship already exists.");
 
             var relation = new BoardItemRelation
             {
