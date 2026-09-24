@@ -3,6 +3,7 @@ using ClefCraft.Application.Contracts.Analytics;
 using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
+using ClefCraft.Application.Exceptions;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItemById;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems;
 using ClefCraft.Domain;
@@ -55,7 +56,7 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
 
             if (boardItem == null)
             {
-                throw new ApplicationException($"Board item with ID {request.Id} not found.");
+                throw new NotFoundException(nameof(BoardItem), request.Id);
             }
 
             await _boardAccessService.EnsureBoardOwnedByUserAsync(boardItem.BoardId, _userService.UserId);
