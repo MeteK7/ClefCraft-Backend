@@ -1,19 +1,23 @@
 ﻿using ClefCraft.Application.Contracts.AI;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace ClefCraft.Infrastructure.Services.AI
 {
     public class AIService : IAIService
     {
         private readonly HttpClient _httpClient;
+        private readonly IConfiguration _configuration;
         private readonly ILogger<AIService> _logger;
 
         private static readonly TimeSpan RequestTimeout = TimeSpan.FromSeconds(5);
 
-        public AIService(HttpClient httpClient, ILogger<AIService> logger)
+        public AIService(HttpClient httpClient, IConfiguration configuration, ILogger<AIService> logger)
         {
             _httpClient = httpClient;
+            _configuration = configuration;
             _logger = logger;
         }
 
@@ -35,7 +39,16 @@ namespace ClefCraft.Infrastructure.Services.AI
             HttpResponseMessage response;
             try
             {
-                response = await _httpClient.PostAsJsonAsync("/predict", payload, cts.Token);
+                using var httpRequest = new HttpRequestMessage(HttpMethod.Post, "/predict")
+                {
+                    Content = JsonContent.Create(payload)
+                };
+
+                var apiKey = _configuration["AIService:PredictApiKey"];
+                if (!string.IsNullOrEmpty(apiKey))
+                    httpRequest.Headers.Add("X-API-Key", apiKey);
+
+                response = await _httpClient.SendAsync(httpRequest, cts.Token);
             }
             catch (OperationCanceledException) when (cts.IsCancellationRequested)
             {
@@ -58,7 +71,16 @@ namespace ClefCraft.Infrastructure.Services.AI
                     $"Prediction service returned {response.StatusCode}.", false);
             }
 
-            var result = await response.Content.ReadFromJsonAsync<PredictionResponse>();
+            PredictionResponse? result;
+            try
+            {
+                result = await response.Content.ReadFromJsonAsync<PredictionResponse>();
+            }
+            catch (JsonException ex)
+            {
+                _logger.LogError(ex, "AI prediction response was not valid JSON.");
+                throw new AIPredictionException("Prediction service returned a malformed response.", false, ex);
+            }
 
             if (result?.Predictions == null || result.Predictions.Count != events.Count)
             {
