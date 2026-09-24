@@ -38,15 +38,40 @@ namespace ClefCraft.Persistence.Repositories
                 .CountAsync();
         }
 
-        public async Task<List<ActivityLog>> GetByEntityTypeAndIdsAsync(string entityType, IEnumerable<int> entityIds)
+        public async Task<(List<ActivityLog> Items, int TotalCount)> GetMergedPagedAsync(
+            IReadOnlyList<(string EntityType, IEnumerable<int> EntityIds)> criteria,
+            int skip,
+            int take)
         {
-            var ids = entityIds as ICollection<int> ?? entityIds.ToList();
-            if (ids.Count == 0) return new List<ActivityLog>();
+            IQueryable<ActivityLog>? merged = null;
 
-            return await _context.ActivityLogs
-                .Where(l => l.EntityType == entityType && ids.Contains(l.EntityId))
+            foreach (var (entityType, entityIds) in criteria)
+            {
+                var ids = entityIds as ICollection<int> ?? entityIds.ToList();
+                if (ids.Count == 0) continue;
+
+                var source = _context.ActivityLogs
+                    .Where(l => l.EntityType == entityType && ids.Contains(l.EntityId));
+
+                // Concat (not Union) since each criterion targets a distinct EntityType, so the
+                // sets can never overlap — this translates to a plain UNION ALL rather than a
+                // UNION with a redundant de-dup pass.
+                merged = merged == null ? source : merged.Concat(source);
+            }
+
+            if (merged == null)
+                return (new List<ActivityLog>(), 0);
+
+            var totalCount = await merged.CountAsync();
+
+            var items = await merged
+                .OrderByDescending(l => l.Timestamp)
                 .AsNoTracking()
+                .Skip(skip)
+                .Take(take)
                 .ToListAsync();
+
+            return (items, totalCount);
         }
     }
 }

@@ -12,9 +12,13 @@ namespace ClefCraft.Application.Contracts.ActivityLogs
         Task<List<ActivityLog>> GetByEntityAsync(string entityType, int entityId, int skip, int take);
         Task<int> CountByEntityAsync(string entityType, int entityId);
 
-        // Batch fetch across multiple ids of one EntityType, unpaged — used to build merged,
-        // multi-source feeds (e.g. Calendar History merges CalendarEvent/CalendarEventSegment/
-        // CalendarEventException) where pagination happens after merging, not per source.
-        Task<List<ActivityLog>> GetByEntityTypeAndIdsAsync(string entityType, IEnumerable<int> entityIds);
+        // Merges multiple (EntityType, EntityIds) criteria (e.g. Calendar History's
+        // CalendarEvent/CalendarEventSegment/CalendarEventException sources) into a single
+        // timestamp-ordered, paged result at the database level via UNION ALL, instead of
+        // fetching every source unpaged and paging in memory.
+        Task<(List<ActivityLog> Items, int TotalCount)> GetMergedPagedAsync(
+            IReadOnlyList<(string EntityType, IEnumerable<int> EntityIds)> criteria,
+            int skip,
+            int take);
     }
 }
