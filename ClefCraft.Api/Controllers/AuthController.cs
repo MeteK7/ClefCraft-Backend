@@ -32,6 +32,22 @@ namespace ClefCraft.Api.Controllers
             return Ok(await _authenticationService.Register(request));
         }
 
+        // Neither refresh nor logout requires an access token — the client calls them precisely
+        // when its access token has expired. The refresh token in the body is the credential.
+        [HttpPost("refresh")]
+        public async Task<ActionResult<AuthResponse>> Refresh(RefreshTokenRequest request)
+        {
+            var response = await _authenticationService.Refresh(request.RefreshToken);
+            return response is null ? Unauthorized() : Ok(response);
+        }
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout(RefreshTokenRequest request)
+        {
+            await _authenticationService.Logout(request.RefreshToken);
+            return NoContent();
+        }
+
         [Authorize]
         [HttpGet("me")]
         public async Task<ActionResult<UserDto>> Me()
