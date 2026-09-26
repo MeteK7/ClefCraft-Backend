@@ -1,9 +1,11 @@
-using ClefCraft.Application.Exceptions;
+﻿using ClefCraft.Application.Exceptions;
 using ClefCraft.Application.Models.Identity;
+using ClefCraft.Identity.DbContext;
 using ClefCraft.Identity.Models;
 using ClefCraft.Identity.Services;
 using ClefCraft.Identity.UnitTests.Mocks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Moq;
 using Shouldly;
@@ -24,10 +26,16 @@ namespace ClefCraft.Identity.UnitTests.Services
             DurationInMinutes = 15
         };
 
+        private static ClefCraftIdentityDbContext MakeContext() =>
+            new ClefCraftIdentityDbContext(new DbContextOptionsBuilder<ClefCraftIdentityDbContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .Options);
+
         private static AuthService MakeService(
             Mock<UserManager<ApplicationUser>> userManager,
-            Mock<SignInManager<ApplicationUser>> signInManager) =>
-            new AuthService(userManager.Object, signInManager.Object, Options.Create(MakeJwtSettings()));
+            Mock<SignInManager<ApplicationUser>> signInManager,
+            ClefCraftIdentityDbContext? context = null) =>
+            new AuthService(userManager.Object, signInManager.Object, Options.Create(MakeJwtSettings()), context ?? MakeContext());
 
         [Fact]
         public async Task Login_UserNotFound_ThrowsNotFoundException()

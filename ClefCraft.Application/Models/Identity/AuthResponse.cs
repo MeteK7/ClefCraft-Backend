@@ -12,5 +12,8 @@ namespace ClefCraft.Application.Models.Identity
         public string UserName { get; set; }
         public string Email { get; set; }
         public string Token { get; set; }
+        public string RefreshToken { get; set; }
+        public DateTime RefreshTokenExpiresAt { get; set; }
+        public DateTime SessionExpiresAt { get; set; }
     }
 }
