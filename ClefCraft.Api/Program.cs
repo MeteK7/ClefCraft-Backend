@@ -8,6 +8,7 @@ using ClefCraft.Application.Contracts.FileAttachment;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Identity;
 using ClefCraft.Identity.DbContext;
+using ClefCraft.Identity.Seeding;
 using ClefCraft.Identity.Services;
 using ClefCraft.Infrastructure;
 using ClefCraft.Infrastructure.FileAttachmentService;
@@ -155,6 +156,11 @@ using (var scope = app.Services.CreateScope())
         else
         {
             logger.LogInformation("No pending identity migrations.");
+        }
+
+        if (app.Environment.IsDevelopment())
+        {
+            await scope.ServiceProvider.GetRequiredService<DevelopmentUserSeeder>().SeedAsync();
         }
     }
     catch (Exception ex)

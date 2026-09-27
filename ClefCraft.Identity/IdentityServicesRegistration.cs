@@ -3,6 +3,7 @@ using ClefCraft.Application.Models.Identity;
 using ClefCraft.Identity.DbContext;
 using ClefCraft.Identity.Models;
 using ClefCraft.Identity.Providers;
+using ClefCraft.Identity.Seeding;
 using ClefCraft.Identity.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -37,6 +38,8 @@ namespace ClefCraft.Identity
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ClefCraftIdentityDbContext>
                 ().AddDefaultTokenProviders();
+
+            services.AddScoped<DevelopmentUserSeeder>();
 
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IUserService, UserService>();
