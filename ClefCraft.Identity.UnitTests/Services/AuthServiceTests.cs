@@ -37,8 +37,10 @@ namespace ClefCraft.Identity.UnitTests.Services
             ClefCraftIdentityDbContext? context = null) =>
             new AuthService(userManager.Object, signInManager.Object, Options.Create(MakeJwtSettings()), context ?? MakeContext());
 
+        // Unknown email, wrong password and locked-out account all return null (-> one generic 401),
+        // so the response doesn't reveal which accounts exist.
         [Fact]
-        public async Task Login_UserNotFound_ThrowsNotFoundException()
+        public async Task Login_UserNotFound_ReturnsNull()
         {
             var userManager = IdentityMocks.MockUserManager();
             userManager.Setup(m => m.FindByEmailAsync("missing@test.com")).ReturnsAsync((ApplicationUser)null!);
@@ -46,23 +48,58 @@ namespace ClefCraft.Identity.UnitTests.Services
 
             var service = MakeService(userManager, signInManager);
 
-            await Should.ThrowAsync<NotFoundException>(() =>
-                service.Login(new AuthRequest { Email = "missing@test.com", Password = "whatever" }));
+            var response = await service.Login(new AuthRequest { Email = "missing@test.com", Password = "whatever" });
+
+            response.ShouldBeNull();
+            signInManager.Verify(s => s.CheckPasswordSignInAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<bool>()), Times.Never);
         }
 
         [Fact]
-        public async Task Login_WrongPassword_ThrowsBadRequestException()
+        public async Task Login_WrongPassword_ReturnsNull()
         {
             var user = new ApplicationUser { Id = "user-1", Email = "a@test.com", UserName = "auser" };
             var userManager = IdentityMocks.MockUserManager();
             userManager.Setup(m => m.FindByEmailAsync(user.Email!)).ReturnsAsync(user);
             var signInManager = IdentityMocks.MockSignInManager(userManager.Object);
-            signInManager.Setup(s => s.CheckPasswordSignInAsync(user, "wrong", false)).ReturnsAsync(SignInResult.Failed);
+            signInManager.Setup(s => s.CheckPasswordSignInAsync(user, "wrong", true)).ReturnsAsync(SignInResult.Failed);
 
             var service = MakeService(userManager, signInManager);
 
-            await Should.ThrowAsync<BadRequestException>(() =>
-                service.Login(new AuthRequest { Email = user.Email!, Password = "wrong" }));
+            var response = await service.Login(new AuthRequest { Email = user.Email!, Password = "wrong" });
+
+            response.ShouldBeNull();
+        }
+
+        [Fact]
+        public async Task Login_LockedOut_ReturnsNull()
+        {
+            var user = new ApplicationUser { Id = "user-1", Email = "a@test.com", UserName = "auser" };
+            var userManager = IdentityMocks.MockUserManager();
+            userManager.Setup(m => m.FindByEmailAsync(user.Email!)).ReturnsAsync(user);
+            var signInManager = IdentityMocks.MockSignInManager(userManager.Object);
+            signInManager.Setup(s => s.CheckPasswordSignInAsync(user, "correct", true)).ReturnsAsync(SignInResult.LockedOut);
+
+            var service = MakeService(userManager, signInManager);
+
+            var response = await service.Login(new AuthRequest { Email = user.Email!, Password = "correct" });
+
+            response.ShouldBeNull();
+        }
+
+        [Fact]
+        public async Task Login_CountsFailuresTowardsLockout()
+        {
+            var user = new ApplicationUser { Id = "user-1", Email = "a@test.com", UserName = "auser" };
+            var userManager = IdentityMocks.MockUserManager();
+            userManager.Setup(m => m.FindByEmailAsync(user.Email!)).ReturnsAsync(user);
+            var signInManager = IdentityMocks.MockSignInManager(userManager.Object);
+            signInManager.Setup(s => s.CheckPasswordSignInAsync(user, "wrong", It.IsAny<bool>())).ReturnsAsync(SignInResult.Failed);
+
+            var service = MakeService(userManager, signInManager);
+
+            await service.Login(new AuthRequest { Email = user.Email!, Password = "wrong" });
+
+            signInManager.Verify(s => s.CheckPasswordSignInAsync(user, "wrong", true), Times.Once);
         }
 
         [Fact]
@@ -74,12 +111,13 @@ namespace ClefCraft.Identity.UnitTests.Services
             userManager.Setup(m => m.GetClaimsAsync(user)).ReturnsAsync(new List<Claim>());
             userManager.Setup(m => m.GetRolesAsync(user)).ReturnsAsync(new List<string> { "Administrator" });
             var signInManager = IdentityMocks.MockSignInManager(userManager.Object);
-            signInManager.Setup(s => s.CheckPasswordSignInAsync(user, "correct", false)).ReturnsAsync(SignInResult.Success);
+            signInManager.Setup(s => s.CheckPasswordSignInAsync(user, "correct", true)).ReturnsAsync(SignInResult.Success);
 
             var service = MakeService(userManager, signInManager);
 
             var response = await service.Login(new AuthRequest { Email = user.Email!, Password = "correct" });
 
+            response.ShouldNotBeNull();
             response.Id.ShouldBe(user.Id);
             response.Token.ShouldNotBeNullOrEmpty();
 

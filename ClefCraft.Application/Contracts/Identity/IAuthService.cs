@@ -9,7 +9,11 @@ namespace ClefCraft.Application.Contracts.Identity
 {
     public interface IAuthService
     {
-        Task<AuthResponse> Login(AuthRequest request);
+        /// <summary>
+        /// Signs in with email and password. Returns null for an unknown email, a wrong password or a
+        /// locked-out account alike, so the response never reveals which accounts exist.
+        /// </summary>
+        Task<AuthResponse?> Login(AuthRequest request);
         Task<RegistrationResponse> Register(RegistrationRequest request);
 
         /// <summary>Rotates the refresh token. Returns null when it is unknown, expired, revoked or lost a race.</summary>

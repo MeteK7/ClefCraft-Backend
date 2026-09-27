@@ -31,8 +31,8 @@ namespace ClefCraft.Identity.UnitTests.Services
             _service = MakeServiceFor(_context);
         }
 
-        private Task<AuthResponse> Login() =>
-            _service.Login(new AuthRequest { Email = _user.Email!, Password = Password });
+        private async Task<AuthResponse> Login() =>
+            (await _service.Login(new AuthRequest { Email = _user.Email!, Password = Password }))!;
 
         private static string Hash(string raw) =>
             Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(raw)));
@@ -161,8 +161,8 @@ namespace ClefCraft.Identity.UnitTests.Services
 
             // Seed two sessions for the user through a plain context.
             var seedService = MakeServiceFor(new ClefCraftIdentityDbContext(OptionsWith()));
-            var session = await seedService.Login(new AuthRequest { Email = _user.Email!, Password = Password });
-            var otherDevice = await seedService.Login(new AuthRequest { Email = _user.Email!, Password = Password });
+            var session = (await seedService.Login(new AuthRequest { Email = _user.Email!, Password = Password }))!;
+            var otherDevice = (await seedService.Login(new AuthRequest { Email = _user.Email!, Password = Password }))!;
 
             // Just before this refresh commits, another request rotates the same token.
             var racer = new RotateFirstInterceptor(() => MakeServiceFor(new ClefCraftIdentityDbContext(OptionsWith())).Refresh(session.RefreshToken));
@@ -182,7 +182,7 @@ namespace ClefCraft.Identity.UnitTests.Services
             userManager.Setup(m => m.GetClaimsAsync(_user)).ReturnsAsync(new List<Claim>());
             userManager.Setup(m => m.GetRolesAsync(_user)).ReturnsAsync(new List<string>());
             var signInManager = IdentityMocks.MockSignInManager(userManager.Object);
-            signInManager.Setup(s => s.CheckPasswordSignInAsync(_user, Password, false)).ReturnsAsync(SignInResult.Success);
+            signInManager.Setup(s => s.CheckPasswordSignInAsync(_user, Password, true)).ReturnsAsync(SignInResult.Success);
 
             return new AuthService(userManager.Object, signInManager.Object, Options.Create(new JwtSettings
             {
