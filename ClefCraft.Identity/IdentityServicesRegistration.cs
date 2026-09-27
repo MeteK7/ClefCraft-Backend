@@ -35,7 +35,14 @@ namespace ClefCraft.Identity
                 options.UseNpgsql(connectionString);
             });
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+                {
+                    // Enforced by AuthService.Login (CheckPasswordSignInAsync with lockoutOnFailure).
+                    // Trade-off: anyone who knows an email can lock that account for 15 minutes.
+                    options.Lockout.AllowedForNewUsers = true;
+                    options.Lockout.MaxFailedAccessAttempts = 5;
+                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+                })
                 .AddEntityFrameworkStores<ClefCraftIdentityDbContext>
                 ().AddDefaultTokenProviders();
 
