@@ -1,11 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClefCraft.Identity.Configurations
 {
@@ -13,13 +8,9 @@ namespace ClefCraft.Identity.Configurations
     {
         public void Configure(EntityTypeBuilder<IdentityUserRole<string>> builder)
         {
-            builder.HasData(
-                new IdentityUserRole<string>
-                {
-                    RoleId = "cbc43a8e-f7bb-4445-baaf-1add431ffbbf",
-                    UserId = "944d0156-cb3d-466f-a1ea-5f53e3a10f8e"
-                }
-                );
+            // No seeded role assignments: they belonged to the seeded users (see UserConfiguration).
+            // The existing admin -> Administrator row is left in place by the DisableSeededAccounts
+            // migration; new administrators are granted explicitly (see the deployment runbook).
         }
     }
 }
