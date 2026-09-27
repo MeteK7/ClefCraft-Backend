@@ -34,6 +34,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClefCraft.Identity", "ClefC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClefCraft.Identity.UnitTests", "ClefCraft.Identity.UnitTests\ClefCraft.Identity.UnitTests.csproj", "{A1B2C3D4-1111-4E5F-9A2B-3C4D5E6F7A8B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClefCraft.Api.IntegrationTests", "ClefCraft.Api.IntegrationTests\ClefCraft.Api.IntegrationTests.csproj", "{B6519E3D-DCE2-4CDC-835D-388CE135BF88}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,6 +78,10 @@ Global
 		{A1B2C3D4-1111-4E5F-9A2B-3C4D5E6F7A8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1B2C3D4-1111-4E5F-9A2B-3C4D5E6F7A8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1B2C3D4-1111-4E5F-9A2B-3C4D5E6F7A8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6519E3D-DCE2-4CDC-835D-388CE135BF88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6519E3D-DCE2-4CDC-835D-388CE135BF88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6519E3D-DCE2-4CDC-835D-388CE135BF88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6519E3D-DCE2-4CDC-835D-388CE135BF88}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -93,6 +99,7 @@ Global
 		{7D4EB891-93DF-4731-8F37-7D9CA86FB8DD} = {26252BAE-D421-40AE-8B63-BB78B515E435}
 		{A1B2C3D4-1111-4E5F-9A2B-3C4D5E6F7A8B} = {26252BAE-D421-40AE-8B63-BB78B515E435}
 		{FF6B17A1-90B6-43DA-86AD-D75FF4DB9D4A} = {85BBBBC8-FB37-4DDF-9548-5621A6E25E4A}
+		{B6519E3D-DCE2-4CDC-835D-388CE135BF88} = {26252BAE-D421-40AE-8B63-BB78B515E435}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B0CD4401-8CF1-48E5-A27C-EABD1352FE7B}

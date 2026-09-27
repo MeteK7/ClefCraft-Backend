@@ -1,0 +1,60 @@
+using ClefCraft.Application.Contracts.AI;
+using ClefCraft.Identity.DbContext;
+using ClefCraft.Persistence.DatabaseContext;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
+
+namespace ClefCraft.Api.IntegrationTests.TestHelpers
+{
+    /// <summary>
+    /// The real API pipeline (middleware order, rate limiting, CORS, controllers) over in-memory
+    /// databases, with nothing that reaches outside the process. Rate-limiter state lives in the
+    /// host, so any test that counts requests should create (and dispose) its own instance.
+    /// </summary>
+    public class ClefCraftApiFactory : WebApplicationFactory<Program>
+    {
+        public const string AllowedOrigin = "http://localhost:4200";
+
+        private readonly string _databaseName = Guid.NewGuid().ToString();
+
+        protected override void ConfigureWebHost(IWebHostBuilder builder)
+        {
+            // Program.cs skips its startup migrations in this environment.
+            builder.UseEnvironment("Testing");
+
+            builder.ConfigureAppConfiguration((_, config) =>
+                config.AddInMemoryCollection(new Dictionary<string, string?>
+                {
+                    ["JwtSettings:Key"] = "integration-test-signing-key-needs-at-least-32-bytes",
+                    ["AIService:BaseUrl"] = "http://ai.invalid"
+                }));
+
+            builder.ConfigureServices(services =>
+            {
+                // Background services (e.g. NotificationBackgroundService) would poll the database.
+                services.RemoveAll<IHostedService>();
+
+                services.RemoveAll<IAIService>();
+                services.AddSingleton<IAIService, StubAIService>();
+
+                services.RemoveAll<DbContextOptions<ClefCraftDatabaseContext>>();
+                services.RemoveAll<DbContextOptions<ClefCraftIdentityDbContext>>();
+                services.AddDbContext<ClefCraftDatabaseContext>(o => o.UseInMemoryDatabase($"{_databaseName}-app"));
+                services.AddDbContext<ClefCraftIdentityDbContext>(o => o.UseInMemoryDatabase($"{_databaseName}-identity"));
+            });
+        }
+
+        private sealed class StubAIService : IAIService
+        {
+            public Task<double> PredictAttendanceAsync(AIEventDto ev) => Task.FromResult(0.5);
+
+            public Task<List<double>> PredictBatchAsync(List<AIEventDto> ev) =>
+                Task.FromResult(ev.Select(_ => 0.5).ToList());
+        }
+    }
+}
