@@ -1,5 +1,6 @@
 using ClefCraft.Api.Hubs;
 using ClefCraft.Api.Middleware;
+using ClefCraft.Api.RateLimiting;
 using ClefCraft.Api.Services;
 using ClefCraft.Application;
 using ClefCraft.Application.Contracts.AI;
@@ -16,6 +17,7 @@ using ClefCraft.Infrastructure.Services.AI;
 using ClefCraft.Infrastructure.Services.Calendar;
 using ClefCraft.Persistence;
 using ClefCraft.Persistence.DatabaseContext;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -49,6 +51,20 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader()
             .AllowCredentials());
 });
+
+// Behind Render's proxy RemoteIpAddress is the proxy, which would put every client in one
+// rate-limit bucket. Take the client IP from X-Forwarded-For instead. Render's proxy addresses
+// aren't fixed, so no proxy is "known"; ForwardLimit = 1 reads only the right-most entry (the one
+// the proxy appended), ignoring anything a client prepended itself.
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor;
+    options.ForwardLimit = 1;
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
+builder.Services.AddAuthRateLimiting();
 
 var aiBaseUrl = builder.Configuration["AIService:BaseUrl"];
 
@@ -111,6 +127,8 @@ app.Logger.LogInformation("ENVIRONMENT: {Env}", app.Environment.EnvironmentName)
 app.Logger.LogInformation("IS DEVELOPMENT: {IsDev}", app.Environment.IsDevelopment());
 
 // AUTO APPLY MIGRATIONS ON STARTUP (Render + Production safe)
+// Skipped under "Testing": ClefCraft.Api.IntegrationTests swaps in the EF in-memory provider, which has no migrations.
+if (!app.Environment.IsEnvironment("Testing"))
 using (var scope = app.Services.CreateScope())
 {
     var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("DatabaseMigration");
@@ -169,6 +187,26 @@ using (var scope = app.Services.CreateScope())
         throw; // fail fast on startup (important for production consistency)
     }
 }
+
+// First, so everything after it (rate limiting, request logging) sees the real client IP.
+app.UseForwardedHeaders();
+
+// TEMP(forwarded-ip-check) BEGIN: confirms on Render that ForwardLimit = 1 resolves real client
+// IPs rather than a proxy address. Delete this block (through END) once the logs confirm it.
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.StartsWithSegments("/api/Auth"))
+    {
+        app.Logger.LogInformation(
+            "Auth request from {ClientIp} (X-Forwarded-For: {ForwardedFor})",
+            context.Connection.RemoteIpAddress,
+            context.Request.Headers["X-Forwarded-For"].ToString());
+    }
+
+    await next();
+});
+// TEMP(forwarded-ip-check) END
+
 app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
@@ -183,6 +221,9 @@ app.UseHttpsRedirection();
 app.UseCors("AllowAngularClient");
 //app.UseCors("all");
 
+// After UseCors so a 429 still carries the CORS headers and the browser can read its status.
+app.UseRateLimiter();
+
 app.UseAuthentication();
 
 app.UseAuthorization();
@@ -192,3 +233,6 @@ app.MapControllers();
 app.MapHub<NotificationHub>("/hubs/notifications");
 
 app.Run();
+
+// Lets ClefCraft.Api.IntegrationTests reference Program in WebApplicationFactory<Program>.
+public partial class Program { }
