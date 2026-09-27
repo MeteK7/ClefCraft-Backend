@@ -4,6 +4,8 @@ using ClefCraft.Identity.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+using ClefCraft.Api.RateLimiting;
 
 namespace ClefCraft.Api.Controllers
 {
@@ -20,12 +22,17 @@ namespace ClefCraft.Api.Controllers
             _userService = userService;
         }
 
+        // One generic 401 for an unknown email, a wrong password and a locked-out account, so the
+        // response doesn't reveal which accounts exist.
+        [EnableRateLimiting(AuthRateLimiting.PolicyName)]
         [HttpPost("login")]
         public async Task<ActionResult<AuthResponse>> Login(AuthRequest request)
         {
-            return Ok(await _authenticationService.Login(request));
+            var response = await _authenticationService.Login(request);
+            return response is null ? Unauthorized() : Ok(response);
         }
 
+        [EnableRateLimiting(AuthRateLimiting.PolicyName)]
         [HttpPost("register")]
         public async Task<ActionResult<RegistrationResponse>> Register(RegistrationRequest request)
         {

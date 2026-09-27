@@ -32,20 +32,29 @@ namespace ClefCraft.Identity.Services
             _jwtSettings = jwtSettings.Value;
             _context = context;
         }
-        public async Task<AuthResponse> Login(AuthRequest request)
+        public async Task<AuthResponse?> Login(AuthRequest request)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
 
             if (user == null)
             {
-                throw new NotFoundException($"User with {request.Email} not found.", request.Email);
+                // Without a user there is no password hash to check, so this path would answer
+                // measurably faster than a wrong password and reveal that the email isn't registered.
+                SpendPasswordHashTime(request.Password);
+                return null;
             }
 
-            var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
+            // lockoutOnFailure counts this failure towards IdentityOptions.Lockout.
+            var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
 
-            if (result.Succeeded == false)
+            if (!result.Succeeded)
             {
-                throw new BadRequestException($"Credentials for '{request.Email} aren't valid'.");
+                // A locked-out account is rejected before its password is checked; pay the same
+                // hashing cost so it can't be told apart from a wrong password by timing either.
+                if (result.IsLockedOut)
+                    SpendPasswordHashTime(request.Password);
+
+                return null;
             }
 
             // Keep the table bounded without a background job: a user's expired tokens are
@@ -170,6 +179,14 @@ namespace ClefCraft.Identity.Services
                 SessionExpiresAt = sessionExpiresAt
             });
         }
+
+        private static readonly PasswordHasher<ApplicationUser> TimingHasher = new();
+        private static readonly string TimingHash = TimingHasher.HashPassword(new ApplicationUser(), Guid.NewGuid().ToString());
+
+        // Runs one real password verification (the expensive PBKDF2 part of a sign-in) and ignores
+        // the result, so failure paths that skip the check take as long as those that don't.
+        private static void SpendPasswordHashTime(string password) =>
+            TimingHasher.VerifyHashedPassword(new ApplicationUser(), TimingHash, password ?? string.Empty);
 
         // Unsalted SHA-256 is sufficient here: the input is 512 bits of CSPRNG output, so there is
         // nothing to brute-force, and a deterministic hash is what makes the lookup indexable.
