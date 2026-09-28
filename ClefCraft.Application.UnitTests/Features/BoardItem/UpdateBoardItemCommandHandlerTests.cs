@@ -34,7 +34,9 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
         private static UpdateBoardItemCommandHandler MakeHandler(
             Mock<IBoardItemRepository> repo,
             Mock<ITaskLifecycleService> lifecycleService,
-            Mock<IUserService>? userService = null) =>
+            Mock<IUserService>? userService = null,
+            Mock<IBoardMemberRepository>? memberRepo = null,
+            Mock<IUnitOfWork>? unitOfWork = null) =>
             new UpdateBoardItemCommandHandler(
                 repo.Object,
                 MockAccessServices.GetMockBoardAccessService(authorized: true).Object,
@@ -44,7 +46,98 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
                 new Mock<IMapper>().Object,
                 (userService ?? MakeUserService()).Object,
                 lifecycleService.Object,
-                new Mock<IUnitOfWork>().Object);
+                (unitOfWork ?? new Mock<IUnitOfWork>()).Object,
+                (memberRepo ?? new Mock<IBoardMemberRepository>()).Object);
+
+        // Board 10 (MakeItem's board) has exactly these members.
+        private static Mock<IBoardMemberRepository> MakeMemberRepo(params string[] memberIds)
+        {
+            var memberRepo = new Mock<IBoardMemberRepository>();
+            memberRepo.Setup(m => m.IsMemberAsync(It.IsAny<int>(), It.IsAny<string>()))
+                .ReturnsAsync((int boardId, string userId) => boardId == 10 && memberIds.Contains(userId));
+            return memberRepo;
+        }
+
+        [Fact]
+        public async Task Handle_AssigneeIsBoardMember_AssignsThem()
+        {
+            var item = MakeItem();
+            var repo = MakeRepoReturning(item);
+            var handler = MakeHandler(repo, new Mock<ITaskLifecycleService>(), memberRepo: MakeMemberRepo("member-1"));
+
+            await handler.Handle(new UpdateBoardItemCommand { Id = 1, AssigneeId = "member-1" }, CancellationToken.None);
+
+            item.AssigneeId.ShouldBe("member-1");
+        }
+
+        [Fact]
+        public async Task Handle_AssigneeIsNotBoardMember_ThrowsBadRequest_AndSavesNothing()
+        {
+            var item = MakeItem();
+            item.AssigneeId = "member-1";
+            var repo = MakeRepoReturning(item);
+            var unitOfWork = new Mock<IUnitOfWork>();
+            var handler = MakeHandler(repo, new Mock<ITaskLifecycleService>(),
+                memberRepo: MakeMemberRepo("member-1"), unitOfWork: unitOfWork);
+
+            await Should.ThrowAsync<ClefCraft.Application.Exceptions.BadRequestException>(() =>
+                handler.Handle(new UpdateBoardItemCommand { Id = 1, Title = "Changed", AssigneeId = "outsider" }, CancellationToken.None));
+
+            item.AssigneeId.ShouldBe("member-1");
+            item.Title.ShouldBe("Practice scales");
+            repo.Verify(r => r.UpdateBoardItem(It.IsAny<Domain.BoardItem>()), Times.Never);
+            unitOfWork.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task Handle_UnchangedAssigneeWhoLeftTheBoard_DoesNotBlockOtherEdits()
+        {
+            var item = MakeItem();
+            item.AssigneeId = "former-member";
+            var repo = MakeRepoReturning(item);
+            var memberRepo = MakeMemberRepo("member-1");
+            var handler = MakeHandler(repo, new Mock<ITaskLifecycleService>(), memberRepo: memberRepo);
+
+            // The dialog sends the item's current assignee back unchanged on every save.
+            await handler.Handle(new UpdateBoardItemCommand { Id = 1, Title = "Renamed", AssigneeId = "former-member" }, CancellationToken.None);
+
+            item.Title.ShouldBe("Renamed");
+            item.AssigneeId.ShouldBe("former-member");
+            memberRepo.Verify(m => m.IsMemberAsync(It.IsAny<int>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task Handle_NullAssignee_LeavesAssigneeUnchanged()
+        {
+            var item = MakeItem();
+            item.AssigneeId = "member-1";
+            var repo = MakeRepoReturning(item);
+            var memberRepo = MakeMemberRepo();
+            var handler = MakeHandler(repo, new Mock<ITaskLifecycleService>(), memberRepo: memberRepo);
+
+            // e.g. SwitchColumn, which sends only { id, boardColumnId }.
+            await handler.Handle(new UpdateBoardItemCommand { Id = 1, BoardColumnId = 5, AssigneeId = null }, CancellationToken.None);
+
+            item.AssigneeId.ShouldBe("member-1");
+            memberRepo.Verify(m => m.IsMemberAsync(It.IsAny<int>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("   ")]
+        public async Task Handle_EmptyAssignee_ClearsAssigneeWithoutMembershipCheck(string cleared)
+        {
+            var item = MakeItem();
+            item.AssigneeId = "member-1";
+            var repo = MakeRepoReturning(item);
+            var memberRepo = MakeMemberRepo();
+            var handler = MakeHandler(repo, new Mock<ITaskLifecycleService>(), memberRepo: memberRepo);
+
+            await handler.Handle(new UpdateBoardItemCommand { Id = 1, AssigneeId = cleared }, CancellationToken.None);
+
+            item.AssigneeId.ShouldBeNull();
+            memberRepo.Verify(m => m.IsMemberAsync(It.IsAny<int>(), It.IsAny<string>()), Times.Never);
+        }
 
         private static Mock<IUserService> MakeUserService()
         {
@@ -142,7 +235,7 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
             var repo = MakeRepoReturning(item);
             var lifecycleService = new Mock<ITaskLifecycleService>();
 
-            var handler = MakeHandler(repo, lifecycleService);
+            var handler = MakeHandler(repo, lifecycleService, memberRepo: MakeMemberRepo("user-new"));
 
             await handler.Handle(new UpdateBoardItemCommand { Id = 1, AssigneeId = "user-new" }, CancellationToken.None);
 
