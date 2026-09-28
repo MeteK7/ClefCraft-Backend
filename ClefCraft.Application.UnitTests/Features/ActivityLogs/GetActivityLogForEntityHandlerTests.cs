@@ -116,6 +116,86 @@ namespace ClefCraft.Application.UnitTests.Features.ActivityLogs
             result.Items.Single().Changes.ShouldBeEmpty();
         }
 
+        private static List<ActivityLog> AssigneeChangeLog(string actorId, string metadataJson) => new()
+        {
+            new ActivityLog
+            {
+                Id = 1,
+                EntityType = "BoardItem",
+                EntityId = 88,
+                ActionType = "UPDATED",
+                UserId = actorId,
+                Timestamp = DateTime.UtcNow,
+                MetadataJson = metadataJson
+            }
+        };
+
+        // Names come from the user store by id alone — the handler has no notion of board
+        // membership — so someone who has since left the board still shows by name.
+        [Fact]
+        public async Task Handle_AssigneeChange_ResolvesOldAndNewAssigneeNames()
+        {
+            var logs = AssigneeChangeLog("user-1",
+                "{\"AssigneeId\":{\"Old\":\"former-member\",\"New\":\"current-member\"},\"StatusId\":{\"Old\":2,\"New\":3}}");
+            var repo = MockActivityLogRepository.GetMockActivityLogRepository(logs);
+            var userService = MockUserService(
+                new User { Id = "user-1", Firstname = "Jane", Lastname = "Doe" },
+                new User { Id = "former-member", Firstname = "Old", Lastname = "Timer" },
+                new User { Id = "current-member", Firstname = "New", Lastname = "Comer" });
+
+            var handler = new GetActivityLogForEntityHandler(repo.Object, MockBoardAccessService().Object, userService.Object);
+
+            var result = await handler.Handle(
+                new GetActivityLogForEntityQuery { EntityType = "BoardItem", EntityId = 88 },
+                CancellationToken.None);
+
+            var changes = result.Items.Single().Changes;
+            var assignee = changes.Single(c => c.FieldName == "AssigneeId");
+            assignee.OldDisplayValue.ShouldBe("Old Timer");
+            assignee.NewDisplayValue.ShouldBe("New Comer");
+
+            // Only assignee ids are resolved; other fields keep their raw values for the client.
+            var status = changes.Single(c => c.FieldName == "StatusId");
+            status.OldDisplayValue.ShouldBeNull();
+            status.NewDisplayValue.ShouldBeNull();
+        }
+
+        [Fact]
+        public async Task Handle_AssigneeChange_DeletedUserShowsUnknownUser_AndUnassignedShowsNothing()
+        {
+            var logs = AssigneeChangeLog("user-1", "{\"AssigneeId\":{\"Old\":\"deleted-user\",\"New\":null}}");
+            var repo = MockActivityLogRepository.GetMockActivityLogRepository(logs);
+            var userService = MockUserService(new User { Id = "user-1", Firstname = "Jane", Lastname = "Doe" });
+
+            var handler = new GetActivityLogForEntityHandler(repo.Object, MockBoardAccessService().Object, userService.Object);
+
+            var result = await handler.Handle(
+                new GetActivityLogForEntityQuery { EntityType = "BoardItem", EntityId = 88 },
+                CancellationToken.None);
+
+            var assignee = result.Items.Single().Changes.Single();
+            assignee.OldDisplayValue.ShouldBe("Unknown user");
+            assignee.NewDisplayValue.ShouldBeNull();
+        }
+
+        [Fact]
+        public async Task Handle_ResolvesActorsAndAssigneesInOneLookup()
+        {
+            var logs = AssigneeChangeLog("user-1", "{\"AssigneeId\":{\"Old\":\"user-2\",\"New\":\"user-3\"}}");
+            var repo = MockActivityLogRepository.GetMockActivityLogRepository(logs);
+            var userService = MockUserService();
+
+            var handler = new GetActivityLogForEntityHandler(repo.Object, MockBoardAccessService().Object, userService.Object);
+
+            await handler.Handle(
+                new GetActivityLogForEntityQuery { EntityType = "BoardItem", EntityId = 88 },
+                CancellationToken.None);
+
+            userService.Verify(u => u.GetUsersByIds(It.Is<List<string>>(ids =>
+                ids.Count == 3 && ids.Contains("user-1") && ids.Contains("user-2") && ids.Contains("user-3"))), Times.Once);
+            userService.Verify(u => u.GetUsersByIds(It.IsAny<List<string>>()), Times.Once);
+        }
+
         [Fact]
         public async Task Handle_UnknownEntityType_ThrowsBadRequestException()
         {
