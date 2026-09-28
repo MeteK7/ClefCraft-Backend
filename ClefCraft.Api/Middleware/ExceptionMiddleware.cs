@@ -1,7 +1,7 @@
 ﻿using ClefCraft.Api.Models;
 using ClefCraft.Application.Exceptions;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
+using System.Diagnostics;
 using System.Net;
 
 namespace ClefCraft.Api.Middleware
@@ -23,11 +23,30 @@ namespace ClefCraft.Api.Middleware
             {
                 await _next(httpContext);
             }
+            catch (OperationCanceledException) when (httpContext.RequestAborted.IsCancellationRequested)
+            {
+                // The client went away; there is nobody to send a response to and nothing went wrong.
+                _logger.LogInformation("Request aborted by client: {Method} {Path}",
+                    httpContext.Request.Method, httpContext.Request.Path);
+            }
             catch (Exception ex)
             {
+                if (httpContext.Response.HasStarted)
+                {
+                    // Status and headers are already sent, so an error body can't be written;
+                    // trying would throw again and hide this exception.
+                    _logger.LogError(ex, "Unhandled exception after the response started for {Method} {Path} (trace {TraceId})",
+                        httpContext.Request.Method, httpContext.Request.Path, TraceIdOf(httpContext));
+                    throw;
+                }
+
                 await HandleExceptionAsync(httpContext, ex, env);
             }
         }
+
+        // Same id [ApiController] puts in its own problem responses, so one id ties a response to its log entry.
+        private static string TraceIdOf(HttpContext httpContext) =>
+            Activity.Current?.Id ?? httpContext.TraceIdentifier;
 
         private async Task HandleExceptionAsync(HttpContext httpContext, Exception ex, IHostEnvironment env)
         {
@@ -78,19 +97,33 @@ namespace ClefCraft.Api.Middleware
                     };
                     break;
                 default:
+                    // An unexpected exception's message is internal (SQL, EF, null references...):
+                    // it goes to the log, never to the client outside Development.
                     problem = new CustomProblemDetails
                     {
-                        Title = ex.Message,
+                        Title = "An unexpected error occurred.",
                         Status = (int)statusCode,
                         Type = nameof(HttpStatusCode.InternalServerError),
-                        Detail = env.IsDevelopment() ? ex.StackTrace : null,
+                        Detail = env.IsDevelopment() ? $"{ex.Message}{Environment.NewLine}{ex.StackTrace}" : null,
                     };
                     break;
             }
 
+            var traceId = TraceIdOf(httpContext);
+            problem.Extensions["traceId"] = traceId;
+
+            if (statusCode == HttpStatusCode.InternalServerError)
+            {
+                _logger.LogError(ex, "Unhandled exception for {Method} {Path} (trace {TraceId})",
+                    httpContext.Request.Method, httpContext.Request.Path, traceId);
+            }
+            else
+            {
+                _logger.LogWarning("{ExceptionType} ({StatusCode}) for {Method} {Path}: {Title} (trace {TraceId})",
+                    ex.GetType().Name, (int)statusCode, httpContext.Request.Method, httpContext.Request.Path, problem.Title, traceId);
+            }
+
             httpContext.Response.StatusCode = (int)statusCode;
-            var logMessage = JsonConvert.SerializeObject(problem);
-            _logger.LogError(logMessage);
             await httpContext.Response.WriteAsJsonAsync(problem);
         }
     }

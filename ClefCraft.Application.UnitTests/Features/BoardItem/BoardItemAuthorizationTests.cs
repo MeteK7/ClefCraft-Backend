@@ -87,7 +87,8 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
                 new Mock<IMapper>().Object,
                 userService.Object,
                 new Mock<ITaskLifecycleService>().Object,
-                new Mock<IUnitOfWork>().Object);
+                new Mock<IUnitOfWork>().Object,
+                new Mock<IBoardMemberRepository>().Object);
 
             await Should.ThrowAsync<ForbiddenAccessException>(() =>
                 handler.Handle(new UpdateBoardItemCommand { Id = 1, Title = "Hacked title" }, CancellationToken.None));

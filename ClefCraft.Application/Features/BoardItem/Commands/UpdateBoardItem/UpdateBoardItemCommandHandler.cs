@@ -27,6 +27,7 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
         private readonly IUserService _userService;
         private readonly ITaskLifecycleService _taskLifecycleService;
         private readonly IUnitOfWork _unitOfWork; // Added for architectural parity
+        private readonly IBoardMemberRepository _boardMemberRepository;
 
         public UpdateBoardItemCommandHandler(
             IBoardItemRepository boardItemRepository,
@@ -37,7 +38,8 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
             IMapper mapper,
             IUserService userService,
             ITaskLifecycleService taskLifecycleService,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IBoardMemberRepository boardMemberRepository)
         {
             _boardItemRepository = boardItemRepository;
             _boardAccessService = boardAccessService;
@@ -48,6 +50,7 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
             _userService = userService;
             _taskLifecycleService = taskLifecycleService;
             _unitOfWork = unitOfWork;
+            _boardMemberRepository = boardMemberRepository;
         }
 
         public async Task<BoardItemByIdDto> Handle(UpdateBoardItemCommand request, CancellationToken cancellationToken)
@@ -60,6 +63,21 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
             }
 
             await _boardAccessService.EnsureBoardOwnedByUserAsync(boardItem.BoardId, _userService.UserId);
+
+            // null leaves the assignee as it is (partial updates such as SwitchColumn omit it);
+            // "" or whitespace clears it.
+            var newAssigneeId = request.AssigneeId == null
+                ? boardItem.AssigneeId
+                : string.IsNullOrWhiteSpace(request.AssigneeId) ? null : request.AssigneeId;
+
+            // Only a *change* of assignee is checked, so an existing assignee who has since left
+            // the board doesn't block unrelated edits to the item.
+            if (newAssigneeId != null
+                && newAssigneeId != boardItem.AssigneeId
+                && !await _boardMemberRepository.IsMemberAsync(boardItem.BoardId, newAssigneeId))
+            {
+                throw new BadRequestException("The assignee must be a member of this board.");
+            }
 
             var previousStatusId = boardItem.BoardItemStatus?.StatusId;
             var previousAssignee = boardItem.AssigneeId;
@@ -123,7 +141,7 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
             }
 
             // Update the rest of the properties
-            boardItem.AssigneeId = request.AssigneeId ?? boardItem.AssigneeId;
+            boardItem.AssigneeId = newAssigneeId;
             boardItem.DueDate = request.DueDate ?? boardItem.DueDate;
             boardItem.EstimatedTime = request.EstimatedTime ?? boardItem.EstimatedTime;
             boardItem.TimeSpent = request.TimeSpent ?? boardItem.TimeSpent;

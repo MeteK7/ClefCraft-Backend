@@ -26,6 +26,14 @@ namespace ClefCraft.Application.Features.ActivityLogs.Queries.GetActivityLogForE
             _userService = userService;
         }
 
+        private const string AssigneeFieldName = "AssigneeId";
+
+        // null for "no assignee" (nothing to show); "Unknown user" when the account no longer exists.
+        private static string? AssigneeDisplayName(string? userId, Dictionary<string, string> fullNames) =>
+            string.IsNullOrEmpty(userId)
+                ? null
+                : fullNames.TryGetValue(userId, out var name) ? name : "Unknown user";
+
         public async Task<PagedResult<ActivityLogEntryDto>> Handle(GetActivityLogForEntityQuery request, CancellationToken cancellationToken)
         {
             var validator = new GetActivityLogForEntityValidator();
@@ -50,15 +58,33 @@ namespace ClefCraft.Application.Features.ActivityLogs.Queries.GetActivityLogForE
             var logs = await _activityLogRepository.GetByEntityAsync(request.EntityType, request.EntityId, skip, request.PageSize);
             var totalCount = await _activityLogRepository.CountByEntityAsync(request.EntityType, request.EntityId);
 
+            // Parsed once, in the same order as logs.
+            var changesPerLog = logs.Select(l => ActivityMetadataParser.Parse(l.MetadataJson)).ToList();
+
+            var assigneeChanges = changesPerLog
+                .SelectMany(changes => changes)
+                .Where(c => c.FieldName == AssigneeFieldName)
+                .ToList();
+
+            // Actors and assignees (past or present, board member or not) in one lookup.
             var userIds = logs
                 .Select(l => l.UserId)
+                .Concat(assigneeChanges.SelectMany(c => new[] { c.OldValue, c.NewValue }))
                 .Where(userId => !string.IsNullOrEmpty(userId))
+                .Select(userId => userId!)
                 .Distinct()
                 .ToList();
 
             var users = await _userService.GetUsersByIds(userIds);
+            var fullNames = users.ToDictionary(u => u.Id, u => $"{u.Firstname} {u.Lastname}");
 
-            var items = logs.Select(l =>
+            foreach (var change in assigneeChanges)
+            {
+                change.OldDisplayValue = AssigneeDisplayName(change.OldValue, fullNames);
+                change.NewDisplayValue = AssigneeDisplayName(change.NewValue, fullNames);
+            }
+
+            var items = logs.Select((l, index) =>
             {
                 var user = users.FirstOrDefault(u => u.Id == l.UserId);
 
@@ -71,7 +97,7 @@ namespace ClefCraft.Application.Features.ActivityLogs.Queries.GetActivityLogForE
                     Timestamp = l.Timestamp,
                     ActorUserId = l.UserId,
                     ActorFullName = user != null ? $"{user.Firstname} {user.Lastname}" : "Unknown",
-                    Changes = ActivityMetadataParser.Parse(l.MetadataJson)
+                    Changes = changesPerLog[index]
                 };
             }).ToList();
 
