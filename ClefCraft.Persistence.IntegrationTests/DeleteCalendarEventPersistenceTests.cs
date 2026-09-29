@@ -37,6 +37,9 @@ namespace ClefCraft.Persistence.IntegrationTests
             public Task<CalendarEventAttachmentDto> SaveAttachmentAsync(int eventId, IFormFile file, string userId)
                 => throw new NotSupportedException();
 
+            public Task<System.IO.Stream?> OpenReadAsync(string storedPath)
+                => throw new NotSupportedException();
+
             public Task DeleteAttachmentFileAsync(string relativePath)
             {
                 DeletedPaths.Add(relativePath);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,8 @@ namespace ClefCraft.Application.Features.Calendar.Queries
     {
         public int Id { get; set; }
         public string FileName { get; set; }
+        /// <summary>Server-side storage location; used internally, never sent to clients.</summary>
+        [JsonIgnore]
         public string StoredFilePath { get; set; }
         public long FileSize { get; set; }
         public string ContentType { get; set; }
