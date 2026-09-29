@@ -96,6 +96,19 @@ namespace ClefCraft.Api.Middleware
                         Detail = validation.InnerException?.Message,
                     };
                     break;
+                case BadHttpRequestException badHttpRequest:
+                    // Raised by the server itself for a malformed or oversized request (e.g. 413 when
+                    // a body exceeds the endpoint's RequestSizeLimit) — a client error, not a crash.
+                    statusCode = (HttpStatusCode)badHttpRequest.StatusCode;
+                    problem = new CustomProblemDetails
+                    {
+                        Title = statusCode == HttpStatusCode.RequestEntityTooLarge
+                            ? "The request is too large."
+                            : "The request could not be read.",
+                        Status = (int)statusCode,
+                        Type = nameof(BadHttpRequestException),
+                    };
+                    break;
                 default:
                     // An unexpected exception's message is internal (SQL, EF, null references...):
                     // it goes to the log, never to the client outside Development.
