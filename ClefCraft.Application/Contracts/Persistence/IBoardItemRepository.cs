@@ -12,6 +12,9 @@ namespace ClefCraft.Application.Contracts.Persistence
         Task<List<BoardColumn>> GetAllBoardColumnsWithItems(string userId);
         Task<List<BoardColumn>> GetBoardColumnsWithBoardItems(int boardId);
         Task<BoardItem> GetBoardItemById(int id);
+
+        /// <summary>True when the column is mapped to the board (a BoardColumnMapping row exists).</summary>
+        Task<bool> IsColumnOnBoardAsync(int boardId, int boardColumnId);
         Task<BoardItemStatus?> GetBoardItemStatusByBoardItemId(int boardItemId);
         Task<BoardItemPriority?> GetBoardItemPriorityByBoardItemId(int boardItemId);
         Task<List<BoardItemTag>> GetBoardItemTagsByBoardItemId(int boardItemId);

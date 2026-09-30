@@ -144,6 +144,17 @@ namespace ClefCraft.Api.IntegrationTests.Middleware
         }
 
         [Fact]
+        public async Task OversizedRequestBody_Returns413_NotA500()
+        {
+            // What Kestrel throws when a body exceeds the endpoint's RequestSizeLimit.
+            var (context, logger) = await Run(new BadHttpRequestException("Request body too large.", StatusCodes.Status413PayloadTooLarge));
+
+            context.Response.StatusCode.ShouldBe(413);
+            JsonNode.Parse(BodyOf(context))!["title"]!.GetValue<string>().ShouldBe("The request is too large.");
+            logger.Entries.ShouldNotContain(e => e.Level == LogLevel.Error);
+        }
+
+        [Fact]
         public async Task ResponseAlreadyStarted_RethrowsAndWritesNoBody()
         {
             var context = NewContext();

@@ -3,6 +3,7 @@ using ClefCraft.Application.Contracts.Analytics;
 using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
+using ClefCraft.Application.Exceptions;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems;
 using ClefCraft.Domain;
 using MediatR;
@@ -44,6 +45,11 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem
             var userId = _userService.UserId;
 
             await _boardAccessService.EnsureBoardOwnedByUserAsync(request.BoardId, userId);
+
+            // An item is created onto a column of its own board; a column id from another board
+            // would leave the item on no board's view.
+            if (!await _boardItemRepository.IsColumnOnBoardAsync(request.BoardId, request.BoardColumnId))
+                throw new BadRequestException("The column does not belong to this board.");
 
             var boardItem = new Domain.BoardItem
             {

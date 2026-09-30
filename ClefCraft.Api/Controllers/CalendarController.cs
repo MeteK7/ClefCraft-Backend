@@ -1,4 +1,5 @@
-﻿using ClefCraft.Application.Contracts.Identity;
+﻿using ClefCraft.Application.Contracts.FileAttachment;
+using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Features.CalendarEventCollaborators;
 using ClefCraft.Application.Features.CalendarEventCollaborators.Commands.RemoveCalendarEventCollaborator;
 using ClefCraft.Application.Features.CalendarEventCollaborators.Queries.GetCalendarEventCollaborators;
@@ -18,6 +19,7 @@ using ClefCraft.Identity.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace ClefCraft.API.Controllers
 {
@@ -28,16 +30,18 @@ namespace ClefCraft.API.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IUserService _userService;
-        private readonly IWebHostEnvironment _env;
+        private readonly IFileAttachmentService _fileService;
+
+        private static readonly FileExtensionContentTypeProvider ContentTypes = new();
 
         public CalendarController(
             IMediator mediator,
             IUserService userService,
-            IWebHostEnvironment env)
+            IFileAttachmentService fileService)
         {
             _mediator = mediator;
             _userService = userService;
-            _env = env;
+            _fileService = fileService;
         }
 
         // ======================================================================
@@ -216,7 +220,11 @@ namespace ClefCraft.API.Controllers
         // ATTACHMENTS
         // ======================================================================
 
+        // Just above AttachmentLimits.MaxUploadSizeBytes, so an allowed upload always reaches the
+        // validator (which gives per-file 400s) and only a truly oversized body is refused with 413.
         [HttpPost("{eventId}/attachments")]
+        [RequestSizeLimit(AttachmentLimits.MaxRequestBodyBytes)]
+        [RequestFormLimits(MultipartBodyLengthLimit = AttachmentLimits.MaxRequestBodyBytes)]
         public async Task<IActionResult> UploadAttachment(
             int eventId,
             [FromForm] List<IFormFile> files)
@@ -248,28 +256,20 @@ namespace ClefCraft.API.Controllers
             if (attachment == null)
                 return NotFound();
 
-            var uploadsRoot = Path.GetFullPath(
-                Path.Combine(_env.ContentRootPath, "uploads"));
-            var fullPath = Path.GetFullPath(attachment.StoredFilePath);
-
-            if (!fullPath.StartsWith(uploadsRoot + Path.DirectorySeparatorChar,
-                    StringComparison.OrdinalIgnoreCase))
-            {
-                return BadRequest("Invalid file path.");
-            }
-
-            if (!System.IO.File.Exists(fullPath))
+            // Null when the file is gone or its stored path lies outside the storage root.
+            var stream = await _fileService.OpenReadAsync(attachment.StoredFilePath);
+            if (stream == null)
                 return NotFound();
 
-            var memory = new MemoryStream();
-            await using (var stream = new FileStream(
-                fullPath, FileMode.Open, FileAccess.Read))
-            {
-                await stream.CopyToAsync(memory);
-            }
-            memory.Position = 0;
+            // Any file type can be uploaded, so never echo the uploader's Content-Type: derive it
+            // from the extension, force a download (File(..., fileName) sends
+            // Content-Disposition: attachment) and forbid MIME sniffing.
+            if (!ContentTypes.TryGetContentType(attachment.FileName, out var contentType))
+                contentType = "application/octet-stream";
 
-            return File(memory, attachment.ContentType, attachment.FileName);
+            Response.Headers["X-Content-Type-Options"] = "nosniff";
+
+            return File(stream, contentType, attachment.FileName);
         }
 
         [HttpDelete("attachments/{id}")]

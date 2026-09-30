@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using ClefCraft.Application.Contracts.FileAttachment;
 using ClefCraft.Application.Contracts.Calendar;
+using ClefCraft.Application.Exceptions;
 
 namespace ClefCraft.Application.Features.Calendar.Commands.UploadCalendarAttachment
 {
@@ -39,6 +40,11 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UploadCalendarAttachm
             CancellationToken cancellationToken)
         {
             await _calendarAccessService.EnsureEventOwnedByUserAsync(request.EventId, request.UserId);
+
+            // Validate the whole batch before writing anything, so an upload is all-or-nothing.
+            var validationResult = await new UploadCalendarAttachmentCommandValidator().ValidateAsync(request, cancellationToken);
+            if (!validationResult.IsValid)
+                throw new BadRequestException("Some files can't be uploaded.", validationResult);
 
             var entities = new List<(CalendarEventAttachmentDto Dto, CalendarEventAttachment Entity)>();
 

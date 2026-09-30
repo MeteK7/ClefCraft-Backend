@@ -112,6 +112,7 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
             var item = MakeItem();
             item.AssigneeId = "member-1";
             var repo = MakeRepoReturning(item);
+            repo.Setup(r => r.IsColumnOnBoardAsync(10, 5)).ReturnsAsync(true);
             var memberRepo = MakeMemberRepo();
             var handler = MakeHandler(repo, new Mock<ITaskLifecycleService>(), memberRepo: memberRepo);
 

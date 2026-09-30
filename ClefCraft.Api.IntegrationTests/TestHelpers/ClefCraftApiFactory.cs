@@ -22,6 +22,9 @@ namespace ClefCraft.Api.IntegrationTests.TestHelpers
 
         private readonly string _databaseName = Guid.NewGuid().ToString();
 
+        /// <summary>Per-factory attachment storage root, deleted when the factory is disposed.</summary>
+        public string AttachmentRoot { get; } = Path.Combine(Path.GetTempPath(), "clefcraft-tests", Guid.NewGuid().ToString());
+
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             // Program.cs skips its startup migrations in this environment.
@@ -31,7 +34,8 @@ namespace ClefCraft.Api.IntegrationTests.TestHelpers
                 config.AddInMemoryCollection(new Dictionary<string, string?>
                 {
                     ["JwtSettings:Key"] = "integration-test-signing-key-needs-at-least-32-bytes",
-                    ["AIService:BaseUrl"] = "http://ai.invalid"
+                    ["AIService:BaseUrl"] = "http://ai.invalid",
+                    ["AttachmentStorage:RootPath"] = AttachmentRoot
                 }));
 
             builder.ConfigureServices(services =>
@@ -47,6 +51,14 @@ namespace ClefCraft.Api.IntegrationTests.TestHelpers
                 services.AddDbContext<ClefCraftDatabaseContext>(o => o.UseInMemoryDatabase($"{_databaseName}-app"));
                 services.AddDbContext<ClefCraftIdentityDbContext>(o => o.UseInMemoryDatabase($"{_databaseName}-identity"));
             });
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (disposing && Directory.Exists(AttachmentRoot))
+                Directory.Delete(AttachmentRoot, recursive: true);
         }
 
         private sealed class StubAIService : IAIService

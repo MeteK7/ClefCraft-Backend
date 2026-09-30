@@ -15,19 +15,22 @@ namespace ClefCraft.Application.Features.Board.Commands.CreateBoard
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IGenericRepository<Domain.BoardColumnMapping> _columnMappingRepository;
 
         public CreateBoardCommandHandler(
             IBoardRepository boardRepository,
             IBoardMemberRepository boardMemberRepository,
             IMapper mapper,
             IUserService userService,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IGenericRepository<Domain.BoardColumnMapping> columnMappingRepository)
         {
             _boardRepository = boardRepository;
             _boardMemberRepository = boardMemberRepository;
             _mapper = mapper;
             _userService = userService;
             _unitOfWork = unitOfWork;
+            _columnMappingRepository = columnMappingRepository;
         }
 
         public async Task<BoardDto> Handle(CreateBoardCommand request, CancellationToken cancellationToken)
@@ -59,6 +62,19 @@ namespace ClefCraft.Application.Features.Board.Commands.CreateBoard
             };
 
             await _boardMemberRepository.CreateAsync(membership);
+
+            // A board is only usable with columns: items are created onto a column. Each board
+            // gets its own BoardColumn rows, added in lane order so their ids ascend in that order
+            // (the order the board displays them in).
+            foreach (var title in BoardColumnDefaults.Titles)
+            {
+                await _columnMappingRepository.CreateAsync(new Domain.BoardColumnMapping
+                {
+                    BoardId = board.Id,
+                    BoardColumn = new Domain.BoardColumn { Title = title }
+                });
+            }
+
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return _mapper.Map<BoardDto>(board);
