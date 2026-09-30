@@ -79,6 +79,14 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
                 throw new BadRequestException("The assignee must be a member of this board.");
             }
 
+            // Moving the item (edit or SwitchColumn) must stay within its own board. An unchanged
+            // column isn't re-checked, so existing items keep saving as they are.
+            if (request.BoardColumnId != boardItem.BoardColumnId
+                && !await _boardItemRepository.IsColumnOnBoardAsync(boardItem.BoardId, request.BoardColumnId))
+            {
+                throw new BadRequestException("The column does not belong to this board.");
+            }
+
             var previousStatusId = boardItem.BoardItemStatus?.StatusId;
             var previousAssignee = boardItem.AssigneeId;
 

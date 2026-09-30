@@ -39,6 +39,8 @@ namespace ClefCraft.Persistence.Repositories
                     .Where(bi => memberBoardIds.Contains(bi.BoardId)))
                     .ThenInclude(bi => bi.BoardItemTags)
                         .ThenInclude(t => t.Tag)
+                // Column ids ascend in lane order (default and seeded columns are created that way).
+                .OrderBy(bc => bc.Id)
                 .ToListAsync();
         }
 
@@ -60,6 +62,8 @@ namespace ClefCraft.Persistence.Repositories
                     .Where(bi => bi.BoardId == boardId))
                     .ThenInclude(bi => bi.BoardItemTags)
                         .ThenInclude(t => t.Tag)
+                // Column ids ascend in lane order (default and seeded columns are created that way).
+                .OrderBy(bc => bc.Id)
                 .ToListAsync();
         }
 
@@ -85,6 +89,12 @@ namespace ClefCraft.Persistence.Repositories
                                  .ToListAsync(); // Get the list of BoardItemTags
         }
 
+
+        public async Task<bool> IsColumnOnBoardAsync(int boardId, int boardColumnId)
+        {
+            return await _context.BoardColumnMappings
+                .AnyAsync(m => m.BoardId == boardId && m.BoardColumnId == boardColumnId);
+        }
 
         public async Task<BoardItem?> GetBoardItemById(int id)
         {

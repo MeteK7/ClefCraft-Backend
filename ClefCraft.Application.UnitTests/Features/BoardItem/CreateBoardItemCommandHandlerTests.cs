@@ -22,6 +22,7 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
         {
             Domain.BoardItem? captured = null;
             var repo = new Mock<IBoardItemRepository>();
+            repo.Setup(r => r.IsColumnOnBoardAsync(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(true);
             repo.Setup(r => r.AddBoardItem(It.IsAny<Domain.BoardItem>()))
                 .Callback<Domain.BoardItem>(b => { b.Id = 55; captured = b; })
                 .Returns(Task.CompletedTask);
@@ -72,6 +73,7 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
             // default value (0) instead. Track call order to confirm Add -> lifecycle -> save.
             var callOrder = new List<string>();
             var repo = new Mock<IBoardItemRepository>();
+            repo.Setup(r => r.IsColumnOnBoardAsync(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(true);
             repo.Setup(r => r.AddBoardItem(It.IsAny<Domain.BoardItem>()))
                 .Callback<Domain.BoardItem>(b => { b.Id = 7; callOrder.Add("Add"); })
                 .Returns(Task.CompletedTask);
