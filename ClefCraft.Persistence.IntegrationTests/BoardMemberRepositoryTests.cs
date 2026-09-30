@@ -26,7 +26,8 @@ namespace ClefCraft.Persistence.IntegrationTests
                 memberRepository,
                 new Mock<IMapper>().Object,
                 userService.Object,
-                new EfUnitOfWork(context));
+                new EfUnitOfWork(context),
+                new GenericRepository<BoardColumnMapping>(context));
 
             await handler.Handle(new CreateBoardCommand { Title = "Scales" }, CancellationToken.None);
             var boardId = context.Boards.Single().Id;

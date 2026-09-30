@@ -20,7 +20,13 @@ namespace ClefCraft.Application.UnitTests.Features.Board
             CreateBoardCommandHandler Handler,
             Mock<IBoardRepository> BoardRepo,
             Mock<IBoardMemberRepository> MemberRepo
-        ) MakeHandler()
+        ) MakeHandler() => MakeHandler(new Mock<IGenericRepository<BoardColumnMapping>>());
+
+        private static (
+            CreateBoardCommandHandler Handler,
+            Mock<IBoardRepository> BoardRepo,
+            Mock<IBoardMemberRepository> MemberRepo
+        ) MakeHandler(Mock<IGenericRepository<BoardColumnMapping>> columnMappingRepo)
         {
             var boardRepo = new Mock<IBoardRepository>();
             boardRepo.Setup(r => r.CreateAsync(It.IsAny<ClefCraft.Domain.Board>()))
@@ -40,7 +46,7 @@ namespace ClefCraft.Application.UnitTests.Features.Board
             unitOfWork.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
 
             var handler = new CreateBoardCommandHandler(
-                boardRepo.Object, memberRepo.Object, mapper.Object, userService.Object, unitOfWork.Object);
+                boardRepo.Object, memberRepo.Object, mapper.Object, userService.Object, unitOfWork.Object, columnMappingRepo.Object);
 
             return (handler, boardRepo, memberRepo);
         }
@@ -61,6 +67,23 @@ namespace ClefCraft.Application.UnitTests.Features.Board
             result.Id.ShouldBe(42);
             result.Title.ShouldBe("New Board");
             result.OwnerUserId.ShouldBe(OwnerId);
+        }
+
+        [Fact]
+        public async Task Handle_GivesTheNewBoardItsOwnFiveDefaultColumns_InLaneOrder()
+        {
+            var added = new List<BoardColumnMapping>();
+            var columnMappingRepo = new Mock<IGenericRepository<BoardColumnMapping>>();
+            columnMappingRepo.Setup(r => r.CreateAsync(It.IsAny<BoardColumnMapping>()))
+                .Callback<BoardColumnMapping>(added.Add)
+                .Returns(Task.CompletedTask);
+            var (handler, _, _) = MakeHandler(columnMappingRepo);
+
+            await handler.Handle(new CreateBoardCommand { Title = "New Board" }, CancellationToken.None);
+
+            added.Select(m => m.BoardId).ShouldAllBe(id => id == 42);
+            added.Select(m => m.BoardColumn.Title).ShouldBe(new[] { "Backlog", "To Do", "In Progress", "In Review", "Done" });
+            added.Select(m => m.BoardColumn).Distinct().Count().ShouldBe(5); // new rows of its own, never shared
         }
 
         [Theory]
