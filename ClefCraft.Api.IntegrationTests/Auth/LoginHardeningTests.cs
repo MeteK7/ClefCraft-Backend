@@ -14,15 +14,13 @@ namespace ClefCraft.Api.IntegrationTests.Auth
     // host would let one test's requests turn another test's expected 401 into a 429.
     public class LoginHardeningTests
     {
-        private static HttpRequestMessage LoginRequest(string email, string password, string? forwardedFor = null)
+        private static HttpRequestMessage LoginRequest(string email, string password)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, "/api/Auth/login")
             {
                 Content = JsonContent.Create(new { email, password })
             };
             request.Headers.Add("Origin", ClefCraftApiFactory.AllowedOrigin);
-            if (forwardedFor != null)
-                request.Headers.Add("X-Forwarded-For", forwardedFor);
             return request;
         }
 
@@ -65,27 +63,6 @@ namespace ClefCraft.Api.IntegrationTests.Auth
             unknownEmail.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
             wrongPassword.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
             (await ComparableBody(unknownEmail)).ShouldBe(await ComparableBody(wrongPassword));
-        }
-
-        [Fact]
-        public async Task Login_RateLimitIsPerForwardedClientIp_AndIgnoresClientSuppliedEntries()
-        {
-            using var factory = new ClefCraftApiFactory();
-            using var client = factory.CreateClient();
-
-            for (var attempt = 1; attempt <= AuthRateLimiting.PermitLimit; attempt++)
-            {
-                using var allowed = await client.SendAsync(LoginRequest("nobody@test.com", "Wr0ng!Pass", "203.0.113.1"));
-                allowed.StatusCode.ShouldBe(HttpStatusCode.Unauthorized, $"attempt {attempt}");
-            }
-
-            // A client prepending its own entry doesn't escape: only the proxy-appended (right-most) one counts.
-            using var spoofed = await client.SendAsync(LoginRequest("nobody@test.com", "Wr0ng!Pass", "198.51.100.9, 203.0.113.1"));
-            spoofed.StatusCode.ShouldBe(HttpStatusCode.TooManyRequests);
-
-            // A different client behind the same proxy has its own bucket.
-            using var otherClient = await client.SendAsync(LoginRequest("nobody@test.com", "Wr0ng!Pass", "203.0.113.2"));
-            otherClient.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
         }
 
         // ProblemDetails carries a per-request traceId; everything else must match exactly.

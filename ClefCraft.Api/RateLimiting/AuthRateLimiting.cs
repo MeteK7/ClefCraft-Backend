@@ -6,7 +6,8 @@ namespace ClefCraft.Api.RateLimiting
     /// Per-client-IP limit for the credential endpoints (login, register), applied with
     /// [EnableRateLimiting(AuthRateLimiting.PolicyName)]. Account lockout (IdentityOptions.Lockout)
     /// stops guessing against one account; this slows spraying across many accounts from one client.
-    /// The client IP is only meaningful behind a proxy once UseForwardedHeaders has run.
+    /// Behind a reverse proxy, configure UseForwardedHeaders for that proxy, or every client shares
+    /// the proxy's IP and therefore one bucket.
     /// </summary>
     public static class AuthRateLimiting
     {
