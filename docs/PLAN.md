@@ -124,7 +124,7 @@ Today, getting a working stack takes a manually installed Postgres, plus at leas
 ---
 
 ## 3. Features: incomplete or in need of polish
-- **Stub routes** registered in `app.routes.ts`, each a 12-line component: `event-tracker`, `playalong`, `metronome`, `tuner`. `management` is an "Under Construction" page. The music features are the product's namesake but none of them exist yet. *Decided:* remove them until they're built (see section 6).
+- **Stub routes** registered in `app.routes.ts`, each a 12-line component: `event-tracker`, `playalong`, `metronome`, `tuner`. `management` is an "Under Construction" page. The music features are the product's namesake but none of them exist yet. *Decided:* remove the four music/tracker stubs until they're built, and keep the Management placeholder (see section 6).
 - `/protected` (`protected-workspace`) is where unauthenticated users land. Check whether you want this landing page, or a straight redirect to `/login?returnUrl=`.
 - The app `<title>` is "Activity Management" (`index.html`, `app.component.ts`). That's a leftover name.
 
@@ -172,7 +172,8 @@ After that, feature work resumes. P2 items are done once a deployment target is 
 
 ## 6. Decisions
 - **AI attendance feature: option (a) for now.** Replace it with a simple, transparent rule-based score computed in .NET. Remove the VIEW-signal writes from the calendar GET path (`GetCalendarEventsQueryHandler`). Don't delete the `clef_ai` repo; the backend just stops calling it. ML may come back later, once real usage data exists. This narrows P1.1 to the .NET replacement. The `clef_ai` findings in P1.1 stay on record for that later work.
-- **Stub routes:** `event-tracker`, `playalong`, `metronome`, `tuner` and `management` are removed from navigation and routing for now (done in step 1). **They are planned features:** a practice/event tracker, play-along, metronome and tuner (the music tools that are the product's namesake), plus an admin management area. They come back when they're actually built.
+- **Stub routes:** `event-tracker`, `playalong`, `metronome` and `tuner` are removed from navigation and routing, and their placeholder components deleted, for now (done in step 1). **They are planned features:** a practice/event tracker, play-along and the music tools (metronome, tuner) that are the product's namesake. They come back when they're actually built.
+- **Management page: kept.** `/management` stays as the "Under Construction" placeholder for the future admin area. It is routed (behind `authGuard`) and linked from the sidebar and the home page for administrators only. It was removed by mistake in step 1 and restored afterwards.
 - **DbContexts (merge `ClefCraftIdentityDbContext` and `ClefCraftDatabaseContext`, or keep them separate):** to be decided before step 3.
 
 ## Verification
