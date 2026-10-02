@@ -24,8 +24,6 @@ namespace ClefCraft.Identity
     {
         public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
         {
-            var cs = configuration.GetConnectionString("ClefCraftDatabaseConnectionString");
-
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
             services.AddDbContext<ClefCraftIdentityDbContext>(options =>
@@ -49,7 +47,7 @@ namespace ClefCraft.Identity
             services.AddScoped<DevelopmentUserSeeder>();
 
             services.AddTransient<IAuthService, AuthService>();
-            services.AddTransient<IUserService, UserService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 
