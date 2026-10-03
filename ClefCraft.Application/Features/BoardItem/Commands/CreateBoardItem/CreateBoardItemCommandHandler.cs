@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ClefCraft.Application.Contracts.Analytics;
+﻿using ClefCraft.Application.Contracts.Analytics;
 using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
@@ -19,7 +18,6 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem
     {
         private readonly IBoardItemRepository _boardItemRepository;
         private readonly IBoardAccessService _boardAccessService;
-        private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly ITaskLifecycleService _taskLifecycleService;
         private readonly IUnitOfWork _unitOfWork;
@@ -27,14 +25,12 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem
         public CreateBoardItemCommandHandler(
             IBoardItemRepository boardItemRepository,
             IBoardAccessService boardAccessService,
-            IMapper mapper,
             IUserService userService,
             ITaskLifecycleService taskLifecycleService,
             IUnitOfWork unitOfWork)
         {
             _boardItemRepository = boardItemRepository;
             _boardAccessService = boardAccessService;
-            _mapper = mapper;
             _userService = userService;
             _taskLifecycleService = taskLifecycleService;
             _unitOfWork = unitOfWork;
@@ -67,7 +63,7 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return _mapper.Map<BoardItemDto>(boardItem);
+            return BoardItemMapper.ToDto(boardItem);
         }
     }
 }

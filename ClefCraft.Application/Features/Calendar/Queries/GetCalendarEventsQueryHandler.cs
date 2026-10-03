@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ClefCraft.Application.Contracts.Analytics;
+﻿using ClefCraft.Application.Contracts.Analytics;
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Models.Analytics;
@@ -17,7 +16,6 @@ namespace ClefCraft.Application.Features.Calendar.Queries
         private readonly IAttendancePredictionService _predictionService;
         private readonly IUserInteractionService _interactionService;
         private readonly ICalendarReminderRepository _reminderRepo;
-        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
         public GetCalendarEventsQueryHandler(
@@ -28,7 +26,6 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             IAttendancePredictionService predictionService,
             IUserInteractionService interactionService,
             ICalendarReminderRepository reminderRepo,
-            IMapper mapper,
             IUnitOfWork unitOfWork)
         {
             _eventRepo = eventRepo;
@@ -38,7 +35,6 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             _predictionService = predictionService;
             _interactionService = interactionService;
             _reminderRepo = reminderRepo;
-            _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
 
@@ -58,7 +54,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
 
             // 3. Map to DTOs and trim to window
             var dtos = expanded
-                .Select(e => _mapper.Map<CalendarEventDto>(e))
+                .Select(e => CalendarMapper.ToDto(e))
                 .Where(e => e.StartDate < request.RangeEnd && e.EndDate > request.RangeStart)
                 .ToList();
 

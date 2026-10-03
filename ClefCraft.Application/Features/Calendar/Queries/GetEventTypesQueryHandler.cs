@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ClefCraft.Application.Contracts.Persistence;
+﻿using ClefCraft.Application.Contracts.Persistence;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -13,14 +12,11 @@ namespace ClefCraft.Application.Features.Calendar.Queries
         : IRequestHandler<GetEventTypesQuery, List<EventTypeDto>>
     {
         private readonly IEventTypeRepository _eventTypeRepository;
-        private readonly IMapper _mapper;
 
         public GetEventTypesQueryHandler(
-            IEventTypeRepository eventTypeRepository,
-            IMapper mapper)
+            IEventTypeRepository eventTypeRepository)
         {
             _eventTypeRepository = eventTypeRepository;
-            _mapper = mapper;
         }
 
         public async Task<List<EventTypeDto>> Handle(
@@ -30,7 +26,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             var types = await _eventTypeRepository
                 .GetByUserIdAsync(request.UserId);
 
-            var result = _mapper.Map<List<EventTypeDto>>(types);
+            var result = types.Select(CalendarMapper.ToDto).ToList();
 
             return result;
         }

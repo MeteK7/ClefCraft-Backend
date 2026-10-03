@@ -1,4 +1,3 @@
-using AutoMapper;
 using ClefCraft.Application.Contracts.Analytics;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
@@ -37,9 +36,8 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
             var accessService = MockAccessServices.GetMockBoardAccessService(authorized: false);
             var userService = new Mock<IUserService>();
             userService.Setup(u => u.UserId).Returns(CallerUserId);
-            var mapper = new Mock<IMapper>();
 
-            var handler = new GetBoardItemByIdHandler(repo.Object, accessService.Object, userService.Object, mapper.Object);
+            var handler = new GetBoardItemByIdHandler(repo.Object, accessService.Object, userService.Object);
 
             await Should.ThrowAsync<ForbiddenAccessException>(() =>
                 handler.Handle(new GetBoardItemByIdQuery(1), CancellationToken.None));
@@ -57,10 +55,8 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
             var accessService = MockAccessServices.GetMockBoardAccessService(authorized: true);
             var userService = new Mock<IUserService>();
             userService.Setup(u => u.UserId).Returns(CallerUserId);
-            var mapper = new Mock<IMapper>();
-            mapper.Setup(m => m.Map<BoardItemByIdDto>(item)).Returns(new BoardItemByIdDto { Id = item.Id });
 
-            var handler = new GetBoardItemByIdHandler(repo.Object, accessService.Object, userService.Object, mapper.Object);
+            var handler = new GetBoardItemByIdHandler(repo.Object, accessService.Object, userService.Object);
 
             var result = await handler.Handle(new GetBoardItemByIdQuery(1), CancellationToken.None);
 
@@ -84,7 +80,6 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
                 new Mock<IStatusRepository>().Object,
                 new Mock<IPriorityRepository>().Object,
                 new Mock<ITagRepository>().Object,
-                new Mock<IMapper>().Object,
                 userService.Object,
                 new Mock<ITaskLifecycleService>().Object,
                 new Mock<IUnitOfWork>().Object,
@@ -132,7 +127,6 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
             var handler = new CreateBoardItemCommandHandler(
                 repo.Object,
                 accessService.Object,
-                new Mock<IMapper>().Object,
                 userService.Object,
                 new Mock<ITaskLifecycleService>().Object,
                 new Mock<IUnitOfWork>().Object);

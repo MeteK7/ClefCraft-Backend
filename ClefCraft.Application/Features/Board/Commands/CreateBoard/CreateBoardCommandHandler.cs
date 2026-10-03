@@ -1,4 +1,3 @@
-using AutoMapper;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Exceptions;
@@ -12,7 +11,6 @@ namespace ClefCraft.Application.Features.Board.Commands.CreateBoard
     {
         private readonly IBoardRepository _boardRepository;
         private readonly IBoardMemberRepository _boardMemberRepository;
-        private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IGenericRepository<Domain.BoardColumnMapping> _columnMappingRepository;
@@ -20,14 +18,12 @@ namespace ClefCraft.Application.Features.Board.Commands.CreateBoard
         public CreateBoardCommandHandler(
             IBoardRepository boardRepository,
             IBoardMemberRepository boardMemberRepository,
-            IMapper mapper,
             IUserService userService,
             IUnitOfWork unitOfWork,
             IGenericRepository<Domain.BoardColumnMapping> columnMappingRepository)
         {
             _boardRepository = boardRepository;
             _boardMemberRepository = boardMemberRepository;
-            _mapper = mapper;
             _userService = userService;
             _unitOfWork = unitOfWork;
             _columnMappingRepository = columnMappingRepository;
@@ -77,7 +73,7 @@ namespace ClefCraft.Application.Features.Board.Commands.CreateBoard
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return _mapper.Map<BoardDto>(board);
+            return BoardMapper.ToDto(board);
         }
     }
 }

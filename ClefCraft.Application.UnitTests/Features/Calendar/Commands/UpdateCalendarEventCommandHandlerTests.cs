@@ -1,4 +1,3 @@
-using AutoMapper;
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
@@ -85,8 +84,6 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
             var userService = new Mock<IUserService>();
             userService.Setup(u => u.UserId).Returns("user-1");
 
-            var mapper = new Mock<IMapper>();
-            mapper.Setup(m => m.Map<CalendarEventDto>(It.IsAny<CalendarEvent>())).Returns(new CalendarEventDto());
 
             var unitOfWork = new Mock<IUnitOfWork>();
             unitOfWork.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
@@ -100,7 +97,6 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
                 segmentRepo.Object,
                 exceptionRepo.Object,
                 userService.Object,
-                mapper.Object,
                 unitOfWork.Object,
                 reminderScheduler.Object);
 

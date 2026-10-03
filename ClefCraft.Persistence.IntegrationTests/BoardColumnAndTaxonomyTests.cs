@@ -1,4 +1,3 @@
-using AutoMapper;
 using ClefCraft.Application.Features.Board.Commands.CreateBoard;
 using ClefCraft.Domain;
 using ClefCraft.Persistence.DatabaseContext;
@@ -27,7 +26,6 @@ namespace ClefCraft.Persistence.IntegrationTests
             var handler = new CreateBoardCommandHandler(
                 new BoardRepository(context),
                 new BoardMemberRepository(context),
-                new Mock<IMapper>().Object,
                 DatabaseContextFactory.CreateUserServiceMock("owner-1").Object,
                 new EfUnitOfWork(context),
                 new GenericRepository<BoardColumnMapping>(context));

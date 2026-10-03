@@ -1,4 +1,3 @@
-using AutoMapper;
 using ClefCraft.Application.Contracts.Analytics;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
@@ -45,7 +44,6 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
                 new Mock<IStatusRepository>().Object,
                 new Mock<IPriorityRepository>().Object,
                 new Mock<ITagRepository>().Object,
-                new Mock<IMapper>().Object,
                 Caller().Object,
                 new Mock<ITaskLifecycleService>().Object,
                 unitOfWork.Object,
@@ -61,7 +59,7 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
             var unitOfWork = new Mock<IUnitOfWork>();
             var handler = new CreateBoardItemCommandHandler(
                 repo.Object, MockAccessServices.GetMockBoardAccessService(authorized: true).Object,
-                new Mock<IMapper>().Object, Caller().Object, new Mock<ITaskLifecycleService>().Object, unitOfWork.Object);
+                Caller().Object, new Mock<ITaskLifecycleService>().Object, unitOfWork.Object);
 
             var ex = await Should.ThrowAsync<BadRequestException>(() => handler.Handle(
                 new CreateBoardItemCommand { Title = "Etude", BoardId = BoardId, BoardColumnId = OtherBoardsColumn, StatusId = 1, PriorityId = 1 },

@@ -1,4 +1,3 @@
-using AutoMapper;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Exceptions;
@@ -31,7 +30,7 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
             var userService = new Mock<IUserService>();
             userService.Setup(u => u.UserId).Returns(CallerUserId);
 
-            var handler = new GetTagsHandler(repo.Object, accessService.Object, userService.Object, new Mock<IMapper>().Object);
+            var handler = new GetTagsHandler(repo.Object, accessService.Object, userService.Object);
 
             await Should.ThrowAsync<ForbiddenAccessException>(() =>
                 handler.Handle(new GetTagsQuery { BoardId = BoardId }, CancellationToken.None));
@@ -49,10 +48,8 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
             var accessService = MockAccessServices.GetMockBoardAccessService(authorized: true);
             var userService = new Mock<IUserService>();
             userService.Setup(u => u.UserId).Returns(CallerUserId);
-            var mapper = new Mock<IMapper>();
-            mapper.Setup(m => m.Map<List<TagDto>>(tags)).Returns(new List<TagDto> { new TagDto { Id = 1, Name = "urgent" } });
 
-            var handler = new GetTagsHandler(repo.Object, accessService.Object, userService.Object, mapper.Object);
+            var handler = new GetTagsHandler(repo.Object, accessService.Object, userService.Object);
 
             var result = await handler.Handle(new GetTagsQuery { BoardId = BoardId }, CancellationToken.None);
 
@@ -67,7 +64,7 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
             var userService = new Mock<IUserService>();
             userService.Setup(u => u.UserId).Returns(CallerUserId);
 
-            var handler = new GetStatusesHandler(repo.Object, accessService.Object, userService.Object, new Mock<IMapper>().Object);
+            var handler = new GetStatusesHandler(repo.Object, accessService.Object, userService.Object);
 
             await Should.ThrowAsync<ForbiddenAccessException>(() =>
                 handler.Handle(new GetStatusesQuery { BoardId = BoardId }, CancellationToken.None));
@@ -83,7 +80,7 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
             var userService = new Mock<IUserService>();
             userService.Setup(u => u.UserId).Returns(CallerUserId);
 
-            var handler = new GetPrioritiesHandler(repo.Object, accessService.Object, userService.Object, new Mock<IMapper>().Object);
+            var handler = new GetPrioritiesHandler(repo.Object, accessService.Object, userService.Object);
 
             await Should.ThrowAsync<ForbiddenAccessException>(() =>
                 handler.Handle(new GetPrioritiesQuery { BoardId = BoardId }, CancellationToken.None));

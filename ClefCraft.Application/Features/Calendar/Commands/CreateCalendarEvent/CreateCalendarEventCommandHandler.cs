@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ClefCraft.Application.Common.Helpers;
+﻿using ClefCraft.Application.Common.Helpers;
 using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
@@ -27,7 +26,6 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
         private readonly ICalendarReminderRepository _reminderRepo;
         private readonly IReminderSchedulerService _reminderSchedulerService;
         private readonly IBoardAccessService _boardAccessService;
-        private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly IUnitOfWork _unitOfWork;
 
@@ -38,7 +36,6 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
             ICalendarReminderRepository reminderRepo,
             IReminderSchedulerService reminderSchedulerService,
             IBoardAccessService boardAccessService,
-            IMapper mapper,
             IUserService userService,
             IUnitOfWork unitOfWork)
         {
@@ -48,7 +45,6 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
             _reminderRepo = reminderRepo;
             _reminderSchedulerService = reminderSchedulerService;
             _boardAccessService = boardAccessService;
-            _mapper = mapper;
             _userService = userService;
             _unitOfWork = unitOfWork;
         }
@@ -181,7 +177,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
             }
 
-            return _mapper.Map<CalendarEventDto>(calendarEvent);
+            return CalendarMapper.ToDto(calendarEvent);
         }
     }
 }

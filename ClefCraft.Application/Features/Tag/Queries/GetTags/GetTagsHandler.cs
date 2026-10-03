@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using ClefCraft.Application.Contracts.Authorization;
+﻿using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
+using ClefCraft.Application.Features.BoardItem;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -16,18 +16,15 @@ namespace ClefCraft.Application.Features.Tag.Queries.GetTags
         private readonly ITagRepository _tagRepository;
         private readonly IBoardAccessService _boardAccessService;
         private readonly IUserService _userService;
-        private readonly IMapper _mapper;
 
         public GetTagsHandler(
             ITagRepository tagRepository,
             IBoardAccessService boardAccessService,
-            IUserService userService,
-            IMapper mapper)
+            IUserService userService)
         {
             _tagRepository = tagRepository;
             _boardAccessService = boardAccessService;
             _userService = userService;
-            _mapper = mapper;
         }
 
         public async Task<List<TagDto>> Handle(GetTagsQuery request, CancellationToken cancellationToken)
@@ -37,7 +34,7 @@ namespace ClefCraft.Application.Features.Tag.Queries.GetTags
             var tags = await _tagRepository
                 .GetTagsByBoardIdAsync(request.BoardId);
 
-            return _mapper.Map<List<TagDto>>(tags);
+            return tags.Select(BoardItemMapper.ToDto).ToList();
         }
     }
 }
