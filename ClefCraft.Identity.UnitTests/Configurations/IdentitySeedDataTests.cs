@@ -47,5 +47,19 @@ namespace ClefCraft.Identity.UnitTests.Configurations
 
             seed.ShouldContain(r => (string)r[nameof(IdentityRole.NormalizedName)]! == "ADMINISTRATOR");
         }
+
+        // A seed value that changes between model builds counts as a pending model change, which
+        // makes Migrate() throw at startup.
+        [Fact]
+        public void Model_SeedsTheAdministratorRoleIdenticallyOnEveryBuild()
+        {
+            static object? Stamp() => DesignTimeModel().FindEntityType(typeof(IdentityRole))!.GetSeedData()
+                .Single(r => (string)r[nameof(IdentityRole.NormalizedName)]! == "ADMINISTRATOR")[nameof(IdentityRole.ConcurrencyStamp)];
+
+            var first = Stamp();
+
+            first.ShouldNotBeNull();
+            Stamp().ShouldBe(first);
+        }
     }
 }
