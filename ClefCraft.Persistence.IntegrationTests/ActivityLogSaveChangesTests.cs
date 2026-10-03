@@ -1,5 +1,7 @@
 using ClefCraft.Domain;
 using ClefCraft.Domain.Enums;
+using ClefCraft.Persistence.DatabaseContext;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using System;
@@ -134,6 +136,44 @@ namespace ClefCraft.Persistence.IntegrationTests
             updatedLogs[0].MetadataJson.ShouldContain("StartDate");
             updatedLogs[0].MetadataJson.ShouldContain("EndDate");
             updatedLogs[0].MetadataJson.ShouldContain("Importance");
+        }
+
+        // The reminder background service saves outside any HTTP request, so there is no user.
+        // On SQLite, as on Postgres, ActivityLogs.UserId is NOT NULL: an audit row without a user
+        // used to fail the save after the entity changes themselves had already been written.
+        [Fact]
+        public async Task Save_WithoutAUser_SavesTheChange_AndWritesNoActivityLog()
+        {
+            using var connection = new SqliteConnection("Data Source=:memory:");
+            connection.Open();
+            var options = new DbContextOptionsBuilder<ClefCraftDatabaseContext>().UseSqlite(connection).Options;
+
+            int queueId;
+            using (var userContext = new ClefCraftDatabaseContext(options, DatabaseContextFactory.CreateUserServiceMock().Object))
+            {
+                userContext.Database.EnsureCreated();
+                var reminder = new NotificationQueue
+                {
+                    UserId = "test-user",
+                    CalendarEventId = 1,
+                    ScheduledFor = DateTimeOffset.UtcNow,
+                    Message = "Lesson starts in 5 minutes"
+                };
+                userContext.NotificationQueues.Add(reminder);
+                await userContext.SaveChangesAsync();
+                queueId = reminder.Id;
+            }
+
+            using var backgroundContext = new ClefCraftDatabaseContext(options, DatabaseContextFactory.CreateUserServiceMock(null!).Object);
+            var logsBefore = await backgroundContext.ActivityLogs.CountAsync();
+            var pending = await backgroundContext.NotificationQueues.SingleAsync(q => q.Id == queueId);
+            pending.IsProcessed = true;
+            pending.ProcessedAt = DateTimeOffset.UtcNow;
+
+            await Should.NotThrowAsync(() => backgroundContext.SaveChangesAsync());
+
+            (await backgroundContext.ActivityLogs.CountAsync()).ShouldBe(logsBefore);
+            (await backgroundContext.NotificationQueues.AsNoTracking().SingleAsync(q => q.Id == queueId)).IsProcessed.ShouldBeTrue();
         }
     }
 }

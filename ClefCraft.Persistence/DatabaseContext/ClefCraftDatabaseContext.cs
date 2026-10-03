@@ -142,6 +142,11 @@ namespace ClefCraft.Persistence.DatabaseContext
                     entry.Entity.ModifiedBy = userId;
                 }
 
+                // Saves made outside a request (e.g. the reminder background service) have no
+                // user. ActivityLogs records user activity and requires a UserId, so skip it.
+                if (string.IsNullOrEmpty(userId))
+                    continue;
+
                 var entityType = entry.Entity.GetType().Name;
 
                 var actionType = entry.State switch
