@@ -4,6 +4,7 @@ using ClefCraft.Persistence.DatabaseContext;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -46,8 +47,12 @@ namespace ClefCraft.Api.IntegrationTests.TestHelpers
                 services.RemoveAll<IAIService>();
                 services.AddSingleton<IAIService, StubAIService>();
 
+                // AddDbContext keeps each configure callback (here UseNpgsql) as its own
+                // registration, so it has to be removed too or both providers apply.
                 services.RemoveAll<DbContextOptions<ClefCraftDatabaseContext>>();
                 services.RemoveAll<DbContextOptions<ClefCraftIdentityDbContext>>();
+                services.RemoveAll<IDbContextOptionsConfiguration<ClefCraftDatabaseContext>>();
+                services.RemoveAll<IDbContextOptionsConfiguration<ClefCraftIdentityDbContext>>();
                 services.AddDbContext<ClefCraftDatabaseContext>(o => o.UseInMemoryDatabase($"{_databaseName}-app"));
                 services.AddDbContext<ClefCraftIdentityDbContext>(o => o.UseInMemoryDatabase($"{_databaseName}-identity"));
             });
