@@ -1,14 +1,15 @@
-using AutoMapper;
+using ClefCraft.Application.Features.Board;
 using ClefCraft.Application.Features.Board.Queries.GetBoards;
 using ClefCraft.Application.Features.BoardColumn.Queries.GetBoardColumns;
+using ClefCraft.Application.Features.BoardItem;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItemById;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems;
 using ClefCraft.Application.Features.BoardItemRelations.DTOs;
+using ClefCraft.Application.Features.Calendar;
 using ClefCraft.Application.Features.Calendar.Queries;
 using ClefCraft.Application.Features.Priority.Queries.GetPriorities;
 using ClefCraft.Application.Features.Status.Queries.GetStatuses;
 using ClefCraft.Application.Features.Tag.Queries.GetTags;
-using ClefCraft.Application.MappingProfiles;
 using ClefCraft.Domain;
 
 namespace ClefCraft.Application.UnitTests.Mapping
@@ -20,28 +21,25 @@ namespace ClefCraft.Application.UnitTests.Mapping
     /// </summary>
     internal static class MappingUnderTest
     {
-        private static readonly IMapper Mapper =
-            new MapperConfiguration(cfg => cfg.AddMaps(typeof(BoardProfile).Assembly)).CreateMapper();
+        public static BoardDto ToBoardDto(Board board) => BoardMapper.ToDto(board);
+        public static List<BoardDto> ToBoardDtos(IEnumerable<Board> boards) => boards.Select(BoardMapper.ToDto).ToList();
 
-        public static BoardDto ToBoardDto(Board board) => Mapper.Map<BoardDto>(board);
-        public static List<BoardDto> ToBoardDtos(IEnumerable<Board> boards) => Mapper.Map<List<BoardDto>>(boards);
+        public static BoardColumnDto ToBoardColumnDto(BoardColumn column) => BoardMapper.ToDto(column);
+        public static List<BoardColumnDto> ToBoardColumnDtos(IEnumerable<BoardColumn> columns) => columns.Select(BoardMapper.ToDto).ToList();
 
-        public static BoardColumnDto ToBoardColumnDto(BoardColumn column) => Mapper.Map<BoardColumnDto>(column);
-        public static List<BoardColumnDto> ToBoardColumnDtos(IEnumerable<BoardColumn> columns) => Mapper.Map<List<BoardColumnDto>>(columns);
+        public static BoardItemDto ToBoardItemDto(BoardItem item) => BoardItemMapper.ToDto(item);
+        public static BoardItemByIdDto ToBoardItemByIdDto(BoardItem item) => BoardItemMapper.ToByIdDto(item);
+        public static RelationshipCardDto ToRelationshipCardDto(BoardItem item) => BoardItemMapper.ToRelationshipCard(item);
+        public static List<BoardItemSearchDto> ToBoardItemSearchDtos(IEnumerable<BoardItem> items) => items.Select(BoardItemMapper.ToSearchDto).ToList();
 
-        public static BoardItemDto ToBoardItemDto(BoardItem item) => Mapper.Map<BoardItemDto>(item);
-        public static BoardItemByIdDto ToBoardItemByIdDto(BoardItem item) => Mapper.Map<BoardItemByIdDto>(item);
-        public static RelationshipCardDto ToRelationshipCardDto(BoardItem item) => Mapper.Map<RelationshipCardDto>(item);
-        public static List<BoardItemSearchDto> ToBoardItemSearchDtos(IEnumerable<BoardItem> items) => Mapper.Map<List<BoardItemSearchDto>>(items);
+        public static List<TagDto> ToTagDtos(IEnumerable<Tag> tags) => tags.Select(BoardItemMapper.ToDto).ToList();
+        public static List<StatusDto> ToStatusDtos(IEnumerable<Status> statuses) => statuses.Select(BoardItemMapper.ToDto).ToList();
+        public static List<PriorityDto> ToPriorityDtos(IEnumerable<Priority> priorities) => priorities.Select(BoardItemMapper.ToDto).ToList();
 
-        public static List<TagDto> ToTagDtos(IEnumerable<Tag> tags) => Mapper.Map<List<TagDto>>(tags);
-        public static List<StatusDto> ToStatusDtos(IEnumerable<Status> statuses) => Mapper.Map<List<StatusDto>>(statuses);
-        public static List<PriorityDto> ToPriorityDtos(IEnumerable<Priority> priorities) => Mapper.Map<List<PriorityDto>>(priorities);
-
-        public static CalendarEventDto ToCalendarEventDto(CalendarEvent calendarEvent) => Mapper.Map<CalendarEventDto>(calendarEvent);
-        public static CalendarEventDto ToCalendarEventDto(CalendarEventInstanceDto instance) => Mapper.Map<CalendarEventDto>(instance);
-        public static CalendarEventAttachmentDto ToAttachmentDto(CalendarEventAttachment attachment) => Mapper.Map<CalendarEventAttachmentDto>(attachment);
-        public static List<CalendarEventAttachmentDto> ToAttachmentDtos(IEnumerable<CalendarEventAttachment> attachments) => Mapper.Map<List<CalendarEventAttachmentDto>>(attachments);
-        public static List<EventTypeDto> ToEventTypeDtos(IEnumerable<EventType> eventTypes) => Mapper.Map<List<EventTypeDto>>(eventTypes);
+        public static CalendarEventDto ToCalendarEventDto(CalendarEvent calendarEvent) => CalendarMapper.ToDto(calendarEvent);
+        public static CalendarEventDto ToCalendarEventDto(CalendarEventInstanceDto instance) => CalendarMapper.ToDto(instance);
+        public static CalendarEventAttachmentDto ToAttachmentDto(CalendarEventAttachment attachment) => CalendarMapper.ToDto(attachment);
+        public static List<CalendarEventAttachmentDto> ToAttachmentDtos(IEnumerable<CalendarEventAttachment> attachments) => attachments.Select(CalendarMapper.ToDto).ToList();
+        public static List<EventTypeDto> ToEventTypeDtos(IEnumerable<EventType> eventTypes) => eventTypes.Select(CalendarMapper.ToDto).ToList();
     }
 }
