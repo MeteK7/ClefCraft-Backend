@@ -38,7 +38,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.DeleteFromOccurrence
             _mediator = mediator;
         }
 
-        public async Task<Unit> Handle(
+        public async Task Handle(
             DeleteFromOccurrenceCommand request,
             CancellationToken cancellationToken)
         {
@@ -68,7 +68,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.DeleteFromOccurrence
             if (removesSegmentEntirely && series.Segments.Count == 1)
             {
                 await _mediator.Send(new DeleteSeriesCommand { SeriesUid = request.SeriesUid }, cancellationToken);
-                return Unit.Value;
+                return;
             }
 
             if (removesSegmentEntirely)
@@ -86,8 +86,6 @@ namespace ClefCraft.Application.Features.Calendar.Commands.DeleteFromOccurrence
             await _exceptionRepo.DeleteFromDateAsync(request.SeriesUid, request.OccurrenceDate);
 
             await _uow.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
         }
     }
 }

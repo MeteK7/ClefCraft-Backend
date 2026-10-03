@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using ClefCraft.Application.Contracts.Authorization;
+﻿using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
+using ClefCraft.Application.Features.Board;
 using ClefCraft.Application.Features.BoardColumn.Queries.GetBoardColumns;
 using ClefCraft.Domain;
 using MediatR;
@@ -17,18 +17,15 @@ namespace ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems
     {
         private readonly IBoardItemRepository _boardItemRepository;
         private readonly IBoardAccessService _boardAccessService;
-        private readonly IMapper _mapper;
         private readonly IUserService _userService;
 
         public GetBoardItemsHandler(
             IBoardItemRepository boardItemRepository,
             IBoardAccessService boardAccessService,
-            IMapper mapper,
             IUserService userService)
         {
             _boardItemRepository = boardItemRepository;
             _boardAccessService = boardAccessService;
-            _mapper = mapper;
             _userService = userService;
         }
 
@@ -46,7 +43,7 @@ namespace ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems
                 columns = await _boardItemRepository.GetAllBoardColumnsWithItems(_userService.UserId);
             }
 
-            var mappedColumns = _mapper.Map<List<BoardColumnDto>>(columns);
+            var mappedColumns = columns.Select(BoardMapper.ToDto).ToList();
 
             // Collect ALL user IDs (distinct)
             var userIds = mappedColumns

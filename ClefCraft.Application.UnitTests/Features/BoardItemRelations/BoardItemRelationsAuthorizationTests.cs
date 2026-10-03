@@ -1,4 +1,3 @@
-using AutoMapper;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Exceptions;
@@ -63,8 +62,7 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemRelations
                 itemRepo.Object,
                 accessService.Object,
                 userService.Object,
-                new Mock<IUnitOfWork>().Object,
-                new Mock<IMapper>().Object);
+                new Mock<IUnitOfWork>().Object);
 
             await Should.ThrowAsync<ForbiddenAccessException>(() =>
                 handler.Handle(

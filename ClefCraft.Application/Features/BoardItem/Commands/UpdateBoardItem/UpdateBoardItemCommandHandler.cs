@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ClefCraft.Application.Contracts.Analytics;
+﻿using ClefCraft.Application.Contracts.Analytics;
 using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
@@ -23,7 +22,6 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
         private readonly IStatusRepository _statusRepository;
         private readonly IPriorityRepository _priorityRepository;
         private readonly ITagRepository _tagRepository;
-        private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly ITaskLifecycleService _taskLifecycleService;
         private readonly IUnitOfWork _unitOfWork; // Added for architectural parity
@@ -35,7 +33,6 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
             IStatusRepository statusRepository,
             IPriorityRepository priorityRepository,
             ITagRepository tagRepository,
-            IMapper mapper,
             IUserService userService,
             ITaskLifecycleService taskLifecycleService,
             IUnitOfWork unitOfWork,
@@ -46,7 +43,6 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
             _statusRepository = statusRepository;
             _priorityRepository = priorityRepository;
             _tagRepository = tagRepository;
-            _mapper = mapper;
             _userService = userService;
             _taskLifecycleService = taskLifecycleService;
             _unitOfWork = unitOfWork;
@@ -186,7 +182,7 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
 
             // Reload fresh state with navigation properties
             var updatedItem = await _boardItemRepository.GetBoardItemById(boardItem.Id);
-            var dto = _mapper.Map<BoardItemByIdDto>(updatedItem);
+            var dto = BoardItemMapper.ToByIdDto(updatedItem);
 
             // Populate assignee manually
             if (!string.IsNullOrEmpty(updatedItem.AssigneeId))

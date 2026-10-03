@@ -31,7 +31,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSingleOccurrenc
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Unit> Handle(UpdateSingleOccurrenceCommand request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateSingleOccurrenceCommand request, CancellationToken cancellationToken)
         {
             await _calendarAccessService.EnsureSeriesOwnedByUserAsync(request.SeriesUid, _userService.UserId);
 
@@ -62,8 +62,6 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSingleOccurrenc
 
             await _repo.UpsertAsync(exception);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
         }
     }
 }

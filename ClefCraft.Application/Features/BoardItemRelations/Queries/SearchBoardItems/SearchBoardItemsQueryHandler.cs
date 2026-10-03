@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using ClefCraft.Application.Contracts.Authorization;
+﻿using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
+using ClefCraft.Application.Features.BoardItem;
 using ClefCraft.Application.Features.BoardItemRelations.DTOs;
 using MediatR;
 using System;
@@ -18,18 +18,15 @@ namespace ClefCraft.Application.Features.BoardItemRelations.Queries.SearchBoardI
         private readonly IBoardItemRelationRepository _relationRepository;
         private readonly IBoardAccessService _boardAccessService;
         private readonly IUserService _userService;
-        private readonly IMapper _mapper;
 
         public SearchBoardItemsQueryHandler(
             IBoardItemRelationRepository relationRepository,
             IBoardAccessService boardAccessService,
-            IUserService userService,
-            IMapper mapper)
+            IUserService userService)
         {
             _relationRepository = relationRepository;
             _boardAccessService = boardAccessService;
             _userService = userService;
-            _mapper = mapper;
         }
 
         public async Task<List<BoardItemSearchDto>> Handle(
@@ -46,7 +43,7 @@ namespace ClefCraft.Application.Features.BoardItemRelations.Queries.SearchBoardI
                 request.SearchTerm.Trim(),
                 request.ExcludeItemId);
 
-            return _mapper.Map<List<BoardItemSearchDto>>(items);
+            return items.Select(BoardItemMapper.ToSearchDto).ToList();
         }
     }
 }

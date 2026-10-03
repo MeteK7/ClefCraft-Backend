@@ -1,8 +1,8 @@
-﻿using AutoMapper;
-using ClefCraft.Application.Contracts.Authorization;
+﻿using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Exceptions;
+using ClefCraft.Application.Features.BoardItem;
 using ClefCraft.Application.Features.BoardItemRelations.DTOs;
 using ClefCraft.Domain;
 using ClefCraft.Domain.Enums;
@@ -23,22 +23,19 @@ namespace ClefCraft.Application.Features.BoardItemRelations.Commands.CreateRelat
         private readonly IBoardAccessService _boardAccessService;
         private readonly IUserService _userService;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
 
         public CreateBoardItemRelationCommandHandler(
             IBoardItemRelationRepository relationRepository,
             IBoardItemRepository boardItemRepository,
             IBoardAccessService boardAccessService,
             IUserService userService,
-            IUnitOfWork unitOfWork,
-            IMapper mapper)
+            IUnitOfWork unitOfWork)
         {
             _relationRepository = relationRepository;
             _boardItemRepository = boardItemRepository;
             _boardAccessService = boardAccessService;
             _userService = userService;
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
         }
 
         public async Task<RelationshipCardDto> Handle(
@@ -89,7 +86,7 @@ namespace ClefCraft.Application.Features.BoardItemRelations.Commands.CreateRelat
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            var dto = _mapper.Map<RelationshipCardDto>(target);
+            var dto = BoardItemMapper.ToRelationshipCard(target);
             dto.RelationId = relation.Id;
 
             return dto;

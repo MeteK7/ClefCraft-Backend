@@ -24,7 +24,7 @@ namespace ClefCraft.Application.Features.CalendarEventCollaborators.Commands.Rem
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Unit> Handle(RemoveCalendarEventCollaboratorCommand request, CancellationToken cancellationToken)
+        public async Task Handle(RemoveCalendarEventCollaboratorCommand request, CancellationToken cancellationToken)
         {
             // Owner-only — revocation is a control the owner retains, not something a
             // collaborator can do to themselves or to each other.
@@ -36,8 +36,6 @@ namespace ClefCraft.Application.Features.CalendarEventCollaborators.Commands.Rem
             // takes effect on their next request, same as any other authorization change).
             await _collaboratorRepository.RemoveAsync(request.EventId, request.CollaboratorUserId);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
         }
     }
 }

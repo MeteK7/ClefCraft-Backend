@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ClefCraft.Application.Contracts.Authorization;
+﻿using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Calendar;
 using MediatR;
 using System;
@@ -14,16 +13,13 @@ namespace ClefCraft.Application.Features.Calendar.Queries.GetCalendarAttachments
     {
         private readonly ICalendarEventAttachmentRepository _attachmentRepo;
         private readonly ICalendarAccessService _calendarAccessService;
-        private readonly IMapper _mapper;
 
         public GetAttachmentsQueryHandler(
             ICalendarEventAttachmentRepository attachmentRepo,
-            ICalendarAccessService calendarAccessService,
-            IMapper mapper)
+            ICalendarAccessService calendarAccessService)
         {
             _attachmentRepo = attachmentRepo;
             _calendarAccessService = calendarAccessService;
-            _mapper = mapper;
         }
 
         public async Task<List<CalendarEventAttachmentDto>> Handle(GetAttachmentsQuery request, CancellationToken cancellationToken)
@@ -32,7 +28,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries.GetCalendarAttachments
             await _calendarAccessService.EnsureCanAccessEventAsync(request.EventId, request.UserId);
 
             var items = await _attachmentRepo.GetByEventIdAsync(request.EventId);
-            return _mapper.Map<List<CalendarEventAttachmentDto>>(items);
+            return items.Select(CalendarMapper.ToDto).ToList();
         }
     }
 }

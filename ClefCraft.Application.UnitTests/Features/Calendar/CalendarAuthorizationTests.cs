@@ -1,4 +1,3 @@
-using AutoMapper;
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.FileAttachment;
 using ClefCraft.Application.Contracts.Identity;
@@ -55,7 +54,7 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar
             var attachmentRepo = new Mock<ICalendarEventAttachmentRepository>();
             var accessService = MockAccessServices.GetMockCalendarAccessService(authorized: false);
 
-            var handler = new GetAttachmentByIdQueryHandler(attachmentRepo.Object, accessService.Object, new Mock<IMapper>().Object);
+            var handler = new GetAttachmentByIdQueryHandler(attachmentRepo.Object, accessService.Object);
 
             await Should.ThrowAsync<ForbiddenAccessException>(() =>
                 handler.Handle(new GetAttachmentByIdQuery { Id = 1, UserId = CallerUserId }, CancellationToken.None));
@@ -94,7 +93,7 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar
             var userService = new Mock<IUserService>();
             userService.Setup(u => u.UserId).Returns(CallerUserId);
 
-            var handler = new GetWorkHistoryQueryHandler(eventRepo.Object, boardAccessService.Object, new Mock<IMapper>().Object, userService.Object);
+            var handler = new GetWorkHistoryQueryHandler(eventRepo.Object, boardAccessService.Object, userService.Object);
 
             await Should.ThrowAsync<ForbiddenAccessException>(() =>
                 handler.Handle(new GetWorkHistoryQuery { ItemId = 123 }, CancellationToken.None));

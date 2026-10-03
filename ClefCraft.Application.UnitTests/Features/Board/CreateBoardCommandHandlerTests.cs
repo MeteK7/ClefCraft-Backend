@@ -1,4 +1,3 @@
-using AutoMapper;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Exceptions;
@@ -35,9 +34,6 @@ namespace ClefCraft.Application.UnitTests.Features.Board
 
             var memberRepo = new Mock<IBoardMemberRepository>();
 
-            var mapper = new Mock<IMapper>();
-            mapper.Setup(m => m.Map<BoardDto>(It.IsAny<ClefCraft.Domain.Board>()))
-                .Returns((ClefCraft.Domain.Board b) => new BoardDto { Id = b.Id, Title = b.Title, OwnerUserId = b.OwnerUserId });
 
             var userService = new Mock<IUserService>();
             userService.Setup(u => u.UserId).Returns(OwnerId);
@@ -46,7 +42,7 @@ namespace ClefCraft.Application.UnitTests.Features.Board
             unitOfWork.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
 
             var handler = new CreateBoardCommandHandler(
-                boardRepo.Object, memberRepo.Object, mapper.Object, userService.Object, unitOfWork.Object, columnMappingRepo.Object);
+                boardRepo.Object, memberRepo.Object, userService.Object, unitOfWork.Object, columnMappingRepo.Object);
 
             return (handler, boardRepo, memberRepo);
         }

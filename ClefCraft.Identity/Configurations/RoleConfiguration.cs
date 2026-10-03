@@ -18,7 +18,10 @@ namespace ClefCraft.Identity.Configurations
                 {
                     Id = "cbc43a8e-f7bb-4445-baaf-1add431ffbbf",
                     Name = "Administrator",
-                    NormalizedName = "ADMINISTRATOR"
+                    NormalizedName = "ADMINISTRATOR",
+                    // IdentityRole defaults this to a new Guid, which would make the seed differ on
+                    // every model build; EF Core then reports pending changes and Migrate() throws.
+                    ConcurrencyStamp = "5ce57909-4634-444b-9297-7a7c691caf9a"
                 }
                 );
         }

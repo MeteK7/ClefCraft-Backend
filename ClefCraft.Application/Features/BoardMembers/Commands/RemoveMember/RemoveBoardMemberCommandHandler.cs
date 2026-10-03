@@ -25,7 +25,7 @@ namespace ClefCraft.Application.Features.BoardMembers.Commands.RemoveMember
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Unit> Handle(RemoveBoardMemberCommand request, CancellationToken cancellationToken)
+        public async Task Handle(RemoveBoardMemberCommand request, CancellationToken cancellationToken)
         {
             await _boardAccessService.EnsureUserIsBoardOwnerAsync(request.BoardId, request.RequestingUserId);
 
@@ -42,8 +42,6 @@ namespace ClefCraft.Application.Features.BoardMembers.Commands.RemoveMember
 
             await _boardMemberRepository.DeleteAsync(membership);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
         }
     }
 }

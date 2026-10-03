@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ClefCraft.Application.Common.Helpers;
+﻿using ClefCraft.Application.Common.Helpers;
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
@@ -24,7 +23,6 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
         private readonly ICalendarEventSegmentRepository _segmentRepo;
         private readonly ICalendarEventExceptionRepository _exceptionRepo;
         private readonly IUserService _userService;
-        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IReminderSchedulerService _reminderSchedulerService;
 
@@ -35,7 +33,6 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
             ICalendarEventSegmentRepository segmentRepo,
             ICalendarEventExceptionRepository exceptionRepo,
             IUserService userService,
-            IMapper mapper,
             IUnitOfWork unitOfWork,
             IReminderSchedulerService reminderSchedulerService)
         {
@@ -45,7 +42,6 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
             _segmentRepo = segmentRepo;
             _exceptionRepo = exceptionRepo;
             _userService = userService;
-            _mapper = mapper;
             _unitOfWork = unitOfWork;
             _reminderSchedulerService = reminderSchedulerService;
         }
@@ -211,7 +207,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
             await _reminderSchedulerService.RescheduleAsync(entity, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return _mapper.Map<CalendarEventDto>(entity);
+            return CalendarMapper.ToDto(entity);
         }
     }
 }

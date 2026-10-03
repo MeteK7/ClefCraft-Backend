@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ClefCraft.Application.Contracts.Persistence;
+﻿using ClefCraft.Application.Contracts.Persistence;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -12,17 +11,15 @@ namespace ClefCraft.Application.Features.Board.Queries.GetBoards
     public class GetBoardsHandler : IRequestHandler<GetBoardsQuery, List<BoardDto>>
     {
         private readonly IBoardRepository _boardRepository;
-        private readonly IMapper _mapper;
 
-        public GetBoardsHandler(IBoardRepository boardRepository, IMapper mapper)
+        public GetBoardsHandler(IBoardRepository boardRepository)
         {
             _boardRepository = boardRepository;
-            _mapper = mapper;
         }
         public async Task<List<BoardDto>> Handle(GetBoardsQuery request, CancellationToken cancellationToken)
         {
             var boards = await _boardRepository.GetBoards(request.UserId);
-            return _mapper.Map<List<BoardDto>>(boards);
+            return boards.Select(BoardMapper.ToDto).ToList();
         }
     }
 }

@@ -47,7 +47,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.DeleteSeries
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Unit> Handle(
+        public async Task Handle(
             DeleteSeriesCommand request,
             CancellationToken cancellationToken)
         {
@@ -90,8 +90,6 @@ namespace ClefCraft.Application.Features.Calendar.Commands.DeleteSeries
             await _calendarEventRepository.DeleteAsync(rootEvent);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
         }
     }
 }

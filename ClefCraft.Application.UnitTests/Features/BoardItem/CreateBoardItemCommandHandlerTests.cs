@@ -1,4 +1,3 @@
-using AutoMapper;
 using ClefCraft.Application.Contracts.Analytics;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
@@ -32,12 +31,9 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
             userService.Setup(u => u.UserId).Returns("user-1");
             var lifecycleService = new Mock<ITaskLifecycleService>();
             var unitOfWork = new Mock<IUnitOfWork>();
-            var mapper = new Mock<IMapper>();
-            mapper.Setup(m => m.Map<BoardItemDto>(It.IsAny<Domain.BoardItem>()))
-                .Returns(new BoardItemDto { Id = 55, Title = "Practice scales" });
 
             var handler = new CreateBoardItemCommandHandler(
-                repo.Object, accessService.Object, mapper.Object, userService.Object, lifecycleService.Object, unitOfWork.Object);
+                repo.Object, accessService.Object, userService.Object, lifecycleService.Object, unitOfWork.Object);
 
             var command = new CreateBoardItemCommand
             {
@@ -89,11 +85,9 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
             unitOfWork.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()))
                 .Callback(() => callOrder.Add("Save"))
                 .ReturnsAsync(1);
-            var mapper = new Mock<IMapper>();
-            mapper.Setup(m => m.Map<BoardItemDto>(It.IsAny<Domain.BoardItem>())).Returns(new BoardItemDto { Id = 7 });
 
             var handler = new CreateBoardItemCommandHandler(
-                repo.Object, accessService.Object, mapper.Object, userService.Object, lifecycleService.Object, unitOfWork.Object);
+                repo.Object, accessService.Object, userService.Object, lifecycleService.Object, unitOfWork.Object);
 
             await handler.Handle(new CreateBoardItemCommand { Title = "Item", BoardId = 1 }, CancellationToken.None);
 

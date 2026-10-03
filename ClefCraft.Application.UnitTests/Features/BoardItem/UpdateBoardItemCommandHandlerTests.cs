@@ -1,4 +1,3 @@
-using AutoMapper;
 using ClefCraft.Application.Contracts.Analytics;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
@@ -43,7 +42,6 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
                 new Mock<IStatusRepository>().Object,
                 new Mock<IPriorityRepository>().Object,
                 new Mock<ITagRepository>().Object,
-                new Mock<IMapper>().Object,
                 (userService ?? MakeUserService()).Object,
                 lifecycleService.Object,
                 (unitOfWork ?? new Mock<IUnitOfWork>()).Object,

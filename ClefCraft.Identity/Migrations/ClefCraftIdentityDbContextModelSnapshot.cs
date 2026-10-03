@@ -17,7 +17,7 @@ namespace ClefCraft.Identity.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.28")
+                .HasAnnotation("ProductVersion", "10.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -167,6 +167,7 @@ namespace ClefCraft.Identity.Migrations
                         new
                         {
                             Id = "cbc43a8e-f7bb-4445-baaf-1add431ffbbf",
+                            ConcurrencyStamp = "5ce57909-4634-444b-9297-7a7c691caf9a",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
