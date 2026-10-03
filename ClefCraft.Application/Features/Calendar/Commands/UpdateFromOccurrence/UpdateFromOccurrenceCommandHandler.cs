@@ -41,7 +41,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateFromOccurrence
             _uow = uow;
         }
 
-        public async Task<Unit> Handle(
+        public async Task Handle(
             UpdateFromOccurrenceCommand request,
             CancellationToken cancellationToken)
         {
@@ -143,8 +143,6 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateFromOccurrence
                 request.OccurrenceDate);
 
             await _uow.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
         }
     }
 }

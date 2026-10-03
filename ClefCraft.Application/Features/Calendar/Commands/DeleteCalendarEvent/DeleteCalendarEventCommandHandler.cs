@@ -37,7 +37,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.DeleteCalendarEvent
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Unit> Handle(
+        public async Task Handle(
             DeleteCalendarEventCommand request,
             CancellationToken cancellationToken)
         {
@@ -67,8 +67,6 @@ namespace ClefCraft.Application.Features.Calendar.Commands.DeleteCalendarEvent
             await _calendarEventRepository.DeleteAsync(entity);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
         }
     }
 }

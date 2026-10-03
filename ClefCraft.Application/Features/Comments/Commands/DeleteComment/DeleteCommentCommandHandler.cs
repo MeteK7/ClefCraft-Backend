@@ -30,7 +30,7 @@ namespace ClefCraft.Application.Features.Comments.Commands.DeleteComment
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Unit> Handle(DeleteCommentCommand request, CancellationToken cancellationToken)
+        public async Task Handle(DeleteCommentCommand request, CancellationToken cancellationToken)
         {
             var comment = await _commentRepository.GetByIdAsync(request.Id);
             if (comment == null)
@@ -40,7 +40,7 @@ namespace ClefCraft.Application.Features.Comments.Commands.DeleteComment
                 throw new ForbiddenAccessException();
 
             if (comment.IsDeleted)
-                return Unit.Value; // already tombstoned — idempotent
+                return; // already tombstoned — idempotent
 
             // The author must still have access to the underlying board/event — if they were
             // since removed (e.g. taken off the board), old comments there are frozen for them.
@@ -57,8 +57,6 @@ namespace ClefCraft.Application.Features.Comments.Commands.DeleteComment
             await _commentRepository.RemoveMentionsAsync(comment.Id);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
         }
     }
 }

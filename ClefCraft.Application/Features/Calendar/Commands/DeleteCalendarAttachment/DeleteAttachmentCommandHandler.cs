@@ -30,18 +30,16 @@ namespace ClefCraft.Application.Features.Calendar.Commands.DeleteCalendarAttachm
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Unit> Handle(DeleteAttachmentCommand request, CancellationToken cancellationToken)
+        public async Task Handle(DeleteAttachmentCommand request, CancellationToken cancellationToken)
         {
             var entity = await _repo.GetByIdAsync(request.Id);
-            if (entity == null) return Unit.Value;
+            if (entity == null) return;
 
             await _calendarAccessService.EnsureEventOwnedByUserAsync(entity.CalendarEventId, request.UserId);
 
             await _fileService.DeleteAttachmentFileAsync(entity.StoredFilePath);
             await _repo.DeleteAsync(entity);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
         }
     }
 }

@@ -27,7 +27,7 @@ namespace ClefCraft.Application.Features.BoardItemRelations.Commands.DeleteRelat
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Unit> Handle(
+        public async Task Handle(
             DeleteBoardItemRelationCommand request,
             CancellationToken cancellationToken)
         {
@@ -43,8 +43,6 @@ namespace ClefCraft.Application.Features.BoardItemRelations.Commands.DeleteRelat
             await _relationRepository.DeleteAsync(request.RelationId);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
         }
     }
 }

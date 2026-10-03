@@ -33,7 +33,7 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.DeleteBoardItem
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Unit> Handle(DeleteBoardItemCommand request, CancellationToken cancellationToken)
+        public async Task Handle(DeleteBoardItemCommand request, CancellationToken cancellationToken)
         {
             var boardItem = await _boardItemRepository.GetByIdAsync(request.Id);
 
@@ -51,8 +51,6 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.DeleteBoardItem
             await _taskLifecycleService.DeleteAsync(request.Id);
             await _boardItemRepository.DeleteAsync(boardItem);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
         }
     }
 }

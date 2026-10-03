@@ -34,7 +34,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSeries
             _uow = uow;
         }
 
-        public async Task<Unit> Handle(
+        public async Task Handle(
             UpdateSeriesPreserveExceptionsCommand request,
             CancellationToken cancellationToken)
         {
@@ -80,8 +80,6 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSeries
             }
 
             await _uow.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
         }
     }
 }
