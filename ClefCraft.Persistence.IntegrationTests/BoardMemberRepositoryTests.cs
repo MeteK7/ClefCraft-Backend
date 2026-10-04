@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 namespace ClefCraft.Persistence.IntegrationTests
 {
     // IsMemberAsync has no special case for Board.OwnerUserId: an owner is a member only through
-    // a BoardMembers row. That's what makes the owner assignable and what the
-    // BackfillBoardOwnerMemberships migration guarantees for every board.
+    // a BoardMembers row. That's what makes the owner assignable, and why CreateBoardCommandHandler
+    // adds that row for every new board.
     public class BoardMemberRepositoryTests
     {
         [Fact]
