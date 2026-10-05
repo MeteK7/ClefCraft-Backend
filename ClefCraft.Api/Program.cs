@@ -16,6 +16,7 @@ using ClefCraft.Infrastructure.Services.Calendar;
 using ClefCraft.Persistence;
 using ClefCraft.Persistence.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 using Serilog;
 
@@ -46,11 +47,14 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddAuthRateLimiting();
 
-var aiBaseUrl = builder.Configuration["AIService:BaseUrl"];
+builder.Services.AddOptions<AIServiceOptions>()
+    .Bind(builder.Configuration.GetSection(AIServiceOptions.SectionName))
+    .Validate(o => o.HasAbsoluteBaseUrl(), "AIService:BaseUrl must be an absolute http(s) URI.")
+    .ValidateOnStart();
 
-builder.Services.AddHttpClient<IAIService, AIService>(client =>
+builder.Services.AddHttpClient<IAIService, AIService>((services, client) =>
 {
-    client.BaseAddress = new Uri(aiBaseUrl!);
+    client.BaseAddress = new Uri(services.GetRequiredService<IOptions<AIServiceOptions>>().Value.BaseUrl!);
 });
 
 builder.Services.AddHttpContextAccessor();
@@ -83,6 +87,11 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 var app = builder.Build();
+
+// Validate every ValidateOnStart() options registration now, in every environment: the startup
+// migrations below would otherwise touch the database before app.Run() gets to it, so a bad config
+// would surface as a provider error instead of its validation message.
+app.Services.GetRequiredService<IStartupValidator>().Validate();
 
 app.Logger.LogInformation("ENVIRONMENT: {Env}", app.Environment.EnvironmentName);
 app.Logger.LogInformation("IS DEVELOPMENT: {IsDev}", app.Environment.IsDevelopment());
