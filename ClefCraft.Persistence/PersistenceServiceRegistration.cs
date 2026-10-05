@@ -23,9 +23,15 @@ namespace ClefCraft.Persistence
     IConfiguration configuration,
     IWebHostEnvironment environment)
         {
+            services.AddOptions<DatabaseOptions>()
+                .Configure(o => o.ConnectionString = configuration.GetConnectionString(DatabaseOptions.ConnectionStringName))
+                .Validate(o => !string.IsNullOrWhiteSpace(o.ConnectionString),
+                    $"ConnectionStrings:{DatabaseOptions.ConnectionStringName} is required.")
+                .ValidateOnStart();
+
             services.AddDbContext<ClefCraftDatabaseContext>(options =>
             {
-                var connectionString = configuration.GetConnectionString("ClefCraftDatabaseConnectionString");
+                var connectionString = configuration.GetConnectionString(DatabaseOptions.ConnectionStringName);
 
                 options.UseNpgsql(connectionString);
             });

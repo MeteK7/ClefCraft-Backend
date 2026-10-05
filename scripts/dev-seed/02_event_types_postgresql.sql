@@ -1,3 +1,26 @@
+-- ============================================================
+-- ClefCraft demo data 2/3: calendar event types for the development admin
+--
+-- Owner: 944d0156-cb3d-466f-a1ea-5f53e3a10f8e (admin@localhost.com, created by DevelopmentUserSeeder)
+-- Creates 33 event types. No explicit ids, so no sequence reset is needed. The dev user's own
+-- event types come from 03_calendar_seed.
+--
+-- Prerequisite: a freshly migrated database, i.e. after the first start of the API in
+-- Development. The script refuses to run if the admin already has event types.
+-- Run order: 01_board_seed -> 02_event_types -> 03_calendar_seed
+--
+--   psql -v ON_ERROR_STOP=1 -h <host> -U <user> -d <database> -f scripts/dev-seed/02_event_types_postgresql.sql
+-- ============================================================
+
+BEGIN;
+
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM "EventTypes" WHERE "UserId" = '944d0156-cb3d-466f-a1ea-5f53e3a10f8e') THEN
+    RAISE EXCEPTION '02_event_types: the admin already has event types. Load the demo data only into a freshly migrated database.';
+  END IF;
+END $$;
+
 INSERT INTO "EventTypes" ("Name", "Color", "UserId", "DateCreated", "CreatedBy", "DateModified", "ModifiedBy")
 VALUES
   -- Work / Productivity
@@ -46,3 +69,5 @@ VALUES
   ('Personal',          '#43A047', '944d0156-cb3d-466f-a1ea-5f53e3a10f8e', '2026-02-14 16:00:00', '944d0156-cb3d-466f-a1ea-5f53e3a10f8e', '2026-02-14 16:00:00', '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
   ('Volunteer Work',    '#388E3C', '944d0156-cb3d-466f-a1ea-5f53e3a10f8e', '2026-04-30 09:00:00', '944d0156-cb3d-466f-a1ea-5f53e3a10f8e', '2026-04-30 09:00:00', '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
   ('Other',             '#757575', '944d0156-cb3d-466f-a1ea-5f53e3a10f8e', '2026-01-15 08:00:00', '944d0156-cb3d-466f-a1ea-5f53e3a10f8e', '2026-01-15 08:00:00', '944d0156-cb3d-466f-a1ea-5f53e3a10f8e');
+
+COMMIT;

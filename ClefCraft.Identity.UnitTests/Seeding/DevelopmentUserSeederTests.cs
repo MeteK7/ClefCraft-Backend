@@ -1,95 +1,172 @@
+using ClefCraft.Identity.DbContext;
 using ClefCraft.Identity.Models;
 using ClefCraft.Identity.Seeding;
-using ClefCraft.Identity.UnitTests.Mocks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
-using Moq;
+using Shouldly;
 
 namespace ClefCraft.Identity.UnitTests.Seeding
 {
+    // The seeder runs against the real Identity stack (EF InMemory store, no mocks), so these tests
+    // check what ends up in the store rather than which UserManager calls were made.
     public class DevelopmentUserSeederTests
     {
-        private static DevelopmentUserSeeder MakeSeeder(
-            Mock<UserManager<ApplicationUser>> userManager,
-            Dictionary<string, string?> settings)
+        private const string AdminPassword = "Adm1n!Pass";
+        private const string UserPassword = "Us3r!Pass";
+
+        private sealed class Store
         {
-            var configuration = new ConfigurationBuilder().AddInMemoryCollection(settings).Build();
-            return new DevelopmentUserSeeder(userManager.Object, configuration, NullLogger<DevelopmentUserSeeder>.Instance);
+            private readonly ServiceProvider _provider;
+
+            public Store(bool seedModelData = true)
+            {
+                var services = new ServiceCollection();
+                services.AddLogging();
+                var databaseName = Guid.NewGuid().ToString();
+                services.AddDbContext<ClefCraftIdentityDbContext>(o => o.UseInMemoryDatabase(databaseName));
+                services.AddIdentity<ApplicationUser, IdentityRole>()
+                    .AddEntityFrameworkStores<ClefCraftIdentityDbContext>()
+                    .AddDefaultTokenProviders();
+                _provider = services.BuildServiceProvider();
+
+                // EnsureCreated applies the model's HasData, i.e. the Administrator role a migrated
+                // database gets from the Initial migration.
+                if (seedModelData)
+                {
+                    using var scope = _provider.CreateScope();
+                    scope.ServiceProvider.GetRequiredService<ClefCraftIdentityDbContext>().Database.EnsureCreated();
+                }
+            }
+
+            // A fresh scope per call, as each application startup gets its own.
+            public async Task SeedAsync(Dictionary<string, string?> settings)
+            {
+                using var scope = _provider.CreateScope();
+                var configuration = new ConfigurationBuilder().AddInMemoryCollection(settings).Build();
+                var seeder = new DevelopmentUserSeeder(
+                    scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>(),
+                    configuration,
+                    NullLogger<DevelopmentUserSeeder>.Instance);
+                await seeder.SeedAsync();
+            }
+
+            public async Task<T> WithUserManager<T>(Func<UserManager<ApplicationUser>, Task<T>> action)
+            {
+                using var scope = _provider.CreateScope();
+                return await action(scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>());
+            }
+
+            public Task<List<ApplicationUser>> UsersAsync() =>
+                WithUserManager(m => m.Users.AsNoTracking().OrderBy(u => u.Email).ToListAsync());
+        }
+
+        private static Dictionary<string, string?> BothPasswords() => new()
+        {
+            ["DevSeed:AdminPassword"] = AdminPassword,
+            ["DevSeed:UserPassword"] = UserPassword
+        };
+
+        [Fact]
+        public async Task SeedAsync_CreatesBothUsersWithTheirFixedIds_AndMakesTheAdminAnAdministrator()
+        {
+            var store = new Store();
+
+            await store.SeedAsync(BothPasswords());
+
+            var users = await store.UsersAsync();
+            users.Select(u => (u.Id, u.Email, u.UserName, u.EmailConfirmed)).ShouldBe(new (string, string?, string?, bool)[]
+            {
+                (DevelopmentUserSeeder.AdminUserId, "admin@localhost.com", "admin@localhost.com", true),
+                (DevelopmentUserSeeder.StandardUserId, "user@localhost.com", "user@localhost.com", true)
+            });
+
+            (await store.WithUserManager(async m => await m.IsInRoleAsync((await m.FindByIdAsync(DevelopmentUserSeeder.AdminUserId))!, "Administrator")))
+                .ShouldBeTrue();
+            (await store.WithUserManager(async m => await m.GetRolesAsync((await m.FindByIdAsync(DevelopmentUserSeeder.StandardUserId))!)))
+                .ShouldBeEmpty();
+            (await store.WithUserManager(async m => await m.CheckPasswordAsync((await m.FindByIdAsync(DevelopmentUserSeeder.AdminUserId))!, AdminPassword)))
+                .ShouldBeTrue();
+            (await store.WithUserManager(async m => await m.CheckPasswordAsync((await m.FindByIdAsync(DevelopmentUserSeeder.StandardUserId))!, UserPassword)))
+                .ShouldBeTrue();
         }
 
         [Fact]
-        public async Task SeedAsync_DoesNothing_WhenNoPasswordsConfigured()
+        public async Task SeedAsync_SecondRun_ChangesNothing_EvenWithADifferentPassword()
         {
-            var userManager = IdentityMocks.MockUserManager();
-            var seeder = MakeSeeder(userManager, new Dictionary<string, string?>());
+            var store = new Store();
+            await store.SeedAsync(BothPasswords());
+            var before = (await store.UsersAsync()).Select(u => (u.Id, u.ConcurrencyStamp, u.SecurityStamp, u.PasswordHash)).ToList();
 
-            await seeder.SeedAsync();
+            await store.SeedAsync(new Dictionary<string, string?>
+            {
+                ["DevSeed:AdminPassword"] = "Changed!Pass1",
+                ["DevSeed:UserPassword"] = "Changed!Pass2"
+            });
 
-            userManager.Verify(m => m.FindByIdAsync(It.IsAny<string>()), Times.Never);
+            (await store.UsersAsync()).Select(u => (u.Id, u.ConcurrencyStamp, u.SecurityStamp, u.PasswordHash)).ToList()
+                .ShouldBe(before);
         }
 
         [Fact]
-        public async Task SeedAsync_SetsPassword_WhenAccountHasNone()
+        public async Task SeedAsync_MissingPassword_SkipsOnlyThatUser()
         {
-            var admin = new ApplicationUser { Id = DevelopmentUserSeeder.AdminUserId };
-            var userManager = IdentityMocks.MockUserManager();
-            userManager.Setup(m => m.FindByIdAsync(DevelopmentUserSeeder.AdminUserId)).ReturnsAsync(admin);
-            userManager.Setup(m => m.CheckPasswordAsync(admin, "Dev-Pass-1")).ReturnsAsync(false);
-            userManager.Setup(m => m.HasPasswordAsync(admin)).ReturnsAsync(false);
-            userManager.Setup(m => m.AddPasswordAsync(admin, "Dev-Pass-1")).ReturnsAsync(IdentityResult.Success);
-            var seeder = MakeSeeder(userManager, new Dictionary<string, string?> { ["DevSeed:AdminPassword"] = "Dev-Pass-1" });
+            var store = new Store();
 
-            await seeder.SeedAsync();
+            await store.SeedAsync(new Dictionary<string, string?> { ["DevSeed:UserPassword"] = UserPassword });
 
-            userManager.Verify(m => m.RemovePasswordAsync(It.IsAny<ApplicationUser>()), Times.Never);
-            userManager.Verify(m => m.AddPasswordAsync(admin, "Dev-Pass-1"), Times.Once);
-            userManager.Verify(m => m.FindByIdAsync(DevelopmentUserSeeder.StandardUserId), Times.Never);
+            (await store.UsersAsync()).Select(u => u.Id).ShouldBe(new[] { DevelopmentUserSeeder.StandardUserId });
         }
 
         [Fact]
-        public async Task SeedAsync_ReplacesPassword_WhenConfiguredOneDiffers()
+        public async Task SeedAsync_EmailAlreadyUsedByAnotherId_SkipsThatUser_AndLeavesTheExistingOneUnchanged()
         {
-            var user = new ApplicationUser { Id = DevelopmentUserSeeder.StandardUserId };
-            var userManager = IdentityMocks.MockUserManager();
-            userManager.Setup(m => m.FindByIdAsync(DevelopmentUserSeeder.StandardUserId)).ReturnsAsync(user);
-            userManager.Setup(m => m.CheckPasswordAsync(user, "Dev-Pass-2")).ReturnsAsync(false);
-            userManager.Setup(m => m.HasPasswordAsync(user)).ReturnsAsync(true);
-            userManager.Setup(m => m.RemovePasswordAsync(user)).ReturnsAsync(IdentityResult.Success);
-            userManager.Setup(m => m.AddPasswordAsync(user, "Dev-Pass-2")).ReturnsAsync(IdentityResult.Success);
-            var seeder = MakeSeeder(userManager, new Dictionary<string, string?> { ["DevSeed:UserPassword"] = "Dev-Pass-2" });
+            var store = new Store();
+            var other = new ApplicationUser
+            {
+                Id = "someone-else",
+                UserName = "admin@localhost.com",
+                Email = "admin@localhost.com",
+                FirstName = "Other",
+                LastName = "Person"
+            };
+            (await store.WithUserManager(m => m.CreateAsync(other, "0ther!Pass"))).Succeeded.ShouldBeTrue();
+            var before = (await store.UsersAsync()).Single();
 
-            await seeder.SeedAsync();
+            await store.SeedAsync(BothPasswords());
 
-            userManager.Verify(m => m.RemovePasswordAsync(user), Times.Once);
-            userManager.Verify(m => m.AddPasswordAsync(user, "Dev-Pass-2"), Times.Once);
+            var users = await store.UsersAsync();
+            users.Select(u => u.Id).ShouldBe(new[] { "someone-else", DevelopmentUserSeeder.StandardUserId });
+            var after = users.First();
+            (after.FirstName, after.ConcurrencyStamp, after.SecurityStamp, after.PasswordHash)
+                .ShouldBe((before.FirstName, before.ConcurrencyStamp, before.SecurityStamp, before.PasswordHash));
+            (await store.WithUserManager(m => m.GetRolesAsync(after))).ShouldBeEmpty();
         }
 
         [Fact]
-        public async Task SeedAsync_LeavesPasswordAlone_WhenItAlreadyMatches()
+        public async Task SeedAsync_PasswordFailingThePolicy_CreatesNoUser()
         {
-            var admin = new ApplicationUser { Id = DevelopmentUserSeeder.AdminUserId };
-            var userManager = IdentityMocks.MockUserManager();
-            userManager.Setup(m => m.FindByIdAsync(DevelopmentUserSeeder.AdminUserId)).ReturnsAsync(admin);
-            userManager.Setup(m => m.CheckPasswordAsync(admin, "Dev-Pass-1")).ReturnsAsync(true);
-            var seeder = MakeSeeder(userManager, new Dictionary<string, string?> { ["DevSeed:AdminPassword"] = "Dev-Pass-1" });
+            var store = new Store();
 
-            await seeder.SeedAsync();
+            await store.SeedAsync(new Dictionary<string, string?>
+            {
+                ["DevSeed:AdminPassword"] = "abcdef", // no digit, upper case or symbol
+                ["DevSeed:UserPassword"] = UserPassword
+            });
 
-            userManager.Verify(m => m.RemovePasswordAsync(It.IsAny<ApplicationUser>()), Times.Never);
-            userManager.Verify(m => m.AddPasswordAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()), Times.Never);
+            (await store.UsersAsync()).Select(u => u.Id).ShouldBe(new[] { DevelopmentUserSeeder.StandardUserId });
         }
 
         [Fact]
-        public async Task SeedAsync_Skips_WhenAccountDoesNotExist()
+        public async Task SeedAsync_RoleAssignmentFails_RemovesTheNewAdmin_SoTheNextRunRetries()
         {
-            var userManager = IdentityMocks.MockUserManager();
-            userManager.Setup(m => m.FindByIdAsync(DevelopmentUserSeeder.AdminUserId)).ReturnsAsync((ApplicationUser?)null);
-            var seeder = MakeSeeder(userManager, new Dictionary<string, string?> { ["DevSeed:AdminPassword"] = "Dev-Pass-1" });
+            var store = new Store(seedModelData: false); // no Administrator role in the store
 
-            await seeder.SeedAsync();
+            await store.SeedAsync(BothPasswords());
 
-            userManager.Verify(m => m.AddPasswordAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()), Times.Never);
+            (await store.UsersAsync()).Select(u => u.Id).ShouldBe(new[] { DevelopmentUserSeeder.StandardUserId });
         }
     }
 }

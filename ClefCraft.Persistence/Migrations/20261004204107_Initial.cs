@@ -1,4 +1,5 @@
 ﻿using System;
+using ClefCraft.Persistence.Seeding;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -7,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ClefCraft.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialPostgresPersistence : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -58,6 +59,7 @@ namespace ClefCraft.Persistence.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "text", nullable: false),
+                    OwnerUserId = table.Column<string>(type: "text", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
                     DateModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -66,6 +68,24 @@ namespace ClefCraft.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Boards", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CalendarEventCollaborators",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CalendarEventId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreatedBy = table.Column<string>(type: "text", nullable: true),
+                    DateModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CalendarEventCollaborators", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -91,6 +111,45 @@ namespace ClefCraft.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CalendarEventExceptions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CommentMentions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CommentId = table.Column<int>(type: "integer", nullable: false),
+                    MentionedUserId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreatedBy = table.Column<string>(type: "text", nullable: true),
+                    DateModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CommentMentions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    EntityType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    EntityId = table.Column<int>(type: "integer", nullable: false),
+                    ParentCommentId = table.Column<int>(type: "integer", nullable: true),
+                    BodyHtml = table.Column<string>(type: "text", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreatedBy = table.Column<string>(type: "text", nullable: true),
+                    DateModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -130,24 +189,6 @@ namespace ClefCraft.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EventTypes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "LeaveTypes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    DefaultDays = table.Column<int>(type: "integer", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    DateModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ModifiedBy = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LeaveTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -318,15 +359,13 @@ namespace ClefCraft.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "LeaveAllocations",
+                name: "BoardMembers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    NumberOfDays = table.Column<int>(type: "integer", nullable: false),
-                    LeaveTypeId = table.Column<int>(type: "integer", nullable: false),
-                    Period = table.Column<int>(type: "integer", nullable: false),
-                    EmployeeId = table.Column<string>(type: "text", nullable: false),
+                    BoardId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
                     DateModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -334,41 +373,11 @@ namespace ClefCraft.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LeaveAllocations", x => x.Id);
+                    table.PrimaryKey("PK_BoardMembers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_LeaveAllocations_LeaveTypes_LeaveTypeId",
-                        column: x => x.LeaveTypeId,
-                        principalTable: "LeaveTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "LeaveRequests",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    LeaveTypeId = table.Column<int>(type: "integer", nullable: false),
-                    DateRequested = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    RequestComments = table.Column<string>(type: "text", nullable: true),
-                    Approved = table.Column<bool>(type: "boolean", nullable: true),
-                    Cancelled = table.Column<bool>(type: "boolean", nullable: false),
-                    RequestingEmployeeId = table.Column<string>(type: "text", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    DateModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ModifiedBy = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LeaveRequests", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_LeaveRequests_LeaveTypes_LeaveTypeId",
-                        column: x => x.LeaveTypeId,
-                        principalTable: "LeaveTypes",
+                        name: "FK_BoardMembers_Boards_BoardId",
+                        column: x => x.BoardId,
+                        principalTable: "Boards",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -416,6 +425,7 @@ namespace ClefCraft.Persistence.Migrations
                     Comment = table.Column<string>(type: "text", nullable: true),
                     IsRecurring = table.Column<bool>(type: "boolean", nullable: false),
                     RecurrenceRuleJson = table.Column<string>(type: "text", nullable: true),
+                    TimeZoneId = table.Column<string>(type: "text", nullable: false, defaultValue: "UTC"),
                     StartDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     EndDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     Importance = table.Column<int>(type: "integer", nullable: false),
@@ -573,6 +583,37 @@ namespace ClefCraft.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BoardItemRelations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    SourceBoardItemId = table.Column<int>(type: "integer", nullable: false),
+                    TargetBoardItemId = table.Column<int>(type: "integer", nullable: false),
+                    RelationType = table.Column<int>(type: "integer", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreatedBy = table.Column<string>(type: "text", nullable: true),
+                    DateModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BoardItemRelations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BoardItemRelations_BoardItems_SourceBoardItemId",
+                        column: x => x.SourceBoardItemId,
+                        principalTable: "BoardItems",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BoardItemRelations_BoardItems_TargetBoardItemId",
+                        column: x => x.TargetBoardItemId,
+                        principalTable: "BoardItems",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "BoardItemStatuses",
                 columns: table => new
                 {
@@ -651,6 +692,7 @@ namespace ClefCraft.Persistence.Migrations
                     SeriesUid = table.Column<string>(type: "text", nullable: false),
                     IsRecurring = table.Column<bool>(type: "boolean", nullable: false),
                     RecurrenceRuleJson = table.Column<string>(type: "text", nullable: true),
+                    TimeZoneId = table.Column<string>(type: "text", nullable: false, defaultValue: "UTC"),
                     DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
                     DateModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -790,6 +832,17 @@ namespace ClefCraft.Persistence.Migrations
                 column: "PriorityId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BoardItemRelations_SourceBoardItemId_TargetBoardItemId_Rela~",
+                table: "BoardItemRelations",
+                columns: new[] { "SourceBoardItemId", "TargetBoardItemId", "RelationType" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BoardItemRelations_TargetBoardItemId",
+                table: "BoardItemRelations",
+                column: "TargetBoardItemId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BoardItems_BoardColumnId",
                 table: "BoardItems",
                 column: "BoardColumnId");
@@ -831,6 +884,12 @@ namespace ClefCraft.Persistence.Migrations
                 column: "TagId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BoardMembers_BoardId_UserId",
+                table: "BoardMembers",
+                columns: new[] { "BoardId", "UserId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BoardPriorities_BoardId",
                 table: "BoardPriorities",
                 column: "BoardId");
@@ -864,6 +923,12 @@ namespace ClefCraft.Persistence.Migrations
                 name: "IX_CalendarEventAttachments_CalendarEventId",
                 table: "CalendarEventAttachments",
                 column: "CalendarEventId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CalendarEventCollaborators_CalendarEventId_UserId",
+                table: "CalendarEventCollaborators",
+                columns: new[] { "CalendarEventId", "UserId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_CalendarEventExceptionHistories_CalendarEventId",
@@ -902,19 +967,29 @@ namespace ClefCraft.Persistence.Migrations
                 column: "CalendarEventId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EntitySnapshots_EntityType_EntityId",
-                table: "EntitySnapshots",
+                name: "IX_CommentMentions_CommentId",
+                table: "CommentMentions",
+                column: "CommentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CommentMentions_MentionedUserId",
+                table: "CommentMentions",
+                column: "MentionedUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_EntityType_EntityId",
+                table: "Comments",
                 columns: new[] { "EntityType", "EntityId" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_LeaveAllocations_LeaveTypeId",
-                table: "LeaveAllocations",
-                column: "LeaveTypeId");
+                name: "IX_Comments_ParentCommentId",
+                table: "Comments",
+                column: "ParentCommentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LeaveRequests_LeaveTypeId",
-                table: "LeaveRequests",
-                column: "LeaveTypeId");
+                name: "IX_EntitySnapshots_EntityType_EntityId",
+                table: "EntitySnapshots",
+                columns: new[] { "EntityType", "EntityId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_TaskLifecycles_BoardItemId",
@@ -931,6 +1006,10 @@ namespace ClefCraft.Persistence.Migrations
                 name: "IX_UserInteractionSignals_UserId",
                 table: "UserInteractionSignals",
                 column: "UserId");
+
+            // Reference data: the standard statuses and priorities, each available on every board.
+            foreach (var statement in StandardReferenceData.InsertStatements)
+                migrationBuilder.Sql(statement);
         }
 
         /// <inheritdoc />
@@ -946,10 +1025,16 @@ namespace ClefCraft.Persistence.Migrations
                 name: "BoardItemPriorities");
 
             migrationBuilder.DropTable(
+                name: "BoardItemRelations");
+
+            migrationBuilder.DropTable(
                 name: "BoardItemStatuses");
 
             migrationBuilder.DropTable(
                 name: "BoardItemTags");
+
+            migrationBuilder.DropTable(
+                name: "BoardMembers");
 
             migrationBuilder.DropTable(
                 name: "BoardPriorities");
@@ -964,6 +1049,9 @@ namespace ClefCraft.Persistence.Migrations
                 name: "CalendarEventAttachments");
 
             migrationBuilder.DropTable(
+                name: "CalendarEventCollaborators");
+
+            migrationBuilder.DropTable(
                 name: "CalendarEventExceptionHistories");
 
             migrationBuilder.DropTable(
@@ -976,13 +1064,13 @@ namespace ClefCraft.Persistence.Migrations
                 name: "CalendarReminders");
 
             migrationBuilder.DropTable(
+                name: "CommentMentions");
+
+            migrationBuilder.DropTable(
+                name: "Comments");
+
+            migrationBuilder.DropTable(
                 name: "EntitySnapshots");
-
-            migrationBuilder.DropTable(
-                name: "LeaveAllocations");
-
-            migrationBuilder.DropTable(
-                name: "LeaveRequests");
 
             migrationBuilder.DropTable(
                 name: "NotificationQueues");
@@ -1001,9 +1089,6 @@ namespace ClefCraft.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "CalendarEvents");
-
-            migrationBuilder.DropTable(
-                name: "LeaveTypes");
 
             migrationBuilder.DropTable(
                 name: "BoardItems");

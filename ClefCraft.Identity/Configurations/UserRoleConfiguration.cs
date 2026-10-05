@@ -8,9 +8,9 @@ namespace ClefCraft.Identity.Configurations
     {
         public void Configure(EntityTypeBuilder<IdentityUserRole<string>> builder)
         {
-            // No seeded role assignments: they belonged to the seeded users (see UserConfiguration).
-            // The existing admin -> Administrator row is left in place by the DisableSeededAccounts
-            // migration; new administrators are granted explicitly (see the deployment runbook).
+            // No seeded role assignments: no users are seeded either (see UserConfiguration).
+            // DevelopmentUserSeeder grants the local admin its role; new administrators are granted
+            // explicitly (see the deployment runbook).
         }
     }
 }

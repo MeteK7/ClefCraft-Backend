@@ -34,6 +34,9 @@ namespace ClefCraft.Api.IntegrationTests.TestHelpers
             builder.ConfigureAppConfiguration((_, config) =>
                 config.AddInMemoryCollection(new Dictionary<string, string?>
                 {
+                    // Never used (the DbContexts are swapped for in-memory below), but startup
+                    // validation requires the setting, as it does in every environment.
+                    ["ConnectionStrings:ClefCraftDatabaseConnectionString"] = "Host=unused.invalid;Database=unused",
                     ["JwtSettings:Key"] = "integration-test-signing-key-needs-at-least-32-bytes",
                     ["AIService:BaseUrl"] = "http://ai.invalid",
                     ["AttachmentStorage:RootPath"] = AttachmentRoot
