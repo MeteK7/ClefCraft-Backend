@@ -1,0 +1,25 @@
+# Optional: a local PostgreSQL for development, for anyone who doesn't want a native install.
+# The default setup is a native PostgreSQL 18 (see README.md). Only the database runs here; the API
+# runs natively with `dotnet run`.
+#
+#   cp .env.example .env      # then choose a password in .env (git ignores it)
+#   docker compose up -d
+#
+# It publishes port 5432, so stop a native PostgreSQL first, or change the left-hand port below and
+# in your connection string.
+services:
+  postgres:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB in .env}
+    ports:
+      - "5432:5432"
+    volumes:
+      # postgres:18 keeps its data under /var/lib/postgresql/<major>/, so mount the parent directory.
+      - clefcraft-postgres:/var/lib/postgresql
+
+volumes:
+  clefcraft-postgres:

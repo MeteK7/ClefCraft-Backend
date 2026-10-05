@@ -363,3 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 # Local attachment storage (AttachmentStorage:RootPath default)
 App_Data/
+
+# Local environment for docker-compose.yml (see .env.example)
+.env

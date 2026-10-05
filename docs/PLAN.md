@@ -163,7 +163,14 @@ This order replaces the one first proposed in the review. Each step is finished,
 
 1. **P0.1:** repo hygiene, dead-code removal, and removal of every Render leftover. The Dockerfile stays, minus its Render-specific parts. The stub routes are also removed (see section 6).
 2. **.NET 10 upgrade with the NuGet cleanup:** remove AutoMapper, pin MediatR 12.5.x, remove the legacy SignalR and other dead packages, and add `Directory.Build.props` and `Directory.Packages.props`.
-3. **Migration squash** (generated with EF Core 10 tooling) **and the P0.2 dev setup.**
+3. **Migration squash** (generated with EF Core 10 tooling) **and the P0.2 dev setup.** *Done 2026-10-05; migrations squashed 2026-10-04.*
+   - One `Initial` migration per DbContext. The Persistence one also inserts the standard statuses and priorities (global rows). Both were checked against the old chain on scratch databases: identical schema, with only the expected data differences.
+   - `DevelopmentUserSeeder` now creates `admin@localhost.com` and `user@localhost.com` (Development only, create-only).
+   - The demo SQL moved to `scripts/dev-seed/` and loads into a fresh database.
+   - Required settings (`JwtSettings`, the connection string, `AIService:BaseUrl`) are validated at startup, before the migrations run.
+   - Backend README with the setup, plus an optional `docker-compose.yml` (PostgreSQL 18 only). Frontend and `clef_ai` READMEs updated.
+   - Tests: removed the 9 backfill tests and the 5 password-sync seeder tests. Added 2 reference-data, 6 seeder and 9 startup-validation tests. The backend now has 350 tests.
+   - Not part of the squash: the `NotificationQueues(IsProcessed, ScheduledFor)` index stays a REMINDERS item, because the squash reproduces the existing schema.
 4. **Playwright smoke suite.**
 5. **Node 24, then Angular 19 → 20 → 21 → 22.**
 6. **Replace the AI feature** (see section 6), then **P1.2** backend cleanup and **P1.3** frontend decomposition.
@@ -174,7 +181,7 @@ After that, feature work resumes. P2 items are done once a deployment target is 
 - **AI attendance feature: option (a) for now.** Replace it with a simple, transparent rule-based score computed in .NET. Remove the VIEW-signal writes from the calendar GET path (`GetCalendarEventsQueryHandler`). Don't delete the `clef_ai` repo; the backend just stops calling it. ML may come back later, once real usage data exists. This narrows P1.1 to the .NET replacement. The `clef_ai` findings in P1.1 stay on record for that later work.
 - **Stub routes:** `event-tracker`, `playalong`, `metronome` and `tuner` are removed from navigation and routing, and their placeholder components deleted, for now (done in step 1). **They are planned features:** a practice/event tracker, play-along and the music tools (metronome, tuner) that are the product's namesake. They come back when they're actually built.
 - **Management page: kept.** `/management` stays as the "Under Construction" placeholder for the future admin area. It is routed (behind `authGuard`) and linked from the sidebar and the home page for administrators only. It was removed by mistake in step 1 and restored afterwards.
-- **DbContexts (merge `ClefCraftIdentityDbContext` and `ClefCraftDatabaseContext`, or keep them separate):** to be decided before step 3.
+- **DbContexts: kept separate.** `ClefCraftIdentityDbContext` and `ClefCraftDatabaseContext` stay two contexts on the same database and connection string, each with its own `Initial` migration (decided for step 3). Merging them would be an architecture change; the squash was the bigger win.
 
 ## Verification
 The baseline to re-run after every phase is `dotnet test ClefCraft.sln` (315 tests passed at review time), `npx ng test --watch=false --browsers=ChromeHeadless` (258 passed at review time), and `pytest` in a venv for `clef_ai`. Test counts may drop only where tests for removed code were deliberately deleted, and each phase lists those tests. Each item above lists its own extra checks.
