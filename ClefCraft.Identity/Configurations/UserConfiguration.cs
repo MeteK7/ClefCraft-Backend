@@ -9,10 +9,9 @@ namespace ClefCraft.Identity.Configurations
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
             // Users are deliberately not seeded with HasData: a seeded password is a credential
-            // committed to source and applied to every database, production included. The two
-            // accounts that used to be seeded still exist (seed SQL references them as owners) but
-            // had their passwords cleared by the DisableSeededAccounts migration. Local development
-            // passwords come from user-secrets via DevelopmentUserSeeder.
+            // committed to source and applied to every database, production included. The local
+            // development accounts (which the demo seed SQL references as owners) are created by
+            // DevelopmentUserSeeder, with passwords from user-secrets.
         }
     }
 }

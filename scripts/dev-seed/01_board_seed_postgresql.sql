@@ -1,34 +1,32 @@
 -- ============================================================
--- ClefCraft Seed Data — AI/Software Engineer Workspace
--- User ID: 944d0156-cb3d-466f-a1ea-5f53e3a10f8e
--- Run with: psql -U <user> -d <db> -f clefcraft_seed.sql
+-- ClefCraft demo data 1/3: boards for the AI/Software Engineer workspace
+--
+-- Owner and assignee: the development admin 944d0156-cb3d-466f-a1ea-5f53e3a10f8e
+--                     (admin@localhost.com, created by DevelopmentUserSeeder)
+-- Creates 3 boards with their owner memberships, columns, tags and 24 items.
+-- Statuses and priorities are not created here: the Initial migration provides the standard
+-- ones as global values, and the items refer to them by name.
+--
+-- Prerequisite: a freshly migrated database, i.e. after the first start of the API in
+-- Development. The script refuses to run if any board already exists.
+-- Run order: 01_board_seed -> 02_event_types -> 03_calendar_seed
+--
+--   psql -v ON_ERROR_STOP=1 -h <host> -U <user> -d <database> -f scripts/dev-seed/01_board_seed_postgresql.sql
 -- ============================================================
+
+BEGIN;
 
 SET search_path TO public;
 
--- ────────────────────────────────────────────────────────────
--- 1. STATUSES
--- ────────────────────────────────────────────────────────────
-INSERT INTO public."Statuses" ("Id", "Name", "DateCreated", "CreatedBy") VALUES
-  (1, 'Backlog',     NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (2, 'To Do',       NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (3, 'In Progress', NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (4, 'In Review',   NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (5, 'Done',        NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e')
-ON CONFLICT ("Id") DO NOTHING;
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM public."Boards") THEN
+    RAISE EXCEPTION '01_board_seed: the database already has boards. Load the demo data only into a freshly migrated database.';
+  END IF;
+END $$;
 
 -- ────────────────────────────────────────────────────────────
--- 2. PRIORITIES
--- ────────────────────────────────────────────────────────────
-INSERT INTO public."Priorities" ("Id", "Name", "DateCreated", "CreatedBy") VALUES
-  (1, 'Critical', NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (2, 'High',     NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (3, 'Medium',   NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (4, 'Low',      NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e')
-ON CONFLICT ("Id") DO NOTHING;
-
--- ────────────────────────────────────────────────────────────
--- 3. TAGS
+-- 1. TAGS
 -- ────────────────────────────────────────────────────────────
 INSERT INTO public."Tags" ("Id", "Name", "DateCreated", "CreatedBy") VALUES
   (1,  'AI/ML',         NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
@@ -40,56 +38,28 @@ INSERT INTO public."Tags" ("Id", "Name", "DateCreated", "CreatedBy") VALUES
   (7,  'Database',      NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
   (8,  'Testing',       NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
   (9,  'Performance',   NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (10, 'Documentation', NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e')
-ON CONFLICT ("Id") DO NOTHING;
+  (10, 'Documentation', NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e');
 
 -- ────────────────────────────────────────────────────────────
--- 4. BOARDS
+-- 2. BOARDS
 -- ────────────────────────────────────────────────────────────
-INSERT INTO public."Boards" ("Id", "Title", "DateCreated", "CreatedBy") VALUES
-  (1, 'AI Platform Sprint',           NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (2, 'Infrastructure & DevOps',      NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (3, 'Research & Experimentation',   NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e')
-ON CONFLICT ("Id") DO NOTHING;
+INSERT INTO public."Boards" ("Id", "Title", "OwnerUserId", "DateCreated", "CreatedBy") VALUES
+  (1, 'AI Platform Sprint',           '944d0156-cb3d-466f-a1ea-5f53e3a10f8e', NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
+  (2, 'Infrastructure & DevOps',      '944d0156-cb3d-466f-a1ea-5f53e3a10f8e', NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
+  (3, 'Research & Experimentation',   '944d0156-cb3d-466f-a1ea-5f53e3a10f8e', NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e');
 
 -- ────────────────────────────────────────────────────────────
--- 5. BOARD STATUSES
+-- 3. BOARD MEMBERS
 -- ────────────────────────────────────────────────────────────
-INSERT INTO public."BoardStatuses" ("Id", "BoardId", "StatusId", "DateCreated", "CreatedBy") VALUES
-  (1,  1, 1, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (2,  1, 2, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (3,  1, 3, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (4,  1, 4, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (5,  1, 5, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (6,  2, 1, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (7,  2, 2, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (8,  2, 3, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (9,  2, 5, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (10, 3, 1, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (11, 3, 2, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (12, 3, 3, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (13, 3, 5, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e')
-ON CONFLICT ("Id") DO NOTHING;
+-- Board access is membership-based: the owner needs a BoardMembers row, as boards created
+-- through the API get (CreateBoardCommandHandler).
+INSERT INTO public."BoardMembers" ("BoardId", "UserId", "DateCreated", "CreatedBy") VALUES
+  (1, '944d0156-cb3d-466f-a1ea-5f53e3a10f8e', NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
+  (2, '944d0156-cb3d-466f-a1ea-5f53e3a10f8e', NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
+  (3, '944d0156-cb3d-466f-a1ea-5f53e3a10f8e', NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e');
 
 -- ────────────────────────────────────────────────────────────
--- 6. BOARD PRIORITIES
--- ────────────────────────────────────────────────────────────
-INSERT INTO public."BoardPriorities" ("Id", "BoardId", "PriorityId", "DateCreated", "CreatedBy") VALUES
-  (1,  1, 1, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (2,  1, 2, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (3,  1, 3, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (4,  1, 4, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (5,  2, 1, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (6,  2, 2, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (7,  2, 3, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (8,  2, 4, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (9,  3, 2, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (10, 3, 3, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (11, 3, 4, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e')
-ON CONFLICT ("Id") DO NOTHING;
-
--- ────────────────────────────────────────────────────────────
--- 7. BOARD TAGS
+-- 4. BOARD TAGS
 -- ────────────────────────────────────────────────────────────
 INSERT INTO public."BoardTags" ("Id", "BoardId", "TagId", "DateCreated", "CreatedBy") VALUES
   (1,  1, 1,  NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
@@ -102,11 +72,10 @@ INSERT INTO public."BoardTags" ("Id", "BoardId", "TagId", "DateCreated", "Create
   (8,  2, 9,  NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
   (9,  3, 1,  NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
   (10, 3, 5,  NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (11, 3, 10, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e')
-ON CONFLICT ("Id") DO NOTHING;
+  (11, 3, 10, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e');
 
 -- ────────────────────────────────────────────────────────────
--- 8. BOARD COLUMNS
+-- 5. BOARD COLUMNS
 -- ────────────────────────────────────────────────────────────
 INSERT INTO public."BoardColumns" ("Id", "Title", "DateCreated", "CreatedBy") VALUES
   (1,  'Backlog',     NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
@@ -120,11 +89,10 @@ INSERT INTO public."BoardColumns" ("Id", "Title", "DateCreated", "CreatedBy") VA
   (9,  'Done',        NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
   (10, 'Ideas',       NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
   (11, 'Running',     NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (12, 'Concluded',   NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e')
-ON CONFLICT ("Id") DO NOTHING;
+  (12, 'Concluded',   NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e');
 
 -- ────────────────────────────────────────────────────────────
--- 9. BOARD COLUMN MAPPINGS
+-- 6. BOARD COLUMN MAPPINGS
 -- ────────────────────────────────────────────────────────────
 INSERT INTO public."BoardColumnMappings" ("Id", "BoardId", "BoardColumnId", "DateCreated", "CreatedBy") VALUES
   (1,  1, 1,  NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
@@ -138,11 +106,10 @@ INSERT INTO public."BoardColumnMappings" ("Id", "BoardId", "BoardColumnId", "Dat
   (9,  2, 9,  NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
   (10, 3, 10, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
   (11, 3, 11, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (12, 3, 12, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e')
-ON CONFLICT ("Id") DO NOTHING;
+  (12, 3, 12, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e');
 
 -- ────────────────────────────────────────────────────────────
--- 10. BOARD ITEMS
+-- 7. BOARD ITEMS
 -- ────────────────────────────────────────────────────────────
 INSERT INTO public."BoardItems" (
   "Id", "BoardId", "BoardColumnId",
@@ -272,71 +239,88 @@ INSERT INTO public."BoardItems" (
  'Token cost analysis across model providers',
  'Compared OpenAI, Anthropic, Cohere, and Mistral pricing for our usage patterns. Recommended hybrid: Claude Haiku for classification, GPT-4o for generation.',
  '944d0156-cb3d-466f-a1ea-5f53e3a10f8e', NOW() - INTERVAL '2 days', 3.0, 3.5,
- NOW() - INTERVAL '10 days', '944d0156-cb3d-466f-a1ea-5f53e3a10f8e')
-ON CONFLICT ("Id") DO NOTHING;
+ NOW() - INTERVAL '10 days', '944d0156-cb3d-466f-a1ea-5f53e3a10f8e');
 
 -- ────────────────────────────────────────────────────────────
--- 11. BOARD ITEM STATUSES
+-- 8. BOARD ITEM STATUSES
 -- ────────────────────────────────────────────────────────────
-INSERT INTO public."BoardItemStatuses" ("Id", "BoardItemId", "StatusId", "DateCreated", "CreatedBy") VALUES
-  (1,  1,  1, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (2,  2,  1, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (3,  3,  1, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (4,  4,  2, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (5,  5,  2, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (6,  6,  2, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (7,  7,  3, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (8,  8,  3, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (9,  9,  4, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (10, 10, 5, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (11, 11, 5, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (12, 12, 1, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (13, 13, 1, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (14, 14, 2, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (15, 15, 2, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (16, 16, 3, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (17, 17, 5, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (18, 18, 5, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (19, 19, 1, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (20, 20, 1, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (21, 21, 3, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (22, 22, 3, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (23, 23, 5, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (24, 24, 5, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e')
-ON CONFLICT ("Id") DO NOTHING;
+-- Resolved by name against the GLOBAL statuses (availability row with BoardId IS NULL), never by
+-- id: the ids are assigned by the Initial migration. A missing name leaves StatusId NULL and a
+-- duplicate name duplicates the explicit id; both fail the script.
+INSERT INTO public."BoardItemStatuses" ("Id", "BoardItemId", "StatusId", "DateCreated", "CreatedBy")
+SELECT v."Id", v."BoardItemId", g."Id", NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'
+FROM (VALUES
+  ( 1,  1, 'Backlog'),
+  ( 2,  2, 'Backlog'),
+  ( 3,  3, 'Backlog'),
+  ( 4,  4, 'To Do'),
+  ( 5,  5, 'To Do'),
+  ( 6,  6, 'To Do'),
+  ( 7,  7, 'In Progress'),
+  ( 8,  8, 'In Progress'),
+  ( 9,  9, 'In Review'),
+  (10, 10, 'Done'),
+  (11, 11, 'Done'),
+  (12, 12, 'Backlog'),
+  (13, 13, 'Backlog'),
+  (14, 14, 'To Do'),
+  (15, 15, 'To Do'),
+  (16, 16, 'In Progress'),
+  (17, 17, 'Done'),
+  (18, 18, 'Done'),
+  (19, 19, 'Backlog'),
+  (20, 20, 'Backlog'),
+  (21, 21, 'In Progress'),
+  (22, 22, 'In Progress'),
+  (23, 23, 'Done'),
+  (24, 24, 'Done')
+) AS v("Id", "BoardItemId", "Name")
+LEFT JOIN (
+  SELECT x."Id", x."Name" FROM public."Statuses" x
+  JOIN public."BoardStatuses" a ON a."StatusId" = x."Id" AND a."BoardId" IS NULL
+) g ON g."Name" = v."Name";
 
 -- ────────────────────────────────────────────────────────────
--- 12. BOARD ITEM PRIORITIES
+-- 9. BOARD ITEM PRIORITIES
 -- ────────────────────────────────────────────────────────────
-INSERT INTO public."BoardItemPriorities" ("Id", "BoardItemId", "PriorityId", "DateCreated", "CreatedBy") VALUES
-  (1,  1,  2, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (2,  2,  2, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (3,  3,  3, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (4,  4,  1, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (5,  5,  2, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (6,  6,  3, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (7,  7,  1, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (8,  8,  2, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (9,  9,  2, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (10, 10, 3, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (11, 11, 3, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (12, 12, 3, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (13, 13, 4, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (14, 14, 2, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (15, 15, 1, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (16, 16, 2, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (17, 17, 2, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (18, 18, 1, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (19, 19, 3, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (20, 20, 2, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (21, 21, 2, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (22, 22, 3, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (23, 23, 4, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (24, 24, 4, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e')
-ON CONFLICT ("Id") DO NOTHING;
+-- Resolved by name against the GLOBAL priorities (availability row with BoardId IS NULL), never by
+-- id: the ids are assigned by the Initial migration. A missing name leaves PriorityId NULL and a
+-- duplicate name duplicates the explicit id; both fail the script.
+INSERT INTO public."BoardItemPriorities" ("Id", "BoardItemId", "PriorityId", "DateCreated", "CreatedBy")
+SELECT v."Id", v."BoardItemId", g."Id", NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'
+FROM (VALUES
+  ( 1,  1, 'High'),
+  ( 2,  2, 'High'),
+  ( 3,  3, 'Medium'),
+  ( 4,  4, 'Critical'),
+  ( 5,  5, 'High'),
+  ( 6,  6, 'Medium'),
+  ( 7,  7, 'Critical'),
+  ( 8,  8, 'High'),
+  ( 9,  9, 'High'),
+  (10, 10, 'Medium'),
+  (11, 11, 'Medium'),
+  (12, 12, 'Medium'),
+  (13, 13, 'Low'),
+  (14, 14, 'High'),
+  (15, 15, 'Critical'),
+  (16, 16, 'High'),
+  (17, 17, 'High'),
+  (18, 18, 'Critical'),
+  (19, 19, 'Medium'),
+  (20, 20, 'High'),
+  (21, 21, 'High'),
+  (22, 22, 'Medium'),
+  (23, 23, 'Low'),
+  (24, 24, 'Low')
+) AS v("Id", "BoardItemId", "Name")
+LEFT JOIN (
+  SELECT x."Id", x."Name" FROM public."Priorities" x
+  JOIN public."BoardPriorities" a ON a."PriorityId" = x."Id" AND a."BoardId" IS NULL
+) g ON g."Name" = v."Name";
 
 -- ────────────────────────────────────────────────────────────
--- 13. BOARD ITEM TAGS
+-- 10. BOARD ITEM TAGS
 -- ────────────────────────────────────────────────────────────
 INSERT INTO public."BoardItemTags" ("Id", "BoardItemId", "TagId", "DateCreated", "CreatedBy") VALUES
   (1,  1, 1,  NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
@@ -390,22 +374,19 @@ INSERT INTO public."BoardItemTags" ("Id", "BoardItemId", "TagId", "DateCreated",
   (49, 23, 5, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
   (50, 23, 10,NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
   (51, 24, 1, NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e'),
-  (52, 24, 10,NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e')
-ON CONFLICT ("Id") DO NOTHING;
+  (52, 24, 10,NOW(), '944d0156-cb3d-466f-a1ea-5f53e3a10f8e');
 
 -- ────────────────────────────────────────────────────────────
--- Sequence resets
+-- Sequence resets: the inserts above use explicit ids, so move each identity sequence past them
 -- ────────────────────────────────────────────────────────────
-SELECT setval(pg_get_serial_sequence('public."Statuses"',            'Id'), 5);
-SELECT setval(pg_get_serial_sequence('public."Priorities"',          'Id'), 4);
-SELECT setval(pg_get_serial_sequence('public."Tags"',                'Id'), 10);
-SELECT setval(pg_get_serial_sequence('public."Boards"',              'Id'), 3);
-SELECT setval(pg_get_serial_sequence('public."BoardStatuses"',       'Id'), 13);
-SELECT setval(pg_get_serial_sequence('public."BoardPriorities"',     'Id'), 11);
-SELECT setval(pg_get_serial_sequence('public."BoardTags"',           'Id'), 11);
-SELECT setval(pg_get_serial_sequence('public."BoardColumns"',        'Id'), 12);
-SELECT setval(pg_get_serial_sequence('public."BoardColumnMappings"', 'Id'), 12);
-SELECT setval(pg_get_serial_sequence('public."BoardItems"',          'Id'), 24);
-SELECT setval(pg_get_serial_sequence('public."BoardItemStatuses"',   'Id'), 24);
-SELECT setval(pg_get_serial_sequence('public."BoardItemPriorities"', 'Id'), 24);
-SELECT setval(pg_get_serial_sequence('public."BoardItemTags"',       'Id'), 52);
+SELECT setval(pg_get_serial_sequence('public."Tags"', 'Id'), (SELECT MAX("Id") FROM public."Tags"));
+SELECT setval(pg_get_serial_sequence('public."Boards"', 'Id'), (SELECT MAX("Id") FROM public."Boards"));
+SELECT setval(pg_get_serial_sequence('public."BoardTags"', 'Id'), (SELECT MAX("Id") FROM public."BoardTags"));
+SELECT setval(pg_get_serial_sequence('public."BoardColumns"', 'Id'), (SELECT MAX("Id") FROM public."BoardColumns"));
+SELECT setval(pg_get_serial_sequence('public."BoardColumnMappings"', 'Id'), (SELECT MAX("Id") FROM public."BoardColumnMappings"));
+SELECT setval(pg_get_serial_sequence('public."BoardItems"', 'Id'), (SELECT MAX("Id") FROM public."BoardItems"));
+SELECT setval(pg_get_serial_sequence('public."BoardItemStatuses"', 'Id'), (SELECT MAX("Id") FROM public."BoardItemStatuses"));
+SELECT setval(pg_get_serial_sequence('public."BoardItemPriorities"', 'Id'), (SELECT MAX("Id") FROM public."BoardItemPriorities"));
+SELECT setval(pg_get_serial_sequence('public."BoardItemTags"', 'Id'), (SELECT MAX("Id") FROM public."BoardItemTags"));
+
+COMMIT;

@@ -6,17 +6,24 @@ using Microsoft.Extensions.Logging;
 namespace ClefCraft.Identity.Seeding
 {
     /// <summary>
-    /// Development-only: gives the two formerly seeded accounts a password taken from
-    /// user-secrets, since the DisableSeededAccounts migration clears it on every database.
-    /// Only ever invoked from Program.cs under IsDevelopment(); an unset secret is a no-op.
+    /// Development-only: creates the two local accounts the demo seed SQL refers to, with fixed ids
+    /// and passwords taken from user-secrets. Only ever invoked from Program.cs under IsDevelopment(),
+    /// after the migrations have run.
     ///
     ///   dotnet user-secrets set "DevSeed:AdminPassword" "..." --project ClefCraft.Api
     ///   dotnet user-secrets set "DevSeed:UserPassword" "..." --project ClefCraft.Api
+    ///
+    /// Create-only: an account that already exists is never modified, so changing a password secret
+    /// later needs a database reset. A missing secret skips that account. Identity failures (e.g. a
+    /// password that fails the password policy) are logged and don't stop startup.
     /// </summary>
     public class DevelopmentUserSeeder
     {
         public const string AdminUserId = "944d0156-cb3d-466f-a1ea-5f53e3a10f8e";
         public const string StandardUserId = "9e224968-33e4-4652-b7b7-8574d048cdb9";
+        public const string AdminEmail = "admin@localhost.com";
+        public const string StandardUserEmail = "user@localhost.com";
+        public const string AdministratorRole = "Administrator";
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
@@ -34,50 +41,86 @@ namespace ClefCraft.Identity.Seeding
 
         public async Task SeedAsync()
         {
-            await SetPasswordAsync(AdminUserId, _configuration["DevSeed:AdminPassword"]);
-            await SetPasswordAsync(StandardUserId, _configuration["DevSeed:UserPassword"]);
+            await EnsureUserAsync(AdminUserId, AdminEmail, "Admin", "DevSeed:AdminPassword", AdministratorRole);
+            await EnsureUserAsync(StandardUserId, StandardUserEmail, "User", "DevSeed:UserPassword", role: null);
         }
 
-        private async Task SetPasswordAsync(string userId, string? password)
+        private async Task EnsureUserAsync(string userId, string email, string lastName, string passwordKey, string? role)
         {
+            var password = _configuration[passwordKey];
             if (string.IsNullOrEmpty(password))
-                return;
-
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
             {
-                _logger.LogWarning("Development seed user {UserId} does not exist; skipping.", userId);
+                _logger.LogWarning("Development seed user {Email} skipped: {PasswordKey} is not set.", email, passwordKey);
                 return;
             }
 
-            if (await _userManager.CheckPasswordAsync(user, password))
-                return;
-
-            if (await _userManager.HasPasswordAsync(user))
+            if (await _userManager.FindByIdAsync(userId) != null)
             {
-                var removed = await _userManager.RemovePasswordAsync(user);
-                if (!removed.Succeeded)
-                {
-                    LogFailure(userId, removed);
-                    return;
-                }
-            }
-
-            var added = await _userManager.AddPasswordAsync(user, password);
-            if (!added.Succeeded)
-            {
-                LogFailure(userId, added);
+                _logger.LogInformation("Development seed user {Email} already exists; left unchanged.", email);
                 return;
             }
 
-            _logger.LogInformation("Development password set for seed user {UserId}.", userId);
+            var byEmail = await _userManager.FindByEmailAsync(email);
+            if (byEmail != null)
+            {
+                _logger.LogWarning(
+                    "Development seed user {Email} skipped: that email belongs to user {ExistingUserId}, not {UserId}.",
+                    email, byEmail.Id, userId);
+                return;
+            }
+
+            var user = new ApplicationUser
+            {
+                Id = userId,
+                UserName = email,
+                Email = email,
+                EmailConfirmed = true,
+                FirstName = "System",
+                LastName = lastName
+            };
+
+            var created = await _userManager.CreateAsync(user, password);
+            if (!created.Succeeded)
+            {
+                LogFailure("create", email, created);
+                return;
+            }
+
+            if (role != null && !await TryAddToRoleAsync(user, role))
+            {
+                // Don't leave a half-seeded account behind: the next run would skip it as existing.
+                await _userManager.DeleteAsync(user);
+                return;
+            }
+
+            _logger.LogInformation("Development seed user {Email} created.", email);
         }
 
-        private void LogFailure(string userId, IdentityResult result)
+        private async Task<bool> TryAddToRoleAsync(ApplicationUser user, string role)
         {
-            _logger.LogWarning(
-                "Could not set development password for seed user {UserId}: {Errors}",
-                userId,
+            try
+            {
+                var added = await _userManager.AddToRoleAsync(user, role);
+                if (added.Succeeded)
+                    return true;
+
+                LogFailure($"add to role {role}", user.Email!, added);
+                return false;
+            }
+            catch (InvalidOperationException ex)
+            {
+                // The store throws (rather than failing the result) when the role doesn't exist.
+                _logger.LogError(ex, "Could not add development seed user {Email} to role {Role}.", user.Email, role);
+                return false;
+            }
+        }
+
+        private void LogFailure(string action, string email, IdentityResult result)
+        {
+            _logger.LogError(
+                "Could not {Action} development seed user {Email}: {Errors}",
+                action,
+                email,
                 string.Join("; ", result.Errors.Select(e => e.Description)));
         }
     }

@@ -24,7 +24,15 @@ namespace ClefCraft.Identity
     {
         public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+            // Validated at startup (Program.cs runs the startup validators before anything else),
+            // so a bad config fails with a clear message rather than at the first sign-in.
+            services.AddOptions<JwtSettings>()
+                .Bind(configuration.GetSection("JwtSettings"))
+                .Validate(s => Encoding.UTF8.GetByteCount(s.Key ?? string.Empty) >= 32,
+                    "JwtSettings:Key must be at least 32 bytes (UTF-8).")
+                .Validate(s => !string.IsNullOrWhiteSpace(s.Issuer), "JwtSettings:Issuer is required.")
+                .Validate(s => !string.IsNullOrWhiteSpace(s.Audience), "JwtSettings:Audience is required.")
+                .ValidateOnStart();
 
             services.AddDbContext<ClefCraftIdentityDbContext>(options =>
             {
