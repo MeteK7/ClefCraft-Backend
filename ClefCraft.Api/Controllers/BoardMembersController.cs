@@ -1,3 +1,4 @@
+using ClefCraft.Api.Models;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Features.BoardMembers.Commands.AddMember;
 using ClefCraft.Application.Features.BoardMembers.Commands.RemoveMember;
@@ -35,13 +36,18 @@ namespace ClefCraft.Api.Controllers
             return Ok(result);
         }
 
+        // Binds a request model rather than the command itself: the command's RequestingUserId is
+        // set here, and binding the command made model validation demand it from the body.
         [HttpPost]
-        public async Task<ActionResult<BoardMemberDto>> Add(int boardId, [FromBody] AddBoardMemberCommand command)
+        public async Task<ActionResult<BoardMemberDto>> Add(int boardId, [FromBody] AddBoardMemberRequest request)
         {
-            command.BoardId = boardId;
-            command.RequestingUserId = _userService.UserId;
+            var result = await _mediator.Send(new AddBoardMemberCommand
+            {
+                BoardId = boardId,
+                UserId = request.UserId,
+                RequestingUserId = _userService.UserId
+            });
 
-            var result = await _mediator.Send(command);
             return Ok(result);
         }
 
