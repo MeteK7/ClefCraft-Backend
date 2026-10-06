@@ -300,6 +300,7 @@ namespace ClefCraft.Application.Common.Helpers
                     {
                         Id = sourceEvent.Id,
                         BaseEventId = sourceEvent.Id,
+                        UserId = sourceEvent.UserId,
                         SeriesUid = sourceEvent.SeriesUid,
                         Subject = sourceEvent.Subject,
                         Location = sourceEvent.Location,

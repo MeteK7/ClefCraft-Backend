@@ -486,5 +486,25 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Helpers
             var rule = new RecurrenceRule { Frequency = "WEEKLY", Interval = 1, DaysOfWeek = new List<int> { 1, 3 } };
             Should.NotThrow(() => RecurrenceHelper.ValidateRule(rule, DateTimeOffset.UtcNow));
         }
+
+        // ------------------------------------------------------------------
+        // Ownership
+        // ------------------------------------------------------------------
+
+        // Occurrences are projected to the client with OwnerUserId taken from UserId; the calendar
+        // dialog treats an occurrence without it as someone else's event (read-only).
+        [Fact]
+        public void ExpandEvent_EveryOccurrence_KeepsTheSourceEventsOwner()
+        {
+            var start = new DateTimeOffset(2026, 1, 5, 9, 0, 0, TimeSpan.Zero);
+            var sourceEvent = MakeSourceEvent(start, start.AddHours(1));
+            var rule = new RecurrenceRule { Frequency = "DAILY", Interval = 1 };
+
+            var occurrences = RecurrenceHelper.ExpandEvent(
+                sourceEvent, rule, new List<CalendarEventException>(), start, start.AddDays(3));
+
+            occurrences.Count.ShouldBe(3);
+            occurrences.ShouldAllBe(o => o.UserId == "user-1");
+        }
     }
 }
