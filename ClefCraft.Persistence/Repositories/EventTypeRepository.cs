@@ -25,5 +25,12 @@ namespace ClefCraft.Persistence.Repositories
                 .OrderBy(t => t.Name)
                 .ToListAsync();
         }
+
+        public async Task<List<EventType>> GetByIdsAsync(List<int> ids)
+        {
+            return await _context.EventTypes
+                .Where(t => ids.Contains(t.Id))
+                .ToListAsync();
+        }
     }
 }

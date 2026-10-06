@@ -16,6 +16,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
         private readonly IAttendancePredictionService _predictionService;
         private readonly IUserInteractionService _interactionService;
         private readonly ICalendarReminderRepository _reminderRepo;
+        private readonly IEventTypeRepository _eventTypeRepo;
         private readonly IUnitOfWork _unitOfWork;
 
         public GetCalendarEventsQueryHandler(
@@ -26,6 +27,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             IAttendancePredictionService predictionService,
             IUserInteractionService interactionService,
             ICalendarReminderRepository reminderRepo,
+            IEventTypeRepository eventTypeRepo,
             IUnitOfWork unitOfWork)
         {
             _eventRepo = eventRepo;
@@ -35,6 +37,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             _predictionService = predictionService;
             _interactionService = interactionService;
             _reminderRepo = reminderRepo;
+            _eventTypeRepo = eventTypeRepo;
             _unitOfWork = unitOfWork;
         }
 
@@ -58,7 +61,12 @@ namespace ClefCraft.Application.Features.Calendar.Queries
                 .Where(e => e.StartDate < request.RangeEnd && e.EndDate > request.RangeStart)
                 .ToList();
 
-            // 3.1 Load reminders in a single query (NO N+1)
+            // 3.1 Event type name/colour for occurrences that only carry an EventTypeId. Recurring
+            //     occurrences are built from segments and single-occurrence edits, which can each
+            //     change the type, so resolve by id (one query) rather than copying the root's.
+            await FillMissingEventTypesAsync(dtos);
+
+            // 3.2 Load reminders in a single query (NO N+1)
             var eventIds = dtos.Select(x => x.Id).Distinct().ToList();
 
             var reminders = await _reminderRepo.GetByEventIdsAsync(eventIds);
@@ -116,6 +124,27 @@ namespace ClefCraft.Application.Features.Calendar.Queries
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return dtos;
+        }
+
+        private async Task FillMissingEventTypesAsync(List<CalendarEventDto> dtos)
+        {
+            var missing = dtos
+                .Where(d => d.EventTypeId.HasValue && d.EventTypeName == null)
+                .ToList();
+            if (missing.Count == 0)
+                return;
+
+            var ids = missing.Select(d => d.EventTypeId!.Value).Distinct().ToList();
+            var types = (await _eventTypeRepo.GetByIdsAsync(ids)).ToDictionary(t => t.Id);
+
+            foreach (var dto in missing)
+            {
+                if (types.TryGetValue(dto.EventTypeId!.Value, out var type))
+                {
+                    dto.EventTypeName = type.Name;
+                    dto.EventColor = type.Color;
+                }
+            }
         }
     }
 }

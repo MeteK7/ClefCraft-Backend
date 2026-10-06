@@ -431,5 +431,57 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar
             result.Where(x => x.SeriesUid == SeriesUidA).ShouldNotContain(x => x.StartDate == cancelledDateA);
             result.Count(x => x.SeriesUid == SeriesUidB).ShouldBe(3); // untouched
         }
+
+        // The calendar dialog compares OwnerUserId with the signed-in user to decide whether the
+        // event is editable; an occurrence without it makes the owner a read-only viewer of their
+        // own recurring event.
+        [Fact]
+        public async Task ProjectAsync_SegmentExpansion_EveryOccurrenceCarriesTheOwner()
+        {
+            var (service, exceptionRepo, seriesRepo) = MakeService();
+            var start = new DateTimeOffset(2026, 1, 5, 9, 0, 0, TimeSpan.Zero);
+
+            var rootEvent = new CalendarEvent
+            {
+                Id = 1, UserId = "owner-1", SeriesUid = SeriesUid, IsRecurring = true,
+                Subject = "Standup", StartDate = start, EndDate = start.AddHours(1),
+                RecurrenceRuleJson = "{\"Frequency\":\"DAILY\",\"Interval\":1}"
+            };
+            var segment = MakeSegment(
+                effectiveFrom: start, effectiveTo: null,
+                startDate: start, endDate: start.AddHours(1),
+                ruleJson: "{\"Frequency\":\"DAILY\",\"Interval\":1}");
+
+            seriesRepo.Setup(r => r.GetBySeriesUidAsync(SeriesUid))
+                .ReturnsAsync(new RecurrenceSeries { Id = 5, SeriesUid = SeriesUid, Segments = new List<CalendarEventSegment> { segment } });
+            exceptionRepo.Setup(r => r.GetBySeriesUids(It.IsAny<IEnumerable<string>>())).ReturnsAsync(new List<CalendarEventException>());
+
+            var result = await service.ProjectAsync(new List<CalendarEvent> { rootEvent }, start, start.AddDays(3));
+
+            result.Count.ShouldBe(3);
+            result.ShouldAllBe(x => x.OwnerUserId == "owner-1");
+        }
+
+        [Fact]
+        public async Task ProjectAsync_LegacyExpansion_EveryOccurrenceCarriesTheOwner()
+        {
+            var (service, exceptionRepo, seriesRepo) = MakeService();
+            var start = new DateTimeOffset(2026, 1, 5, 9, 0, 0, TimeSpan.Zero);
+
+            seriesRepo.Setup(r => r.GetBySeriesUidAsync(SeriesUid)).ReturnsAsync((RecurrenceSeries?)null);
+            exceptionRepo.Setup(r => r.GetBySeriesUids(It.IsAny<IEnumerable<string>>())).ReturnsAsync(new List<CalendarEventException>());
+
+            var rootEvent = new CalendarEvent
+            {
+                Id = 1, UserId = "owner-1", SeriesUid = SeriesUid, IsRecurring = true,
+                Subject = "Standup", StartDate = start, EndDate = start.AddHours(1),
+                RecurrenceRuleJson = "{\"Frequency\":\"DAILY\",\"Interval\":1}"
+            };
+
+            var result = await service.ProjectAsync(new List<CalendarEvent> { rootEvent }, start, start.AddDays(3));
+
+            result.Count.ShouldBe(3);
+            result.ShouldAllBe(x => x.OwnerUserId == "owner-1");
+        }
     }
 }
