@@ -44,8 +44,10 @@ namespace ClefCraft.Application.Features.BoardItemRelations.Queries.GetRelations
 
             foreach (var relation in relations)
             {
+                var isOutgoing = relation.SourceBoardItemId == request.ItemId;
+
                 var relatedItem =
-                    relation.SourceBoardItemId == request.ItemId
+                    isOutgoing
                         ? relation.TargetBoardItem
                         : relation.SourceBoardItem;
 
@@ -56,6 +58,8 @@ namespace ClefCraft.Application.Features.BoardItemRelations.Queries.GetRelations
                 {
                     RelationId = relation.Id,
                     ItemId = relatedItem.Id,
+                    BoardId = relatedItem.BoardId,
+                    IsOutgoing = isOutgoing,
                     Title = relatedItem.Title,
                     Status = relatedItem.BoardItemStatus?.Status?.Name ?? "",
                     Priority = relatedItem.BoardItemPriority?.Priority?.Name ?? "",
