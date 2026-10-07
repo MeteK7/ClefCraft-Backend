@@ -48,12 +48,13 @@ namespace ClefCraft.Application.Features.BoardItem
             };
         }
 
-        /// <summary>RelationId is filled by the handler.</summary>
+        /// <summary>RelationId and IsOutgoing are filled by the handler.</summary>
         public static RelationshipCardDto ToRelationshipCard(Domain.BoardItem item)
         {
             return new RelationshipCardDto
             {
                 ItemId = item.Id,
+                BoardId = item.BoardId,
                 Title = item.Title,
                 // No status link means "": a link whose Status isn't loaded means null.
                 Status = item.BoardItemStatus != null ? item.BoardItemStatus.Status?.Name! : "",

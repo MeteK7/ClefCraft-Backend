@@ -68,7 +68,7 @@ This drops the whole database (both contexts). The next start of the API recreat
 
 ### Demo data
 
-`scripts/dev-seed/` has three psql scripts. Load them into a freshly migrated database, after the
+`scripts/dev-seed/` has three general demo scripts. Load them into a freshly migrated database, after the
 first start of the API, in this order:
 
 ```bash
@@ -79,6 +79,16 @@ psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d clefcraft_db -f scripts/dev-
 
 Each script runs in one transaction and refuses to run twice. Sign in as `admin@localhost.com` for
 the boards and as `user@localhost.com` for the calendar (the events are in June 2026).
+
+`04_relay_demo_postgresql.sql` adds the "Relay Support Platform" board for demonstrating the
+Relationship Graph: 50 items, 72 relationships and 7 display-only team members who can't sign in.
+It only needs the admin account, so it loads with or without 01–03:
+
+```bash
+psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d clefcraft_db -f scripts/dev-seed/04_relay_demo_postgresql.sql
+```
+
+Open "Implement RAG orchestration service" and switch to the Relationship Graph.
 
 ## Run
 

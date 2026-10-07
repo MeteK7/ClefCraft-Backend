@@ -224,6 +224,9 @@ namespace ClefCraft.Infrastructure.Services.Calendar
             {
                 Id = rootEvent.Id,
                 BaseEventId = rootEvent.Id,
+                // Projected as OwnerUserId; without it the calendar dialog treats the owner
+                // as a read-only viewer of their own recurring event.
+                UserId = rootEvent.UserId,
                 SeriesUid = rootEvent.SeriesUid,
                 Subject = segment.Subject,
                 Location = segment.Location,
