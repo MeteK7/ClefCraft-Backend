@@ -88,6 +88,7 @@ namespace ClefCraft.Application.Features.BoardItemRelations.Commands.CreateRelat
 
             var dto = BoardItemMapper.ToRelationshipCard(target);
             dto.RelationId = relation.Id;
+            dto.IsOutgoing = true;
 
             return dto;
         }

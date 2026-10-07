@@ -166,7 +166,9 @@ namespace ClefCraft.Application.UnitTests.Mapping
             var dto = MappingUnderTest.ToRelationshipCardDto(FullItem());
 
             dto.ItemId.ShouldBe(11);
+            dto.BoardId.ShouldBe(3);
             dto.RelationId.ShouldBe(0); // set by the handler
+            dto.IsOutgoing.ShouldBeFalse(); // set by the handler
             dto.Title.ShouldBe("Scales");
             dto.Status.ShouldBe("Doing");
             dto.Priority.ShouldBe("High");
