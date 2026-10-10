@@ -14,7 +14,7 @@ namespace ClefCraft.Persistence.Repositories
     {
         public CalendarEventRepository(ClefCraftDatabaseContext context) : base(context) { }
 
-        public async Task<CalendarEvent> GetByDateAsync(DateTime date)
+        public async Task<CalendarEvent?> GetByDateAsync(DateTime date)
         {
             return await _context.CalendarEvents
                 .Where(e => e.StartDate.Date == date.Date)

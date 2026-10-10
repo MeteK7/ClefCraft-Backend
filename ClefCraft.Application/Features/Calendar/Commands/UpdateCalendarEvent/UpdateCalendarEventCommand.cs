@@ -12,7 +12,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
     public class UpdateCalendarEventCommand : IRequest<CalendarEventDto>
     {
         public int Id { get; set; }
-        public string Subject { get; set; }
+        public string Subject { get; set; } = null!;
         public string? Location { get; set; }
         public DateTimeOffset StartDate { get; set; }
         public DateTimeOffset EndDate { get; set; }

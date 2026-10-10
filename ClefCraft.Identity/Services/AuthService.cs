@@ -157,8 +157,8 @@ namespace ClefCraft.Identity.Services
             {
                 Id = user.Id,
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
-                Email = user.Email,
-                UserName = user.UserName,
+                Email = user.Email!,
+                UserName = user.UserName!,
                 RefreshToken = rawRefreshToken,
                 RefreshTokenExpiresAt = refreshToken.ExpiresAt,
                 SessionExpiresAt = refreshToken.SessionExpiresAt
@@ -231,9 +231,9 @@ namespace ClefCraft.Identity.Services
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName!),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email!),
                 new Claim("uid", user.Id)
             }
             .Union(userClaims)

@@ -9,6 +9,6 @@ namespace ClefCraft.Application.Features.Board.Queries.GetBoards
 {
     public class GetBoardsQuery:IRequest<List<BoardDto>>
     {
-        public string UserId { get; set; }
+        public string UserId { get; set; } = null!;
     }
 }

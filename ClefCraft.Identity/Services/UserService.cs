@@ -24,14 +24,15 @@ namespace ClefCraft.Identity.Services
             _contextAccessor = contextAccessor;
         }
 
-        public string UserId { get => _contextAccessor.HttpContext?.User?.FindFirstValue("uid"); }
+        // Only read in [Authorize] controllers, where the uid claim is always present.
+        public string UserId { get => _contextAccessor.HttpContext?.User?.FindFirstValue("uid")!; }
 
         public async Task<User> GetUser(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
             return new User
             {
-                Email = user.Email,
+                Email = user!.Email!,
                 Id = user.Id,
                 Firstname = user.FirstName,
                 Lastname = user.LastName
@@ -46,7 +47,7 @@ namespace ClefCraft.Identity.Services
             return users.Select(u => new Assignee
             {
                 Id = u.Id,
-                Email = u.Email,
+                Email = u.Email!,
                 Firstname = u.FirstName,
                 Lastname = u.LastName
             }).ToList();
@@ -60,7 +61,7 @@ namespace ClefCraft.Identity.Services
             return new Assignee
             {
                 Id = user.Id,
-                Email = user.Email,
+                Email = user.Email!,
                 Firstname = user.FirstName,
                 Lastname = user.LastName
             };
@@ -78,7 +79,7 @@ namespace ClefCraft.Identity.Services
             return users.Select(u => new User
             {
                 Id = u.Id,
-                Email = u.Email,
+                Email = u.Email!,
                 Firstname = u.FirstName,
                 Lastname = u.LastName
             }).ToList();

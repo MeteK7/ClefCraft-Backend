@@ -8,9 +8,9 @@ namespace ClefCraft.Application.Features.BoardMembers.Commands.AddMember
         public int BoardId { get; set; }
 
         /// <summary>The user being added as a member.</summary>
-        public string UserId { get; set; }
+        public string UserId { get; set; } = null!;
 
         /// <summary>The caller — set by the controller, must be the board's owner.</summary>
-        public string RequestingUserId { get; set; }
+        public string RequestingUserId { get; set; } = null!;
     }
 }

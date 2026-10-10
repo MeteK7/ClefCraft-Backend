@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Application.Features.Calendar.Queries.GetCalendarAttachments
 {
-    public class GetAttachmentByIdQuery : IRequest<CalendarEventAttachmentDto>
+    public class GetAttachmentByIdQuery : IRequest<CalendarEventAttachmentDto?>
     {
         public int Id { get; set; }
-        public string UserId { get; set; }
+        public string UserId { get; set; } = null!;
     }
 }

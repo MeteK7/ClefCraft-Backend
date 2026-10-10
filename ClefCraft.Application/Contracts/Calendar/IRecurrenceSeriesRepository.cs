@@ -18,7 +18,5 @@ namespace ClefCraft.Application.Contracts.Calendar
         Task<RecurrenceSeries?> GetBySeriesUidAsync(string seriesUid);
 
         Task<List<RecurrenceSeries>> GetByUserIdAsync(string userId);
-
-        Task CreateAsync(RecurrenceSeries series);
     }
 }

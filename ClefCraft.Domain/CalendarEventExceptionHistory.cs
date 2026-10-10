@@ -10,9 +10,9 @@ namespace ClefCraft.Domain
     public class CalendarEventExceptionHistory : BaseEntity
     {
         public int CalendarEventId { get; set; }
-        public CalendarEvent CalendarEvent { get; set; }
+        public CalendarEvent CalendarEvent { get; set; } = null!;
         public DateTime ChangeDate { get; set; }
-        public string ChangeDescription { get; set; }
-        public string ChangedBy { get; set; }
+        public string ChangeDescription { get; set; } = null!;
+        public string ChangedBy { get; set; } = null!;
     }
 }

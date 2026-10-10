@@ -9,11 +9,11 @@ namespace ClefCraft.Domain
 {
     public class EventType : BaseEntity
     {
-        public string Name { get; set; }
-        public string Color { get; set; }
+        public string Name { get; set; } = null!;
+        public string Color { get; set; } = null!;
 
-        public string UserId { get; set; }
+        public string UserId { get; set; } = null!;
 
-        public List<CalendarEvent> Events { get; set; }
+        public List<CalendarEvent> Events { get; set; } = null!;
     }
 }

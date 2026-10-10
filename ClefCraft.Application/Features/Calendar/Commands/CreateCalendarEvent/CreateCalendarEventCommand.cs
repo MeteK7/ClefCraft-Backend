@@ -11,7 +11,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
 {
     public class CreateCalendarEventCommand : IRequest<CalendarEventDto>
     {
-        public string Subject { get; set; }
+        public string Subject { get; set; } = null!;
         public string? Location { get; set; }
         public DateTimeOffset StartDate { get; set; }
         public DateTimeOffset EndDate { get; set; }

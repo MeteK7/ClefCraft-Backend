@@ -13,7 +13,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSingleOccurrenc
         /// <summary>
         /// Identifies the recurring series (NOT a single event anymore)
         /// </summary>
-        public string SeriesUid { get; set; }
+        public string SeriesUid { get; set; } = null!;
 
         /// <summary>
         /// The exact occurrence being modified

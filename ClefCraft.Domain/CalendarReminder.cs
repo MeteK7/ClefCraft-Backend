@@ -11,7 +11,7 @@ namespace ClefCraft.Domain
     {
         public int CalendarEventId { get; set; }
 
-        public CalendarEvent CalendarEvent { get; set; }
+        public CalendarEvent CalendarEvent { get; set; } = null!;
 
         public int MinutesBeforeStart { get; set; }
 

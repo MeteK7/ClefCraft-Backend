@@ -181,7 +181,7 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             // Reload fresh state with navigation properties
-            var updatedItem = await _boardItemRepository.GetBoardItemById(boardItem.Id);
+            var updatedItem = (await _boardItemRepository.GetBoardItemById(boardItem.Id))!; // just saved
             var dto = BoardItemMapper.ToByIdDto(updatedItem);
 
             // Populate assignee manually

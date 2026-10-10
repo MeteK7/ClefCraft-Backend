@@ -12,7 +12,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UploadCalendarAttachm
     public class UploadCalendarAttachmentCommand : IRequest<List<CalendarEventAttachmentDto>>
     {
         public int EventId { get; set; }
-        public List<IFormFile> Files { get; set; }
-        public string UserId { get; set; }
+        public List<IFormFile> Files { get; set; } = null!;
+        public string UserId { get; set; } = null!;
     }
 }

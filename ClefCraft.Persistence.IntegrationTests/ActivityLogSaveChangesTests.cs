@@ -133,9 +133,10 @@ namespace ClefCraft.Persistence.IntegrationTests
                 .ToList();
 
             updatedLogs.Count.ShouldBe(1);
-            updatedLogs[0].MetadataJson.ShouldContain("StartDate");
-            updatedLogs[0].MetadataJson.ShouldContain("EndDate");
-            updatedLogs[0].MetadataJson.ShouldContain("Importance");
+            var metadata = updatedLogs[0].MetadataJson.ShouldNotBeNull();
+            metadata.ShouldContain("StartDate");
+            metadata.ShouldContain("EndDate");
+            metadata.ShouldContain("Importance");
         }
 
         // The reminder background service saves outside any HTTP request, so there is no user.

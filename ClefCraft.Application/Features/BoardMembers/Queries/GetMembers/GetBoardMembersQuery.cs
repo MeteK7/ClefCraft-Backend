@@ -6,6 +6,6 @@ namespace ClefCraft.Application.Features.BoardMembers.Queries.GetMembers
     public class GetBoardMembersQuery : IRequest<List<BoardMemberDto>>
     {
         public int BoardId { get; set; }
-        public string UserId { get; set; }
+        public string UserId { get; set; } = null!;
     }
 }

@@ -28,8 +28,8 @@ namespace ClefCraft.Application.Features.Calendar.Queries
         /// they don't own here (a teammate's "Mark as Worked" entry linked to a shared
         /// board item) — compare against the current user to decide read-only rendering.
         /// </summary>
-        public string OwnerUserId { get; set; }
-        public string Subject { get; set; }
+        public string OwnerUserId { get; set; } = null!;
+        public string Subject { get; set; } = null!;
         public string? Location { get; set; }
         public DateTimeOffset StartDate { get; set; }
         public DateTimeOffset EndDate { get; set; }

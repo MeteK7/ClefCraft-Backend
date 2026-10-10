@@ -10,8 +10,8 @@ namespace ClefCraft.Domain
     public class BoardItemTag : BaseEntity
     {
         public int BoardItemId { get; set; }
-        public BoardItem BoardItem { get; set; }
+        public BoardItem BoardItem { get; set; } = null!;
         public int TagId { get; set; }
-        public Tag Tag { get; set; }
+        public Tag Tag { get; set; } = null!;
     }
 }

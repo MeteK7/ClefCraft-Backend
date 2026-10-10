@@ -4,7 +4,7 @@ namespace ClefCraft.Domain
 {
     public class Comment : BaseEntity
     {
-        public string EntityType { get; set; } // "BoardItem", "CalendarEvent"
+        public string EntityType { get; set; } = null!; // "BoardItem", "CalendarEvent"
         public int EntityId { get; set; }
 
         // Single-level reply-to only: a comment whose own ParentCommentId is

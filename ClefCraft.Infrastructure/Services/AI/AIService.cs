@@ -120,7 +120,7 @@ namespace ClefCraft.Infrastructure.Services.AI
 
     public class AIPredictionRequest
     {
-        public string UserId { get; set; }
+        public string UserId { get; set; } = null!;
         public int EventId { get; set; }
 
         public DateTimeOffset StartDate { get; set; }

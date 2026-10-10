@@ -26,7 +26,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateFromOccurrence
         /// <summary>
         /// Stable identity of the recurrence series being split.
         /// </summary>
-        public string SeriesUid { get; set; }
+        public string SeriesUid { get; set; } = null!;
 
         /// <summary>
         /// The occurrence at which the split begins ("this" occurrence).

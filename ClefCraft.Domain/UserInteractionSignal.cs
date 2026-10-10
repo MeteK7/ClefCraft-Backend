@@ -9,10 +9,10 @@ namespace ClefCraft.Domain
 {
     public class UserInteractionSignal : BaseEntity
     {
-        public string UserId { get; set; }
-        public string SignalType { get; set; }
+        public string UserId { get; set; } = null!;
+        public string SignalType { get; set; } = null!;
         // "SNOOZE", "DRAG_DROP", "EDIT", "COMMENT", "VIEW"
-        public string EntityType { get; set; }
+        public string EntityType { get; set; } = null!;
         public int EntityId { get; set; }
         public double Value { get; set; } // intensity, duration, etc.
         public DateTime Timestamp { get; set; }

@@ -9,7 +9,7 @@ namespace ClefCraft.Domain
 {
     public class Tag : BaseEntity
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
         public ICollection<BoardTag> BoardTags { get; set; } = new List<BoardTag>();
         public ICollection<BoardItemTag> BoardItemTags { get; set; } = new List<BoardItemTag>();
     }

@@ -8,7 +8,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.DeleteFromOccurrence
     /// </summary>
     public class DeleteFromOccurrenceCommand : IRequest
     {
-        public string SeriesUid { get; set; }
+        public string SeriesUid { get; set; } = null!;
 
         public DateTimeOffset OccurrenceDate { get; set; }
     }

@@ -15,7 +15,7 @@ namespace ClefCraft.Identity.UnitTests.Mocks
         {
             var store = new Mock<IUserStore<ApplicationUser>>();
             return new Mock<UserManager<ApplicationUser>>(
-                store.Object, null, null, null, null, null, null, null, null);
+                store.Object, null!, null!, null!, null!, null!, null!, null!, null!);
         }
 
         public static Mock<SignInManager<ApplicationUser>> MockSignInManager(UserManager<ApplicationUser> userManager)
@@ -24,7 +24,7 @@ namespace ClefCraft.Identity.UnitTests.Mocks
             var claimsFactory = new Mock<IUserClaimsPrincipalFactory<ApplicationUser>>();
 
             return new Mock<SignInManager<ApplicationUser>>(
-                userManager, contextAccessor.Object, claimsFactory.Object, null, null, null, null);
+                userManager, contextAccessor.Object, claimsFactory.Object, null!, null!, null!, null!);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSeries
 {
     public class UpdateSeriesPreserveExceptionsCommand : IRequest
     {
-        public string SeriesUid { get; set; }
+        public string SeriesUid { get; set; } = null!;
 
         public string? Subject { get; set; }
         public string? Location { get; set; }
