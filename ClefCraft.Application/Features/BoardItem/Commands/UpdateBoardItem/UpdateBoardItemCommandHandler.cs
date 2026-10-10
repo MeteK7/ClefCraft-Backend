@@ -17,6 +17,8 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
 {
     public class UpdateBoardItemCommandHandler : IRequestHandler<UpdateBoardItemCommand, BoardItemByIdDto>
     {
+        private const string CompletedStatusName = "Done";
+
         private readonly IBoardItemRepository _boardItemRepository;
         private readonly IBoardAccessService _boardAccessService;
         private readonly IStatusRepository _statusRepository;
@@ -165,15 +167,23 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
                 await _taskLifecycleService.RecordAssigneeChangeAsync(boardItem.Id);
             }
 
-            const int COMPLETED_STATUS_ID = 3;
             var currentStatusId = boardItem.BoardItemStatus?.StatusId;
 
             if (previousStatusId != currentStatusId)
             {
-                if (currentStatusId == COMPLETED_STATUS_ID)
+                // Resolve "Done" by name: status ids depend on the order the statuses were created in.
+                var doneStatusIds = (await _statusRepository.GetStatusesAsync())
+                    .Where(s => s.Name == CompletedStatusName)
+                    .Select(s => s.Id)
+                    .ToHashSet();
+
+                var wasDone = previousStatusId.HasValue && doneStatusIds.Contains(previousStatusId.Value);
+                var isDone = currentStatusId.HasValue && doneStatusIds.Contains(currentStatusId.Value);
+
+                if (isDone)
                     await _taskLifecycleService.RecordCompletionAsync(boardItem.Id);
 
-                if (previousStatusId == COMPLETED_STATUS_ID && currentStatusId != COMPLETED_STATUS_ID)
+                if (wasDone && !isDone)
                     await _taskLifecycleService.RecordReopenAsync(boardItem.Id);
             }
 

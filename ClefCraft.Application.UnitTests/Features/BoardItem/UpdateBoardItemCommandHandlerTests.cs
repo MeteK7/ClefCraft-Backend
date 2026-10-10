@@ -19,7 +19,19 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
     // is already covered by BoardItemAuthorizationTests, so it's mocked as allowed here.
     public class UpdateBoardItemCommandHandlerTests
     {
-        private const int CompletedStatusId = 3;
+        // The standard statuses in creation order: 1 Backlog, 2 To Do, 3 In Progress, 4 In Review, 5 Done.
+        private const int InProgressStatusId = 3;
+        private const int DoneStatusId = 5;
+
+        private static Mock<IStatusRepository> MakeStatusRepo()
+        {
+            var statusRepo = new Mock<IStatusRepository>();
+            statusRepo.Setup(r => r.GetStatusesAsync()).ReturnsAsync(
+                new[] { "Backlog", "To Do", "In Progress", "In Review", "Done" }
+                    .Select((name, i) => new Status { Id = i + 1, Name = name })
+                    .ToList());
+            return statusRepo;
+        }
 
         private static Domain.BoardItem MakeItem(int statusId = 1, params int[] tagIds) => new Domain.BoardItem
         {
@@ -39,7 +51,7 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
             new UpdateBoardItemCommandHandler(
                 repo.Object,
                 MockAccessServices.GetMockBoardAccessService(authorized: true).Object,
-                new Mock<IStatusRepository>().Object,
+                MakeStatusRepo().Object,
                 new Mock<IPriorityRepository>().Object,
                 new Mock<ITagRepository>().Object,
                 (userService ?? MakeUserService()).Object,
@@ -190,16 +202,31 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
 
             var handler = MakeHandler(repo, lifecycleService);
 
-            await handler.Handle(new UpdateBoardItemCommand { Id = 1, StatusId = CompletedStatusId }, CancellationToken.None);
+            await handler.Handle(new UpdateBoardItemCommand { Id = 1, StatusId = DoneStatusId }, CancellationToken.None);
 
             lifecycleService.Verify(l => l.RecordCompletionAsync(1), Times.Once);
             lifecycleService.Verify(l => l.RecordReopenAsync(It.IsAny<int>()), Times.Never);
         }
 
         [Fact]
+        public async Task Handle_StatusChangesToInProgress_RecordsNeitherCompletionNorReopen()
+        {
+            var item = MakeItem(statusId: 1);
+            var repo = MakeRepoReturning(item);
+            var lifecycleService = new Mock<ITaskLifecycleService>();
+
+            var handler = MakeHandler(repo, lifecycleService);
+
+            await handler.Handle(new UpdateBoardItemCommand { Id = 1, StatusId = InProgressStatusId }, CancellationToken.None);
+
+            lifecycleService.Verify(l => l.RecordCompletionAsync(It.IsAny<int>()), Times.Never);
+            lifecycleService.Verify(l => l.RecordReopenAsync(It.IsAny<int>()), Times.Never);
+        }
+
+        [Fact]
         public async Task Handle_StatusChangesFromCompletedToOther_RecordsReopenButNotCompletion()
         {
-            var item = MakeItem(statusId: CompletedStatusId);
+            var item = MakeItem(statusId: DoneStatusId);
             var repo = MakeRepoReturning(item);
             var lifecycleService = new Mock<ITaskLifecycleService>();
 
