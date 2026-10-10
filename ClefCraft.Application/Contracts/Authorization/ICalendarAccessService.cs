@@ -13,6 +13,11 @@ namespace ClefCraft.Application.Contracts.Authorization
 
         Task EnsureSeriesOwnedByUserAsync(string seriesUid, string userId);
 
+        /// <summary>
+        /// Throws unless the event type belongs to the user. No event type (null) is allowed.
+        /// </summary>
+        Task EnsureEventTypeOwnedByUserAsync(int? eventTypeId, string userId);
+
         Task EnsureAttachmentOwnedByUserAsync(int attachmentId, string userId);
 
         /// <summary>

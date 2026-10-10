@@ -57,7 +57,8 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
                 reminderScheduler.Object,
                 boardAccessService.Object,
                 userService.Object,
-                unitOfWork.Object);
+                unitOfWork.Object,
+                MockAccessServices.GetMockCalendarAccessService().Object);
 
             return (handler, eventRepo, seriesRepo, segmentRepo, boardAccessService);
         }

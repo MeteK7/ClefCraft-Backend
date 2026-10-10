@@ -34,6 +34,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSingleOccurrenc
         public async Task Handle(UpdateSingleOccurrenceCommand request, CancellationToken cancellationToken)
         {
             await _calendarAccessService.EnsureSeriesOwnedByUserAsync(request.SeriesUid, _userService.UserId);
+            await _calendarAccessService.EnsureEventTypeOwnedByUserAsync(request.EventTypeId, _userService.UserId);
 
             // IMPORTANT: now lookup is SeriesUid + OccurrenceDate
             var exception = await _repo.GetBySeriesAndDate(

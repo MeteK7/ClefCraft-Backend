@@ -1,4 +1,5 @@
 ﻿using ClefCraft.Application.Common.Helpers;
+using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
@@ -25,6 +26,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
         private readonly IUserService _userService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IReminderSchedulerService _reminderSchedulerService;
+        private readonly ICalendarAccessService _calendarAccessService;
 
         public UpdateCalendarEventCommandHandler(
             ICalendarEventRepository calendarEventRepository,
@@ -34,7 +36,8 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
             ICalendarEventExceptionRepository exceptionRepo,
             IUserService userService,
             IUnitOfWork unitOfWork,
-            IReminderSchedulerService reminderSchedulerService)
+            IReminderSchedulerService reminderSchedulerService,
+            ICalendarAccessService calendarAccessService)
         {
             _calendarEventRepository = calendarEventRepository;
             _reminderRepo = reminderRepo;
@@ -44,6 +47,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
             _userService = userService;
             _unitOfWork = unitOfWork;
             _reminderSchedulerService = reminderSchedulerService;
+            _calendarAccessService = calendarAccessService;
         }
 
         public async Task<CalendarEventDto> Handle(
@@ -57,6 +61,8 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateCalendarEvent
 
             if (entity.UserId != _userService.UserId)
                 throw new ForbiddenAccessException();
+
+            await _calendarAccessService.EnsureEventTypeOwnedByUserAsync(request.EventTypeId, _userService.UserId);
 
             if (string.IsNullOrWhiteSpace(request.Subject))
                 throw new BadRequestException("Subject is required.");
