@@ -10,9 +10,9 @@ namespace ClefCraft.Domain
     public class BoardColumnMapping : BaseEntity
     {
         public int BoardId { get; set; }
-        public Board Board { get; set; }
+        public Board Board { get; set; } = null!;
 
         public int BoardColumnId { get; set; }
-        public BoardColumn BoardColumn { get; set; }
+        public BoardColumn BoardColumn { get; set; } = null!;
     }
 }

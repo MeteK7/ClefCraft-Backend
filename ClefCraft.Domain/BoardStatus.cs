@@ -13,6 +13,6 @@ namespace ClefCraft.Domain
         public Board? Board { get; set; }
 
         public int StatusId { get; set; }
-        public Status Status { get; set; }
+        public Status Status { get; set; } = null!;
     }
 }

@@ -9,7 +9,7 @@ namespace ClefCraft.Domain
 {
     public class CalendarEventException : BaseEntity
     {
-        public string SeriesUid { get; set; }
+        public string SeriesUid { get; set; } = null!;
 
         public DateTimeOffset OccurrenceDate { get; set; }
 

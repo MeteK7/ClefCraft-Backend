@@ -10,6 +10,6 @@ namespace ClefCraft.Application.Features.Board.Commands.CreateBoard
     /// </summary>
     public class CreateBoardCommand : IRequest<BoardDto>
     {
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
     }
 }

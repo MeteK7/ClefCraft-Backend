@@ -7,22 +7,22 @@ namespace ClefCraft.Domain
     public class BoardItem : BaseEntity
     {
         public int BoardId { get; set; }
-        public Board Board { get; set; }
+        public Board Board { get; set; } = null!;
 
         public int BoardColumnId { get; set; }
-        public BoardColumn BoardColumn { get; set; }
+        public BoardColumn BoardColumn { get; set; } = null!;
 
         // ONE status
-        public BoardItemStatus BoardItemStatus { get; set; }
+        public BoardItemStatus BoardItemStatus { get; set; } = null!;
 
         // ONE priority
-        public BoardItemPriority BoardItemPriority { get; set; }
+        public BoardItemPriority BoardItemPriority { get; set; } = null!;
 
         // MANY tags
         public ICollection<BoardItemTag> BoardItemTags { get; set; }
             = new List<BoardItemTag>();
 
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
         public string? Description { get; set; }
         public string? AssigneeId { get; set; }
         public DateTime? DueDate { get; set; }

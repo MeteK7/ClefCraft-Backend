@@ -10,8 +10,6 @@ namespace ClefCraft.Application.Contracts.Calendar
 {
     public interface ICalendarEventSegmentRepository : IGenericRepository<CalendarEventSegment>
     {
-        Task<CalendarEventSegment?> GetByIdAsync(int id);
-
         /// <summary>
         /// Returns all segments for a series ordered by EffectiveFrom.
         /// </summary>
@@ -25,7 +23,5 @@ namespace ClefCraft.Application.Contracts.Calendar
         Task<CalendarEventSegment?> GetActiveSegmentAsync(
             int recurrenceSeriesId,
             DateTimeOffset date);
-
-        Task CreateAsync(CalendarEventSegment segment);
     }
 }

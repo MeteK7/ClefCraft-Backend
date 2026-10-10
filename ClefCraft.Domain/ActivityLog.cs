@@ -9,14 +9,14 @@ namespace ClefCraft.Domain
 {
     public class ActivityLog : BaseEntity
     {
-        public string UserId { get; set; }
+        public string UserId { get; set; } = null!;
 
         // What entity was affected
-        public string EntityType { get; set; } // "BoardItem", "CalendarEvent"
+        public string EntityType { get; set; } = null!; // "BoardItem", "CalendarEvent"
         public int EntityId { get; set; }
 
         // Action type
-        public string ActionType { get; set; }
+        public string ActionType { get; set; } = null!;
         public string? MetadataJson { get; set; }
 
         public DateTime Timestamp { get; set; }

@@ -15,7 +15,7 @@ namespace ClefCraft.Application.Contracts.AI
 
     public class AIEventDto
     {
-        public string UserId { get; set; }
+        public string UserId { get; set; } = null!;
         public int EventId { get; set; }
 
         public DateTimeOffset StartDate { get; set; }

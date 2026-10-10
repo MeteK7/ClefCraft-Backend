@@ -31,7 +31,7 @@ namespace ClefCraft.Application.Features.BoardItem.Queries.GetBoardItemById
             await _boardAccessService.EnsureBoardItemOwnedByUserAsync(request.Id, _userService.UserId);
 
             var boardItem = await _boardItemRepository.GetBoardItemById(request.Id);
-            return BoardItemMapper.ToByIdDto(boardItem);
+            return BoardItemMapper.ToByIdDto(boardItem!); // the ownership check above already found it
         }
     }
 }

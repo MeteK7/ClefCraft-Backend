@@ -14,6 +14,6 @@ namespace ClefCraft.Application.Exceptions
             ValidationErrors = validationResult.ToDictionary();
         }
 
-        public IDictionary<string, string[]> ValidationErrors { get; set; }
+        public IDictionary<string, string[]>? ValidationErrors { get; set; }
     }
 }

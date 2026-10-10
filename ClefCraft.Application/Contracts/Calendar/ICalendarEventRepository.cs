@@ -10,7 +10,7 @@ namespace ClefCraft.Application.Contracts.Calendar
 {
     public interface ICalendarEventRepository : IGenericRepository<CalendarEvent>
     {
-        Task<CalendarEvent> GetByDateAsync(DateTime date);
+        Task<CalendarEvent?> GetByDateAsync(DateTime date);
         Task<List<CalendarEvent>> GetByUserIdAsync(string userId, DateTimeOffset windowStart, DateTimeOffset windowEnd);
         Task<List<CalendarEvent>> GetWorkHistoryByItemIdAsync(int itemId);
 

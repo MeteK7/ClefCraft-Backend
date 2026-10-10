@@ -37,7 +37,8 @@ namespace ClefCraft.Application.Features.Calendar.Queries
 
             var userIds = history
                 .Select(h => h.CreatedBy) // or h.UserId
-                .Where(userId => !string.IsNullOrEmpty(userId))
+                .OfType<string>()
+                .Where(userId => userId.Length > 0)
                 .Distinct()
                 .ToList();
 

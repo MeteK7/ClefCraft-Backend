@@ -9,6 +9,6 @@ namespace ClefCraft.Application.Features.Priority.Queries.GetPriorities
     public class PriorityDto
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
     }
 }

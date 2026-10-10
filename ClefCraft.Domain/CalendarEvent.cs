@@ -11,7 +11,7 @@ namespace ClefCraft.Domain
 {
     public class CalendarEvent : BaseEntity
     {
-        public string Subject { get; set; }
+        public string Subject { get; set; } = null!;
         public string? Location { get; set; }
         public DateTimeOffset StartDate { get; set; }
         public DateTimeOffset EndDate { get; set; }
@@ -20,7 +20,7 @@ namespace ClefCraft.Domain
         public EventType? EventType { get; set; }
         public ImportanceLevel Importance { get; set; }
         public string? Comment { get; set; }
-        public string UserId { get; set; }
+        public string UserId { get; set; } = null!;
         public int? LinkedBoardItemId { get; set; }
         public string SeriesUid { get; set; } = Guid.NewGuid().ToString();
         public bool IsRecurring { get; set; }

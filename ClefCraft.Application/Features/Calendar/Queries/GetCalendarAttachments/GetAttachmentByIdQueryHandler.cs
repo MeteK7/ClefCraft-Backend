@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ClefCraft.Application.Features.Calendar.Queries.GetCalendarAttachments
 {
-    public class GetAttachmentByIdQueryHandler : IRequestHandler<GetAttachmentByIdQuery, CalendarEventAttachmentDto>
+    public class GetAttachmentByIdQueryHandler : IRequestHandler<GetAttachmentByIdQuery, CalendarEventAttachmentDto?>
     {
         private readonly ICalendarEventAttachmentRepository _attachmentRepo;
         private readonly ICalendarAccessService _calendarAccessService;
@@ -22,7 +22,7 @@ namespace ClefCraft.Application.Features.Calendar.Queries.GetCalendarAttachments
             _calendarAccessService = calendarAccessService;
         }
 
-        public async Task<CalendarEventAttachmentDto> Handle(GetAttachmentByIdQuery request, CancellationToken cancellationToken)
+        public async Task<CalendarEventAttachmentDto?> Handle(GetAttachmentByIdQuery request, CancellationToken cancellationToken)
         {
             // Read-only: owner or a granted collaborator can download. Upload/delete stay
             // owner-only via EnsureAttachmentOwnedByUserAsync elsewhere.

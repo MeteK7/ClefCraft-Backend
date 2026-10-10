@@ -9,7 +9,7 @@ namespace ClefCraft.Domain
 {
     public class Priority : BaseEntity
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
         public ICollection<BoardItem> BoardItems { get; set; } = new List<BoardItem>();
     }
 }

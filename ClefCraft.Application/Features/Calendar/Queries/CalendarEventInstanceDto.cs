@@ -11,11 +11,11 @@ namespace ClefCraft.Application.Features.Calendar.Queries
     {
         public int Id { get; set; }
         public int BaseEventId { get; set; }
-        public string OwnerUserId { get; set; }
+        public string OwnerUserId { get; set; } = null!;
         public string? SeriesUid { get; set; }
-        public string OccurrenceKey { get; set; }
+        public string OccurrenceKey { get; set; } = null!;
         public DateTimeOffset OccurrenceDate { get; set; }
-        public string Subject { get; set; }
+        public string Subject { get; set; } = null!;
         public string? Location { get; set; }
         public DateTimeOffset StartDate { get; set; }
         public DateTimeOffset EndDate { get; set; }

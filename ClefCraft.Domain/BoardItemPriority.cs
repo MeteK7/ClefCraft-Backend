@@ -10,8 +10,8 @@ namespace ClefCraft.Domain
     public class BoardItemPriority:BaseEntity
     {
         public int BoardItemId { get; set; }
-        public BoardItem BoardItem { get; set; }
+        public BoardItem BoardItem { get; set; } = null!;
         public int PriorityId { get; set; }
-        public Priority Priority { get; set; }
+        public Priority Priority { get; set; } = null!;
     }
 }

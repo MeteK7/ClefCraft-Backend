@@ -10,8 +10,8 @@ namespace ClefCraft.Domain
     public class BoardItemStatus:BaseEntity
     {
         public int BoardItemId { get; set; }
-        public BoardItem BoardItem { get; set; }
+        public BoardItem BoardItem { get; set; } = null!;
         public int StatusId { get; set; }
-        public Status Status { get; set; }
+        public Status Status { get; set; } = null!;
     }
 }

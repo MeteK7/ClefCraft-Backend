@@ -8,8 +8,7 @@ namespace ClefCraft.Domain
 {
     public class BoardColumn : BaseEntity
     {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public List<BoardItem> BoardItems { get; set; }
+        public string Title { get; set; } = null!;
+        public List<BoardItem> BoardItems { get; set; } = null!;
     }
 }

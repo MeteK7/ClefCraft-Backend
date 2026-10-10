@@ -9,9 +9,9 @@ namespace ClefCraft.Domain
 {
     public class EntitySnapshot : BaseEntity
     {
-        public string EntityType { get; set; }
+        public string EntityType { get; set; } = null!;
         public int EntityId { get; set; }
-        public string SnapshotJson { get; set; }
+        public string SnapshotJson { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
     }
 }

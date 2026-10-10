@@ -9,7 +9,7 @@ namespace ClefCraft.Domain
 {
     public class NotificationQueue : BaseEntity
     {
-        public string UserId { get; set; }
+        public string UserId { get; set; } = null!;
 
         public int CalendarEventId { get; set; }
 
@@ -19,6 +19,6 @@ namespace ClefCraft.Domain
 
         public DateTimeOffset? ProcessedAt { get; set; }
 
-        public string Message { get; set; }
+        public string Message { get; set; } = null!;
     }
 }

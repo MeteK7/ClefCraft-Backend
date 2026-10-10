@@ -13,29 +13,29 @@ namespace ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems
     {
         public int Id { get; set; }
 
-        public string Title { get; set; }
-        public string Description { get; set; }
+        public string Title { get; set; } = null!;
+        public string Description { get; set; } = null!;
 
         public int BoardId { get; set; }
         public int BoardColumnId { get; set; }
 
-        public StatusDto Status { get; set; }
-        public PriorityDto Priority { get; set; }
+        public StatusDto Status { get; set; } = null!;
+        public PriorityDto Priority { get; set; } = null!;
 
         public List<TagDto> Tags { get; set; } = new();
-        public string AssigneeId { get; set; }
-        public string AssigneeFirstName { get; set; }
-        public string AssigneeLastName { get; set; }
+        public string AssigneeId { get; set; } = null!;
+        public string AssigneeFirstName { get; set; } = null!;
+        public string AssigneeLastName { get; set; } = null!;
         public DateTime? DueDate { get; set; }
 
         public double? EstimatedTime { get; set; }
         public double? TimeSpent { get; set; }
 
-        public string CreatedBy { get; set; }
-        public string ModifiedBy { get; set; }
+        public string CreatedBy { get; set; } = null!;
+        public string ModifiedBy { get; set; } = null!;
 
-        public string CreatedByFullName { get; set; }
-        public string ModifiedByFullName { get; set; }
+        public string CreatedByFullName { get; set; } = null!;
+        public string ModifiedByFullName { get; set; } = null!;
 
         public DateTime DateCreated { get; set; }
         public DateTime DateModified { get; set; }

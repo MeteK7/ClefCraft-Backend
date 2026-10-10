@@ -13,6 +13,6 @@ namespace ClefCraft.Domain
         public Board? Board { get; set; }
 
         public int PriorityId { get; set; }
-        public Priority Priority { get; set; }
+        public Priority Priority { get; set; } = null!;
     }
 }

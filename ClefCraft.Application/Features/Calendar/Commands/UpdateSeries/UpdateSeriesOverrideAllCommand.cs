@@ -9,13 +9,13 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateSeries
 {
     public class UpdateSeriesOverrideAllCommand : IRequest
     {
-        public string SeriesUid { get; set; }
+        public string SeriesUid { get; set; } = null!;
 
         public string? Subject { get; set; }
         public string? Location { get; set; }
         public string? Comment { get; set; }
 
-        public string RecurrenceRuleJson { get; set; }
-        public string TimeZoneId { get; set; }
+        public string RecurrenceRuleJson { get; set; } = null!;
+        public string TimeZoneId { get; set; } = null!;
     }
 }

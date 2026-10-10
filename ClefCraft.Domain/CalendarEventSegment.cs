@@ -11,12 +11,12 @@ namespace ClefCraft.Domain
     public class CalendarEventSegment : BaseEntity
     {
         public int RecurrenceSeriesId { get; set; }
-        public RecurrenceSeries RecurrenceSeries { get; set; }
+        public RecurrenceSeries RecurrenceSeries { get; set; } = null!;
 
         public DateTimeOffset EffectiveFrom { get; set; }
         public DateTimeOffset? EffectiveTo { get; set; }
 
-        public string Subject { get; set; }
+        public string Subject { get; set; } = null!;
         public string? Location { get; set; }
         public string? Comment { get; set; }
 

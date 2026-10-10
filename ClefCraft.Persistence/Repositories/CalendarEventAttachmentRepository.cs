@@ -12,12 +12,7 @@ namespace ClefCraft.Persistence.Repositories
 {
     public class CalendarEventAttachmentRepository : GenericRepository<CalendarEventAttachment>, ICalendarEventAttachmentRepository
     {
-        private readonly ClefCraftDatabaseContext _context;
-
-        public CalendarEventAttachmentRepository(ClefCraftDatabaseContext context) : base(context)
-        {
-            _context = context;
-        }
+        public CalendarEventAttachmentRepository(ClefCraftDatabaseContext context) : base(context) { }
 
         public async Task<List<CalendarEventAttachment>> GetByEventIdAsync(int eventId)
         {

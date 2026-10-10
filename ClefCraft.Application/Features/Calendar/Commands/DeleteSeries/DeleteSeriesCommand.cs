@@ -8,6 +8,6 @@ namespace ClefCraft.Application.Features.Calendar.Commands.DeleteSeries
     /// </summary>
     public class DeleteSeriesCommand : IRequest
     {
-        public string SeriesUid { get; set; }
+        public string SeriesUid { get; set; } = null!;
     }
 }
