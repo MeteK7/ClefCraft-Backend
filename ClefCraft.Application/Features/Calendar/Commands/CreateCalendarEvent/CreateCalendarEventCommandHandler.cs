@@ -28,6 +28,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
         private readonly IBoardAccessService _boardAccessService;
         private readonly IUserService _userService;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICalendarAccessService _calendarAccessService;
 
         public CreateCalendarEventCommandHandler(
             ICalendarEventRepository calendarEventRepository,
@@ -37,7 +38,8 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
             IReminderSchedulerService reminderSchedulerService,
             IBoardAccessService boardAccessService,
             IUserService userService,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            ICalendarAccessService calendarAccessService)
         {
             _calendarEventRepository = calendarEventRepository;
             _seriesRepo = seriesRepo;
@@ -47,6 +49,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
             _boardAccessService = boardAccessService;
             _userService = userService;
             _unitOfWork = unitOfWork;
+            _calendarAccessService = calendarAccessService;
         }
 
         public async Task<CalendarEventDto> Handle(
@@ -77,6 +80,8 @@ namespace ClefCraft.Application.Features.Calendar.Commands.CreateCalendarEvent
             {
                 await _boardAccessService.EnsureBoardItemOwnedByUserAsync(request.LinkedBoardItemId.Value, userId);
             }
+
+            await _calendarAccessService.EnsureEventTypeOwnedByUserAsync(request.EventTypeId, userId);
 
             var seriesUid = Guid.NewGuid().ToString();
 

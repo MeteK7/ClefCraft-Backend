@@ -11,15 +11,18 @@ namespace ClefCraft.Infrastructure.Services.Authorization
         private readonly ICalendarEventRepository _eventRepository;
         private readonly ICalendarEventAttachmentRepository _attachmentRepository;
         private readonly ICalendarEventCollaboratorRepository _collaboratorRepository;
+        private readonly IEventTypeRepository _eventTypeRepository;
 
         public CalendarAccessService(
             ICalendarEventRepository eventRepository,
             ICalendarEventAttachmentRepository attachmentRepository,
-            ICalendarEventCollaboratorRepository collaboratorRepository)
+            ICalendarEventCollaboratorRepository collaboratorRepository,
+            IEventTypeRepository eventTypeRepository)
         {
             _eventRepository = eventRepository;
             _attachmentRepository = attachmentRepository;
             _collaboratorRepository = collaboratorRepository;
+            _eventTypeRepository = eventTypeRepository;
         }
 
         public async Task EnsureEventOwnedByUserAsync(int eventId, string userId)
@@ -30,6 +33,20 @@ namespace ClefCraft.Infrastructure.Services.Authorization
                 throw new NotFoundException(nameof(CalendarEvent), eventId);
 
             if (calendarEvent.UserId != userId)
+                throw new ForbiddenAccessException();
+        }
+
+        public async Task EnsureEventTypeOwnedByUserAsync(int? eventTypeId, string userId)
+        {
+            if (eventTypeId == null)
+                return;
+
+            var eventType = await _eventTypeRepository.GetByIdAsync(eventTypeId.Value);
+
+            if (eventType == null)
+                throw new NotFoundException(nameof(EventType), eventTypeId.Value);
+
+            if (eventType.UserId != userId)
                 throw new ForbiddenAccessException();
         }
 

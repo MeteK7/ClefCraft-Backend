@@ -33,6 +33,7 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar
             await service.EnrichAsync(events, "user-1");
 
             events[0].LinkedBoardItemTitle.ShouldBe("Practice scales");
+            events[0].LinkedBoardId.ShouldBe(10);
         }
 
         [Fact]
@@ -51,6 +52,7 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar
             await service.EnrichAsync(events, "user-1");
 
             events[0].LinkedBoardItemTitle.ShouldBeNull();
+            events[0].LinkedBoardId.ShouldBeNull();
         }
 
         [Fact]

@@ -44,6 +44,8 @@ namespace ClefCraft.Application.Features.Calendar.Queries
         public string TimeZoneId { get; set; } = "UTC";
         public int? LinkedBoardItemId { get; set; }
         public string? LinkedBoardItemTitle { get; set; }
+        /// <summary>The linked item's board, so the client can open the item on it.</summary>
+        public int? LinkedBoardId { get; set; }
         public double? AttendanceScore { get; set; }
         public List<int> ReminderMinutes { get; set; } = new();
     }

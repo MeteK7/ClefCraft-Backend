@@ -1,3 +1,4 @@
+using ClefCraft.Application.UnitTests.Mocks;
 using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
@@ -98,7 +99,8 @@ namespace ClefCraft.Application.UnitTests.Features.Calendar.Commands
                 exceptionRepo.Object,
                 userService.Object,
                 unitOfWork.Object,
-                reminderScheduler.Object);
+                reminderScheduler.Object,
+                MockAccessServices.GetMockCalendarAccessService().Object);
 
             return (handler, eventRepo, seriesRepo, segmentRepo, exceptionRepo);
         }

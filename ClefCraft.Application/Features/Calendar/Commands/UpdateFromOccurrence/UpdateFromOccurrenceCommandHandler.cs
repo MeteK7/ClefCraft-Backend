@@ -46,6 +46,7 @@ namespace ClefCraft.Application.Features.Calendar.Commands.UpdateFromOccurrence
             CancellationToken cancellationToken)
         {
             await _calendarAccessService.EnsureSeriesOwnedByUserAsync(request.SeriesUid, _userService.UserId);
+            await _calendarAccessService.EnsureEventTypeOwnedByUserAsync(request.EventTypeId, _userService.UserId);
 
             var series = await _seriesRepo.GetBySeriesUidAsync(request.SeriesUid);
 

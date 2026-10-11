@@ -29,7 +29,7 @@ namespace ClefCraft.Application.UnitTests.Features.Comments
             collaboratorRepo.Setup(r => r.IsCollaboratorAsync(It.IsAny<int>(), It.IsAny<string>()))
                 .ReturnsAsync(isCollaborator);
 
-            var service = new CalendarAccessService(eventRepo.Object, attachmentRepo.Object, collaboratorRepo.Object);
+            var service = new CalendarAccessService(eventRepo.Object, attachmentRepo.Object, collaboratorRepo.Object, new Mock<IEventTypeRepository>().Object);
 
             return (service, collaboratorRepo);
         }
@@ -75,7 +75,7 @@ namespace ClefCraft.Application.UnitTests.Features.Comments
 
             var service = new CalendarAccessService(
                 eventRepo.Object, new Mock<ICalendarEventAttachmentRepository>().Object,
-                new Mock<ICalendarEventCollaboratorRepository>().Object);
+                new Mock<ICalendarEventCollaboratorRepository>().Object, new Mock<IEventTypeRepository>().Object);
 
             await Should.ThrowAsync<NotFoundException>(() => service.EnsureCanAccessEventAsync(999, "anyone"));
         }

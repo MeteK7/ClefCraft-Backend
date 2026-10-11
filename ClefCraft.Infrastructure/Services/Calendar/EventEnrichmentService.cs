@@ -32,12 +32,15 @@ namespace ClefCraft.Infrastructure.Services.Calendar
             var items = await _boardRepo.GetByIdsAsync(ids);
             var map = items
                 .Where(x => memberBoardIds.Contains(x.BoardId))
-                .ToDictionary(x => x.Id, x => x.Title);
+                .ToDictionary(x => x.Id);
 
             foreach (var e in events)
             {
-                if (e.LinkedBoardItemId is int id && map.TryGetValue(id, out var title))
-                    e.LinkedBoardItemTitle = title;
+                if (e.LinkedBoardItemId is int id && map.TryGetValue(id, out var item))
+                {
+                    e.LinkedBoardItemTitle = item.Title;
+                    e.LinkedBoardId = item.BoardId;
+                }
             }
         }
     }

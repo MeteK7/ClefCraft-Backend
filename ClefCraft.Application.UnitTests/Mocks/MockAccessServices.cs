@@ -47,6 +47,8 @@ namespace ClefCraft.Application.UnitTests.Mocks
                 s.EnsureCanAccessEventAsync(It.IsAny<int>(), It.IsAny<string>()));
             var canAccessAttachmentSetup = mock.Setup(s =>
                 s.EnsureCanAccessAttachmentAsync(It.IsAny<int>(), It.IsAny<string>()));
+            var eventTypeSetup = mock.Setup(s =>
+                s.EnsureEventTypeOwnedByUserAsync(It.IsAny<int?>(), It.IsAny<string>()));
 
             if (authorized)
             {
@@ -55,6 +57,7 @@ namespace ClefCraft.Application.UnitTests.Mocks
                 attachmentSetup.Returns(Task.CompletedTask);
                 canAccessEventSetup.Returns(Task.CompletedTask);
                 canAccessAttachmentSetup.Returns(Task.CompletedTask);
+                eventTypeSetup.Returns(Task.CompletedTask);
             }
             else
             {
@@ -63,6 +66,7 @@ namespace ClefCraft.Application.UnitTests.Mocks
                 attachmentSetup.ThrowsAsync(new ForbiddenAccessException());
                 canAccessEventSetup.ThrowsAsync(new ForbiddenAccessException());
                 canAccessAttachmentSetup.ThrowsAsync(new ForbiddenAccessException());
+                eventTypeSetup.ThrowsAsync(new ForbiddenAccessException());
             }
 
             // GrantCollaboratorAccessAsync never throws by design (it's a silent no-op for a
