@@ -174,6 +174,7 @@ namespace ClefCraft.Application.UnitTests.Mapping
             dto.Priority.ShouldBe("High");
             dto.AssigneeId.ShouldBe("user-2");
             dto.DueDate.ShouldBe(Due);
+            dto.EstimatedTime.ShouldBe(1.5);
         }
 
         [Fact]
@@ -185,6 +186,7 @@ namespace ClefCraft.Application.UnitTests.Mapping
             dto.Priority.ShouldBe("");
             dto.AssigneeId.ShouldBeNull();
             dto.DueDate.ShouldBeNull();
+            dto.EstimatedTime.ShouldBeNull();
         }
 
         [Fact]
