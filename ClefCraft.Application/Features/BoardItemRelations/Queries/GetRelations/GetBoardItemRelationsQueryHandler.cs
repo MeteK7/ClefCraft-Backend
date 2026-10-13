@@ -64,7 +64,8 @@ namespace ClefCraft.Application.Features.BoardItemRelations.Queries.GetRelations
                     Status = relatedItem.BoardItemStatus?.Status?.Name ?? "",
                     Priority = relatedItem.BoardItemPriority?.Priority?.Name ?? "",
                     AssigneeId = relatedItem.AssigneeId,
-                    DueDate = relatedItem.DueDate
+                    DueDate = relatedItem.DueDate,
+                    EstimatedTime = relatedItem.EstimatedTime
                 });
             }
 

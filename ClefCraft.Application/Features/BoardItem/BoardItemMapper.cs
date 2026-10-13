@@ -60,7 +60,8 @@ namespace ClefCraft.Application.Features.BoardItem
                 Status = item.BoardItemStatus != null ? item.BoardItemStatus.Status?.Name! : "",
                 Priority = item.BoardItemPriority != null ? item.BoardItemPriority.Priority?.Name! : "",
                 AssigneeId = item.AssigneeId,
-                DueDate = item.DueDate
+                DueDate = item.DueDate,
+                EstimatedTime = item.EstimatedTime
             };
         }
 
