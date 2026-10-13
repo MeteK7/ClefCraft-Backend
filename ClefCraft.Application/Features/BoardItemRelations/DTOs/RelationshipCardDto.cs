@@ -30,5 +30,8 @@ namespace ClefCraft.Application.Features.BoardItemRelations.DTOs
         public string? AssigneeId { get; set; }
 
         public DateTime? DueDate { get; set; }
+
+        /// <summary>The related item's recorded estimate in hours; null when none was recorded.</summary>
+        public double? EstimatedTime { get; set; }
     }
 }

@@ -21,7 +21,7 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemRelations
         private const string CallerUserId = "user-1";
 
         private static readonly Domain.BoardItem Blocker = new() { Id = 1, BoardId = 10, Title = "Run migrations in the pipeline" };
-        private static readonly Domain.BoardItem Launch = new() { Id = 2, BoardId = 10, Title = "Enable production deployment" };
+        private static readonly Domain.BoardItem Launch = new() { Id = 2, BoardId = 10, Title = "Enable production deployment", EstimatedTime = 3.5 };
 
         private static GetBoardItemRelationsQueryHandler HandlerFor(params BoardItemRelation[] relations)
         {
@@ -57,6 +57,7 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemRelations
             card.IsOutgoing.ShouldBeTrue();
             card.BoardId.ShouldBe(10);
             card.RelationId.ShouldBe(7);
+            card.EstimatedTime.ShouldBe(3.5);
         }
 
         [Fact]
@@ -68,6 +69,7 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemRelations
             card.ItemId.ShouldBe(Blocker.Id);
             card.IsOutgoing.ShouldBeFalse();
             card.BoardId.ShouldBe(10);
+            card.EstimatedTime.ShouldBeNull();
         }
 
         [Fact]
@@ -99,6 +101,7 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemRelations
             card.ItemId.ShouldBe(Launch.Id);
             card.IsOutgoing.ShouldBeTrue();
             card.BoardId.ShouldBe(10);
+            card.EstimatedTime.ShouldBe(3.5);
         }
     }
 }
