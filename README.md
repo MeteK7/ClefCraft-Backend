@@ -90,6 +90,25 @@ psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d clefcraft_db -f scripts/dev-
 
 Open "Implement RAG orchestration service" and switch to the Relationship Graph.
 
+`05_cellist_engineer_calendar_postgresql.sql` fills `admin@localhost.com`'s calendar with four weeks
+in the life of a software engineer who plays the cello in an amateur orchestra:
+
+- **When:** Monday 5 October to Sunday 1 November 2026, in Europe/Istanbul time.
+- **Work:** sprint meetings, a 1:1, a design review, deadlines, a release, an on-call week and a
+  tech talk.
+- **Music:** practice, a weekly lesson, rehearsals and a concert on 31 October.
+- **Recurring events:** continue after 1 November.
+- **Density:** no day has more than three events, so the month view shows everything without
+  "+N more".
+
+It needs only the admin account, and reuses the admin's "Meeting" and "Deadline" event types from 02
+when they exist. 02 refuses to run once the admin has event types, so if you want both, load 02
+first. Running the script again replaces what an earlier run loaded:
+
+```bash
+psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d clefcraft_db -f scripts/dev-seed/05_cellist_engineer_calendar_postgresql.sql
+```
+
 ## Run
 
 ```bash
