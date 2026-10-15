@@ -1,5 +1,6 @@
 ﻿using ClefCraft.Api.Hubs;
 using ClefCraft.Application.Contracts.Calendar;
+using ClefCraft.Application.Models.Notifications;
 using Microsoft.AspNetCore.SignalR;
 
 namespace ClefCraft.Api.Services
@@ -34,6 +35,13 @@ namespace ClefCraft.Api.Services
             await _hubContext.Clients
                 .User(mentionedUserId)
                 .SendAsync("ReceiveMention", new { entityType, entityId, commentId, authorFullName, excerpt, boardId, grantedAccess }, cancellationToken);
+        }
+
+        public async Task SendAskEventAsync(string userId, AskNotification notification, CancellationToken cancellationToken)
+        {
+            await _hubContext.Clients
+                .User(userId)
+                .SendAsync("ReceiveAsk", notification, cancellationToken);
         }
     }
 }
