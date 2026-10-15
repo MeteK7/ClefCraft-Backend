@@ -30,6 +30,7 @@ namespace ClefCraft.Persistence.DatabaseContext
         public DbSet<BoardColumn> BoardColumns { get; set; }
         public DbSet<BoardItem> BoardItems { get; set; }
         public DbSet<BoardItemRelation> BoardItemRelations { get; set; }
+        public DbSet<BoardItemAsk> BoardItemAsks { get; set; }
         public DbSet<BoardMember> BoardMembers { get; set; }
         public DbSet<CalendarEvent> CalendarEvents { get; set; }
         public DbSet<CalendarReminder> CalendarReminders { get; set; }
@@ -96,6 +97,12 @@ namespace ClefCraft.Persistence.DatabaseContext
             modelBuilder.Entity<BoardMember>()
                 .HasIndex(x => new { x.BoardId, x.UserId })
                 .IsUnique();
+
+            // Serializes "an ask becomes open" against "the item moves to Done": both increment
+            // it, so whichever saves second fails instead of leaving a Done item with an open ask.
+            modelBuilder.Entity<BoardItem>()
+                .Property(x => x.AskVersion)
+                .IsConcurrencyToken();
 
             base.OnModelCreating(modelBuilder);
         }
@@ -171,7 +178,9 @@ namespace ClefCraft.Persistence.DatabaseContext
                         if (Equals(prop.OriginalValue, prop.CurrentValue))
                             continue;
 
-                        if (prop.Metadata.Name is "DateModified" or "ModifiedBy")
+                        // AskVersion is concurrency bookkeeping, not a field anyone edited: logging it
+                        // would show up in the item's History as an "Ask Version" change.
+                        if (prop.Metadata.Name is "DateModified" or "ModifiedBy" or nameof(BoardItem.AskVersion))
                             continue;
 
                         changes[prop.Metadata.Name] = new
