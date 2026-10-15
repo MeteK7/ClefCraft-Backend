@@ -1,4 +1,5 @@
-﻿using ClefCraft.Application.Features.Priority.Queries.GetPriorities;
+﻿using ClefCraft.Application.Features.BoardItemAsks.DTOs;
+using ClefCraft.Application.Features.Priority.Queries.GetPriorities;
 using ClefCraft.Application.Features.Status.Queries.GetStatuses;
 using ClefCraft.Application.Features.Tag.Queries.GetTags;
 using System;
@@ -39,5 +40,8 @@ namespace ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems
 
         public DateTime DateCreated { get; set; }
         public DateTime DateModified { get; set; }
+
+        /// <summary>Filled by GetBoardItemsHandler; empty elsewhere.</summary>
+        public AskSummaryDto AskSummary { get; set; } = new();
     }
 }

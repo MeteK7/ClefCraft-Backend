@@ -1,4 +1,6 @@
+using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
+using ClefCraft.Application.Contracts.Logging;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Exceptions;
 using ClefCraft.Application.Features.BoardMembers.Commands.AddMember;
@@ -90,7 +92,7 @@ namespace ClefCraft.Application.UnitTests.Features.BoardMembers
 
             var accessService = MockAccessServices.GetMockBoardAccessService(authorized: true);
 
-            var handler = new RemoveBoardMemberCommandHandler(memberRepo.Object, boardRepo.Object, accessService.Object, new Mock<IUnitOfWork>().Object);
+            var handler = new RemoveBoardMemberCommandHandler(memberRepo.Object, boardRepo.Object, accessService.Object, new Mock<IUnitOfWork>().Object, MockBoardItemAskRepository.GetEmpty().Object, new Mock<IActivityLogger>().Object, new Mock<INotificationHubService>().Object, new Mock<IUserService>().Object);
 
             await Should.ThrowAsync<BadRequestException>(() =>
                 handler.Handle(
@@ -113,7 +115,7 @@ namespace ClefCraft.Application.UnitTests.Features.BoardMembers
 
             var accessService = MockAccessServices.GetMockBoardAccessService(authorized: true);
 
-            var handler = new RemoveBoardMemberCommandHandler(memberRepo.Object, boardRepo.Object, accessService.Object, new Mock<IUnitOfWork>().Object);
+            var handler = new RemoveBoardMemberCommandHandler(memberRepo.Object, boardRepo.Object, accessService.Object, new Mock<IUnitOfWork>().Object, MockBoardItemAskRepository.GetEmpty().Object, new Mock<IActivityLogger>().Object, new Mock<INotificationHubService>().Object, new Mock<IUserService>().Object);
 
             await handler.Handle(
                 new RemoveBoardMemberCommand { BoardId = BoardId, UserId = OtherMemberId, RequestingUserId = OwnerId },

@@ -1,11 +1,15 @@
 ﻿using ClefCraft.Application.Contracts.Analytics;
 using ClefCraft.Application.Contracts.Authorization;
+using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
+using ClefCraft.Application.Contracts.Logging;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Exceptions;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItemById;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems;
+using ClefCraft.Application.Features.BoardItemAsks;
 using ClefCraft.Domain;
+using ClefCraft.Domain.Enums;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -17,7 +21,7 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
 {
     public class UpdateBoardItemCommandHandler : IRequestHandler<UpdateBoardItemCommand, BoardItemByIdDto>
     {
-        private const string CompletedStatusName = "Done";
+        public const string ConflictMessage = "This item changed while you were saving it; reload it and try again.";
 
         private readonly IBoardItemRepository _boardItemRepository;
         private readonly IBoardAccessService _boardAccessService;
@@ -28,6 +32,10 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
         private readonly ITaskLifecycleService _taskLifecycleService;
         private readonly IUnitOfWork _unitOfWork; // Added for architectural parity
         private readonly IBoardMemberRepository _boardMemberRepository;
+        private readonly IBoardItemAskRepository _askRepository;
+        private readonly IBoardRepository _boardRepository;
+        private readonly IActivityLogger _activityLogger;
+        private readonly INotificationHubService _notificationHubService;
 
         public UpdateBoardItemCommandHandler(
             IBoardItemRepository boardItemRepository,
@@ -38,7 +46,11 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
             IUserService userService,
             ITaskLifecycleService taskLifecycleService,
             IUnitOfWork unitOfWork,
-            IBoardMemberRepository boardMemberRepository)
+            IBoardMemberRepository boardMemberRepository,
+            IBoardItemAskRepository askRepository,
+            IBoardRepository boardRepository,
+            IActivityLogger activityLogger,
+            INotificationHubService notificationHubService)
         {
             _boardItemRepository = boardItemRepository;
             _boardAccessService = boardAccessService;
@@ -49,6 +61,10 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
             _taskLifecycleService = taskLifecycleService;
             _unitOfWork = unitOfWork;
             _boardMemberRepository = boardMemberRepository;
+            _askRepository = askRepository;
+            _boardRepository = boardRepository;
+            _activityLogger = activityLogger;
+            _notificationHubService = notificationHubService;
         }
 
         public async Task<BoardItemByIdDto> Handle(UpdateBoardItemCommand request, CancellationToken cancellationToken)
@@ -87,6 +103,55 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
 
             var previousStatusId = boardItem.BoardItemStatus?.StatusId;
             var previousAssignee = boardItem.AssigneeId;
+            var callerId = _userService.UserId;
+
+            // Resolve "Done" by name: status ids depend on the order the statuses were created in.
+            // Looked up only when the status changes.
+            var statusChanges = request.StatusId.HasValue && request.StatusId != previousStatusId;
+            var doneStatusIds = statusChanges ? await CompletedStatus.GetIdsAsync(_statusRepository) : null;
+            var entersDone = doneStatusIds != null
+                && doneStatusIds.Contains(request.StatusId!.Value)
+                && !(previousStatusId.HasValue && doneStatusIds.Contains(previousStatusId.Value));
+
+            // Completing the item settles its asks. This is the only place an item's status can move
+            // to Done once it exists (PUT /BoardItems/{id} and SwitchColumn both come here), so no
+            // path skips the required-ask rule. Validated before the item is touched.
+            var askClosure = AskClosureResult.None;
+            if (entersDone)
+            {
+                var asks = await _askRepository.GetByItemIdAsync(boardItem.Id);
+
+                // The owner only matters for marking someone else's ask done (managers may).
+                var boardOwnerId = request.AskClosure?.CompleteAskIds?.Count > 0
+                    ? (await _boardRepository.GetByIdReadOnlyAsync(boardItem.BoardId))?.OwnerUserId
+                    : null;
+
+                askClosure = AskClosure.Apply(
+                    asks,
+                    request.AskClosure,
+                    ask => AskActorRoles.For(ask, callerId, previousAssignee, boardOwnerId),
+                    callerId,
+                    DateTime.UtcNow);
+
+                foreach (var ask in askClosure.Completed)
+                {
+                    await AskHistory.LogAsync(_activityLogger, AskHistory.Completed, ask,
+                        new Dictionary<string, object?> { [AskHistory.CompletedByUserIdKey] = callerId });
+                }
+
+                foreach (var ask in askClosure.Cancelled)
+                {
+                    await AskHistory.LogAsync(_activityLogger, AskHistory.Cancelled, ask,
+                        new Dictionary<string, object?> { [AskHistory.ReasonKey] = nameof(BoardItemAskCancelReason.ItemCompleted) });
+                }
+
+                if (askClosure.OverriddenAskIds.Count > 0)
+                    await AskHistory.LogRequirementsOverriddenAsync(_activityLogger, boardItem.Id, askClosure.OverriddenAskIds);
+
+                // Always, even without asks: an ask created while this save is in flight then fails
+                // instead of leaving a Done item with an open ask.
+                boardItem.AskVersion++;
+            }
 
             boardItem.Title = request.Title ?? boardItem.Title;
             boardItem.Description = request.Description ?? boardItem.Description;
@@ -156,8 +221,16 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
             // Update state in change tracker
             await _boardItemRepository.UpdateBoardItem(boardItem);
 
-            // Fix 3: Persist changes to database via Unit of Work
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            // Fix 3: Persist changes to database via Unit of Work. The item, its asks and their
+            // history entries are written by this one save, so they succeed or fail together.
+            try
+            {
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
+            }
+            catch (ConcurrencyConflictException)
+            {
+                throw new BadRequestException(ConflictMessage);
+            }
 
             // Lifecycle tracking (Fix 2: Compare previous state with the newly mutated domain state)
             await _taskLifecycleService.RecordStatusChangeAsync(boardItem.Id);
@@ -169,14 +242,8 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
 
             var currentStatusId = boardItem.BoardItemStatus?.StatusId;
 
-            if (previousStatusId != currentStatusId)
+            if (previousStatusId != currentStatusId && doneStatusIds != null)
             {
-                // Resolve "Done" by name: status ids depend on the order the statuses were created in.
-                var doneStatusIds = (await _statusRepository.GetStatusesAsync())
-                    .Where(s => s.Name == CompletedStatusName)
-                    .Select(s => s.Id)
-                    .ToHashSet();
-
                 var wasDone = previousStatusId.HasValue && doneStatusIds.Contains(previousStatusId.Value);
                 var isDone = currentStatusId.HasValue && doneStatusIds.Contains(currentStatusId.Value);
 
@@ -189,6 +256,15 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
 
             // Commit lifecycle logs
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            await AskNotifier.SendAsync(
+                askClosure.Completed
+                    .Select(ask => new AskNotice(ask, boardItem.BoardId, boardItem.Title, AskEvent.Completed))
+                    .Concat(askClosure.Cancelled
+                        .Select(ask => new AskNotice(ask, boardItem.BoardId, boardItem.Title, AskEvent.Cancelled,
+                            nameof(BoardItemAskCancelReason.ItemCompleted))))
+                    .ToList(),
+                callerId, _notificationHubService, _boardMemberRepository, _userService, cancellationToken);
 
             // Reload fresh state with navigation properties
             var updatedItem = (await _boardItemRepository.GetBoardItemById(boardItem.Id))!; // just saved
