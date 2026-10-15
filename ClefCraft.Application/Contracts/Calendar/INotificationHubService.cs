@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClefCraft.Application.Models.Notifications;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,5 +21,7 @@ namespace ClefCraft.Application.Contracts.Calendar
             int? boardId,
             bool grantedAccess,
             CancellationToken cancellationToken);
+
+        Task SendAskEventAsync(string userId, AskNotification notification, CancellationToken cancellationToken);
     }
 }
