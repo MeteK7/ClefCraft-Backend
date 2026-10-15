@@ -8,6 +8,9 @@ namespace ClefCraft.Application.Contracts.Persistence
 
         Task<List<BoardMember>> GetByBoardIdAsync(int boardId);
 
+        /// <summary>The members of all the given boards, in one query.</summary>
+        Task<List<BoardMember>> GetByBoardIdsAsync(IEnumerable<int> boardIds);
+
         Task<BoardMember?> GetByBoardAndUserAsync(int boardId, string userId);
 
         Task<List<int>> GetMemberBoardIdsAsync(string userId);
