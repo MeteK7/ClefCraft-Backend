@@ -3,6 +3,7 @@ using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Features.Board;
 using ClefCraft.Application.Features.BoardColumn.Queries.GetBoardColumns;
+using ClefCraft.Application.Features.BoardItemAsks;
 using ClefCraft.Domain;
 using MediatR;
 using System;
@@ -18,15 +19,18 @@ namespace ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems
         private readonly IBoardItemRepository _boardItemRepository;
         private readonly IBoardAccessService _boardAccessService;
         private readonly IUserService _userService;
+        private readonly IBoardItemAskRepository _askRepository;
 
         public GetBoardItemsHandler(
             IBoardItemRepository boardItemRepository,
             IBoardAccessService boardAccessService,
-            IUserService userService)
+            IUserService userService,
+            IBoardItemAskRepository askRepository)
         {
             _boardItemRepository = boardItemRepository;
             _boardAccessService = boardAccessService;
             _userService = userService;
+            _askRepository = askRepository;
         }
 
         public async Task<List<BoardColumnDto>> Handle(GetBoardItemsQuery request, CancellationToken cancellationToken)
@@ -45,6 +49,11 @@ namespace ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems
 
             var mappedColumns = columns.Select(BoardMapper.ToDto).ToList();
 
+            // Every item's asks in one query, for the cards' ask summaries.
+            var asksByItem = (await _askRepository.GetByItemIdsReadOnlyAsync(
+                    mappedColumns.SelectMany(c => c.BoardItems).Select(i => i.Id).ToList()))
+                .ToLookup(a => a.BoardItemId);
+
             // Collect ALL user IDs (distinct)
             var userIds = mappedColumns
                 .SelectMany(c => c.BoardItems)
@@ -54,6 +63,7 @@ namespace ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems
             i.ModifiedBy,
             i.AssigneeId
                 })
+                .Concat(asksByItem.SelectMany(g => g).Where(a => AskTransitions.IsOpen(a.State)).Select(a => a.RecipientUserId))
                 .Where(id => !string.IsNullOrEmpty(id))
                 .Distinct()
                 .ToList();
@@ -63,6 +73,7 @@ namespace ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems
 
             // Convert to dictionary for O(1) lookup
             var userDictionary = users.ToDictionary(u => u.Id);
+            var fullNames = users.ToDictionary(u => u.Id, u => $"{u.Firstname} {u.Lastname}");
 
             // Map FullNames without extra DB calls
             foreach (var column in mappedColumns)
@@ -87,6 +98,8 @@ namespace ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems
                         item.AssigneeFirstName = assignee.Firstname;
                         item.AssigneeLastName = assignee.Lastname;
                     }
+
+                    item.AskSummary = BoardItemAskMapper.ToSummary(asksByItem[item.Id], fullNames);
                 }
             }
 

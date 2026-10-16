@@ -30,6 +30,7 @@ namespace ClefCraft.Persistence.DatabaseContext
         public DbSet<BoardColumn> BoardColumns { get; set; }
         public DbSet<BoardItem> BoardItems { get; set; }
         public DbSet<BoardItemRelation> BoardItemRelations { get; set; }
+        public DbSet<BoardItemAsk> BoardItemAsks { get; set; }
         public DbSet<BoardMember> BoardMembers { get; set; }
         public DbSet<CalendarEvent> CalendarEvents { get; set; }
         public DbSet<CalendarReminder> CalendarReminders { get; set; }
@@ -97,6 +98,12 @@ namespace ClefCraft.Persistence.DatabaseContext
                 .HasIndex(x => new { x.BoardId, x.UserId })
                 .IsUnique();
 
+            // Serializes "an ask becomes open" against "the item moves to Done": both increment
+            // it, so whichever saves second fails instead of leaving a Done item with an open ask.
+            modelBuilder.Entity<BoardItem>()
+                .Property(x => x.AskVersion)
+                .IsConcurrencyToken();
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -136,7 +143,11 @@ namespace ClefCraft.Persistence.DatabaseContext
                     entry.Entity.CreatedBy = userId;
                 }
 
-                if (entry.State is EntityState.Added or EntityState.Modified)
+                // An ask that only increments the item's AskVersion hasn't modified the item itself,
+                // so it doesn't become the item's "last modified". The row is still updated (and
+                // its concurrency token checked); only the stamp is left alone.
+                if (entry.State == EntityState.Added
+                    || (entry.State == EntityState.Modified && !OnlyAskVersionModified(entry)))
                 {
                     entry.Entity.DateModified = utcNow;
                     entry.Entity.ModifiedBy = userId;
@@ -171,7 +182,9 @@ namespace ClefCraft.Persistence.DatabaseContext
                         if (Equals(prop.OriginalValue, prop.CurrentValue))
                             continue;
 
-                        if (prop.Metadata.Name is "DateModified" or "ModifiedBy")
+                        // AskVersion is concurrency bookkeeping, not a field anyone edited: logging it
+                        // would show up in the item's History as an "Ask Version" change.
+                        if (prop.Metadata.Name is "DateModified" or "ModifiedBy" or nameof(BoardItem.AskVersion))
                             continue;
 
                         changes[prop.Metadata.Name] = new
@@ -221,6 +234,18 @@ namespace ClefCraft.Persistence.DatabaseContext
             }
 
             return result;
+        }
+
+        // True when AskVersion is the only property EF will write for this item. Uses IsModified,
+        // not changed values: UpdateBoardItem marks every property modified (DbSet.Update), and
+        // such a save has always stamped the item, whatever actually changed.
+        private static bool OnlyAskVersionModified(EntityEntry<BaseEntity> entry)
+        {
+            if (entry.Entity is not BoardItem)
+                return false;
+
+            var modified = entry.Properties.Where(p => p.IsModified).Select(p => p.Metadata.Name).ToList();
+            return modified.Count == 1 && modified[0] == nameof(BoardItem.AskVersion);
         }
     }
 }

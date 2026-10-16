@@ -34,5 +34,13 @@ namespace ClefCraft.Domain
 
         public ICollection<BoardItemRelation> IncomingRelations
             = new List<BoardItemRelation>();
+
+        public ICollection<BoardItemAsk> Asks { get; set; } = new List<BoardItemAsk>();
+
+        // Concurrency token, incremented whenever an ask becomes open (create, ask again,
+        // reassign, reopen) and whenever the item moves to Done, so the two can't interleave and
+        // leave a Done item with an open ask. Only ever incremented on an item tracked by the
+        // context that saves it.
+        public int AskVersion { get; set; }
     }
 }

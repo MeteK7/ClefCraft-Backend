@@ -3,6 +3,7 @@ using ClefCraft.Application.Contracts.ActivityLogs;
 using ClefCraft.Application.Contracts.Authorization;
 using ClefCraft.Application.Contracts.Identity;
 using ClefCraft.Application.Exceptions;
+using ClefCraft.Application.Features.BoardItemAsks;
 using MediatR;
 using System.Linq;
 using System.Threading;
@@ -28,8 +29,12 @@ namespace ClefCraft.Application.Features.ActivityLogs.Queries.GetActivityLogForE
 
         private const string AssigneeFieldName = "AssigneeId";
 
+        // Fields whose values are user ids: the assignee, and the people named in ask entries.
+        private static readonly HashSet<string> UserIdFieldNames =
+            new(AskHistory.UserIdKeys) { AssigneeFieldName };
+
         // null for "no assignee" (nothing to show); "Unknown user" when the account no longer exists.
-        private static string? AssigneeDisplayName(string? userId, Dictionary<string, string> fullNames) =>
+        private static string? UserDisplayName(string? userId, Dictionary<string, string> fullNames) =>
             string.IsNullOrEmpty(userId)
                 ? null
                 : fullNames.TryGetValue(userId, out var name) ? name : "Unknown user";
@@ -61,15 +66,15 @@ namespace ClefCraft.Application.Features.ActivityLogs.Queries.GetActivityLogForE
             // Parsed once, in the same order as logs.
             var changesPerLog = logs.Select(l => ActivityMetadataParser.Parse(l.MetadataJson)).ToList();
 
-            var assigneeChanges = changesPerLog
+            var userIdChanges = changesPerLog
                 .SelectMany(changes => changes)
-                .Where(c => c.FieldName == AssigneeFieldName)
+                .Where(c => UserIdFieldNames.Contains(c.FieldName))
                 .ToList();
 
-            // Actors and assignees (past or present, board member or not) in one lookup.
+            // Actors, assignees and ask recipients (past or present, board member or not) in one lookup.
             var userIds = logs
                 .Select(l => l.UserId)
-                .Concat(assigneeChanges.SelectMany(c => new[] { c.OldValue, c.NewValue }))
+                .Concat(userIdChanges.SelectMany(c => new[] { c.OldValue, c.NewValue }))
                 .Where(userId => !string.IsNullOrEmpty(userId))
                 .Select(userId => userId!)
                 .Distinct()
@@ -78,10 +83,10 @@ namespace ClefCraft.Application.Features.ActivityLogs.Queries.GetActivityLogForE
             var users = await _userService.GetUsersByIds(userIds);
             var fullNames = users.ToDictionary(u => u.Id, u => $"{u.Firstname} {u.Lastname}");
 
-            foreach (var change in assigneeChanges)
+            foreach (var change in userIdChanges)
             {
-                change.OldDisplayValue = AssigneeDisplayName(change.OldValue, fullNames);
-                change.NewDisplayValue = AssigneeDisplayName(change.NewValue, fullNames);
+                change.OldDisplayValue = UserDisplayName(change.OldValue, fullNames);
+                change.NewDisplayValue = UserDisplayName(change.NewValue, fullNames);
             }
 
             var items = logs.Select((l, index) =>
