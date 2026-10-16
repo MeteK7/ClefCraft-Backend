@@ -10,14 +10,24 @@ namespace ClefCraft.Application.Features.BoardItemAsks
     /// </summary>
     public class AskClosureRequest
     {
-        /// <summary>Every ask the prompt listed: the open asks plus the unmet requirements.</summary>
-        public List<int> AcknowledgedAskIds { get; set; } = new();
+        /// <summary>
+        /// Every ask the prompt listed (the open asks plus the unmet requirements), each with the
+        /// Revision GetAsksForItem returned for it.
+        /// </summary>
+        public List<AcknowledgedAsk> AcknowledgedAsks { get; set; } = new();
 
         /// <summary>Accepted asks to mark Completed (for their recipient). The other open asks are cancelled.</summary>
         public List<int> CompleteAskIds { get; set; } = new();
 
         /// <summary>Exactly the unmet requirements the user chose to complete the item past.</summary>
         public List<int> OverrideAskIds { get; set; } = new();
+    }
+
+    /// <summary>One ask as the completion prompt showed it.</summary>
+    public class AcknowledgedAsk
+    {
+        public int AskId { get; set; }
+        public int Revision { get; set; }
     }
 
     public sealed class AskClosureResult
@@ -70,22 +80,28 @@ namespace ClefCraft.Application.Features.BoardItemAsks
             if (request == null)
                 throw new BadRequestException(MissingMessage);
 
-            var acknowledged = request.AcknowledgedAskIds ?? new List<int>();
+            var acknowledged = request.AcknowledgedAsks ?? new List<AcknowledgedAsk>();
+            var acknowledgedIds = acknowledged.Select(a => a.AskId).ToList();
             var complete = request.CompleteAskIds ?? new List<int>();
             var overrides = request.OverrideAskIds ?? new List<int>();
 
-            if (HasDuplicates(acknowledged) || HasDuplicates(complete) || HasDuplicates(overrides))
+            if (HasDuplicates(acknowledgedIds) || HasDuplicates(complete) || HasDuplicates(overrides))
                 throw new BadRequestException(DuplicateMessage);
 
-            // The prompt must have shown exactly the asks there are now: this rejects a stale
-            // prompt, an ask created after it opened, and ids that aren't this item's.
+            // The prompt must have shown exactly the asks there are now, each as it is now: this
+            // rejects a stale prompt, an ask created, answered or edited after it opened, and ids
+            // that aren't this item's.
             var byId = toReview.ToDictionary(a => a.Id);
-            if (!byId.Keys.ToHashSet().SetEquals(acknowledged))
+            if (!byId.Keys.ToHashSet().SetEquals(acknowledgedIds)
+                || acknowledged.Any(a => byId[a.AskId].Revision != a.Revision))
+            {
                 throw new BadRequestException(ChangedMessage);
+            }
 
             foreach (var askId in complete)
             {
-                var ask = byId[askId];
+                if (!byId.TryGetValue(askId, out var ask))
+                    throw new BadRequestException(ChangedMessage);
 
                 if (ask.State != BoardItemAskState.Accepted)
                     throw new BadRequestException($"Ask {askId} can't be marked done: only an accepted ask can.");

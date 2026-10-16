@@ -31,7 +31,7 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
 
         private static AskClosureRequest Closure(IEnumerable<BoardItemAsk> acknowledged, IEnumerable<BoardItemAsk>? complete = null, IEnumerable<BoardItemAsk>? overrides = null) => new()
         {
-            AcknowledgedAskIds = acknowledged.Select(a => a.Id).ToList(),
+            AcknowledgedAsks = acknowledged.Select(a => new AcknowledgedAsk { AskId = a.Id, Revision = a.Revision }).ToList(),
             CompleteAskIds = (complete ?? Enumerable.Empty<BoardItemAsk>()).Select(a => a.Id).ToList(),
             OverrideAskIds = (overrides ?? Enumerable.Empty<BoardItemAsk>()).Select(a => a.Id).ToList()
         };

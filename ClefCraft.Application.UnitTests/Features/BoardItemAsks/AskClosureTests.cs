@@ -20,24 +20,35 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
 
         private int _nextId = 1;
 
-        private BoardItemAsk Ask(BoardItemAskState state, bool isRequired = false, string recipient = Recipient) => new()
+        private readonly List<BoardItemAsk> _created = new();
+
+        private BoardItemAsk Ask(BoardItemAskState state, bool isRequired = false, string recipient = Recipient)
         {
-            Id = _nextId++,
-            BoardItemId = 1,
-            RequestedByUserId = Requester,
-            RecipientUserId = recipient,
-            Note = "Review",
-            State = state,
-            IsRequired = isRequired,
-            Revision = 1
-        };
+            var ask = new BoardItemAsk
+            {
+                Id = _nextId++,
+                BoardItemId = 1,
+                RequestedByUserId = Requester,
+                RecipientUserId = recipient,
+                Note = "Review",
+                State = state,
+                IsRequired = isRequired,
+                Revision = 1
+            };
+            _created.Add(ask);
+            return ask;
+        }
 
         private static AskClosureResult Apply(IReadOnlyCollection<BoardItemAsk> asks, AskClosureRequest? request, string caller = Assignee) =>
             AskClosure.Apply(asks, request, ask => AskActorRoles.For(ask, caller, Assignee, Owner), caller, Now);
 
-        private static AskClosureRequest Request(IEnumerable<int> acknowledged, IEnumerable<int>? complete = null, IEnumerable<int>? overrides = null) => new()
+        // Acknowledges each id at the revision its ask has now (1 for an id no ask has), the way
+        // the prompt sends back what GetAsksForItem returned.
+        private AskClosureRequest Request(IEnumerable<int> acknowledged, IEnumerable<int>? complete = null, IEnumerable<int>? overrides = null) => new()
         {
-            AcknowledgedAskIds = acknowledged.ToList(),
+            AcknowledgedAsks = acknowledged
+                .Select(id => new AcknowledgedAsk { AskId = id, Revision = _created.FirstOrDefault(a => a.Id == id)?.Revision ?? 1 })
+                .ToList(),
             CompleteAskIds = (complete ?? new int[0]).ToList(),
             OverrideAskIds = (overrides ?? new int[0]).ToList()
         };
@@ -234,18 +245,59 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
         }
 
         [Fact]
-        public void AskMadeRequiredAfterThePromptOpened_CannotBeOverriddenUnseen()
+        public void AskMadeRequiredAfterThePromptOpened_IsRejectedAsChanged()
         {
-            // The prompt showed an optional pending ask; meanwhile someone made it required. The
-            // acknowledged set still matches, but the override list the user sent doesn't name it.
+            // The prompt showed an optional pending ask at revision 1; then a manager made it
+            // required (UpdateAsk increments the revision).
             var pending = Ask(BoardItemAskState.Pending);
-            var acknowledged = new[] { pending.Id };
+            var snapshot = Request(new[] { pending.Id });
             pending.IsRequired = true;
+            pending.Revision++;
 
-            Should.Throw<BadRequestException>(() => Apply(new[] { pending }, Request(acknowledged, overrides: new int[0])))
+            Should.Throw<BadRequestException>(() => Apply(new[] { pending }, snapshot))
                 .Message.ShouldBe(AskClosure.ChangedMessage);
 
             pending.State.ShouldBe(BoardItemAskState.Pending);
+        }
+
+        [Fact]
+        public void RequiredAskMissingFromTheOverrides_IsRejected_EvenWhenItsRevisionMatches()
+        {
+            // The override list is checked on its own too, not only through the revisions.
+            var pending = Ask(BoardItemAskState.Pending);
+            pending.IsRequired = true;
+
+            Should.Throw<BadRequestException>(() => Apply(new[] { pending }, Request(new[] { pending.Id }, overrides: new int[0])))
+                .Message.ShouldBe(AskClosure.ChangedMessage);
+        }
+
+        [Fact]
+        public void PendingAskAcceptedAfterThePromptOpened_IsRejectedAsChanged()
+        {
+            var pending = Ask(BoardItemAskState.Pending);
+            var snapshot = Request(new[] { pending.Id });
+            pending.State = BoardItemAskState.Accepted;
+            pending.Revision++;
+
+            Should.Throw<BadRequestException>(() => Apply(new[] { pending }, snapshot))
+                .Message.ShouldBe(AskClosure.ChangedMessage);
+
+            pending.State.ShouldBe(BoardItemAskState.Accepted);
+            pending.Revision.ShouldBe(2);
+        }
+
+        [Fact]
+        public void CompletingAnAskThatIsntOneOfTheItemsReviewableAsks_IsRejectedAsChanged()
+        {
+            var accepted = Ask(BoardItemAskState.Accepted);
+            var alreadyDone = Ask(BoardItemAskState.Completed);
+
+            Should.Throw<BadRequestException>(() =>
+                    Apply(new[] { accepted, alreadyDone }, Request(new[] { accepted.Id }, complete: new[] { alreadyDone.Id })))
+                .Message.ShouldBe(AskClosure.ChangedMessage);
+            Should.Throw<BadRequestException>(() =>
+                    Apply(new[] { accepted }, Request(new[] { accepted.Id }, complete: new[] { 9999 })))
+                .Message.ShouldBe(AskClosure.ChangedMessage);
         }
 
         [Fact]
