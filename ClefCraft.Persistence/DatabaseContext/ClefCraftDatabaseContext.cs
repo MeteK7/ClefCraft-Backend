@@ -143,7 +143,11 @@ namespace ClefCraft.Persistence.DatabaseContext
                     entry.Entity.CreatedBy = userId;
                 }
 
-                if (entry.State is EntityState.Added or EntityState.Modified)
+                // An ask that only increments the item's AskVersion hasn't modified the item itself,
+                // so it doesn't become the item's "last modified". The row is still updated (and
+                // its concurrency token checked); only the stamp is left alone.
+                if (entry.State == EntityState.Added
+                    || (entry.State == EntityState.Modified && !OnlyAskVersionModified(entry)))
                 {
                     entry.Entity.DateModified = utcNow;
                     entry.Entity.ModifiedBy = userId;
@@ -230,6 +234,18 @@ namespace ClefCraft.Persistence.DatabaseContext
             }
 
             return result;
+        }
+
+        // True when AskVersion is the only property EF will write for this item. Uses IsModified,
+        // not changed values: UpdateBoardItem marks every property modified (DbSet.Update), and
+        // such a save has always stamped the item, whatever actually changed.
+        private static bool OnlyAskVersionModified(EntityEntry<BaseEntity> entry)
+        {
+            if (entry.Entity is not BoardItem)
+                return false;
+
+            var modified = entry.Properties.Where(p => p.IsModified).Select(p => p.Metadata.Name).ToList();
+            return modified.Count == 1 && modified[0] == nameof(BoardItem.AskVersion);
         }
     }
 }
