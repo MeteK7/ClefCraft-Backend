@@ -1,4 +1,5 @@
 ﻿using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItemById;
+using ClefCraft.Application.Features.BoardItemAsks;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -21,5 +22,11 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
         public double? EstimatedTime { get; set; }
         public double? TimeSpent { get; set; }
         public int BoardColumnId { get; set; }
+
+        /// <summary>
+        /// Required when StatusId moves the item to Done while it has open asks or unmet
+        /// requirements; ignored otherwise. See AskClosure.
+        /// </summary>
+        public AskClosureRequest? AskClosure { get; set; }
     }
 }

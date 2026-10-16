@@ -1,5 +1,7 @@
 using ClefCraft.Application.Contracts.Analytics;
+using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
+using ClefCraft.Application.Contracts.Logging;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem;
 using ClefCraft.Application.Features.BoardItem.Queries.GetBoardItemById;
@@ -57,7 +59,11 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
                 (userService ?? MakeUserService()).Object,
                 lifecycleService.Object,
                 (unitOfWork ?? new Mock<IUnitOfWork>()).Object,
-                (memberRepo ?? new Mock<IBoardMemberRepository>()).Object);
+                (memberRepo ?? new Mock<IBoardMemberRepository>()).Object,
+                MockBoardItemAskRepository.GetEmpty().Object,
+                new Mock<IBoardRepository>().Object,
+                new Mock<IActivityLogger>().Object,
+                new Mock<INotificationHubService>().Object);
 
         // Board 10 (MakeItem's board) has exactly these members.
         private static Mock<IBoardMemberRepository> MakeMemberRepo(params string[] memberIds)

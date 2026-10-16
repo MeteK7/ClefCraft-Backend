@@ -1,5 +1,7 @@
 using ClefCraft.Application.Contracts.Analytics;
+using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
+using ClefCraft.Application.Contracts.Logging;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Exceptions;
 using ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem;
@@ -83,7 +85,11 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
                 userService.Object,
                 new Mock<ITaskLifecycleService>().Object,
                 new Mock<IUnitOfWork>().Object,
-                new Mock<IBoardMemberRepository>().Object);
+                new Mock<IBoardMemberRepository>().Object,
+                MockBoardItemAskRepository.GetEmpty().Object,
+                new Mock<IBoardRepository>().Object,
+                new Mock<IActivityLogger>().Object,
+                new Mock<INotificationHubService>().Object);
 
             await Should.ThrowAsync<ForbiddenAccessException>(() =>
                 handler.Handle(new UpdateBoardItemCommand { Id = 1, Title = "Hacked title" }, CancellationToken.None));

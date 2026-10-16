@@ -24,6 +24,16 @@ namespace ClefCraft.Persistence.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<BoardMember>> GetByBoardIdsAsync(IEnumerable<int> boardIds)
+        {
+            var ids = boardIds as ICollection<int> ?? boardIds.ToList();
+            if (ids.Count == 0) return new List<BoardMember>();
+
+            return await _context.BoardMembers
+                .Where(m => ids.Contains(m.BoardId))
+                .ToListAsync();
+        }
+
         public async Task<BoardMember?> GetByBoardAndUserAsync(int boardId, string userId)
         {
             return await _context.BoardMembers

@@ -1,5 +1,7 @@
 using ClefCraft.Application.Contracts.Analytics;
+using ClefCraft.Application.Contracts.Calendar;
 using ClefCraft.Application.Contracts.Identity;
+using ClefCraft.Application.Contracts.Logging;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Exceptions;
 using ClefCraft.Application.Features.BoardItem.Commands.CreateBoardItem;
@@ -47,7 +49,11 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItem
                 Caller().Object,
                 new Mock<ITaskLifecycleService>().Object,
                 unitOfWork.Object,
-                new Mock<IBoardMemberRepository>().Object);
+                new Mock<IBoardMemberRepository>().Object,
+                MockBoardItemAskRepository.GetEmpty().Object,
+                new Mock<IBoardRepository>().Object,
+                new Mock<IActivityLogger>().Object,
+                new Mock<INotificationHubService>().Object);
 
         private static Domain.BoardItem ItemOnBoard(int boardId, int columnId) =>
             new() { Id = 1, BoardId = boardId, BoardColumnId = columnId, Title = "Etude" };
