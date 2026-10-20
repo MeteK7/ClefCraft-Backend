@@ -19,5 +19,14 @@ namespace ClefCraft.Application.Contracts.Persistence
         /// loaded. The filter can rely on BoardItem being loaded.
         /// </summary>
         Task<List<BoardItemAsk>> GetWithItemReadOnlyAsync(Expression<Func<BoardItemAsk, bool>> filter);
+
+        /// <summary>The replies on the given asks, read-only, oldest first. One query.</summary>
+        Task<List<BoardItemAskReply>> GetRepliesByAskIdsReadOnlyAsync(IEnumerable<int> askIds);
+
+        /// <summary>One reply, tracked; null when it doesn't exist.</summary>
+        Task<BoardItemAskReply?> GetReplyByIdAsync(int replyId);
+
+        /// <summary>Adds a reply; the next save inserts it.</summary>
+        Task AddReplyAsync(BoardItemAskReply reply);
     }
 }

@@ -5,6 +5,10 @@ namespace ClefCraft.Application.Features.BoardItemAsks
     {
         public const int NoteMaxLength = 200;
         public const int ResponseNoteMaxLength = 500;
+        public const int ReplyMaxLength = 2000;
+
+        /// <summary>How much of a reply a notification carries.</summary>
+        public const int ReplyExcerptLength = 140;
 
         /// <summary>A Pending ask can be nudged at most once in this period.</summary>
         public static readonly TimeSpan NudgeInterval = TimeSpan.FromHours(24);
