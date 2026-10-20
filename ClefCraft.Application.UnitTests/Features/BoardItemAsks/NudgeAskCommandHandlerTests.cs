@@ -33,11 +33,19 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
             ask.Revision.ShouldBe(3);
             ask.DateCreated.ShouldBe(asked);
             dto.AllowedActions.ShouldNotContain(BoardItemAskAction.Nudge);
+            dto.NextNudgeAt.ShouldBe(ask.LastNudgedAt!.Value.AddHours(24));
             _bed.LoggedOf(AskHistory.Nudged).ShouldHaveSingleItem();
 
             var sent = _bed.Sent.ShouldHaveSingleItem();
             sent.UserId.ShouldBe(Recipient);
             sent.Payload.Event.ShouldBe(nameof(AskEvent.Nudged));
+        }
+
+        // The frontend recognises this rejection by its exact text, so the text is part of the contract.
+        [Fact]
+        public void AlreadyNudgedMessage_IsTheTextTheFrontendMatches()
+        {
+            NudgeAskCommandHandler.AlreadyNudgedMessage.ShouldBe("This ask was already nudged in the last 24 hours.");
         }
 
         [Fact]

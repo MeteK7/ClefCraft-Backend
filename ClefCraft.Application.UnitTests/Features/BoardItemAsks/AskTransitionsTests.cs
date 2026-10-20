@@ -79,9 +79,31 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
             var manager = new AskActorRoles(IsRecipient: false, IsManager: true);
 
             AskTransitions.AllowedActions(ask, manager, false, now).ShouldNotContain(BoardItemAskAction.Nudge);
+            AskTransitions.NextNudgeAt(ask, manager, false, now).ShouldBe(now.AddHours(1));
 
             ask.LastNudgedAt = now.AddHours(-25);
             AskTransitions.AllowedActions(ask, manager, false, now).ShouldContain(BoardItemAskAction.Nudge);
+            AskTransitions.NextNudgeAt(ask, manager, false, now).ShouldBeNull();
+        }
+
+        [Fact]
+        public void NextNudgeAt_IsNullWheneverTheViewerCouldNotNudgeAnyway()
+        {
+            var now = System.DateTime.UtcNow;
+            var recentlyNudged = new BoardItemAsk { State = BoardItemAskState.Pending, LastNudgedAt = now.AddHours(-2) };
+            var manager = new AskActorRoles(IsRecipient: false, IsManager: true);
+
+            // The recipient, and a member who manages nothing, never nudge.
+            AskTransitions.NextNudgeAt(recentlyNudged, new AskActorRoles(IsRecipient: true, IsManager: false), false, now).ShouldBeNull();
+            AskTransitions.NextNudgeAt(recentlyNudged, new AskActorRoles(false, false), false, now).ShouldBeNull();
+
+            // Nothing is nudged on a Done item, nor an ask that is no longer Pending.
+            AskTransitions.NextNudgeAt(recentlyNudged, manager, itemIsDone: true, now).ShouldBeNull();
+            var accepted = new BoardItemAsk { State = BoardItemAskState.Accepted, LastNudgedAt = now.AddHours(-2) };
+            AskTransitions.NextNudgeAt(accepted, manager, false, now).ShouldBeNull();
+
+            // Never nudged: nudging is possible now, there's no cooldown to report.
+            AskTransitions.NextNudgeAt(new BoardItemAsk { State = BoardItemAskState.Pending }, manager, false, now).ShouldBeNull();
         }
 
         [Fact]
