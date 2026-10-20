@@ -5,6 +5,7 @@ using ClefCraft.Application.Contracts.Logging;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Exceptions;
 using ClefCraft.Application.Features.BoardItemAsks.DTOs;
+using ClefCraft.Domain;
 using ClefCraft.Domain.Enums;
 using MediatR;
 
@@ -59,11 +60,27 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Commands.ChangeAskState
             var context = await AskCommandSupport.LoadItemAsync(
                 ask.BoardItemId, callerId, _boardAccessService, _boardItemRepository, _boardRepository, _statusRepository);
 
-            AskTransitions.EnsureAllowed(request.Action, ask, context.RolesFor(ask, callerId), context.ItemIsDone);
+            var roles = context.RolesFor(ask, callerId);
+            var utcNow = DateTime.UtcNow;
+            var replyBody = request.ReplyBody?.Trim();
+
+            // "Send & mark done" on a Pending ask: accept it first, in this same save. Only the
+            // recipient may accept, and Complete is then checked from Accepted as usual.
+            if (request.Action == BoardItemAskAction.Complete && replyBody != null && ask.State == BoardItemAskState.Pending)
+            {
+                AskTransitions.EnsureAllowed(BoardItemAskAction.Accept, ask, roles, context.ItemIsDone);
+                AskTransitions.EnsureRevision(ask, request.ExpectedRevision);
+
+                ask.State = BoardItemAskState.Accepted;
+                ask.RespondedAt = utcNow;
+                await AskHistory.LogAsync(_activityLogger, AskHistory.Accepted, ask);
+            }
+
+            AskTransitions.EnsureAllowed(request.Action, ask, roles, context.ItemIsDone);
             AskTransitions.EnsureRevision(ask, request.ExpectedRevision);
 
-            var utcNow = DateTime.UtcNow;
             string? reason = null;
+            BoardItemAskReply? reply = null;
             AskEvent askEvent;
 
             switch (request.Action)
@@ -86,6 +103,18 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Commands.ChangeAskState
                     break;
 
                 case BoardItemAskAction.Complete:
+                    if (replyBody != null)
+                    {
+                        reply = new BoardItemAskReply { BoardItemAskId = ask.Id, AuthorUserId = callerId, Body = replyBody };
+                        await _askRepository.AddReplyAsync(reply);
+                    }
+                    else if (ask.ExpectsAnswer)
+                    {
+                        var replies = await _askRepository.GetRepliesByAskIdsReadOnlyAsync(new[] { ask.Id });
+                        if (!AskReplies.IsAnswered(ask, replies))
+                            throw new BadRequestException(AskReplies.AnswerRequiredMessage, AskReplies.AnswerRequiredCode);
+                    }
+
                     ask.State = BoardItemAskState.Completed;
                     ask.CompletedAt = utcNow;
                     ask.CompletedByUserId = callerId;
@@ -98,6 +127,8 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Commands.ChangeAskState
                     ask.State = BoardItemAskState.Accepted;
                     ask.CompletedAt = null;
                     ask.CompletedByUserId = null;
+                    // Replies from before this point no longer answer the ask.
+                    ask.LastReopenedAt = utcNow;
                     askEvent = AskEvent.Reopened;
                     await AskHistory.LogAsync(_activityLogger, AskHistory.Reopened, ask);
 
@@ -123,10 +154,10 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Commands.ChangeAskState
             await AskCommandSupport.SaveAsync(_unitOfWork, cancellationToken);
 
             await AskNotifier.SendAsync(
-                new[] { new AskNotice(ask, context.Item.BoardId, context.Item.Title, askEvent, reason) },
+                new[] { new AskNotice(ask, context.Item.BoardId, context.Item.Title, askEvent, reason, Reply: reply) },
                 callerId, _notificationHubService, _boardMemberRepository, _userService, cancellationToken);
 
-            return await AskCommandSupport.ToDtoAsync(ask, context, callerId, _userService, _boardMemberRepository);
+            return await AskCommandSupport.ToDtoAsync(ask, context, callerId, _userService, _boardMemberRepository, _askRepository);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace ClefCraft.Application.Models.Notifications
 
         public string ItemTitle { get; set; } = null!;
 
-        /// <summary>Requested, Changed, Nudged, Accepted, Declined, Completed, Reopened or Cancelled.</summary>
+        /// <summary>Requested, Changed, Nudged, Accepted, Declined, Completed, Reopened, Cancelled or Replied.</summary>
         public string Event { get; set; } = null!;
 
         public string ActorFullName { get; set; } = null!;
@@ -22,5 +22,11 @@ namespace ClefCraft.Application.Models.Notifications
 
         /// <summary>True when someone other than the recipient marked the ask done.</summary>
         public bool ActedOnBehalf { get; set; }
+
+        /// <summary>The reply this event is about: a Replied event, or a Completed one sent with its answer.</summary>
+        public int? ReplyId { get; set; }
+
+        /// <summary>The start of that reply as plain text, for the toast.</summary>
+        public string? ReplyExcerpt { get; set; }
     }
 }

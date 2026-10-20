@@ -65,7 +65,7 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Commands.UpdateAsk
             var requiredChanged = request.IsRequired != ask.IsRequired;
 
             if (!termsChanged && !requiredChanged)
-                return await AskCommandSupport.ToDtoAsync(ask, context, callerId, _userService, _boardMemberRepository);
+                return await AskCommandSupport.ToDtoAsync(ask, context, callerId, _userService, _boardMemberRepository, _askRepository);
 
             if (termsChanged)
                 AskTransitions.EnsureAllowed(BoardItemAskAction.Edit, ask, roles, context.ItemIsDone);
@@ -122,7 +122,7 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Commands.UpdateAsk
                     callerId, _notificationHubService, _boardMemberRepository, _userService, cancellationToken);
             }
 
-            return await AskCommandSupport.ToDtoAsync(ask, context, callerId, _userService, _boardMemberRepository);
+            return await AskCommandSupport.ToDtoAsync(ask, context, callerId, _userService, _boardMemberRepository, _askRepository);
         }
     }
 }

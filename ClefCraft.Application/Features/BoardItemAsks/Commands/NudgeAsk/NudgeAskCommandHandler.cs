@@ -82,7 +82,7 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Commands.NudgeAsk
                 new[] { new AskNotice(ask, context.Item.BoardId, context.Item.Title, AskEvent.Nudged) },
                 callerId, _notificationHubService, _boardMemberRepository, _userService, cancellationToken);
 
-            return await AskCommandSupport.ToDtoAsync(ask, context, callerId, _userService, _boardMemberRepository);
+            return await AskCommandSupport.ToDtoAsync(ask, context, callerId, _userService, _boardMemberRepository, _askRepository);
         }
     }
 }

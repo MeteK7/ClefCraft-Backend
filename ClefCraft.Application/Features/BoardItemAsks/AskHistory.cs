@@ -24,6 +24,8 @@ namespace ClefCraft.Application.Features.BoardItemAsks
         public const string RequirementWaived = "ASK_REQUIREMENT_WAIVED";
         public const string RequirementMoved = "ASK_REQUIREMENT_MOVED";
         public const string RequirementsOverridden = "ASK_REQUIREMENTS_OVERRIDDEN";
+        public const string AnswerExpected = "ASK_ANSWER_EXPECTED";
+        public const string AnswerNotExpected = "ASK_ANSWER_NOT_EXPECTED";
 
         // Metadata keys. User-id keys are resolved to names by GetActivityLogForEntityHandler.
         public const string AskIdKey = "AskId";
@@ -33,6 +35,7 @@ namespace ClefCraft.Application.Features.BoardItemAsks
         public const string ReasonKey = "Reason";
         public const string ToRecipientUserIdKey = "ToRecipientUserId";
         public const string AskIdsKey = "AskIds";
+        public const string ExpectsAnswerKey = "ExpectsAnswer";
 
         /// <summary>The metadata keys whose values are user ids.</summary>
         public static readonly IReadOnlySet<string> UserIdKeys =

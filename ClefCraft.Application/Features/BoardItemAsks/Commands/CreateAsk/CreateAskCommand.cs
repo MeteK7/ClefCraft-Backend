@@ -11,6 +11,9 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Commands.CreateAsk
         public DateTime? DueDate { get; set; }
         public bool IsRequired { get; set; }
 
+        /// <summary>The ask can only be marked done once the recipient has replied.</summary>
+        public bool ExpectsAnswer { get; set; }
+
         /// <summary>
         /// "Ask again": a Declined or Cancelled ask on the same item that this one follows up. The
         /// new ask keeps that ask's requester, and when both are required the requirement moves to

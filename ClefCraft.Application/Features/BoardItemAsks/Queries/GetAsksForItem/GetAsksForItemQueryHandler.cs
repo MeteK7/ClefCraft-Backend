@@ -53,6 +53,8 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Queries.GetAsksForItem
             var fullNames = (await _userService.GetUsersByIds(userIds))
                 .ToDictionary(u => u.Id, u => $"{u.Firstname} {u.Lastname}");
 
+            var replies = await _askRepository.GetRepliesByAskIdsReadOnlyAsync(asks.Select(a => a.Id));
+
             var utcNow = DateTime.UtcNow;
 
             return asks
@@ -61,9 +63,11 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Queries.GetAsksForItem
                     context.Item,
                     fullNames,
                     memberIds.Contains(ask.RecipientUserId),
+                    callerId,
                     context.RolesFor(ask, callerId),
                     context.ItemIsDone,
-                    utcNow))
+                    utcNow,
+                    replies))
                 .ToList();
         }
     }
