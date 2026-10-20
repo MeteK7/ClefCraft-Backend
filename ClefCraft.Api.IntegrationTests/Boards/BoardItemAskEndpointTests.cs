@@ -288,6 +288,56 @@ namespace ClefCraft.Api.IntegrationTests.Boards
             (await ReadAsync(response))["errors"]!.AsObject().ContainsKey("ExpectedRevision").ShouldBeTrue();
         }
 
+        // ---- Timestamps -----------------------------------------------------------------------------
+
+        // Every ask timestamp must reach the client as an unambiguous instant: UTC with a "Z", the
+        // instant the server recorded. (On InMemory the stored Kind is kept; that Npgsql reads
+        // timestamptz back as UTC is the provider's documented behaviour.)
+        [Fact]
+        public async Task AskTimestamps_AreSerializedAsUtcInstants()
+        {
+            using var factory = new ClefCraftApiFactory();
+            using var board = await CreateAskBoardAsync(factory);
+            var before = DateTimeOffset.UtcNow.AddSeconds(-1);
+
+            using var created = await board.Owner.PostAsJsonAsync($"/api/BoardItems/{board.ItemId}/asks", new
+            {
+                recipientUserId = board.HelperId,
+                note = "Review the migration",
+                isRequired = false,
+                dueDate = "2026-11-02T00:00:00Z"
+            });
+            created.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var accepted = await ReadAsync(created);
+            (await ActAsync(board.Helper, accepted, "accept")).EnsureSuccessStatusCode();
+
+            var nudged = await AskOkAsync(board.Owner, board.ItemId, board.SecondId);
+            (await board.Owner.PostAsync($"/api/BoardItemAsks/{nudged["id"]}/nudge", null)).EnsureSuccessStatusCode();
+            var after = DateTimeOffset.UtcNow.AddSeconds(1);
+
+            var asks = await AsksOfItemAsync(board.Owner, board.ItemId);
+            var first = asks.Single(a => a!["id"]!.GetValue<int>() == accepted["id"]!.GetValue<int>())!;
+            var second = asks.Single(a => a!["id"]!.GetValue<int>() == nudged["id"]!.GetValue<int>())!;
+
+            static DateTimeOffset Instant(JsonNode ask, string field)
+            {
+                var raw = ask[field]!.GetValue<string>();
+                raw.ShouldEndWith("Z", customMessage: $"{field} was \"{raw}\"");
+                var parsed = DateTimeOffset.Parse(raw, System.Globalization.CultureInfo.InvariantCulture);
+                parsed.Offset.ShouldBe(TimeSpan.Zero);
+                return parsed;
+            }
+
+            Instant(first, "dateCreated").ShouldBeInRange(before, after);
+            Instant(first, "respondedAt").ShouldBeInRange(before, after);
+            Instant(first, "dueDate").ShouldBe(new DateTimeOffset(2026, 11, 2, 0, 0, 0, TimeSpan.Zero));
+
+            var lastNudgedAt = Instant(second, "lastNudgedAt");
+            lastNudgedAt.ShouldBeInRange(before, after);
+            (Instant(second, "nextNudgeAt") - lastNudgedAt).ShouldBe(TimeSpan.FromHours(24));
+            second["allowedActions"]!.AsArray().Select(a => a!.GetValue<int>()).ShouldNotContain(8); // Nudge
+        }
+
         // ---- Reassign -----------------------------------------------------------------------------
 
         [Fact]

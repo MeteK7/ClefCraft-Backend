@@ -92,9 +92,8 @@ namespace ClefCraft.Application.Features.BoardItemAsks
             var users = await userService.GetUsersByIds(BoardItemAskMapper.UserIdsOf(ask).Distinct().ToList());
             var fullNames = users.ToDictionary(u => u.Id, u => $"{u.Firstname} {u.Lastname}");
             var recipientIsMember = await boardMemberRepository.IsMemberAsync(context.Item.BoardId, ask.RecipientUserId);
-            var allowed = AskTransitions.AllowedActions(ask, context.RolesFor(ask, callerId), context.ItemIsDone, DateTime.UtcNow);
-
-            return BoardItemAskMapper.ToDto(ask, context.Item, fullNames, recipientIsMember, allowed);
+            return BoardItemAskMapper.ToDto(
+                ask, context.Item, fullNames, recipientIsMember, context.RolesFor(ask, callerId), context.ItemIsDone, DateTime.UtcNow);
         }
     }
 }

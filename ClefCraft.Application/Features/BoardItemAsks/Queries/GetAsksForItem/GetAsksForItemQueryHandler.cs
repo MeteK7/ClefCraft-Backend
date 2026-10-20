@@ -61,7 +61,9 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Queries.GetAsksForItem
                     context.Item,
                     fullNames,
                     memberIds.Contains(ask.RecipientUserId),
-                    AskTransitions.AllowedActions(ask, context.RolesFor(ask, callerId), context.ItemIsDone, utcNow)))
+                    context.RolesFor(ask, callerId),
+                    context.ItemIsDone,
+                    utcNow))
                 .ToList();
         }
     }
