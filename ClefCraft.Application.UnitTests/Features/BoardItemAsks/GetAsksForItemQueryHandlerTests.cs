@@ -76,6 +76,27 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
             dto.AllowedActions.ShouldContain(BoardItemAskAction.Cancel);
         }
 
+        [Theory]
+        [InlineData(Assignee, true)]
+        [InlineData(Owner, true)]
+        [InlineData(Requester, true)]
+        [InlineData(Recipient, false)]
+        [InlineData(Other, false)]
+        public async Task NextNudgeAt_GoesOnlyToAskManagers_DuringTheCooldown(string viewer, bool getsIt)
+        {
+            var ask = _bed.AddAsk(BoardItemAskState.Pending);
+            ask.LastNudgedAt = System.DateTime.UtcNow.AddHours(-2);
+            _bed.CallerId = viewer;
+
+            var dto = (await Get()).Single();
+
+            dto.AllowedActions.ShouldNotContain(BoardItemAskAction.Nudge);
+            if (getsIt)
+                dto.NextNudgeAt.ShouldBe(ask.LastNudgedAt.Value.AddHours(24));
+            else
+                dto.NextNudgeAt.ShouldBeNull();
+        }
+
         [Fact]
         public async Task OnADoneItem_NobodyMayDoAnything()
         {

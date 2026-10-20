@@ -93,6 +93,23 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
         }
 
         [Fact]
+        public async Task NextNudgeAt_IsForTheRequester_NeverForTheRecipient()
+        {
+            var ask = _bed.AddAsk(BoardItemAskState.Pending);
+            ask.LastNudgedAt = DateTime.UtcNow.AddHours(-2);
+
+            _bed.CallerId = Recipient;
+            var received = (await Get(AskDirection.Received)).Single();
+            received.NextNudgeAt.ShouldBeNull();
+            received.AllowedActions.ShouldNotContain(BoardItemAskAction.Nudge);
+
+            _bed.CallerId = Requester;
+            var sent = (await Get(AskDirection.Sent)).Single();
+            sent.NextNudgeAt.ShouldBe(ask.LastNudgedAt.Value.AddHours(24));
+            sent.AllowedActions.ShouldNotContain(BoardItemAskAction.Nudge);
+        }
+
+        [Fact]
         public async Task InvalidDirection_IsABadRequest()
         {
             await Should.ThrowAsync<BadRequestException>(() => Get((AskDirection)7));

@@ -38,6 +38,12 @@ namespace ClefCraft.Application.Features.BoardItemAsks.DTOs
 
         public DateTime? LastNudgedAt { get; set; }
 
+        /// <summary>
+        /// Set only for a viewer who may nudge this ask once the cooldown ends: when that is.
+        /// Null when they may nudge now (Nudge is in AllowedActions) or not at all.
+        /// </summary>
+        public DateTime? NextNudgeAt { get; set; }
+
         /// <summary>Send back as ExpectedRevision with any change.</summary>
         public int Revision { get; set; }
 

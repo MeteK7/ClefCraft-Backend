@@ -6,13 +6,19 @@ namespace ClefCraft.Application.Features.BoardItemAsks
 {
     public static class BoardItemAskMapper
     {
-        /// <summary>Recipient, requester and completer names come from fullNames (user id to full name).</summary>
+        /// <summary>
+        /// Recipient, requester and completer names come from fullNames (user id to full name).
+        /// What the viewer may do (AllowedActions, NextNudgeAt) is worked out from their roles,
+        /// whether the item is Done and the request's single clock reading.
+        /// </summary>
         public static BoardItemAskDto ToDto(
             BoardItemAsk ask,
             Domain.BoardItem item,
             IReadOnlyDictionary<string, string> fullNames,
             bool recipientIsBoardMember,
-            List<BoardItemAskAction> allowedActions)
+            AskActorRoles viewerRoles,
+            bool itemIsDone,
+            DateTime utcNow)
         {
             return new BoardItemAskDto
             {
@@ -37,10 +43,11 @@ namespace ClefCraft.Application.Features.BoardItemAsks
                 CancelReason = ask.CancelReason,
                 DateCreated = ask.DateCreated ?? default,
                 LastNudgedAt = ask.LastNudgedAt,
+                NextNudgeAt = AskTransitions.NextNudgeAt(ask, viewerRoles, itemIsDone, utcNow),
                 Revision = ask.Revision,
                 IsOpen = AskTransitions.IsOpen(ask.State),
                 IsUnmetRequirement = AskTransitions.IsUnmetRequirement(ask),
-                AllowedActions = allowedActions
+                AllowedActions = AskTransitions.AllowedActions(ask, viewerRoles, itemIsDone, utcNow)
             };
         }
 

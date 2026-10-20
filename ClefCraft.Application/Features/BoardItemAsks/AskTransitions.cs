@@ -133,6 +133,25 @@ namespace ClefCraft.Application.Features.BoardItemAsks
                 throw new BadRequestException("This ask changed since you loaded it; reload it and try again.");
         }
 
+        /// <summary>
+        /// When the caller may nudge the ask again, for a caller who could nudge it but for the
+        /// cooldown: same role, state and item checks as AllowedActions, with the nudge not yet
+        /// due. Null otherwise (nudging allowed now, or not the caller's to do at all).
+        /// </summary>
+        public static DateTime? NextNudgeAt(BoardItemAsk ask, AskActorRoles roles, bool itemIsDone, DateTime utcNow)
+        {
+            if (itemIsDone
+                || ask.LastNudgedAt == null
+                || !HasRole(BoardItemAskAction.Nudge, roles)
+                || !IsAllowedFrom(BoardItemAskAction.Nudge, ask)
+                || IsNudgeDue(ask, utcNow))
+            {
+                return null;
+            }
+
+            return ask.LastNudgedAt.Value + BoardItemAskLimits.NudgeInterval;
+        }
+
         /// <summary>Everything the caller may do with the ask right now. Empty while the item is Done.</summary>
         public static List<BoardItemAskAction> AllowedActions(BoardItemAsk ask, AskActorRoles roles, bool itemIsDone, DateTime utcNow)
         {
