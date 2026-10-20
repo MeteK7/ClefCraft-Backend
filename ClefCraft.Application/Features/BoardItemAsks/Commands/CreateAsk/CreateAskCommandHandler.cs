@@ -83,11 +83,13 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Commands.CreateAsk
                 Note = request.Note.Trim(),
                 DueDate = request.DueDate,
                 IsRequired = request.IsRequired,
+                ExpectsAnswer = request.ExpectsAnswer,
                 State = BoardItemAskState.Pending
             };
 
             await _askRepository.CreateAsync(ask);
-            await AskHistory.LogAsync(_activityLogger, AskHistory.Created, ask);
+            await AskHistory.LogAsync(_activityLogger, AskHistory.Created, ask,
+                ask.ExpectsAnswer ? new Dictionary<string, object?> { [AskHistory.ExpectsAnswerKey] = true } : null);
 
             if (replaced != null && replaced.IsRequired && ask.IsRequired)
             {
@@ -106,7 +108,7 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Commands.CreateAsk
                 new[] { new AskNotice(ask, context.Item.BoardId, context.Item.Title, AskEvent.Requested) },
                 callerId, _notificationHubService, _boardMemberRepository, _userService, cancellationToken);
 
-            return await AskCommandSupport.ToDtoAsync(ask, context, callerId, _userService, _boardMemberRepository);
+            return await AskCommandSupport.ToDtoAsync(ask, context, callerId, _userService, _boardMemberRepository, _askRepository);
         }
     }
 }

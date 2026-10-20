@@ -20,6 +20,9 @@ namespace ClefCraft.Api.Models
 
         public bool IsRequired { get; set; }
 
+        /// <summary>The ask can only be marked done once the recipient has replied.</summary>
+        public bool ExpectsAnswer { get; set; }
+
         /// <summary>"Ask again": the Declined or Cancelled ask on the same item this one follows up.</summary>
         public int? ReplacesAskId { get; set; }
     }
@@ -48,6 +51,26 @@ namespace ClefCraft.Api.Models
 
         /// <summary>The recipient's reason, used when declining.</summary>
         public string? Reason { get; set; }
+
+        /// <summary>Complete only: a reply to post with it ("Send & mark done").</summary>
+        public string? ReplyBody { get; set; }
+    }
+
+    /// <summary>Body of POST api/BoardItemAsks/{id}/replies and PUT api/BoardItemAskReplies/{replyId}.</summary>
+    public class AskReplyRequest
+    {
+        [Required]
+        public string Body { get; set; } = string.Empty;
+    }
+
+    /// <summary>Body of POST api/BoardItemAsks/{id}/expects-answer.</summary>
+    public class SetAskExpectsAnswerRequest
+    {
+        [Required]
+        public int? ExpectedRevision { get; set; }
+
+        [Required]
+        public bool? ExpectsAnswer { get; set; }
     }
 
     /// <summary>Body of POST api/BoardItemAsks/{id}/reassign.</summary>

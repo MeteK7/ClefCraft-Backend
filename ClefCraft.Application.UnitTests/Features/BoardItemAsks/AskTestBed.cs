@@ -6,10 +6,13 @@ using ClefCraft.Application.Contracts.Logging;
 using ClefCraft.Application.Contracts.Persistence;
 using ClefCraft.Application.Exceptions;
 using ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem;
+using ClefCraft.Application.Features.BoardItemAsks.Commands.AddAskReply;
 using ClefCraft.Application.Features.BoardItemAsks.Commands.ChangeAskState;
 using ClefCraft.Application.Features.BoardItemAsks.Commands.CreateAsk;
+using ClefCraft.Application.Features.BoardItemAsks.Commands.EditAskReply;
 using ClefCraft.Application.Features.BoardItemAsks.Commands.NudgeAsk;
 using ClefCraft.Application.Features.BoardItemAsks.Commands.ReassignAsk;
+using ClefCraft.Application.Features.BoardItemAsks.Commands.SetAskExpectsAnswer;
 using ClefCraft.Application.Features.BoardItemAsks.Commands.UpdateAsk;
 using ClefCraft.Application.Features.BoardItemAsks.Queries.GetAsksForItem;
 using ClefCraft.Application.Features.BoardItemAsks.Queries.GetMyAsks;
@@ -54,6 +57,7 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
         public const string Outsider = "user-outsider";
 
         private int _nextAskId = 100;
+        private int _nextReplyId = 500;
 
         public AskTestBed()
         {
@@ -83,6 +87,15 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
         public List<Domain.BoardItem> Items => new[] { Item }.Concat(ExtraItems).ToList();
         public List<Domain.BoardItem> ExtraItems { get; } = new();
         public List<BoardItemAsk> Asks { get; } = new();
+
+        /// <summary>Saved replies, as the database holds them.</summary>
+        public List<BoardItemAskReply> Replies { get; } = new();
+
+        /// <summary>Replies added since the last save; a save inserts them, a failed save drops them.</summary>
+        public List<BoardItemAskReply> PendingReplies { get; } = new();
+
+        /// <summary>How often the replies were loaded, to show DTOs load them in one query.</summary>
+        public int ReplyQueryCount { get; private set; }
         public HashSet<(int BoardId, string UserId)> Members { get; }
 
         /// <summary>The authenticated user (IUserService.UserId).</summary>
@@ -158,6 +171,21 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
             return item;
         }
 
+        /// <summary>A saved reply on the ask, posted at the given time.</summary>
+        public BoardItemAskReply AddReply(BoardItemAsk ask, string author, string body = "SELECT 1;", DateTime? at = null)
+        {
+            var reply = new BoardItemAskReply
+            {
+                Id = _nextReplyId++,
+                BoardItemAskId = ask.Id,
+                AuthorUserId = author,
+                Body = body,
+                DateCreated = at ?? DateTime.UtcNow.AddMinutes(-5)
+            };
+            Replies.Add(reply);
+            return reply;
+        }
+
         public IEnumerable<LoggedEntry> LoggedOf(string actionType) => Logged.Where(l => l.ActionType == actionType);
 
         public IEnumerable<SentNotification> SentTo(string userId) => Sent.Where(s => s.UserId == userId);
@@ -188,6 +216,18 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
             AskRepository.Object, BoardItemRepository.Object, BoardRepository.Object, StatusRepository.Object,
             BoardMemberRepository.Object, BoardAccessService.Object, UserService.Object, ActivityLogger.Object,
             NotificationHub.Object, UnitOfWork.Object);
+
+        public AddAskReplyCommandHandler AddReplyHandler() => new(
+            AskRepository.Object, BoardItemRepository.Object, BoardRepository.Object, StatusRepository.Object,
+            BoardMemberRepository.Object, BoardAccessService.Object, UserService.Object, NotificationHub.Object, UnitOfWork.Object);
+
+        public EditAskReplyCommandHandler EditReplyHandler() => new(
+            AskRepository.Object, BoardItemRepository.Object, BoardRepository.Object, StatusRepository.Object,
+            BoardMemberRepository.Object, BoardAccessService.Object, UserService.Object, UnitOfWork.Object);
+
+        public SetAskExpectsAnswerCommandHandler SetExpectsAnswerHandler() => new(
+            AskRepository.Object, BoardItemRepository.Object, BoardRepository.Object, StatusRepository.Object,
+            BoardMemberRepository.Object, BoardAccessService.Object, UserService.Object, ActivityLogger.Object, UnitOfWork.Object);
 
         public GetAsksForItemQueryHandler GetAsksForItemHandler() => new(
             AskRepository.Object, BoardItemRepository.Object, BoardRepository.Object, StatusRepository.Object,
@@ -232,6 +272,17 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
                     Asks.Add(ask);
                 })
                 .Returns(Task.CompletedTask);
+            AskRepository.Setup(r => r.GetRepliesByAskIdsReadOnlyAsync(It.IsAny<IEnumerable<int>>()))
+                .ReturnsAsync((IEnumerable<int> ids) =>
+                {
+                    ReplyQueryCount++;
+                    return Replies.Where(r => ids.Contains(r.BoardItemAskId)).OrderBy(r => r.Id).ToList();
+                });
+            AskRepository.Setup(r => r.GetReplyByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync((int id) => Replies.FirstOrDefault(r => r.Id == id));
+            AskRepository.Setup(r => r.AddReplyAsync(It.IsAny<BoardItemAskReply>()))
+                .Callback((BoardItemAskReply reply) => PendingReplies.Add(reply))
+                .Returns(Task.CompletedTask);
 
             BoardItemRepository.Setup(r => r.GetBoardItemById(It.IsAny<int>()))
                 .ReturnsAsync((int id) => ItemById(id));
@@ -268,8 +319,17 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
                     if (FailNextSave)
                     {
                         FailNextSave = false;
+                        PendingReplies.Clear();
                         throw new ConcurrencyConflictException(new InvalidOperationException("token mismatch"));
                     }
+
+                    foreach (var reply in PendingReplies)
+                    {
+                        reply.Id = _nextReplyId++;
+                        reply.DateCreated = DateTime.UtcNow;
+                        Replies.Add(reply);
+                    }
+                    PendingReplies.Clear();
 
                     // What the database does on insert: an id, and DateCreated from SaveChangesAsync.
                     foreach (var ask in Asks.Where(a => a.Id == 0))

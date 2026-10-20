@@ -14,6 +14,15 @@ namespace ClefCraft.Application.Exceptions
             ValidationErrors = validationResult.ToDictionary();
         }
 
+        /// <summary>A rejection the client reacts to specifically, identified by <paramref name="code"/>.</summary>
+        public BadRequestException(string message, string code) : base(message)
+        {
+            Code = code;
+        }
+
         public IDictionary<string, string[]>? ValidationErrors { get; set; }
+
+        /// <summary>Sent as the problem's "code" extension; most rejections have none.</summary>
+        public string? Code { get; }
     }
 }

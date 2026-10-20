@@ -60,6 +60,7 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Queries.GetMyAsks
                 .ToDictionary(u => u.Id, u => $"{u.Firstname} {u.Lastname}");
 
             var completedStatusIds = await CompletedStatus.GetIdsAsync(_statusRepository);
+            var replies = await _askRepository.GetRepliesByAskIdsReadOnlyAsync(asks.Select(a => a.Id));
 
             var ordered = request.Direction == AskDirection.Received
                 // Waiting for an answer first, oldest first; then accepted work by due date.
@@ -88,9 +89,11 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Queries.GetMyAsks
                         item,
                         fullNames,
                         members.Contains((item.BoardId, ask.RecipientUserId)),
+                        callerId,
                         roles,
                         itemIsDone,
-                        utcNow);
+                        utcNow,
+                        replies);
                 })
                 .ToList();
         }

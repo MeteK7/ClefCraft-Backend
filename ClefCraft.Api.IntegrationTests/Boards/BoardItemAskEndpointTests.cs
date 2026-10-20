@@ -541,5 +541,134 @@ namespace ClefCraft.Api.IntegrationTests.Boards
             (await TitleOfAsync(response)).ShouldBe("This ask or its item changed while you were saving; reload and try again.");
             (await AsksOfItemAsync(board.Owner, board.ItemId)).Single()!["state"]!.GetValue<int>().ShouldBe(Pending);
         }
+
+        // ---- Replies and "Expects an answer" ------------------------------------------------------
+
+        private const int Completed = 3;
+
+        private static async Task<JsonNode> AskExpectingAnAnswerAsync(AskBoard board)
+        {
+            using var response = await board.Owner.PostAsJsonAsync($"/api/BoardItems/{board.ItemId}/asks",
+                new { recipientUserId = board.HelperId, note = "Share the dummy-data SQL", expectsAnswer = true });
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            return await ReadAsync(response);
+        }
+
+        private static Task<HttpResponseMessage> ReplyAsync(HttpClient client, JsonNode ask, string body) =>
+            client.PostAsJsonAsync($"/api/BoardItemAsks/{ask["id"]!.GetValue<int>()}/replies", new { body });
+
+        [Fact]
+        public async Task ExpectedAnswer_BlocksMarkingDone_WithACode_UntilTheRecipientReplies()
+        {
+            using var factory = new ClefCraftApiFactory();
+            using var board = await CreateAskBoardAsync(factory);
+            var ask = await AskExpectingAnAnswerAsync(board);
+            ask["expectsAnswer"]!.GetValue<bool>().ShouldBeTrue();
+            ask["isAnswered"]!.GetValue<bool>().ShouldBeFalse();
+
+            using (var accept = await ActAsync(board.Helper, ask, "accept"))
+                ask = await ReadAsync(accept);
+
+            using (var blocked = await ActAsync(board.Helper, ask, "complete"))
+            {
+                blocked.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+                var problem = await ReadAsync(blocked);
+                problem["code"]!.GetValue<string>().ShouldBe("ASK_ANSWER_REQUIRED");
+                problem["title"]!.GetValue<string>().ShouldBe("This ask expects an answer. Reply with the answer before marking it done.");
+            }
+
+            // Every other 400 keeps its old shape: no code.
+            using (var stale = await ActAsync(board.Helper, ask, "complete", revision: 99))
+            {
+                stale.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+                (await ReadAsync(stale)).AsObject().ContainsKey("code").ShouldBeFalse();
+            }
+
+            using (var reply = await ReplyAsync(board.Helper, ask, "INSERT INTO items (title) VALUES ('a');"))
+            {
+                reply.StatusCode.ShouldBe(HttpStatusCode.OK);
+                var dto = await ReadAsync(reply);
+                dto["isAnswered"]!.GetValue<bool>().ShouldBeTrue();
+                dto["revision"]!.GetValue<int>().ShouldBe(ask["revision"]!.GetValue<int>());
+                var saved = dto["replies"]!.AsArray().Single()!;
+                saved["isMine"]!.GetValue<bool>().ShouldBeTrue();
+                saved["authorUserId"]!.GetValue<string>().ShouldBe(board.HelperId);
+                saved["dateCreated"]!.GetValue<string>().ShouldEndWith("Z");
+            }
+
+            using var done = await ActAsync(board.Helper, ask, "complete");
+            done.StatusCode.ShouldBe(HttpStatusCode.OK);
+            (await ReadAsync(done))["state"]!.GetValue<int>().ShouldBe(Completed);
+
+            var seenByRequester = (await AsksOfItemAsync(board.Owner, board.ItemId)).Single()!;
+            seenByRequester["replies"]!.AsArray().Single()!["isMine"]!.GetValue<bool>().ShouldBeFalse();
+            seenByRequester["canReply"]!.GetValue<bool>().ShouldBeTrue();
+        }
+
+        [Fact]
+        public async Task SendAndMarkDone_FromPending_IsOneRequest()
+        {
+            using var factory = new ClefCraftApiFactory();
+            using var board = await CreateAskBoardAsync(factory);
+            var ask = await AskExpectingAnAnswerAsync(board);
+
+            using var response = await board.Helper.PostAsJsonAsync($"/api/BoardItemAsks/{ask["id"]!.GetValue<int>()}/complete",
+                new { expectedRevision = ask["revision"]!.GetValue<int>(), replyBody = "Here is the SQL." });
+
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var dto = await ReadAsync(response);
+            dto["state"]!.GetValue<int>().ShouldBe(Completed);
+            dto["respondedAt"].ShouldNotBeNull();
+            dto["replies"]!.AsArray().Single()!["body"]!.GetValue<string>().ShouldBe("Here is the SQL.");
+        }
+
+        [Fact]
+        public async Task Replies_AreForTheRequesterAndRecipientOnly_AndOnlyTheAuthorEdits()
+        {
+            using var factory = new ClefCraftApiFactory();
+            using var board = await CreateAskBoardAsync(factory);
+            var ask = await AskOkAsync(board.Owner, board.ItemId, board.HelperId);
+
+            using (var outsider = await ReplyAsync(board.Second, ask, "Me too"))
+                outsider.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
+
+            using (var empty = await ReplyAsync(board.Helper, ask, "   "))
+                empty.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+
+            int replyId;
+            using (var reply = await ReplyAsync(board.Owner, ask, "Which table?"))
+            {
+                reply.StatusCode.ShouldBe(HttpStatusCode.OK);
+                replyId = (await ReadAsync(reply))["replies"]!.AsArray().Single()!["id"]!.GetValue<int>();
+            }
+
+            using (var notAuthor = await board.Helper.PutAsJsonAsync($"/api/BoardItemAskReplies/{replyId}", new { body = "Changed" }))
+                notAuthor.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
+
+            using var edit = await board.Owner.PutAsJsonAsync($"/api/BoardItemAskReplies/{replyId}", new { body = "Which table, items?" });
+            edit.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var edited = (await ReadAsync(edit))["replies"]!.AsArray().Single()!;
+            edited["body"]!.GetValue<string>().ShouldBe("Which table, items?");
+            edited["dateEdited"].ShouldNotBeNull();
+        }
+
+        [Fact]
+        public async Task ExpectsAnswerToggle_IsForAskManagers_AndBumpsTheRevision()
+        {
+            using var factory = new ClefCraftApiFactory();
+            using var board = await CreateAskBoardAsync(factory);
+            var ask = await AskOkAsync(board.Owner, board.ItemId, board.HelperId);
+            var route = $"/api/BoardItemAsks/{ask["id"]!.GetValue<int>()}/expects-answer";
+            var revision = ask["revision"]!.GetValue<int>();
+
+            using (var recipient = await board.Helper.PostAsJsonAsync(route, new { expectedRevision = revision, expectsAnswer = true }))
+                recipient.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
+
+            using var set = await board.Owner.PostAsJsonAsync(route, new { expectedRevision = revision, expectsAnswer = true });
+            set.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var dto = await ReadAsync(set);
+            dto["expectsAnswer"]!.GetValue<bool>().ShouldBeTrue();
+            dto["revision"]!.GetValue<int>().ShouldBe(revision + 1);
+        }
     }
 }

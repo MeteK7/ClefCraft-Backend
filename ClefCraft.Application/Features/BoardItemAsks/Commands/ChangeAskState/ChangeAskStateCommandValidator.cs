@@ -23,6 +23,14 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Commands.ChangeAskState
 
             RuleFor(c => c.Reason)
                 .MaximumLength(BoardItemAskLimits.ResponseNoteMaxLength);
+
+            RuleFor(c => c.ReplyBody)
+                .Null().WithMessage("Only marking an ask done can include a reply")
+                .When(c => c.Action != BoardItemAskAction.Complete);
+
+            RuleFor(c => c.ReplyBody)
+                .ValidReplyBody()
+                .When(c => c.Action == BoardItemAskAction.Complete && c.ReplyBody != null);
         }
     }
 }

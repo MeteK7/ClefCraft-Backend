@@ -29,7 +29,12 @@ namespace ClefCraft.Application.Features.BoardItemAsks
         AskAgain = 10,
 
         /// <summary>Mark an Accepted ask done while completing the item.</summary>
-        CompleteOnBehalf = 11
+        CompleteOnBehalf = 11,
+
+        /// <summary>Require the recipient's reply before the ask can be marked done.</summary>
+        SetExpectsAnswer = 12,
+
+        ClearExpectsAnswer = 13
     }
 
     /// <summary>
@@ -71,7 +76,9 @@ namespace ClefCraft.Application.Features.BoardItemAsks
                 [BoardItemAskAction.Nudge] = new(Actor.Manager, [BoardItemAskState.Pending]),
                 [BoardItemAskAction.Reassign] = new(Actor.Manager, [BoardItemAskState.Pending, BoardItemAskState.Accepted]),
                 [BoardItemAskAction.AskAgain] = new(Actor.Manager, [BoardItemAskState.Declined, BoardItemAskState.Cancelled]),
-                [BoardItemAskAction.CompleteOnBehalf] = new(Actor.RecipientOrManager, [BoardItemAskState.Accepted])
+                [BoardItemAskAction.CompleteOnBehalf] = new(Actor.RecipientOrManager, [BoardItemAskState.Accepted]),
+                [BoardItemAskAction.SetExpectsAnswer] = new(Actor.Manager, [BoardItemAskState.Pending, BoardItemAskState.Accepted]),
+                [BoardItemAskAction.ClearExpectsAnswer] = new(Actor.Manager, [BoardItemAskState.Pending, BoardItemAskState.Accepted])
             };
 
         public static bool IsOpen(BoardItemAskState state) =>
@@ -103,6 +110,8 @@ namespace ClefCraft.Application.Features.BoardItemAsks
             {
                 BoardItemAskAction.SetRequired => !ask.IsRequired,
                 BoardItemAskAction.WaiveRequirement => ask.IsRequired,
+                BoardItemAskAction.SetExpectsAnswer => !ask.ExpectsAnswer,
+                BoardItemAskAction.ClearExpectsAnswer => ask.ExpectsAnswer,
                 _ => true
             };
         }

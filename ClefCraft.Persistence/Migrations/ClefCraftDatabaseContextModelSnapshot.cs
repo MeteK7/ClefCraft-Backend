@@ -275,11 +275,17 @@ namespace ClefCraft.Persistence.Migrations
                     b.Property<DateTime?>("DueDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("ExpectsAnswer")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsRequired")
                         .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastNudgedAt")
                         .IsConcurrencyToken()
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("LastReopenedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("ModifiedBy")
@@ -323,6 +329,49 @@ namespace ClefCraft.Persistence.Migrations
                     b.HasIndex("RequestedByUserId", "State");
 
                     b.ToTable("BoardItemAsks", (string)null);
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.BoardItemAskReply", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AuthorUserId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("BoardItemAskId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DateEdited")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BoardItemAskId");
+
+                    b.ToTable("BoardItemAskReplies", (string)null);
                 });
 
             modelBuilder.Entity("ClefCraft.Domain.BoardItemPriority", b =>
@@ -1482,6 +1531,17 @@ namespace ClefCraft.Persistence.Migrations
                     b.Navigation("BoardItem");
                 });
 
+            modelBuilder.Entity("ClefCraft.Domain.BoardItemAskReply", b =>
+                {
+                    b.HasOne("ClefCraft.Domain.BoardItemAsk", "BoardItemAsk")
+                        .WithMany("Replies")
+                        .HasForeignKey("BoardItemAskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BoardItemAsk");
+                });
+
             modelBuilder.Entity("ClefCraft.Domain.BoardItemPriority", b =>
                 {
                     b.HasOne("ClefCraft.Domain.BoardItem", "BoardItem")
@@ -1708,6 +1768,11 @@ namespace ClefCraft.Persistence.Migrations
                     b.Navigation("IncomingRelations");
 
                     b.Navigation("OutgoingRelations");
+                });
+
+            modelBuilder.Entity("ClefCraft.Domain.BoardItemAsk", b =>
+                {
+                    b.Navigation("Replies");
                 });
 
             modelBuilder.Entity("ClefCraft.Domain.CalendarEvent", b =>

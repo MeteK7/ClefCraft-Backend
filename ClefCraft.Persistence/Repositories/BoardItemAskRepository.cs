@@ -57,5 +57,27 @@ namespace ClefCraft.Persistence.Repositories
                 .AsNoTracking()
                 .ToListAsync();
         }
+
+        public async Task<List<BoardItemAskReply>> GetRepliesByAskIdsReadOnlyAsync(IEnumerable<int> askIds)
+        {
+            var ids = askIds as ICollection<int> ?? askIds.ToList();
+            if (ids.Count == 0) return new List<BoardItemAskReply>();
+
+            return await _context.BoardItemAskReplies
+                .Where(r => ids.Contains(r.BoardItemAskId))
+                .OrderBy(r => r.Id)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<BoardItemAskReply?> GetReplyByIdAsync(int replyId)
+        {
+            return await _context.BoardItemAskReplies.FirstOrDefaultAsync(r => r.Id == replyId);
+        }
+
+        public async Task AddReplyAsync(BoardItemAskReply reply)
+        {
+            await _context.BoardItemAskReplies.AddAsync(reply);
+        }
     }
 }

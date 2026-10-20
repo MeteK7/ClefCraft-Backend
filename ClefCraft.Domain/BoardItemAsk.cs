@@ -22,6 +22,10 @@ namespace ClefCraft.Domain
         // waived or overridden. Declining or cancelling the ask doesn't satisfy it.
         public bool IsRequired { get; set; }
 
+        // The ask can only be marked done once the recipient has replied (since the last reopen):
+        // the reply is the deliverable, not just the status.
+        public bool ExpectsAnswer { get; set; }
+
         public BoardItemAskState State { get; set; }
 
         /// <summary>The recipient's optional reason when declining.</summary>
@@ -31,6 +35,9 @@ namespace ClefCraft.Domain
         public DateTime? RespondedAt { get; set; }
 
         public DateTime? CompletedAt { get; set; }
+
+        /// <summary>When the recipient last reopened the ask; replies before it don't answer it.</summary>
+        public DateTime? LastReopenedAt { get; set; }
 
         // Who marked it done. The recipient always gets the credit; this differs from
         // RecipientUserId when someone completed the item and marked the ask done for them.
@@ -43,5 +50,7 @@ namespace ClefCraft.Domain
         // Concurrency token, incremented on every change except a nudge, so a nudge never makes
         // a recipient's answer look stale.
         public int Revision { get; set; }
+
+        public ICollection<BoardItemAskReply> Replies { get; set; } = new List<BoardItemAskReply>();
     }
 }
