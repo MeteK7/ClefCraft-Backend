@@ -13,22 +13,24 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
         private enum Who { Recipient, Manager, Either }
 
         // The lifecycle as the plan states it (§3.3 / §3.5): who may take each action, from which
-        // states, and the extra condition on the requirement where there is one.
-        private static readonly Dictionary<BoardItemAskAction, (Who Who, BoardItemAskState[] From, bool? NeedsRequired)> Spec = new()
+        // states, and the extra condition on the requirement or the answer flag where there is one.
+        private static readonly Dictionary<BoardItemAskAction, (Who Who, BoardItemAskState[] From, bool? NeedsRequired, bool? NeedsExpectsAnswer)> Spec = new()
         {
-            [BoardItemAskAction.Accept] = (Who.Recipient, new[] { BoardItemAskState.Pending }, null),
-            [BoardItemAskAction.Decline] = (Who.Recipient, new[] { BoardItemAskState.Pending, BoardItemAskState.Accepted }, null),
-            [BoardItemAskAction.Complete] = (Who.Recipient, new[] { BoardItemAskState.Accepted }, null),
-            [BoardItemAskAction.Reopen] = (Who.Recipient, new[] { BoardItemAskState.Completed }, null),
-            [BoardItemAskAction.Cancel] = (Who.Manager, new[] { BoardItemAskState.Pending, BoardItemAskState.Accepted }, null),
-            [BoardItemAskAction.Edit] = (Who.Manager, new[] { BoardItemAskState.Pending, BoardItemAskState.Accepted }, null),
-            [BoardItemAskAction.SetRequired] = (Who.Manager, new[] { BoardItemAskState.Pending, BoardItemAskState.Accepted }, false),
+            [BoardItemAskAction.Accept] = (Who.Recipient, new[] { BoardItemAskState.Pending }, null, null),
+            [BoardItemAskAction.Decline] = (Who.Recipient, new[] { BoardItemAskState.Pending, BoardItemAskState.Accepted }, null, null),
+            [BoardItemAskAction.Complete] = (Who.Recipient, new[] { BoardItemAskState.Accepted }, null, null),
+            [BoardItemAskAction.Reopen] = (Who.Recipient, new[] { BoardItemAskState.Completed }, null, null),
+            [BoardItemAskAction.Cancel] = (Who.Manager, new[] { BoardItemAskState.Pending, BoardItemAskState.Accepted }, null, null),
+            [BoardItemAskAction.Edit] = (Who.Manager, new[] { BoardItemAskState.Pending, BoardItemAskState.Accepted }, null, null),
+            [BoardItemAskAction.SetRequired] = (Who.Manager, new[] { BoardItemAskState.Pending, BoardItemAskState.Accepted }, false, null),
             [BoardItemAskAction.WaiveRequirement] = (Who.Manager,
-                new[] { BoardItemAskState.Pending, BoardItemAskState.Accepted, BoardItemAskState.Declined, BoardItemAskState.Cancelled }, true),
-            [BoardItemAskAction.Nudge] = (Who.Manager, new[] { BoardItemAskState.Pending }, null),
-            [BoardItemAskAction.Reassign] = (Who.Manager, new[] { BoardItemAskState.Pending, BoardItemAskState.Accepted }, null),
-            [BoardItemAskAction.AskAgain] = (Who.Manager, new[] { BoardItemAskState.Declined, BoardItemAskState.Cancelled }, null),
-            [BoardItemAskAction.CompleteOnBehalf] = (Who.Either, new[] { BoardItemAskState.Accepted }, null)
+                new[] { BoardItemAskState.Pending, BoardItemAskState.Accepted, BoardItemAskState.Declined, BoardItemAskState.Cancelled }, true, null),
+            [BoardItemAskAction.Nudge] = (Who.Manager, new[] { BoardItemAskState.Pending }, null, null),
+            [BoardItemAskAction.Reassign] = (Who.Manager, new[] { BoardItemAskState.Pending, BoardItemAskState.Accepted }, null, null),
+            [BoardItemAskAction.AskAgain] = (Who.Manager, new[] { BoardItemAskState.Declined, BoardItemAskState.Cancelled }, null, null),
+            [BoardItemAskAction.CompleteOnBehalf] = (Who.Either, new[] { BoardItemAskState.Accepted }, null, null),
+            [BoardItemAskAction.SetExpectsAnswer] = (Who.Manager, new[] { BoardItemAskState.Pending, BoardItemAskState.Accepted }, null, false),
+            [BoardItemAskAction.ClearExpectsAnswer] = (Who.Manager, new[] { BoardItemAskState.Pending, BoardItemAskState.Accepted }, null, true)
         };
 
         public static IEnumerable<object[]> AllCombinations()
@@ -38,24 +40,27 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
                     foreach (var isRecipient in new[] { false, true })
                         foreach (var isManager in new[] { false, true })
                             foreach (var isRequired in new[] { false, true })
-                                yield return new object[] { action, state, isRecipient, isManager, isRequired };
+                                foreach (var expectsAnswer in new[] { false, true })
+                                    yield return new object[] { action, state, isRecipient, isManager, isRequired, expectsAnswer };
         }
 
         [Theory]
         [MemberData(nameof(AllCombinations))]
         public void EveryActionStateAndRole_IsAllowedExactlyAsSpecified(
-            BoardItemAskAction action, BoardItemAskState state, bool isRecipient, bool isManager, bool isRequired)
+            BoardItemAskAction action, BoardItemAskState state, bool isRecipient, bool isManager, bool isRequired, bool expectsAnswer)
         {
-            var (who, from, needsRequired) = Spec[action];
+            var (who, from, needsRequired, needsExpectsAnswer) = Spec[action];
             var roleOk = who switch
             {
                 Who.Recipient => isRecipient,
                 Who.Manager => isManager,
                 _ => isRecipient || isManager
             };
-            var expected = roleOk && from.Contains(state) && (needsRequired == null || needsRequired == isRequired);
+            var expected = roleOk && from.Contains(state)
+                && (needsRequired == null || needsRequired == isRequired)
+                && (needsExpectsAnswer == null || needsExpectsAnswer == expectsAnswer);
 
-            var ask = new BoardItemAsk { State = state, IsRequired = isRequired };
+            var ask = new BoardItemAsk { State = state, IsRequired = isRequired, ExpectsAnswer = expectsAnswer };
             var roles = new AskActorRoles(isRecipient, isManager);
 
             (AskTransitions.HasRole(action, roles) && AskTransitions.IsAllowedFrom(action, ask)).ShouldBe(expected);

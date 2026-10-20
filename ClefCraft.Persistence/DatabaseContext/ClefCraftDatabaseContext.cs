@@ -31,6 +31,7 @@ namespace ClefCraft.Persistence.DatabaseContext
         public DbSet<BoardItem> BoardItems { get; set; }
         public DbSet<BoardItemRelation> BoardItemRelations { get; set; }
         public DbSet<BoardItemAsk> BoardItemAsks { get; set; }
+        public DbSet<BoardItemAskReply> BoardItemAskReplies { get; set; }
         public DbSet<BoardMember> BoardMembers { get; set; }
         public DbSet<CalendarEvent> CalendarEvents { get; set; }
         public DbSet<CalendarReminder> CalendarReminders { get; set; }

@@ -83,6 +83,8 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Commands.ReassignAsk
                 Note = request.Note?.Trim() ?? old.Note,
                 DueDate = request.DueDate ?? old.DueDate,
                 IsRequired = requirementMoves,
+                // The same question to someone else still needs its answer.
+                ExpectsAnswer = old.ExpectsAnswer,
                 State = BoardItemAskState.Pending
             };
 
@@ -114,7 +116,7 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Commands.ReassignAsk
                 },
                 callerId, _notificationHubService, _boardMemberRepository, _userService, cancellationToken);
 
-            return await AskCommandSupport.ToDtoAsync(replacement, context, callerId, _userService, _boardMemberRepository);
+            return await AskCommandSupport.ToDtoAsync(replacement, context, callerId, _userService, _boardMemberRepository, _askRepository);
         }
     }
 }

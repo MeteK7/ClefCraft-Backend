@@ -13,5 +13,11 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Commands.ChangeAskState
 
         /// <summary>Optional: the recipient's reason when declining.</summary>
         public string? Reason { get; set; }
+
+        /// <summary>
+        /// Complete only, optional: "Send & mark done". The reply is posted and the ask completed in
+        /// one save; from Pending the ask is accepted first, in the same save.
+        /// </summary>
+        public string? ReplyBody { get; set; }
     }
 }

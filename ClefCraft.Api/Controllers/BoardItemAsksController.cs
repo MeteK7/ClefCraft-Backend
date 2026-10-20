@@ -1,9 +1,12 @@
 using ClefCraft.Api.Models;
 using ClefCraft.Application.Features.BoardItemAsks;
+using ClefCraft.Application.Features.BoardItemAsks.Commands.AddAskReply;
 using ClefCraft.Application.Features.BoardItemAsks.Commands.ChangeAskState;
 using ClefCraft.Application.Features.BoardItemAsks.Commands.CreateAsk;
+using ClefCraft.Application.Features.BoardItemAsks.Commands.EditAskReply;
 using ClefCraft.Application.Features.BoardItemAsks.Commands.NudgeAsk;
 using ClefCraft.Application.Features.BoardItemAsks.Commands.ReassignAsk;
+using ClefCraft.Application.Features.BoardItemAsks.Commands.SetAskExpectsAnswer;
 using ClefCraft.Application.Features.BoardItemAsks.Commands.UpdateAsk;
 using ClefCraft.Application.Features.BoardItemAsks.DTOs;
 using ClefCraft.Application.Features.BoardItemAsks.Queries.GetAsksForItem;
@@ -49,6 +52,7 @@ namespace ClefCraft.Api.Controllers
                 Note = request.Note,
                 DueDate = request.DueDate,
                 IsRequired = request.IsRequired,
+                ExpectsAnswer = request.ExpectsAnswer,
                 ReplacesAskId = request.ReplacesAskId
             }));
         }
@@ -122,6 +126,34 @@ namespace ClefCraft.Api.Controllers
             }));
         }
 
+        [HttpPost("api/BoardItemAsks/{id:int}/expects-answer")]
+        public async Task<ActionResult<BoardItemAskDto>> SetExpectsAnswer(int id, [FromBody] SetAskExpectsAnswerRequest request)
+        {
+            return Ok(await _mediator.Send(new SetAskExpectsAnswerCommand
+            {
+                AskId = id,
+                ExpectedRevision = request.ExpectedRevision!.Value,
+                ExpectsAnswer = request.ExpectsAnswer!.Value
+            }));
+        }
+
+        //----------------------------------------
+        // REPLIES
+        //----------------------------------------
+
+        // Returns the ask with its replies, so the panel shows the new reply in place.
+        [HttpPost("api/BoardItemAsks/{id:int}/replies")]
+        public async Task<ActionResult<BoardItemAskDto>> AddReply(int id, [FromBody] AskReplyRequest request)
+        {
+            return Ok(await _mediator.Send(new AddAskReplyCommand { AskId = id, Body = request.Body }));
+        }
+
+        [HttpPut("api/BoardItemAskReplies/{replyId:int}")]
+        public async Task<ActionResult<BoardItemAskDto>> EditReply(int replyId, [FromBody] AskReplyRequest request)
+        {
+            return Ok(await _mediator.Send(new EditAskReplyCommand { ReplyId = replyId, Body = request.Body }));
+        }
+
         private async Task<ActionResult<BoardItemAskDto>> ChangeState(int id, BoardItemAskAction action, AskStateChangeRequest request)
         {
             return Ok(await _mediator.Send(new ChangeAskStateCommand
@@ -129,7 +161,8 @@ namespace ClefCraft.Api.Controllers
                 AskId = id,
                 ExpectedRevision = request.ExpectedRevision!.Value,
                 Action = action,
-                Reason = request.Reason
+                Reason = request.Reason,
+                ReplyBody = request.ReplyBody
             }));
         }
     }

@@ -23,6 +23,12 @@ namespace ClefCraft.Application.Features.BoardItemAsks.DTOs
         public DateTime? DueDate { get; set; }
         public bool IsRequired { get; set; }
 
+        /// <summary>The ask can't be marked done until the recipient replies (see IsAnswered).</summary>
+        public bool ExpectsAnswer { get; set; }
+
+        /// <summary>The recipient has replied since the ask was last reopened.</summary>
+        public bool IsAnswered { get; set; }
+
         public BoardItemAskState State { get; set; }
         public string? ResponseNote { get; set; }
         public DateTime? RespondedAt { get; set; }
@@ -55,5 +61,29 @@ namespace ClefCraft.Application.Features.BoardItemAsks.DTOs
 
         /// <summary>What the current user may do with this ask right now.</summary>
         public List<BoardItemAskAction> AllowedActions { get; set; } = new();
+
+        /// <summary>
+        /// The current user may post a reply: they are the requester or the recipient and the ask
+        /// isn't cancelled. Not one of AllowedActions, since replying is open while the item is Done.
+        /// </summary>
+        public bool CanReply { get; set; }
+
+        /// <summary>The replies on this ask, oldest first.</summary>
+        public List<AskReplyDto> Replies { get; set; } = new();
+    }
+
+    public class AskReplyDto
+    {
+        public int Id { get; set; }
+        public string AuthorUserId { get; set; } = null!;
+        public string AuthorFullName { get; set; } = null!;
+        public string Body { get; set; } = null!;
+        public DateTime DateCreated { get; set; }
+
+        /// <summary>When the author last edited it; null when never edited.</summary>
+        public DateTime? DateEdited { get; set; }
+
+        /// <summary>Written by the current user, who may edit it.</summary>
+        public bool IsMine { get; set; }
     }
 }

@@ -7,19 +7,24 @@ namespace ClefCraft.Application.Features.BoardItemAsks
     public static class BoardItemAskMapper
     {
         /// <summary>
-        /// Recipient, requester and completer names come from fullNames (user id to full name).
-        /// What the viewer may do (AllowedActions, NextNudgeAt) is worked out from their roles,
-        /// whether the item is Done and the request's single clock reading.
+        /// Recipient, requester, completer and reply author names come from fullNames (user id to
+        /// full name); replies are only ever by the requester or recipient, so UserIdsOf covers them.
+        /// What the viewer may do (AllowedActions, NextNudgeAt, CanReply) is worked out from who they
+        /// are, their roles, whether the item is Done and the request's single clock reading.
         /// </summary>
         public static BoardItemAskDto ToDto(
             BoardItemAsk ask,
             Domain.BoardItem item,
             IReadOnlyDictionary<string, string> fullNames,
             bool recipientIsBoardMember,
+            string viewerId,
             AskActorRoles viewerRoles,
             bool itemIsDone,
-            DateTime utcNow)
+            DateTime utcNow,
+            IEnumerable<BoardItemAskReply> replies)
         {
+            var ownReplies = replies.Where(r => r.BoardItemAskId == ask.Id).OrderBy(r => r.Id).ToList();
+
             return new BoardItemAskDto
             {
                 Id = ask.Id,
@@ -34,6 +39,8 @@ namespace ClefCraft.Application.Features.BoardItemAsks
                 Note = ask.Note,
                 DueDate = ask.DueDate,
                 IsRequired = ask.IsRequired,
+                ExpectsAnswer = ask.ExpectsAnswer,
+                IsAnswered = AskReplies.IsAnswered(ask, ownReplies),
                 State = ask.State,
                 ResponseNote = ask.ResponseNote,
                 RespondedAt = ask.RespondedAt,
@@ -47,7 +54,18 @@ namespace ClefCraft.Application.Features.BoardItemAsks
                 Revision = ask.Revision,
                 IsOpen = AskTransitions.IsOpen(ask.State),
                 IsUnmetRequirement = AskTransitions.IsUnmetRequirement(ask),
-                AllowedActions = AskTransitions.AllowedActions(ask, viewerRoles, itemIsDone, utcNow)
+                AllowedActions = AskTransitions.AllowedActions(ask, viewerRoles, itemIsDone, utcNow),
+                CanReply = AskReplies.CanReply(ask, viewerId),
+                Replies = ownReplies.Select(r => new AskReplyDto
+                {
+                    Id = r.Id,
+                    AuthorUserId = r.AuthorUserId,
+                    AuthorFullName = FullNameOf(r.AuthorUserId, fullNames),
+                    Body = r.Body,
+                    DateCreated = r.DateCreated ?? default,
+                    DateEdited = r.DateEdited,
+                    IsMine = r.AuthorUserId == viewerId
+                }).ToList()
             };
         }
 

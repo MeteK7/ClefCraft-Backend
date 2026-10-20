@@ -87,13 +87,16 @@ namespace ClefCraft.Application.Features.BoardItemAsks
             AskItemContext context,
             string callerId,
             IUserService userService,
-            IBoardMemberRepository boardMemberRepository)
+            IBoardMemberRepository boardMemberRepository,
+            IBoardItemAskRepository askRepository)
         {
             var users = await userService.GetUsersByIds(BoardItemAskMapper.UserIdsOf(ask).Distinct().ToList());
             var fullNames = users.ToDictionary(u => u.Id, u => $"{u.Firstname} {u.Lastname}");
             var recipientIsMember = await boardMemberRepository.IsMemberAsync(context.Item.BoardId, ask.RecipientUserId);
+            var replies = await askRepository.GetRepliesByAskIdsReadOnlyAsync(new[] { ask.Id });
             return BoardItemAskMapper.ToDto(
-                ask, context.Item, fullNames, recipientIsMember, context.RolesFor(ask, callerId), context.ItemIsDone, DateTime.UtcNow);
+                ask, context.Item, fullNames, recipientIsMember, callerId, context.RolesFor(ask, callerId), context.ItemIsDone,
+                DateTime.UtcNow, replies);
         }
     }
 }

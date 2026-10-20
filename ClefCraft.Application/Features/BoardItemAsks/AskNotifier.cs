@@ -16,7 +16,10 @@ namespace ClefCraft.Application.Features.BoardItemAsks
         Declined,
         Completed,
         Reopened,
-        Cancelled
+        Cancelled,
+
+        /// <summary>The requester or recipient replied; only the other one is told.</summary>
+        Replied
     }
 
     /// <summary>One notification to send about an ask, once the change is saved.</summary>
@@ -24,13 +27,15 @@ namespace ClefCraft.Application.Features.BoardItemAsks
     /// Who to tell. When null: the recipient for a nudge, otherwise the recipient and the requester.
     /// The actor and anyone who isn't a current member of the board are always left out.
     /// </param>
+    /// <param name="Reply">The reply this event carries (Replied, or Completed with an answer), once saved.</param>
     public sealed record AskNotice(
         BoardItemAsk Ask,
         int BoardId,
         string ItemTitle,
         AskEvent Event,
         string? Reason = null,
-        IReadOnlyCollection<string>? Audience = null);
+        IReadOnlyCollection<string>? Audience = null,
+        BoardItemAskReply? Reply = null);
 
     // Sends ReceiveAsk notifications. Called only after the save that made the change succeeded,
     // so nobody is told about a change that didn't happen.
@@ -92,7 +97,9 @@ namespace ClefCraft.Application.Features.BoardItemAsks
             ActedOnBehalf = notice.Event == AskEvent.Completed
                 && notice.Ask.State == BoardItemAskState.Completed
                 && notice.Ask.CompletedByUserId != null
-                && notice.Ask.CompletedByUserId != notice.Ask.RecipientUserId
+                && notice.Ask.CompletedByUserId != notice.Ask.RecipientUserId,
+            ReplyId = notice.Reply?.Id,
+            ReplyExcerpt = notice.Reply != null ? AskReplies.Excerpt(notice.Reply.Body) : null
         };
     }
 }

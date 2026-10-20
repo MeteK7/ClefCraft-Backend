@@ -65,6 +65,11 @@ namespace ClefCraft.Api.Middleware
                         Type = nameof(BadRequestException),
                         Errors = badRequestException.ValidationErrors
                     };
+
+                    // Only rejections the client handles specifically carry a code; every other
+                    // 400 keeps exactly the shape it had.
+                    if (badRequestException.Code != null)
+                        problem.Extensions["code"] = badRequestException.Code;
                     break;
                 case NotFoundException NotFound:
                     statusCode = HttpStatusCode.NotFound;
