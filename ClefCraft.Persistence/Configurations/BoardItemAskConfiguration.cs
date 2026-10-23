@@ -47,6 +47,13 @@ namespace ClefCraft.Persistence.Configurations
                 .HasForeignKey(x => x.BoardItemId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // The answer is one of the ask's own replies. Replies are never deleted, but if one were,
+            // the ask would simply lose its answer.
+            builder.HasOne(x => x.AnswerReply)
+                .WithMany()
+                .HasForeignKey(x => x.AnswerReplyId)
+                .OnDelete(DeleteBehavior.SetNull);
+
             builder.HasIndex(x => x.BoardItemId);
             builder.HasIndex(x => new { x.RecipientUserId, x.State });
             builder.HasIndex(x => new { x.RequestedByUserId, x.State });
