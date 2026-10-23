@@ -133,8 +133,16 @@ namespace ClefCraft.Application.Features.BoardItem.Commands.UpdateBoardItem
                     callerId,
                     DateTime.UtcNow);
 
+                // Marked done on the recipient's behalf: the answer is their latest reply, as when
+                // they mark it done themselves without one.
+                var completedReplies = askClosure.Completed.Count > 0
+                    ? await _askRepository.GetRepliesByAskIdsReadOnlyAsync(askClosure.Completed.Select(a => a.Id))
+                    : new List<Domain.BoardItemAskReply>();
+
                 foreach (var ask in askClosure.Completed)
                 {
+                    ask.AnswerReplyId = AskReplies.LatestAnswerCandidate(ask, completedReplies)?.Id;
+
                     await AskHistory.LogAsync(_activityLogger, AskHistory.Completed, ask,
                         new Dictionary<string, object?> { [AskHistory.CompletedByUserIdKey] = callerId });
                 }

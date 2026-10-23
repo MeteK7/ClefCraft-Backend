@@ -68,6 +68,30 @@ namespace ClefCraft.Persistence.IntegrationTests
         }
 
         [Fact]
+        public async Task ANewReply_CanBeLinkedAsTheAnswer_InTheSameSave()
+        {
+            using var db = await CreateAsync();
+            var ask = await db.AddAskAsync(BoardItemAskState.Accepted);
+
+            using (var context = db.NewContext(Recipient))
+            {
+                var repository = new BoardItemAskRepository(context);
+                var tracked = (await repository.GetByIdAsync(ask.Id)).ShouldNotBeNull();
+                var reply = new BoardItemAskReply { BoardItemAskId = ask.Id, AuthorUserId = Recipient, Body = "Here it is." };
+                await repository.AddReplyAsync(reply);
+                tracked.State = BoardItemAskState.Completed;
+                tracked.AnswerReply = reply;
+                await context.SaveChangesAsync();
+            }
+
+            using var reader = db.NewContext("reader");
+            var saved = await reader.BoardItemAsks.SingleAsync(a => a.Id == ask.Id);
+            var answer = await reader.BoardItemAskReplies.SingleAsync();
+            saved.AnswerReplyId.ShouldBe(answer.Id);
+            answer.Body.ShouldBe("Here it is.");
+        }
+
+        [Fact]
         public async Task DeletingAnAsk_DeletesItsReplies()
         {
             using var db = await CreateAsync();

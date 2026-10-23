@@ -103,16 +103,24 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Commands.ChangeAskState
                     break;
 
                 case BoardItemAskAction.Complete:
+                    // The answer is fixed now: the reply sent with it, or else the recipient's
+                    // latest reply since the last reopen (none: done without an answer).
                     if (replyBody != null)
                     {
                         reply = new BoardItemAskReply { BoardItemAskId = ask.Id, AuthorUserId = callerId, Body = replyBody };
                         await _askRepository.AddReplyAsync(reply);
+                        // Its id only exists once saved; the navigation sets the key in the same save.
+                        ask.AnswerReply = reply;
                     }
-                    else if (ask.ExpectsAnswer)
+                    else
                     {
                         var replies = await _askRepository.GetRepliesByAskIdsReadOnlyAsync(new[] { ask.Id });
-                        if (!AskReplies.IsAnswered(ask, replies))
+                        var answer = AskReplies.LatestAnswerCandidate(ask, replies);
+
+                        if (answer == null && ask.ExpectsAnswer)
                             throw new BadRequestException(AskReplies.AnswerRequiredMessage, AskReplies.AnswerRequiredCode);
+
+                        ask.AnswerReplyId = answer?.Id;
                     }
 
                     ask.State = BoardItemAskState.Completed;
@@ -127,8 +135,11 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Commands.ChangeAskState
                     ask.State = BoardItemAskState.Accepted;
                     ask.CompletedAt = null;
                     ask.CompletedByUserId = null;
-                    // Replies from before this point no longer answer the ask.
+                    // Replies from before this point no longer answer the ask; marking it done
+                    // again fixes a new answer.
                     ask.LastReopenedAt = utcNow;
+                    ask.AnswerReplyId = null;
+                    ask.AnswerReply = null;
                     askEvent = AskEvent.Reopened;
                     await AskHistory.LogAsync(_activityLogger, AskHistory.Reopened, ask);
 

@@ -50,6 +50,22 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
         }
 
         [Fact]
+        public async Task MarkingAnAskDoneForItsRecipient_TakesTheirLatestReplyAsTheAnswer()
+        {
+            var answered = _bed.AddAsk(BoardItemAskState.Accepted);
+            var silent = _bed.AddAsk(BoardItemAskState.Accepted);
+            _bed.AddReply(answered, Recipient, "older", at: System.DateTime.UtcNow.AddHours(-2));
+            var latest = _bed.AddReply(answered, Recipient, "latest", at: System.DateTime.UtcNow.AddHours(-1));
+            _bed.AddReply(silent, Requester, "a question");
+
+            await Complete(Closure(new[] { answered, silent }, complete: new[] { answered, silent }));
+
+            answered.AnswerReplyId.ShouldBe(latest.Id);
+            silent.AnswerReplyId.ShouldBeNull();
+            _bed.ReplyQueryCount.ShouldBe(1);
+        }
+
+        [Fact]
         public async Task MarkingAnAskDoneForItsRecipient_CreditsThemButRecordsWhoDidIt()
         {
             var accepted = _bed.AddAsk(BoardItemAskState.Accepted);
