@@ -250,6 +250,9 @@ namespace ClefCraft.Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("AnswerReplyId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("BoardItemId")
                         .HasColumnType("integer");
 
@@ -321,6 +324,8 @@ namespace ClefCraft.Persistence.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AnswerReplyId");
 
                     b.HasIndex("BoardItemId");
 
@@ -1522,11 +1527,18 @@ namespace ClefCraft.Persistence.Migrations
 
             modelBuilder.Entity("ClefCraft.Domain.BoardItemAsk", b =>
                 {
+                    b.HasOne("ClefCraft.Domain.BoardItemAskReply", "AnswerReply")
+                        .WithMany()
+                        .HasForeignKey("AnswerReplyId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("ClefCraft.Domain.BoardItem", "BoardItem")
                         .WithMany("Asks")
                         .HasForeignKey("BoardItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("AnswerReply");
 
                     b.Navigation("BoardItem");
                 });

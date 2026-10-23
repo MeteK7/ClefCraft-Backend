@@ -559,6 +559,79 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
             dtos.Single(d => d.Id == cancelled.Id).CanReply.ShouldBeFalse();
         }
 
+        // ---- The answer ----------------------------------------------------------------------------
+
+        [Fact]
+        public async Task SendAndComplete_MakesTheReplySentWithItTheAnswer()
+        {
+            var ask = _bed.AddAsk(BoardItemAskState.Accepted);
+            _bed.AddReply(ask, Recipient, "an earlier reply");
+
+            var dto = await Complete(ask, "The final SQL");
+
+            var answer = _bed.Replies.Single(r => r.Body == "The final SQL");
+            ask.AnswerReplyId.ShouldBe(answer.Id);
+            dto.AnswerReplyId.ShouldBe(answer.Id);
+        }
+
+        [Fact]
+        public async Task PlainComplete_MakesTheRecipientsLatestReplySinceTheReopenTheAnswer()
+        {
+            var ask = _bed.AddAsk(BoardItemAskState.Accepted);
+            ask.LastReopenedAt = DateTime.UtcNow.AddHours(-2);
+            _bed.AddReply(ask, Recipient, "from before the reopen", at: DateTime.UtcNow.AddHours(-3));
+            var latest = _bed.AddReply(ask, Recipient, "the answer", at: DateTime.UtcNow.AddMinutes(-30));
+            _bed.AddReply(ask, Requester, "thanks!", at: DateTime.UtcNow.AddMinutes(-10));
+
+            var dto = await Complete(ask);
+
+            ask.AnswerReplyId.ShouldBe(latest.Id);
+            dto.AnswerReplyId.ShouldBe(latest.Id);
+        }
+
+        [Fact]
+        public async Task PlainComplete_WithoutARecipientReply_LeavesNoAnswer_WhenNoneIsExpected()
+        {
+            var ask = _bed.AddAsk(BoardItemAskState.Accepted);
+            _bed.AddReply(ask, Requester, "any news?");
+
+            var dto = await Complete(ask);
+
+            ask.State.ShouldBe(BoardItemAskState.Completed);
+            ask.AnswerReplyId.ShouldBeNull();
+            dto.AnswerReplyId.ShouldBeNull();
+        }
+
+        [Fact]
+        public async Task PlainComplete_WithoutARecipientReply_IsStillRejected_WhenAnAnswerIsExpected()
+        {
+            var ask = _bed.AddAsk(BoardItemAskState.Accepted);
+            ask.ExpectsAnswer = true;
+
+            (await Should.ThrowAsync<BadRequestException>(() => Complete(ask))).Code.ShouldBe(AskReplies.AnswerRequiredCode);
+            ask.AnswerReplyId.ShouldBeNull();
+        }
+
+        [Fact]
+        public async Task Reopen_ClearsTheAnswer_AndTheNextCompletionFixesANewOne()
+        {
+            var ask = _bed.AddAsk(BoardItemAskState.Accepted);
+            var first = _bed.AddReply(ask, Recipient, "first answer", at: DateTime.UtcNow.AddHours(-1));
+            await Complete(ask);
+            ask.AnswerReplyId.ShouldBe(first.Id);
+
+            await _bed.ChangeStateHandler().Handle(new ChangeAskStateCommand
+            {
+                AskId = ask.Id,
+                ExpectedRevision = ask.Revision,
+                Action = BoardItemAskAction.Reopen
+            }, CancellationToken.None);
+            ask.AnswerReplyId.ShouldBeNull();
+
+            await Complete(ask, "second answer");
+            ask.AnswerReplyId.ShouldBe(_bed.Replies.Single(r => r.Body == "second answer").Id);
+        }
+
         [Fact]
         public async Task CreateAsk_CanExpectAnAnswer_AndReassignKeepsIt()
         {

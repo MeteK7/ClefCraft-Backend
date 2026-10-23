@@ -65,7 +65,8 @@ namespace ClefCraft.Application.Features.BoardItemAsks
                     DateCreated = r.DateCreated ?? default,
                     DateEdited = r.DateEdited,
                     IsMine = r.AuthorUserId == viewerId
-                }).ToList()
+                }).ToList(),
+                AnswerReplyId = ask.AnswerReplyId
             };
         }
 

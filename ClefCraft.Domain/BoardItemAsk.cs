@@ -39,6 +39,12 @@ namespace ClefCraft.Domain
         /// <summary>When the recipient last reopened the ask; replies before it don't answer it.</summary>
         public DateTime? LastReopenedAt { get; set; }
 
+        // The reply that answered the ask, fixed when it was marked done: the reply sent with it,
+        // or else the recipient's latest since the last reopen. Later replies are follow-ups, not
+        // the answer. Null while the ask isn't done, or when it was done without a reply.
+        public int? AnswerReplyId { get; set; }
+        public BoardItemAskReply? AnswerReply { get; set; }
+
         // Who marked it done. The recipient always gets the credit; this differs from
         // RecipientUserId when someone completed the item and marked the ask done for them.
         public string? CompletedByUserId { get; set; }

@@ -38,14 +38,23 @@ namespace ClefCraft.Application.Features.BoardItemAsks
         /// The recipient has replied since the ask was last reopened (or ever, if it never was). A
         /// reply that isn't saved yet has no DateCreated and counts: it is being posted now.
         /// </summary>
-        public static bool IsAnswered(BoardItemAsk ask, IEnumerable<BoardItemAskReply> replies)
+        public static bool IsAnswered(BoardItemAsk ask, IEnumerable<BoardItemAskReply> replies) =>
+            LatestAnswerCandidate(ask, replies) != null;
+
+        /// <summary>
+        /// The recipient's latest reply since the ask was last reopened: what becomes the answer
+        /// when the ask is marked done without a reply of its own. Null when there is none.
+        /// </summary>
+        public static BoardItemAskReply? LatestAnswerCandidate(BoardItemAsk ask, IEnumerable<BoardItemAskReply> replies)
         {
             var since = ask.LastReopenedAt ?? DateTime.MinValue;
 
-            return replies.Any(r =>
-                r.BoardItemAskId == ask.Id
-                && r.AuthorUserId == ask.RecipientUserId
-                && (r.DateCreated ?? DateTime.MaxValue) > since);
+            return replies
+                .Where(r => r.BoardItemAskId == ask.Id
+                    && r.AuthorUserId == ask.RecipientUserId
+                    && (r.DateCreated ?? DateTime.MaxValue) > since)
+                .OrderByDescending(r => r.Id == 0 ? int.MaxValue : r.Id)
+                .FirstOrDefault();
         }
 
         /// <summary>A reply's text for a notification: whitespace collapsed, cut at the excerpt length.</summary>
