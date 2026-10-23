@@ -619,7 +619,9 @@ namespace ClefCraft.Api.IntegrationTests.Boards
             var dto = await ReadAsync(response);
             dto["state"]!.GetValue<int>().ShouldBe(Completed);
             dto["respondedAt"].ShouldNotBeNull();
-            dto["replies"]!.AsArray().Single()!["body"]!.GetValue<string>().ShouldBe("Here is the SQL.");
+            var answer = dto["replies"]!.AsArray().Single()!;
+            answer["body"]!.GetValue<string>().ShouldBe("Here is the SQL.");
+            dto["answerReplyId"]!.GetValue<int>().ShouldBe(answer["id"]!.GetValue<int>());
         }
 
         [Fact]

@@ -331,6 +331,10 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
                     }
                     PendingReplies.Clear();
 
+                    // As EF does: an answer linked by navigation gets its key once the reply has an id.
+                    foreach (var ask in Asks.Where(a => a.AnswerReply != null))
+                        ask.AnswerReplyId = ask.AnswerReply!.Id;
+
                     // What the database does on insert: an id, and DateCreated from SaveChangesAsync.
                     foreach (var ask in Asks.Where(a => a.Id == 0))
                     {
