@@ -70,6 +70,12 @@ namespace ClefCraft.Application.Features.BoardItemAsks.DTOs
 
         /// <summary>The replies on this ask, oldest first.</summary>
         public List<AskReplyDto> Replies { get; set; } = new();
+
+        /// <summary>
+        /// The reply that answered the ask, fixed when it was marked done (one of Replies). Null
+        /// while it isn't done, or when it was done without a reply.
+        /// </summary>
+        public int? AnswerReplyId { get; set; }
     }
 
     public class AskReplyDto
