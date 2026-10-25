@@ -7,7 +7,7 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Queries.GetMyAsks
         public GetMyAsksQueryValidator()
         {
             RuleFor(q => q.Direction)
-                .IsInEnum().WithMessage("{PropertyName} must be Received or Sent");
+                .IsInEnum().WithMessage("{PropertyName} must be Received, Sent or Waiting");
         }
     }
 }

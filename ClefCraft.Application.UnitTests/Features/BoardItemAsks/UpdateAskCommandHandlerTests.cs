@@ -84,6 +84,45 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
         }
 
         [Theory]
+        [InlineData(Assignee)]
+        [InlineData(Owner)]
+        public async Task SomeoneElseWaivingTheRequirement_TellsOnlyTheRequester_WhoseMoveItWas(string manager)
+        {
+            var ask = _bed.AddAsk(BoardItemAskState.Declined, isRequired: true);
+            AskTurn.Of(ask, false)!.Value.UserId.ShouldBe(Requester);
+            _bed.CallerId = manager;
+
+            await Update(ask, isRequired: false);
+
+            var sent = _bed.Sent.ShouldHaveSingleItem();
+            sent.UserId.ShouldBe(Requester);
+            sent.Payload.Event.ShouldBe(nameof(AskEvent.Changed));
+            sent.Payload.Reason.ShouldBe(AskNotifier.RequirementWaivedReason);
+            AskTurn.Of(ask, false).ShouldBeNull();
+        }
+
+        [Fact]
+        public async Task TheRequesterWaivingTheirOwnRequirement_NotifiesNobody()
+        {
+            var ask = _bed.AddAsk(BoardItemAskState.Cancelled, isRequired: true);
+
+            await Update(ask, isRequired: false);
+
+            _bed.Sent.ShouldBeEmpty();
+        }
+
+        [Fact]
+        public async Task SettingTheRequirement_NotifiesNobody()
+        {
+            var ask = _bed.AddAsk(BoardItemAskState.Pending);
+            _bed.CallerId = Assignee;
+
+            await Update(ask, isRequired: true);
+
+            _bed.Sent.ShouldBeEmpty();
+        }
+
+        [Theory]
         [InlineData(BoardItemAskState.Declined)]
         [InlineData(BoardItemAskState.Cancelled)]
         [InlineData(BoardItemAskState.Completed)]

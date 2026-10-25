@@ -68,6 +68,13 @@ namespace ClefCraft.Api.Controllers
             return Ok(await _mediator.Send(new GetMyAsksQuery { Direction = direction }));
         }
 
+        // GET api/BoardItemAsks/mine/count?direction=waiting: the "Waiting for you" badge
+        [HttpGet("api/BoardItemAsks/mine/count")]
+        public async Task<ActionResult<AskCountDto>> MineCount([FromQuery, BindRequired] AskDirection direction)
+        {
+            return Ok(new AskCountDto { Count = await _mediator.Send(new GetMyAskCountQuery { Direction = direction }) });
+        }
+
         //----------------------------------------
         // ONE ASK
         //----------------------------------------

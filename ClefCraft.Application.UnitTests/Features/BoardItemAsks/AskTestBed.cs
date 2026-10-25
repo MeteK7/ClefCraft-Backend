@@ -236,6 +236,9 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
         public GetMyAsksQueryHandler GetMyAsksHandler() => new(
             AskRepository.Object, BoardMemberRepository.Object, StatusRepository.Object, UserService.Object);
 
+        public GetMyAskCountQueryHandler GetMyAskCountHandler() => new(
+            AskRepository.Object, BoardMemberRepository.Object, StatusRepository.Object, UserService.Object);
+
         public UpdateBoardItemCommandHandler UpdateItemHandler(Mock<ITaskLifecycleService>? lifecycle = null) => new(
             BoardItemRepository.Object, BoardAccessService.Object, StatusRepository.Object,
             new Mock<IPriorityRepository>().Object, new Mock<ITagRepository>().Object, UserService.Object,
@@ -265,6 +268,8 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
                     .ToList());
             AskRepository.Setup(r => r.GetWithItemReadOnlyAsync(It.IsAny<Expression<Func<BoardItemAsk, bool>>>()))
                 .ReturnsAsync((Expression<Func<BoardItemAsk, bool>> filter) => Asks.Where(filter.Compile()).ToList());
+            AskRepository.Setup(r => r.CountAsync(It.IsAny<Expression<Func<BoardItemAsk, bool>>>()))
+                .ReturnsAsync((Expression<Func<BoardItemAsk, bool>> filter) => Asks.Count(filter.Compile()));
             AskRepository.Setup(r => r.CreateAsync(It.IsAny<BoardItemAsk>()))
                 .Callback((BoardItemAsk ask) =>
                 {
