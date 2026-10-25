@@ -100,6 +100,9 @@ namespace ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems
                     }
 
                     item.AskSummary = BoardItemAskMapper.ToSummary(asksByItem[item.Id], fullNames);
+                    // From the same asks, no further query: which of them are the caller's move.
+                    item.AskAttention = BoardItemAskMapper.ToAttention(
+                        asksByItem[item.Id], _userService.UserId, item.Status?.Name == CompletedStatus.Name);
                 }
             }
 
