@@ -20,6 +20,9 @@ namespace ClefCraft.Application.Contracts.Persistence
         /// </summary>
         Task<List<BoardItemAsk>> GetWithItemReadOnlyAsync(Expression<Func<BoardItemAsk, bool>> filter);
 
+        /// <summary>How many asks match the filter: one COUNT query. The filter can rely on BoardItem as above.</summary>
+        Task<int> CountAsync(Expression<Func<BoardItemAsk, bool>> filter);
+
         /// <summary>The replies on the given asks, read-only, oldest first. One query.</summary>
         Task<List<BoardItemAskReply>> GetRepliesByAskIdsReadOnlyAsync(IEnumerable<int> askIds);
 

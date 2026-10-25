@@ -114,5 +114,76 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
         {
             await Should.ThrowAsync<BadRequestException>(() => Get((AskDirection)7));
         }
+
+        // ---- Waiting for you (AskTurn) ------------------------------------------------------------
+
+        private Task<int> Count(AskDirection direction) =>
+            _bed.GetMyAskCountHandler().Handle(new GetMyAskCountQuery { Direction = direction }, CancellationToken.None);
+
+        [Fact]
+        public async Task Waiting_IsTheCallersMoves_AsRecipientAndAsRequester_GroupedByBoard()
+        {
+            // The caller, Other, is on both boards.
+            var otherItem = _bed.AddItemOnOtherBoard();
+            _bed.Members.Add((OtherBoardId, Other));
+
+            var deliver = _bed.AddAsk(BoardItemAskState.Accepted, recipient: Other);
+            var respond = _bed.AddAsk(BoardItemAskState.Pending, recipient: Other);
+            var resolve = _bed.AddAsk(BoardItemAskState.Declined, requester: Other, recipient: Recipient, isRequired: true);
+            var elsewhere = _bed.AddAsk(BoardItemAskState.Pending, recipient: Other, item: otherItem);
+
+            // Not the caller's move: news, someone else's turn, or closed.
+            _bed.AddAsk(BoardItemAskState.Declined, requester: Other, recipient: Recipient);
+            _bed.AddAsk(BoardItemAskState.Pending, requester: Other, recipient: Recipient);
+            _bed.AddAsk(BoardItemAskState.Completed, recipient: Other);
+            _bed.AddAsk(BoardItemAskState.Pending, recipient: Recipient);
+            _bed.CallerId = Other;
+
+            var result = await Get(AskDirection.Waiting);
+
+            // "Other" before "Release"; within a board, decisions, then work, then requirements.
+            result.Select(d => d.Id).ShouldBe(new[] { elsewhere.Id, respond.Id, deliver.Id, resolve.Id });
+            result.Select(d => d.YourMove).ShouldBe(new AskTurnReason?[]
+            {
+                AskTurnReason.Respond, AskTurnReason.Respond, AskTurnReason.Deliver, AskTurnReason.ResolveRequirement
+            });
+            result.Select(d => d.BoardTitle).ShouldBe(new[] { "Other", "Release", "Release", "Release" });
+
+            (await Count(AskDirection.Waiting)).ShouldBe(result.Count);
+        }
+
+        [Fact]
+        public async Task Waiting_LeavesOutDoneItemsAndBoardsTheCallerLeft()
+        {
+            _bed.AddAsk(BoardItemAskState.Pending, recipient: Other, item: _bed.AddItemOnOtherBoard());
+            _bed.AddAsk(BoardItemAskState.Pending, recipient: Other);
+            _bed.CallerId = Other;
+
+            (await Get(AskDirection.Waiting)).Count.ShouldBe(1);
+
+            _bed.MarkItemDone();
+
+            (await Get(AskDirection.Waiting)).ShouldBeEmpty();
+            (await Count(AskDirection.Waiting)).ShouldBe(0);
+        }
+
+        [Fact]
+        public async Task Count_UsesTheSameRulesAsTheLists()
+        {
+            _bed.AddAsk(BoardItemAskState.Pending);
+            _bed.AddAsk(BoardItemAskState.Accepted);
+            _bed.AddAsk(BoardItemAskState.Declined);
+
+            _bed.CallerId = Recipient;
+            (await Count(AskDirection.Received)).ShouldBe((await Get(AskDirection.Received)).Count);
+            _bed.CallerId = Requester;
+            (await Count(AskDirection.Sent)).ShouldBe((await Get(AskDirection.Sent)).Count);
+        }
+
+        [Fact]
+        public async Task Count_InvalidDirection_IsABadRequest()
+        {
+            await Should.ThrowAsync<BadRequestException>(() => Count((AskDirection)7));
+        }
     }
 }

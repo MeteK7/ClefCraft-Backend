@@ -58,6 +58,11 @@ namespace ClefCraft.Persistence.Repositories
                 .ToListAsync();
         }
 
+        public async Task<int> CountAsync(Expression<Func<BoardItemAsk, bool>> filter)
+        {
+            return await _context.BoardItemAsks.CountAsync(filter);
+        }
+
         public async Task<List<BoardItemAskReply>> GetRepliesByAskIdsReadOnlyAsync(IEnumerable<int> askIds)
         {
             var ids = askIds as ICollection<int> ?? askIds.ToList();
