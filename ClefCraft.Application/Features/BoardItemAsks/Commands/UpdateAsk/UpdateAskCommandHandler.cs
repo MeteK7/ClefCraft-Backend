@@ -121,6 +121,18 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Commands.UpdateAsk
                     new[] { new AskNotice(ask, context.Item.BoardId, context.Item.Title, AskEvent.Changed) },
                     callerId, _notificationHubService, _boardMemberRepository, _userService, cancellationToken);
             }
+            else if (requiredChanged && !ask.IsRequired && callerId != ask.RequestedByUserId)
+            {
+                // Another manager waived the requirement: a declined or cancelled required ask stops
+                // being the requester's move (AskTurn), so tell them. Changed terms already did.
+                await AskNotifier.SendAsync(
+                    new[]
+                    {
+                        new AskNotice(ask, context.Item.BoardId, context.Item.Title, AskEvent.Changed,
+                            Reason: AskNotifier.RequirementWaivedReason, Audience: new[] { ask.RequestedByUserId })
+                    },
+                    callerId, _notificationHubService, _boardMemberRepository, _userService, cancellationToken);
+            }
 
             return await AskCommandSupport.ToDtoAsync(ask, context, callerId, _userService, _boardMemberRepository, _askRepository);
         }
