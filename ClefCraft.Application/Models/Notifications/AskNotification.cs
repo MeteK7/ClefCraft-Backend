@@ -17,7 +17,10 @@ namespace ClefCraft.Application.Models.Notifications
         public string ActorFullName { get; set; } = null!;
         public string Note { get; set; } = null!;
 
-        /// <summary>The decline reason, or the cancel reason (Withdrawn, ItemCompleted, RecipientRemoved).</summary>
+        /// <summary>
+        /// The decline reason, or the cancel reason (Withdrawn, ItemCompleted, RecipientRemoved), or
+        /// RequirementWaived on a Changed event that only waived the requirement.
+        /// </summary>
         public string? Reason { get; set; }
 
         /// <summary>True when someone other than the recipient marked the ask done.</summary>
@@ -28,5 +31,11 @@ namespace ClefCraft.Application.Models.Notifications
 
         /// <summary>The start of that reply as plain text, for the toast.</summary>
         public string? ReplyExcerpt { get; set; }
+
+        /// <summary>
+        /// When it happened (UTC). With AskId and Event, it identifies the event: the client drops
+        /// the copy another tab of the same user already showed.
+        /// </summary>
+        public DateTime OccurredAt { get; set; }
     }
 }

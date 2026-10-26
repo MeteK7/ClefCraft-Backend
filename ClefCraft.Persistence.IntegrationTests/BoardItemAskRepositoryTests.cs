@@ -129,6 +129,39 @@ namespace ClefCraft.Persistence.IntegrationTests
         }
 
         [Fact]
+        public async Task WaitingFilter_TranslatesToSql_AndAgreesWithAskTurn_ForEveryStateAndUser()
+        {
+            using var db = await CreateAsync();
+            var asks = new List<BoardItemAsk>();
+            foreach (var state in Enum.GetValues<BoardItemAskState>())
+                foreach (var isRequired in new[] { false, true })
+                    asks.Add(await db.AddAskAsync(state, isRequired: isRequired));
+            await AddAskOnAsync(db, await OtherBoardItemAsync(db), BoardItemAskState.Pending);
+
+            foreach (var itemIsDone in new[] { false, true })
+            {
+                using (var context = db.NewContext("seed-user"))
+                {
+                    var status = await context.BoardItemStatuses.SingleAsync(s => s.BoardItemId == db.ItemId);
+                    status.StatusId = itemIsDone ? db.DoneStatusId : db.InProgressStatusId;
+                    await context.SaveChangesAsync();
+                }
+
+                foreach (var user in new[] { Requester, Recipient, Assignee, Owner, Other })
+                {
+                    using var reader = db.NewContext("reader");
+                    var repository = new BoardItemAskRepository(reader);
+                    var filter = AskTurn.IsYourMove(user, new List<int> { db.BoardId }, new[] { db.DoneStatusId });
+
+                    var expected = asks.Where(a => AskTurn.ReasonFor(a, user, itemIsDone) != null).Select(a => a.Id).ToList();
+
+                    (await repository.GetWithItemReadOnlyAsync(filter)).Select(a => a.Id).ShouldBe(expected, $"{user}, done: {itemIsDone}");
+                    (await repository.CountAsync(filter)).ShouldBe(expected.Count);
+                }
+            }
+        }
+
+        [Fact]
         public async Task DeletingAnItem_DeletesItsAsks()
         {
             using var db = await CreateAsync();

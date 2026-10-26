@@ -10,6 +10,9 @@ namespace ClefCraft.Application.Features.BoardItemAsks.DTOs
         public string BoardItemTitle { get; set; } = null!;
         public int BoardId { get; set; }
 
+        /// <summary>The board's title, when the board was loaded with the item (the caller's asks); null otherwise.</summary>
+        public string? BoardTitle { get; set; }
+
         public string RequestedByUserId { get; set; } = null!;
         public string RequestedByFullName { get; set; } = null!;
 
@@ -61,6 +64,9 @@ namespace ClefCraft.Application.Features.BoardItemAsks.DTOs
 
         /// <summary>What the current user may do with this ask right now.</summary>
         public List<BoardItemAskAction> AllowedActions { get; set; } = new();
+
+        /// <summary>Why the ask is the current user's move (see AskTurn); null when it isn't theirs.</summary>
+        public AskTurnReason? YourMove { get; set; }
 
         /// <summary>
         /// The current user may post a reply: they are the requester or the recipient and the ask
