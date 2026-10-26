@@ -42,9 +42,9 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Queries.GetMyAsks
             if (boardIds.Count == 0)
                 return new List<BoardItemAskDto>();
 
-            var filter = request.Direction == AskDirection.Received
-                ? MyAskFilters.Received(callerId, boardIds)
-                : MyAskFilters.Sent(callerId, boardIds, utcNow - BoardItemAskLimits.SentDeclinedWindow);
+            var completedStatusIds = await CompletedStatus.GetIdsAsync(_statusRepository);
+
+            var filter = MyAskFilters.For(request.Direction, callerId, boardIds, utcNow, completedStatusIds);
 
             var asks = await _askRepository.GetWithItemReadOnlyAsync(filter);
             if (asks.Count == 0)
@@ -59,23 +59,31 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Queries.GetMyAsks
             var fullNames = (await _userService.GetUsersByIds(userIds))
                 .ToDictionary(u => u.Id, u => $"{u.Firstname} {u.Lastname}");
 
-            var completedStatusIds = await CompletedStatus.GetIdsAsync(_statusRepository);
             var replies = await _askRepository.GetRepliesByAskIdsReadOnlyAsync(asks.Select(a => a.Id));
 
-            var ordered = request.Direction == AskDirection.Received
+            var ordered = request.Direction switch
+            {
                 // Waiting for an answer first, oldest first; then accepted work by due date.
-                ? asks.OrderBy(a => a.State == BoardItemAskState.Pending ? 0 : 1)
+                AskDirection.Received => asks.OrderBy(a => a.State == BoardItemAskState.Pending ? 0 : 1)
                     .ThenBy(a => a.State == BoardItemAskState.Pending ? (DateTime?)null : a.DueDate ?? DateTime.MaxValue)
-                    .ThenBy(a => a.DateCreated)
+                    .ThenBy(a => a.DateCreated),
                 // Open asks first, then the recently declined ones, newest decline first.
-                : asks.OrderBy(a => a.State switch
+                AskDirection.Sent => asks.OrderBy(a => a.State switch
                     {
                         BoardItemAskState.Pending => 0,
                         BoardItemAskState.Accepted => 1,
                         _ => 2
                     })
                     .ThenByDescending(a => a.State == BoardItemAskState.Declined ? a.RespondedAt : null)
-                    .ThenBy(a => a.DateCreated);
+                    .ThenBy(a => a.DateCreated),
+                // Grouped by board; within a board, decisions first, then work, then requirements to
+                // resolve; earliest due first, then oldest.
+                _ => asks.OrderBy(a => a.BoardItem.Board?.Title, StringComparer.CurrentCultureIgnoreCase)
+                    .ThenBy(a => a.BoardItem.BoardId)
+                    .ThenBy(a => AskTurn.Of(a, false)?.Reason)
+                    .ThenBy(a => a.DueDate ?? DateTime.MaxValue)
+                    .ThenBy(a => a.DateCreated)
+            };
 
             return ordered
                 .Select(ask =>

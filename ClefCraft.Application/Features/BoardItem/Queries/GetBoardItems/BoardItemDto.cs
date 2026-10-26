@@ -43,5 +43,8 @@ namespace ClefCraft.Application.Features.BoardItem.Queries.GetBoardItems
 
         /// <summary>Filled by GetBoardItemsHandler; empty elsewhere.</summary>
         public AskSummaryDto AskSummary { get; set; } = new();
+
+        /// <summary>What the item's asks need from the caller. Filled by GetBoardItemsHandler; empty elsewhere.</summary>
+        public AskAttentionDto AskAttention { get; set; } = new();
     }
 }

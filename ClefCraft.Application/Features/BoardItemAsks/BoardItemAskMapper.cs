@@ -31,6 +31,7 @@ namespace ClefCraft.Application.Features.BoardItemAsks
                 BoardItemId = ask.BoardItemId,
                 BoardItemTitle = item.Title,
                 BoardId = item.BoardId,
+                BoardTitle = item.Board?.Title,
                 RequestedByUserId = ask.RequestedByUserId,
                 RequestedByFullName = FullNameOf(ask.RequestedByUserId, fullNames),
                 RecipientUserId = ask.RecipientUserId,
@@ -55,6 +56,7 @@ namespace ClefCraft.Application.Features.BoardItemAsks
                 IsOpen = AskTransitions.IsOpen(ask.State),
                 IsUnmetRequirement = AskTransitions.IsUnmetRequirement(ask),
                 AllowedActions = AskTransitions.AllowedActions(ask, viewerRoles, itemIsDone, utcNow),
+                YourMove = AskTurn.ReasonFor(ask, viewerId, itemIsDone),
                 CanReply = AskReplies.CanReply(ask, viewerId),
                 Replies = ownReplies.Select(r => new AskReplyDto
                 {
@@ -92,6 +94,10 @@ namespace ClefCraft.Application.Features.BoardItemAsks
                 }).ToList()
             };
         }
+
+        /// <summary>What an item's asks need from the viewer: how many are their move.</summary>
+        public static AskAttentionDto ToAttention(IEnumerable<BoardItemAsk> asks, string viewerId, bool itemIsDone) =>
+            new() { YourMove = asks.Count(a => AskTurn.ReasonFor(a, viewerId, itemIsDone) != null) };
 
         /// <summary>Every user an ask names: requester, recipient and, once done, who completed it.</summary>
         public static IEnumerable<string> UserIdsOf(BoardItemAsk ask)

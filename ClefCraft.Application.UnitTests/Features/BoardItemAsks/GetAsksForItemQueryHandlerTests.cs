@@ -62,6 +62,25 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
         }
 
         [Fact]
+        public async Task YourMove_IsSetOnlyForTheCallerWhoseMoveItIs()
+        {
+            _bed.AddAsk(BoardItemAskState.Pending);
+            _bed.AddAsk(BoardItemAskState.Declined, isRequired: true);
+
+            _bed.CallerId = Recipient;
+            (await Get()).Select(d => d.YourMove).ShouldBe(new AskTurnReason?[] { AskTurnReason.Respond, null });
+
+            _bed.CallerId = Requester;
+            (await Get()).Select(d => d.YourMove).ShouldBe(new AskTurnReason?[] { null, AskTurnReason.ResolveRequirement });
+
+            // Managing the ask isn't the same as it being your move.
+            _bed.CallerId = Assignee;
+            (await Get()).Select(d => d.YourMove).ShouldAllBe(m => m == null);
+
+            (await Get()).First().BoardTitle.ShouldBe("Release");
+        }
+
+        [Fact]
         public async Task RecipientWhoBecameTheAssignee_KeepsTheirAsk_AndManagesIt()
         {
             var accepted = _bed.AddAsk(BoardItemAskState.Accepted);

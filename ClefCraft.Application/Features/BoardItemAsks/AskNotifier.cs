@@ -41,6 +41,9 @@ namespace ClefCraft.Application.Features.BoardItemAsks
     // so nobody is told about a change that didn't happen.
     public static class AskNotifier
     {
+        /// <summary>The Reason of a Changed notice that only waived the requirement.</summary>
+        public const string RequirementWaivedReason = "RequirementWaived";
+
         public static async Task SendAsync(
             IReadOnlyCollection<AskNotice> notices,
             string actorUserId,
@@ -54,6 +57,9 @@ namespace ClefCraft.Application.Features.BoardItemAsks
 
             var actor = await userService.GetUser(actorUserId);
             var actorFullName = actor != null ? $"{actor.Firstname} {actor.Lastname}" : "Unknown";
+
+            // One time for the whole request: its notices happened together.
+            var occurredAt = DateTime.UtcNow;
 
             // Membership doesn't change between notices of one request; look each user up once.
             var membership = new Dictionary<(int BoardId, string UserId), bool>();
@@ -74,7 +80,7 @@ namespace ClefCraft.Application.Features.BoardItemAsks
                     if (!isMember)
                         continue;
 
-                    await notificationHubService.SendAskEventAsync(userId, ToPayload(notice, actorFullName), cancellationToken);
+                    await notificationHubService.SendAskEventAsync(userId, ToPayload(notice, actorFullName, occurredAt), cancellationToken);
                 }
             }
         }
@@ -84,7 +90,7 @@ namespace ClefCraft.Application.Features.BoardItemAsks
                 ? new[] { notice.Ask.RecipientUserId }
                 : new[] { notice.Ask.RecipientUserId, notice.Ask.RequestedByUserId };
 
-        private static AskNotification ToPayload(AskNotice notice, string actorFullName) => new()
+        private static AskNotification ToPayload(AskNotice notice, string actorFullName, DateTime occurredAt) => new()
         {
             AskId = notice.Ask.Id,
             BoardItemId = notice.Ask.BoardItemId,
@@ -99,7 +105,8 @@ namespace ClefCraft.Application.Features.BoardItemAsks
                 && notice.Ask.CompletedByUserId != null
                 && notice.Ask.CompletedByUserId != notice.Ask.RecipientUserId,
             ReplyId = notice.Reply?.Id,
-            ReplyExcerpt = notice.Reply != null ? AskReplies.Excerpt(notice.Reply.Body) : null
+            ReplyExcerpt = notice.Reply != null ? AskReplies.Excerpt(notice.Reply.Body) : null,
+            OccurredAt = occurredAt
         };
     }
 }

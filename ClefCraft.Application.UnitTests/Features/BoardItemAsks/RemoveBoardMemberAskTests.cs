@@ -4,6 +4,7 @@ using ClefCraft.Application.Features.BoardMembers.Commands.RemoveMember;
 using ClefCraft.Domain.Enums;
 using Moq;
 using Shouldly;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -68,6 +69,20 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
             sent.UserId.ShouldBe(Requester);
             sent.Payload.Event.ShouldBe(nameof(AskEvent.Cancelled));
             sent.Payload.Reason.ShouldBe("RecipientRemoved");
+        }
+
+        [Fact]
+        public async Task TheNoticesOfOneChange_CarryOneTimeOfOccurrence()
+        {
+            _bed.AddAsk(BoardItemAskState.Pending);
+            _bed.AddAsk(BoardItemAskState.Accepted);
+            var before = DateTime.UtcNow;
+
+            await Remove(Recipient);
+
+            _bed.Sent.Count.ShouldBe(2);
+            _bed.Sent.Select(s => s.Payload.OccurredAt).Distinct().ShouldHaveSingleItem()
+                .ShouldBeInRange(before, DateTime.UtcNow);
         }
 
         [Fact]

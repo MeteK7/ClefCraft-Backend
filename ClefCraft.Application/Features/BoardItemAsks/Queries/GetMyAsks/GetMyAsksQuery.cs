@@ -9,7 +9,10 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Queries.GetMyAsks
         Received = 0,
 
         /// <summary>"Asks you sent": open asks the caller made, plus those declined in the last 14 days.</summary>
-        Sent = 1
+        Sent = 1,
+
+        /// <summary>"Waiting for you": the asks that are the caller's move (see AskTurn), as recipient or requester.</summary>
+        Waiting = 2
     }
 
     /// <summary>
