@@ -91,7 +91,10 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
             result.Completed.ShouldBeEmpty();
             pending.State.ShouldBe(BoardItemAskState.Cancelled);
             pending.CancelReason.ShouldBe(BoardItemAskCancelReason.ItemCompleted);
+            pending.CancelledAt.ShouldBe(Now);
+            pending.CancelledByUserId.ShouldBe(Assignee);
             accepted.State.ShouldBe(BoardItemAskState.Cancelled);
+            accepted.CancelledAt.ShouldBe(Now);
             accepted.Revision.ShouldBe(2);
         }
 

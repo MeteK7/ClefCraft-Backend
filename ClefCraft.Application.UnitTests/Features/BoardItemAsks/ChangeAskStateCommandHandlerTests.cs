@@ -122,6 +122,9 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
 
             ask.State.ShouldBe(BoardItemAskState.Cancelled);
             ask.CancelReason.ShouldBe(BoardItemAskCancelReason.Withdrawn);
+            ask.CancelledAt.ShouldNotBeNull();
+            ask.CancelledAt!.Value.ShouldBe(System.DateTime.UtcNow, System.TimeSpan.FromMinutes(1));
+            ask.CancelledByUserId.ShouldBe(Assignee);
             _bed.Sent.Select(s => s.UserId).OrderBy(id => id).ShouldBe(new[] { Recipient, Requester });
             _bed.Sent.ShouldAllBe(s => s.Payload.Event == nameof(AskEvent.Cancelled) && s.Payload.Reason == "Withdrawn");
         }

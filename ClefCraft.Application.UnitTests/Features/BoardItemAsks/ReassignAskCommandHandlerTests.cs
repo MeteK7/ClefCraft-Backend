@@ -35,6 +35,8 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
 
             old.State.ShouldBe(BoardItemAskState.Cancelled);
             old.CancelReason.ShouldBe(BoardItemAskCancelReason.Withdrawn);
+            old.CancelledAt.ShouldNotBeNull();
+            old.CancelledByUserId.ShouldBe(_bed.CallerId);
             old.IsRequired.ShouldBeFalse();
 
             var replacement = _bed.Asks.Single(a => a.Id == dto.Id);

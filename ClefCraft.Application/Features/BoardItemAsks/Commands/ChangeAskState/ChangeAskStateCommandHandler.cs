@@ -150,7 +150,9 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Commands.ChangeAskState
                 case BoardItemAskAction.Cancel:
                     ask.State = BoardItemAskState.Cancelled;
                     ask.CancelReason = BoardItemAskCancelReason.Withdrawn;
-                    reason = nameof(BoardItemAskCancelReason.Withdrawn);
+                    ask.CancelledAt = utcNow;
+                    ask.CancelledByUserId = callerId;
+                    reason =nameof(BoardItemAskCancelReason.Withdrawn);
                     askEvent = AskEvent.Cancelled;
                     await AskHistory.LogAsync(_activityLogger, AskHistory.Cancelled, ask,
                         new Dictionary<string, object?> { [AskHistory.ReasonKey] = reason });
