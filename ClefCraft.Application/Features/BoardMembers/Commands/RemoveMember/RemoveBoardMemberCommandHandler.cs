@@ -63,11 +63,14 @@ namespace ClefCraft.Application.Features.BoardMembers.Commands.RemoveMember
             // Cancelling doesn't satisfy a requirement: a required one stays unmet until a manager
             // moves, waives or overrides it.
             var openAsks = await _askRepository.GetOpenByRecipientOnBoardAsync(request.BoardId, request.UserId);
+            var utcNow = DateTime.UtcNow;
 
             foreach (var ask in openAsks)
             {
                 ask.State = BoardItemAskState.Cancelled;
                 ask.CancelReason = BoardItemAskCancelReason.RecipientRemoved;
+                ask.CancelledAt = utcNow;
+                ask.CancelledByUserId = request.RequestingUserId;
                 ask.Revision++;
 
                 await AskHistory.LogAsync(_activityLogger, AskHistory.Cancelled, ask,

@@ -51,6 +51,11 @@ namespace ClefCraft.Domain
 
         public BoardItemAskCancelReason? CancelReason { get; set; }
 
+        // When it was cancelled, and by whom: who withdrew it, reassigned it, completed the item
+        // or removed the recipient from the board. Cancelled is final, so these never change.
+        public DateTime? CancelledAt { get; set; }
+        public string? CancelledByUserId { get; set; }
+
         public DateTime? LastNudgedAt { get; set; }
 
         // Concurrency token, incremented on every change except a nudge, so a nudge never makes

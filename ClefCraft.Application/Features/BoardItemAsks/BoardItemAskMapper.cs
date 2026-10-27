@@ -49,6 +49,9 @@ namespace ClefCraft.Application.Features.BoardItemAsks
                 CompletedByUserId = ask.CompletedByUserId,
                 CompletedByFullName = ask.CompletedByUserId != null ? FullNameOf(ask.CompletedByUserId, fullNames) : null,
                 CancelReason = ask.CancelReason,
+                CancelledAt = ask.CancelledAt,
+                CancelledByUserId = ask.CancelledByUserId,
+                CancelledByFullName = ask.CancelledByUserId != null ? FullNameOf(ask.CancelledByUserId, fullNames) : null,
                 DateCreated = ask.DateCreated ?? default,
                 LastNudgedAt = ask.LastNudgedAt,
                 NextNudgeAt = AskTransitions.NextNudgeAt(ask, viewerRoles, itemIsDone, utcNow),
@@ -99,7 +102,10 @@ namespace ClefCraft.Application.Features.BoardItemAsks
         public static AskAttentionDto ToAttention(IEnumerable<BoardItemAsk> asks, string viewerId, bool itemIsDone) =>
             new() { YourMove = asks.Count(a => AskTurn.ReasonFor(a, viewerId, itemIsDone) != null) };
 
-        /// <summary>Every user an ask names: requester, recipient and, once done, who completed it.</summary>
+        /// <summary>
+        /// Every user an ask names: requester, recipient and, once done or cancelled, who
+        /// completed or cancelled it.
+        /// </summary>
         public static IEnumerable<string> UserIdsOf(BoardItemAsk ask)
         {
             yield return ask.RequestedByUserId;
@@ -107,6 +113,9 @@ namespace ClefCraft.Application.Features.BoardItemAsks
 
             if (!string.IsNullOrEmpty(ask.CompletedByUserId))
                 yield return ask.CompletedByUserId;
+
+            if (!string.IsNullOrEmpty(ask.CancelledByUserId))
+                yield return ask.CancelledByUserId;
         }
 
         // "Unknown user" when the account no longer exists, as the history does for assignees.

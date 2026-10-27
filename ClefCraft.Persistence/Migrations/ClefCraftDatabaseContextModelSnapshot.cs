@@ -259,6 +259,13 @@ namespace ClefCraft.Persistence.Migrations
                     b.Property<int?>("CancelReason")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime?>("CancelledAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CancelledByUserId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
                     b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("timestamp with time zone");
 
