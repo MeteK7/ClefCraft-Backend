@@ -140,6 +140,8 @@ namespace ClefCraft.Application.Features.BoardItemAsks
                 {
                     ask.State = BoardItemAskState.Cancelled;
                     ask.CancelReason = BoardItemAskCancelReason.ItemCompleted;
+                    ask.CancelledAt = utcNow;
+                    ask.CancelledByUserId = callerId;
                     ask.Revision++;
                     cancelled.Add(ask);
                 }

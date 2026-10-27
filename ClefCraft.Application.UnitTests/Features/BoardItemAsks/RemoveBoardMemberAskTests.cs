@@ -36,8 +36,12 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
 
             pending.State.ShouldBe(BoardItemAskState.Cancelled);
             pending.CancelReason.ShouldBe(BoardItemAskCancelReason.RecipientRemoved);
+            pending.CancelledAt.ShouldNotBeNull();
+            pending.CancelledByUserId.ShouldBe(Owner);
             accepted.State.ShouldBe(BoardItemAskState.Cancelled);
+            accepted.CancelledByUserId.ShouldBe(Owner);
             completed.State.ShouldBe(BoardItemAskState.Completed);
+            completed.CancelledAt.ShouldBeNull();
             declined.State.ShouldBe(BoardItemAskState.Declined);
             someoneElses.State.ShouldBe(BoardItemAskState.Pending);
 

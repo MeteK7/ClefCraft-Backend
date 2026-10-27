@@ -50,6 +50,27 @@ namespace ClefCraft.Application.UnitTests.Features.BoardItemAsks
         }
 
         [Fact]
+        public async Task ACancelledAsk_SaysWhenAndByWhom_AndAnOpenOneNeither()
+        {
+            var withdrawn = _bed.AddAsk(BoardItemAskState.Cancelled);
+            var cancelledAt = new System.DateTime(2026, 10, 26, 21, 42, 0, System.DateTimeKind.Utc);
+            withdrawn.CancelledAt = cancelledAt;
+            withdrawn.CancelledByUserId = Owner;
+            var pending = _bed.AddAsk(BoardItemAskState.Pending);
+
+            var result = await Get();
+
+            var withdrawnDto = result.Single(d => d.Id == withdrawn.Id);
+            withdrawnDto.CancelledAt.ShouldBe(cancelledAt);
+            withdrawnDto.CancelledByUserId.ShouldBe(Owner);
+            withdrawnDto.CancelledByFullName.ShouldBe(FullName(Owner));
+
+            var pendingDto = result.Single(d => d.Id == pending.Id);
+            pendingDto.CancelledAt.ShouldBeNull();
+            pendingDto.CancelledByFullName.ShouldBeNull();
+        }
+
+        [Fact]
         public async Task AllowedActions_AreTheCallers()
         {
             var pending = _bed.AddAsk(BoardItemAskState.Pending);
