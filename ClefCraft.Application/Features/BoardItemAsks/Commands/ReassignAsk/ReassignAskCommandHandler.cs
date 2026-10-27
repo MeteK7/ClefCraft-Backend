@@ -72,6 +72,8 @@ namespace ClefCraft.Application.Features.BoardItemAsks.Commands.ReassignAsk
 
             old.State = BoardItemAskState.Cancelled;
             old.CancelReason = BoardItemAskCancelReason.Withdrawn;
+            old.CancelledAt = DateTime.UtcNow;
+            old.CancelledByUserId = callerId;
             old.IsRequired = false;
             old.Revision++;
 

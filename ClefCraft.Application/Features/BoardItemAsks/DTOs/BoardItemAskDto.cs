@@ -42,6 +42,11 @@ namespace ClefCraft.Application.Features.BoardItemAsks.DTOs
 
         public BoardItemAskCancelReason? CancelReason { get; set; }
 
+        /// <summary>When it was cancelled; null while it isn't, or for a cancel with no record of it.</summary>
+        public DateTime? CancelledAt { get; set; }
+        public string? CancelledByUserId { get; set; }
+        public string? CancelledByFullName { get; set; }
+
         /// <summary>When the ask was made: its age. Never reset by edits or nudges.</summary>
         public DateTime DateCreated { get; set; }
 

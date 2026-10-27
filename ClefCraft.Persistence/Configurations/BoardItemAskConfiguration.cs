@@ -24,6 +24,9 @@ namespace ClefCraft.Persistence.Configurations
             builder.Property(x => x.CompletedByUserId)
                 .HasMaxLength(100);
 
+            builder.Property(x => x.CancelledByUserId)
+                .HasMaxLength(100);
+
             builder.Property(x => x.Note)
                 .IsRequired()
                 .HasMaxLength(BoardItemAskLimits.NoteMaxLength);
